@@ -8,3 +8,5 @@ frontend/.vscode/*
 .idea/
 db/
 .env
+code-quality-report.json
+tmp-*.json
