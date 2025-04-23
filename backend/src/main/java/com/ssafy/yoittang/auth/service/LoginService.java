@@ -46,11 +46,11 @@ public class LoginService {
                 kakaoMemberInfo.getProfileImageUrl()
         );
 
-        MemberTokens memberTokens = jwtUtil.createLoginToken(member.getId().toString());
-        RefreshToken refreshToken = new RefreshToken(member.getId(), memberTokens.getRefreshToken());
+        MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
+        RefreshToken refreshToken = new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken());
         refreshTokenRepository.save(refreshToken);
         LoginResponse loginResponse = LoginResponse.from(
-                member.getId(),
+                member.getMemberId(),
                 memberTokens.getAccessToken(),
                 memberTokens.getRefreshToken()
         );
