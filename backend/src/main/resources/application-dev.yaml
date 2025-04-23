@@ -29,11 +29,14 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
-            client-name: kakao-login
+            client_id: ${KAKAO_CLIENT_ID}
+            client_secret: ${KAKAO_CLIENT_SECRET}
+            client_name : kakao-login
             client-authentication-method: client_secret_post
-            redirect-uri: ${KAKAO_REDIRECT_URI}
+            redirect-uri-app: ${KAKAO_REDIRECT_URI_APP}
+            redirect-uri-web: ${KAKAO_REDIRECT_URI_WEB}
+            redirect-uri-app-local: ${KAKAO_REDIRECT_URI_APP_LOCAL}
+            redirect-uri-web-local: ${KAKAO_REDIRECT_URI_WEB_LOCAL}
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname
