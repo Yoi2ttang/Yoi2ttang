@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  forward-headers-strategy: NATIVE
+  servlet:
+    context-path: /api/v1
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
