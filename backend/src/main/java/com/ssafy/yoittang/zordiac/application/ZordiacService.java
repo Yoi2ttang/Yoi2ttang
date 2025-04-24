@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ZordiacService {
     private final ZordiacJpaRepository zordiacJpaRepository;
-    private final ZordiacJdbcRepository zordiacJdbcRepository;
 
     @Transactional
     public void save() {
@@ -26,6 +25,6 @@ public class ZordiacService {
                 .map(name -> Zordiac.builder().zordiacName(name).build())
                 .collect(Collectors.toList());
 
-        zordiacJdbcRepository.bulkInsert(zordiacs);
+        zordiacJpaRepository.bulkInsert(zordiacs);
     }
 }

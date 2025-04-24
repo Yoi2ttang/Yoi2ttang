@@ -18,7 +18,7 @@ public class TokenController {
 
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/api/v1/access-tokens")
+    @GetMapping("/access-tokens")
     @Operation(description = "테스트용 JWT 토큰을 발급받는다, 이걸로 발급받은 accessToken, refreshToken 으로 테스트 가능")
     public ResponseEntity<MemberTokens> getAccessToken(
             @RequestParam(name = "id") String id
