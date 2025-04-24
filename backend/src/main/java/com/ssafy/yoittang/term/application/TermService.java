@@ -32,13 +32,7 @@ public class TermService {
     private final MemberTermJpaRepository memberTermJpaRepository;
 
     public List<TermSummaryGetResponse> getTermSummary() {
-        return termJpaRepository.findAll().stream()
-                .map(term -> new TermSummaryGetResponse(
-                        term.getTermId(),
-                        term.getTitle(),
-                        term.getTermType()
-                ))
-                .toList();
+        return termJpaRepository.findAllTermSummaries();
     }
 
     public TermDetailGetResponse getTermDetailsByTermId(Long termId) {

@@ -14,6 +14,7 @@ import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.term.domain.Term;
 import com.ssafy.yoittang.term.domain.response.TermDetailGetResponse;
 import com.ssafy.yoittang.term.domain.response.TermDetailItemGetResponse;
+import com.ssafy.yoittang.term.domain.response.TermSummaryGetResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,5 +55,18 @@ public class TermQueryRepositoryImpl implements TermQueryRepository {
                 findTerm.getSubTitle(),
                 detailGetResponses
         );
+    }
+
+    @Override
+    public List<TermSummaryGetResponse> findAllTermSummaries() {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        TermSummaryGetResponse.class,
+                        term.termId,
+                        term.title,
+                        term.termType
+                ))
+                .from(term)
+                .fetch();
     }
 }
