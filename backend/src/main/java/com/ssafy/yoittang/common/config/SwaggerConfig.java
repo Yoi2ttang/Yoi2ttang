@@ -16,17 +16,17 @@ public class SwaggerConfig {
 		final String securitySchemeName = "bearerAuth";
 
 		Info info = new Info()
-			.version("v1.0")
-			.title("API Documentation")
-			.description("breadbread api");
+				.version("v1.0")
+				.title("API Documentation")
+				.description("breadbread api");
 		return new OpenAPI()
-			.info(info)
-			.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-			.components(new Components()
-				.addSecuritySchemes(securitySchemeName, new SecurityScheme()
-					.name(securitySchemeName)
-					.type(SecurityScheme.Type.HTTP)
-					.scheme("bearer")
-					.bearerFormat("JWT")));
+				.info(info)
+				.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+				.components(new Components()
+						.addSecuritySchemes(securitySchemeName, new SecurityScheme()
+								.name(securitySchemeName)
+								.type(SecurityScheme.Type.HTTP)
+								.scheme("bearer")
+								.bearerFormat("JWT")));
 	}
 }
