@@ -2,6 +2,10 @@ spring:
   profiles:
     active: dev
 
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Seoul
+
 server:
   forward-headers-strategy: NATIVE
   servlet:
