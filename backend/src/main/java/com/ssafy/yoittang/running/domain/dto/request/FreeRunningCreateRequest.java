@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 public record FreeRunningCreateRequest(
 
         @NotNull
-        Long lat,
+        Double lat,
 
         @NotNull
-        Long lng,
+        Double lng,
 
         @NotNull
         LocalDateTime currentTime

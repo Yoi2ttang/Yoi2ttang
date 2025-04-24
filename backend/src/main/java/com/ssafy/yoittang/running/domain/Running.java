@@ -11,14 +11,18 @@ import jakarta.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Table(name = "runnings")
 @Builder
 @Getter
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Running {
 
     @Id
@@ -35,6 +39,7 @@ public class Running {
     @Column(updatable = false, nullable = false)
     private LocalDateTime startTime;
 
+    @Setter
     @Column
     private LocalDateTime endTime;
 

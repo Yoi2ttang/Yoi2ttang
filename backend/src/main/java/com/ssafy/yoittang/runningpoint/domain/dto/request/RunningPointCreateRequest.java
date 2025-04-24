@@ -14,10 +14,10 @@ public record RunningPointCreateRequest(
         Long runningId,
 
         @NotNull
-        Long lat,
+        GeoPoint beforePoint,
 
         @NotNull
-        Long lng,
+        GeoPoint nowPoint,
 
         @NotNull
         LocalDateTime currentTime

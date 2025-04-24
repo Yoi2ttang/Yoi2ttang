@@ -7,14 +7,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.locationtech.jts.geom.LineString;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "running_points")
+@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RunningPoint {
 
     @Id
@@ -34,7 +41,7 @@ public class RunningPoint {
     private LocalDateTime arrivalTime;
 
     // GEOMETRY(LINESTRING, 4326)
-    @Column(columnDefinition = "geometry(LineString,4326)")
+    @Column(columnDefinition = "geometry(LineString, 4326)")
     private LineString root;
 
 }

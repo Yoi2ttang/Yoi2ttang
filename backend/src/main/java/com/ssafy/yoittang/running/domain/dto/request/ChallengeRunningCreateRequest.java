@@ -10,10 +10,10 @@ public record ChallengeRunningCreateRequest(
         Long courseId,
 
         @NotNull
-        Long lat,
+        Double lat,
 
         @NotNull
-        Long lng,
+        Double lng,
 
         @NotNull
         LocalDateTime currentTime

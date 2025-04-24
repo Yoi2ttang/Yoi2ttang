@@ -40,6 +40,10 @@ dependencies {
     // PostgreSQL JDBC
     runtimeOnly 'org.postgresql:postgresql'
 
+    //Postgis
+    implementation 'net.postgis:postgis-jdbc:2024.1.0'
+
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -64,14 +68,12 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-// jwt 설정
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
     //JTS Core
     implementation 'org.locationtech.jts:jts-core:1.20.0'
+
+    //Hibernate Spatial
+    implementation 'org.hibernate.orm:hibernate-spatial:6.6.13.Final'
+
 }
 
 tasks.named('test') {

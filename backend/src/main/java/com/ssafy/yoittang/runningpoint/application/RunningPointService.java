@@ -1,18 +1,21 @@
 package com.ssafy.yoittang.runningpoint.application;
 
+
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
+import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.RunningPointCreateRequest;
-import com.ssafy.yoittang.runningpoint.domain.dto.reseponse.TopRunningPointResponse;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RunningPointService {
 
+    private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
 
     @Transactional
@@ -28,40 +32,32 @@ public class RunningPointService {
             Member member
     ) {
 
-        TopRunningPointResponse topCoordinateResponse
-                = runningPointRepository.getTopRunningPointByRunningIdAndMemberId(
-                        runningPointCreateRequest.runningId(),
-                        member.getMemberId()
-                );
-
-//        if(topCoordinateResponse == null){
-//            throw new
-//        }
-
-//        if (topCoordinateResponse.state().equals(State.COMPLETE)) {
-//           throw new
-//        }
-
-        Point start = topCoordinateResponse.root().getEndPoint();
+        if (!runningRepository.existsByRunningIdAndMemberId(
+                runningPointCreateRequest.runningId(),
+                member.getMemberId())) {
+            throw new NotFoundException(ErrorCode.RUNNING_NOT_FOUND);
+        }
 
         LineString newRoot
-                = getLineStringWithTwoPoint(start, runningPointCreateRequest.lat(), runningPointCreateRequest.lng());
+                = getLineStringWithTwoPoint(
+                        runningPointCreateRequest.beforePoint(),
+                runningPointCreateRequest.nowPoint()
+        );
 
         runningPointRepository.save(RunningPoint.builder()
                         .runningId(runningPointCreateRequest.runningId())
                         .courseId(runningPointCreateRequest.courseId())
-                        .sequence(topCoordinateResponse.sequence())
                         .arrivalTime(runningPointCreateRequest.currentTime())
                         .root(newRoot)
                         .build());
     }
 
-    LineString getLineStringWithTwoPoint(Point start, long lat, long lng) {
+    LineString getLineStringWithTwoPoint(GeoPoint beforePoint, GeoPoint nowPoint) {
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-        Coordinate startCoordinate = start.getCoordinate();
-        Coordinate endCoordinate = new Coordinate(lng, lat);
+        Coordinate startCoordinate = new Coordinate(beforePoint.lng(), beforePoint.lat());
+        Coordinate endCoordinate = new Coordinate(nowPoint.lng(), beforePoint.lat());
 
         Coordinate[] coordinates = new Coordinate[] { startCoordinate, endCoordinate };
 
