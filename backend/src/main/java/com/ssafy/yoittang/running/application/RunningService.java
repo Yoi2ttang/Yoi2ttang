@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
-import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.State;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
+import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 

@@ -32,7 +32,10 @@ public enum ErrorCode {
 
     RUNNING_NOT_FOUND(4000, "런닝이 존재하지 않습니다."),
     END_TIME_BEFORE_START_TIME(4001, "종료시간이 시작시간보다 클 수 없습니다."),
-    ALREADY_COMPLETED(4002, "이미 종료된 런닝입니다.");
+    ALREADY_COMPLETED(4002, "이미 종료된 런닝입니다."),
+
+    NOT_FOUND_TERM(5001, "존재하지 않는 약관입니다."),
+    MANDATORY_TERM_NOT_AGREED(5002, "필수 약관에 동의하지 않았습니다.");
 
     private final int code;
     private final String message;
