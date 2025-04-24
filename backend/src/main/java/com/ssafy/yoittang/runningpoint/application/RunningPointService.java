@@ -57,7 +57,7 @@ public class RunningPointService {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
         Coordinate startCoordinate = new Coordinate(beforePoint.lng(), beforePoint.lat());
-        Coordinate endCoordinate = new Coordinate(nowPoint.lng(), beforePoint.lat());
+        Coordinate endCoordinate = new Coordinate(nowPoint.lng(), nowPoint.lat());
 
         Coordinate[] coordinates = new Coordinate[] { startCoordinate, endCoordinate };
 
