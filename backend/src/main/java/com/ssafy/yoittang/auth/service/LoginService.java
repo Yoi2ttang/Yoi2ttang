@@ -1,7 +1,9 @@
 package com.ssafy.yoittang.auth.service;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.Optional;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +11,7 @@ import com.ssafy.yoittang.auth.JwtUtil;
 import com.ssafy.yoittang.auth.domain.MemberTokens;
 import com.ssafy.yoittang.auth.domain.RefreshToken;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
+import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.infrastructure.KakaoMemberInfo;
 import com.ssafy.yoittang.auth.infrastructure.KakaoOAuthProvider;
@@ -17,6 +20,7 @@ import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class LoginService {
+    private static final String REDIS_PREFIX = "PRE_MEMBER:";
+    private static final Duration TTL = Duration.ofMinutes(30);
+
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final KakaoOAuthProvider kakaoOAuthProvider;
+    private final RedisTemplate<String, MemberRedisEntity> redisTemplate;
 
     public LoginResponse login(LoginRequest loginRequest) {
         String kakaoAccessToken = kakaoOAuthProvider.fetchKakaoAccessToken(
@@ -40,41 +48,25 @@ public class LoginService {
 
         KakaoMemberInfo kakaoMemberInfo = kakaoOAuthProvider.getMemberInfo(kakaoAccessToken);
 
-        Member member = findOrCreateMember(
-                kakaoMemberInfo.getSocialLoginId(),
-                kakaoMemberInfo.getSocialLoginId(),
-                kakaoMemberInfo.getProfileImageUrl()
-        );
+        Optional<Member> optionalMember = memberRepository.findBySocialId(kakaoMemberInfo.getSocialLoginId());
 
-        MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
-        RefreshToken refreshToken = new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken());
-        refreshTokenRepository.save(refreshToken);
-        LoginResponse loginResponse = LoginResponse.from(
-                member.getMemberId(),
-                memberTokens.getAccessToken(),
-                memberTokens.getRefreshToken()
-        );
-        return loginResponse;
-    }
-
-    private Member findOrCreateMember(String socialId, String nickname, String profileImageUrl) {
-        return memberRepository.findBySocialId(socialId)
-                .orElseGet(() -> createMember(socialId, nickname, profileImageUrl));
-    }
-
-    private Member createMember(String socialId, String nickname, String profileImageUrl) {
-        Member member = memberRepository.save(
-                Member.builder()
-                        .zordiacId(1L)
-                        .socialId(socialId)
-                        .birthDate(LocalDateTime.now())
-                        .nickname(nickname)
-                        .profileImageUrl(profileImageUrl)
-                        .disclosure(DisclosureStatus.ALL)
-                        .stateMessage("기본")
-                        .build()
-        );
-        return member;
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
+            refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
+            return LoginResponse.from(
+                    member.getMemberId(),
+                    memberTokens.getAccessToken(),
+                    memberTokens.getRefreshToken(),
+                    null
+            );
+        } else {
+            return preRegister(
+                    kakaoMemberInfo.getSocialLoginId(),
+                    kakaoMemberInfo.getNickname(),
+                    kakaoMemberInfo.getProfileImageUrl()
+            );
+        }
     }
 
     public void logout(String refreshToken) {
@@ -98,4 +90,71 @@ public class LoginService {
 
         throw new BadRequestException(ErrorCode.FAILED_TO_VALIDATE_TOKEN);
     }
+
+    private LoginResponse preRegister(String socialId, String nickname, String profileImageUrl) {
+        MemberRedisEntity memberRedisEntity = MemberRedisEntity.builder()
+                .socialId(socialId)
+                .nickname(nickname)
+                .profileImageUrl(profileImageUrl)
+                .build();
+        String key = REDIS_PREFIX + memberRedisEntity.getSocialId();
+        redisTemplate.opsForValue().set(key, memberRedisEntity);
+        return LoginResponse.from(
+                null,
+                null,
+                null,
+                socialId
+        );
+    }
+
+    public LoginResponse finalizeSignup(SignupRequest signupRequest) {
+        MemberRedisEntity cache = getMemberRedisEntity(signupRequest.socialId());
+
+        String finalNickname = Optional.ofNullable(signupRequest.nickname())
+                .filter(n -> !n.isBlank())
+                .orElse(cache.getNickname());
+
+        String finalProfileImageUrl = Optional.ofNullable(signupRequest.profileImageUrl())
+                .filter(url -> !url.isBlank())
+                .orElse(cache.getProfileImageUrl());
+
+        int birthYear = signupRequest.birthDate().getYear();
+        Long zordiacId = calculateZordiacId(birthYear);
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .zordiacId(zordiacId)
+                        .socialId(cache.getSocialId())
+                        .birthDate(signupRequest.birthDate())
+                        .nickname(finalNickname)
+                        .profileImageUrl(finalProfileImageUrl)
+                        .disclosure(DisclosureStatus.ALL)
+                        .stateMessage(null)
+                        .build()
+        );
+
+        MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
+        refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
+        return LoginResponse.from(
+                member.getMemberId(),
+                memberTokens.getAccessToken(),
+                memberTokens.getRefreshToken(),
+                null
+        );
+    }
+
+
+
+    private MemberRedisEntity getMemberRedisEntity(String socialId) {
+        String redisKey = REDIS_PREFIX + socialId;
+        return Optional.ofNullable(redisTemplate.opsForValue().get(redisKey))
+                .orElseThrow(() -> new BadRequestException(ErrorCode.INVALID_SIGNUP_TOKEN));
+    }
+
+    private Long calculateZordiacId(int birthYear) {
+        int[] zordiacIdByRemainder = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
+        return (long) zordiacIdByRemainder[birthYear % 12];
+    }
+
+
 }

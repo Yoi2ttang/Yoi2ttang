@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.common.config;
 
+
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -10,10 +11,12 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.GeoOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +48,16 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(objectMapper, Object.class));
         return redisTemplate;
     }
+
+    @Bean
+    public RedisTemplate<String, MemberRedisEntity> memberRedisTemplate() {
+        RedisTemplate<String, MemberRedisEntity> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return redisTemplate;
+    }
+
 
     @Bean
     public GeoOperations<String, String> geoOperations(RedisTemplate<String, String> template) {
