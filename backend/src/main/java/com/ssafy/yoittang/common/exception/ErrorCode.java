@@ -34,7 +34,7 @@ public enum ErrorCode {
     END_TIME_BEFORE_START_TIME(4001, "종료시간이 시작시간보다 클 수 없습니다."),
     ALREADY_COMPLETED(4002, "이미 종료된 런닝입니다."),
 
-    TOO_LARGE_GEOHASH(5000, "대한민국을 벗어나는 GeoHash 입니다.");
+    TOO_LARGE_GEOHASH(6000, "대한민국을 벗어나는 GeoHash 입니다.");
 
     private final int code;
     private final String message;
