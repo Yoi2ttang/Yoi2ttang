@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.tilehistory.domain.redis;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 
 import org.springframework.data.annotation.Id;
@@ -9,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Getter
 @Builder
