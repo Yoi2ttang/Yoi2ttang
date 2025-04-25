@@ -80,6 +80,7 @@ public class RunningPointService {
         tileHistoryRepository.saveRedis(TileHistoryRedis.builder()
                         .tileHistoryId(member.getMemberId() + ":" + geoHashString)
                         .memberId(member.getMemberId())
+                        .birthDate(member.getBirthDate())
                         .zordiacId(member.getZordiacId())
                         .geoHash(geoHashString)
                         .runningPointId(runningPoint.getRunningPointId())

@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "tile_histories")
 @Getter
@@ -29,6 +31,9 @@ public class TileHistoryJpa {
 
     @Column(nullable = false)
     private Long memberId;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
 
     @Column(nullable = false, name = "geohash")
     private String geoHash;

@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.member.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -35,7 +36,7 @@ public class Member extends BaseTimeEntity {
     private String socialId;
 
     @Column(name = "birth_date", nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "nickname", length = 16, nullable = false)
     private String nickname;
@@ -54,7 +55,7 @@ public class Member extends BaseTimeEntity {
     private Member(
             Long zordiacId,
             String socialId,
-            LocalDateTime birthDate,
+            LocalDate birthDate,
             String nickname,
             String profileImageUrl,
             DisclosureStatus disclosure,

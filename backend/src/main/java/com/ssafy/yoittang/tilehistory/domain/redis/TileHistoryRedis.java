@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 @RedisHash(value = "tile_histories", timeToLive = 60 * 60 * 24)
@@ -25,6 +27,9 @@ public class TileHistoryRedis {
 
     @Column(nullable = false)
     private Long memberId;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
 
     @Column(nullable = false, name = "geohash")
     private String geoHash;
