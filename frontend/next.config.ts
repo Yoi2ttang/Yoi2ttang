@@ -1,7 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  rewrites: async () => [
+    {
+      source: "/api/:slug*",
+      destination: "https://yoi2ttang.com/api/:slug*",
+    },
+  ],
+}
 
-export default nextConfig;
+export default nextConfig
