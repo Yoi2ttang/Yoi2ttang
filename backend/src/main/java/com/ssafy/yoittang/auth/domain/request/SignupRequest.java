@@ -1,11 +1,11 @@
 package com.ssafy.yoittang.auth.domain.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record SignupRequest(
         String socialId,
         String nickname,
         String profileImageUrl,
-        LocalDateTime birthDate
+        LocalDate birthDate
 ) {
 }
