@@ -42,10 +42,9 @@ public class TermController {
 
     @PostMapping
     public ResponseEntity<Void> createMemberTermAgreement(
-            @Valid @RequestBody MemberTermCreateRequest memberTermCreateRequest,
-            @AuthMember Member member
+            @Valid @RequestBody MemberTermCreateRequest memberTermCreateRequest
     ) {
-        termService.createMemberTermAgreement(memberTermCreateRequest, member);
+        termService.createMemberTermAgreement(memberTermCreateRequest);
         return ResponseEntity.created(URI.create("/api/v1/term")).build();
     }
 }
