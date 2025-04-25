@@ -1,6 +1,5 @@
 package com.ssafy.yoittang.runningpoint.application;
 
-
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -16,7 +15,12 @@ import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.RunningPointCreateRequest;
+import com.ssafy.yoittang.runningpoint.domain.dto.reseponse.RunningPointCreateResponse;
+import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
+import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
+import ch.hsr.geohash.BoundingBox;
+import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,9 +29,11 @@ public class RunningPointService {
 
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
+    private final TileHistoryRepository tileHistoryRepository;
+
 
     @Transactional
-    public void createRunningPoint(
+    public RunningPointCreateResponse createRunningPoint(
             RunningPointCreateRequest runningPointCreateRequest,
             Member member
     ) {
@@ -44,12 +50,52 @@ public class RunningPointService {
                 runningPointCreateRequest.nowPoint()
         );
 
-        runningPointRepository.save(RunningPoint.builder()
-                        .runningId(runningPointCreateRequest.runningId())
-                        .courseId(runningPointCreateRequest.courseId())
-                        .arrivalTime(runningPointCreateRequest.currentTime())
-                        .root(newRoot)
-                        .build());
+        RunningPoint runningPoint = RunningPoint.builder()
+                .runningId(runningPointCreateRequest.runningId())
+                .courseId(runningPointCreateRequest.courseId())
+                .arrivalTime(runningPointCreateRequest.currentTime())
+                .root(newRoot)
+                .build();
+
+        runningPointRepository.save(runningPoint);
+
+        GeoPoint nowPoint = runningPointCreateRequest.nowPoint();
+
+        String geoHashString = GeoHash.geoHashStringWithCharacterPrecision(nowPoint.lat(), nowPoint.lng(), 7);
+
+        String redisId = member.getMemberId() + ":" + geoHashString;
+
+        if (tileHistoryRepository.existsByRedisId(redisId)) {
+            return RunningPointCreateResponse.builder().build();
+        }
+
+        GeoHash geoHash = GeoHash.fromGeohashString(geoHashString);
+        BoundingBox boundingBox = geoHash.getBoundingBox();
+
+        double latNorth = boundingBox.getNorthLatitude();
+        double latSouth = boundingBox.getSouthLatitude();
+        double lngEast = boundingBox.getEastLongitude();
+        double lngWest = boundingBox.getWestLongitude();
+
+        tileHistoryRepository.saveRedis(TileHistoryRedis.builder()
+                        .tileHistoryId(member.getMemberId() + ":" + geoHashString)
+                        .memberId(member.getMemberId())
+                        .zordiacId(member.getZordiacId())
+                        .geoHash(geoHashString)
+                        .runningPointId(runningPoint.getRunningPointId())
+                .build());
+
+        return RunningPointCreateResponse.builder()
+                .geoHash(geoHashString)
+                .sw(GeoPoint.builder()
+                        .lat(latSouth)
+                        .lng(lngWest)
+                        .build())
+                .ne(GeoPoint.builder()
+                        .lat(latNorth)
+                        .lng(lngEast)
+                        .build())
+                .build();
     }
 
     LineString getLineStringWithTwoPoint(GeoPoint beforePoint, GeoPoint nowPoint) {

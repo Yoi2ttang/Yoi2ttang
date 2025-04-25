@@ -1,8 +1,5 @@
 package com.ssafy.yoittang.running.application;
 
-import com.ssafy.yoittang.common.exception.NotFoundException;
-import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
-import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -12,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
@@ -19,8 +17,10 @@ import com.ssafy.yoittang.running.domain.State;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
+import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tileinfo.domain.TileInfo;
 import com.ssafy.yoittang.tileinfo.domain.TileInfoRepository;
 
@@ -66,6 +66,7 @@ public class RunningService {
 
         return RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
+                .geoHash(geoHash)
                 .sw(GeoPoint.builder()
                         .lat(tileInfo.getLatSouth())
                         .lng(tileInfo.getLngWest())
@@ -109,6 +110,7 @@ public class RunningService {
 
         return  RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
+                .geoHash(geoHash)
                 .sw(GeoPoint.builder()
                         .lat(tileInfo.getLatSouth())
                         .lng(tileInfo.getLngEast())

@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Null;
 
 public record RunningPointCreateRequest(
 
-        @Null
         Long courseId,
 
         @NotNull
