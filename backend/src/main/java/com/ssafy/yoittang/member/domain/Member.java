@@ -1,6 +1,6 @@
 package com.ssafy.yoittang.member.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,13 +35,20 @@ public class Member extends BaseTimeEntity {
     private String socialId;
 
     @Column(name = "birth_date", nullable = false)
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "nickname", length = 16, nullable = false)
     private String nickname;
 
     @Column(name = "profile_image_url", length = 256, nullable = false)
     private String profileImageUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @Column(name = "weight", nullable = false)
+    private float weight;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "disclosure", nullable = false)
@@ -54,9 +61,11 @@ public class Member extends BaseTimeEntity {
     private Member(
             Long zordiacId,
             String socialId,
-            LocalDateTime birthDate,
+            LocalDate birthDate,
             String nickname,
             String profileImageUrl,
+            Gender gender,
+            float weight,
             DisclosureStatus disclosure,
             String stateMessage
     ) {

@@ -129,6 +129,8 @@ public class LoginService {
                         .birthDate(signupRequest.birthDate())
                         .nickname(finalNickname)
                         .profileImageUrl(finalProfileImageUrl)
+                        .gender(signupRequest.gender())
+                        .weight(signupRequest.weight())
                         .disclosure(DisclosureStatus.ALL)
                         .stateMessage(null)
                         .build()
