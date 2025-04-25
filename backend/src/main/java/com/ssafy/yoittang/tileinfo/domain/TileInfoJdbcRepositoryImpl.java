@@ -27,7 +27,7 @@ public class TileInfoJdbcRepositoryImpl implements TileInfoJdbcRepository {
 
                 TileInfo now = tileInfoList.get(index);
 
-                preparedStatement.setString(1, now.getGeohash());
+                preparedStatement.setString(1, now.getGeoHash());
                 preparedStatement.setDouble(2, now.getLatNorth());
                 preparedStatement.setDouble(3, now.getLatSouth());
                 preparedStatement.setDouble(4, now.getLngEast());

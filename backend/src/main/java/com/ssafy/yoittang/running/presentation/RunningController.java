@@ -37,9 +37,7 @@ public class RunningController {
             @Valid @RequestBody FreeRunningCreateRequest freeRunningCreateRequest,
             @AuthMember Member member
     ) {
-        Long runningId = runningService.createFreeRunning(freeRunningCreateRequest, member);
-        RunningCreateResponse response = new RunningCreateResponse(runningId);
-
+        RunningCreateResponse response = runningService.createFreeRunning(freeRunningCreateRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -48,8 +46,7 @@ public class RunningController {
             @Valid @RequestBody ChallengeRunningCreateRequest challengeRunningCreateRequest,
             @AuthMember Member member
     ) {
-        Long runningId = runningService.createChallengeRunning(challengeRunningCreateRequest, member);
-        RunningCreateResponse response = new RunningCreateResponse(runningId);
+        RunningCreateResponse response = runningService.createChallengeRunning(challengeRunningCreateRequest, member);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

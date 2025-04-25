@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 public class TileInfo {
 
     @Id
-    @Column(nullable = false)
-    private String geohash;
+    @Column(name = "geohash", nullable = false)
+    private String geoHash;
 
     @Column(nullable = false)
     private Double latNorth;
