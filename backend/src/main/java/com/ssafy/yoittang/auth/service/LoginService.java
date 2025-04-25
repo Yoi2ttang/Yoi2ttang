@@ -22,6 +22,7 @@ import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
+import com.ssafy.yoittang.term.application.TermService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +34,9 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginService {
     private static final String REDIS_PREFIX = "PRE_MEMBER:";
     private static final Duration TTL = Duration.ofMinutes(30);
-
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
+    private final TermService termService;
     private final JwtUtil jwtUtil;
     private final KakaoOAuthProvider kakaoOAuthProvider;
     private final RedisTemplate<String, MemberRedisEntity> redisTemplate;
@@ -132,6 +133,8 @@ public class LoginService {
                         .stateMessage(null)
                         .build()
         );
+
+        termService.persistMemberTerms(member, signupRequest.socialId());
 
         MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
         refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
