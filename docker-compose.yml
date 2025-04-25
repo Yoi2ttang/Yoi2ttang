@@ -1,19 +1,22 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgis/postgis:15-3.4
-    container_name: yoittang_postgresql
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ssafy
-      POSTGRES_DB: yoittang
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: yoittang_backend
     ports:
-      - "5432:5432"
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./backend/dev.env:/app/dev.env
     restart: unless-stopped
-  
+
   redis:
     image: redis:7.2
     container_name: yoittang_redis
@@ -24,5 +27,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
   redis_data:
