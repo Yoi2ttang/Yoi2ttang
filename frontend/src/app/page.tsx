@@ -3,7 +3,7 @@ const Home = () => {
     <div>
       <h1>요이땅</h1>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
