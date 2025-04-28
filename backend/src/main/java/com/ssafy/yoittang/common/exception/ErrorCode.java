@@ -37,7 +37,7 @@ public enum ErrorCode {
     ALREADY_COMPLETED(4002, "이미 종료된 런닝입니다."),
 
     NOT_FOUND_TERM(5001, "존재하지 않는 약관입니다."),
-    MANDATORY_TERM_NOT_AGREED(5002, "필수 약관에 동의하지 않았습니다.");
+    MANDATORY_TERM_NOT_AGREED(5002, "필수 약관에 동의하지 않았습니다."),
 
     TOO_LARGE_GEOHASH(6000, "대한민국을 벗어나는 GeoHash 입니다.");
 
