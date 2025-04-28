@@ -36,8 +36,8 @@ public class MidnightScheduler {
             beforeCursorId = cursorId;
 
             cursorId = temp.nextCursorId();
-            tileHistoryRepository.bulkInsert(temp.resultList());
-            tileHistoryRepository.bulkDelete(temp.resultList());
+            tileHistoryRepository.bulkInsertToPostGreSQL(temp.resultList());
+            tileHistoryRepository.bulkDeleteInRedis(temp.resultList());
         } while (!Objects.equals(cursorId, beforeCursorId));
 
         tileHistoryRepository.deleteZSet(LocalDate.now().toString());

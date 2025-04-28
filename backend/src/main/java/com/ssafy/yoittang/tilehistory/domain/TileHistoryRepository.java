@@ -74,11 +74,11 @@ public class TileHistoryRepository {
         return new ScanResult<>(nextCursorId, tileHistories);
     }
 
-    public void bulkInsert(List<TileHistoryRedis> batch) {
+    public void bulkInsertToPostGreSQL(List<TileHistoryRedis> batch) {
         tileHistoryJdbcRepository.bulkInsert(batch);
     }
 
-    public void bulkDelete(List<TileHistoryRedis> tileHistories) {
+    public void bulkDeleteInRedis(List<TileHistoryRedis> tileHistories) {
         if (tileHistories == null || tileHistories.isEmpty()) {
             return;
         }

@@ -113,7 +113,7 @@ public class RunningService {
                 .geoHash(geoHash)
                 .sw(GeoPoint.builder()
                         .lat(tileInfo.getLatSouth())
-                        .lng(tileInfo.getLngEast())
+                        .lng(tileInfo.getLngWest())
                         .build())
                 .ne(GeoPoint.builder()
                         .lat(tileInfo.getLatNorth())

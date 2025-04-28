@@ -71,8 +71,6 @@ public class RunningPointService {
             return RunningPointCreateResponse.builder().build();
         }
 
-        System.out.println("is ok");
-
         GeoHash geoHash = GeoHash.fromGeohashString(geoHashString);
         BoundingBox boundingBox = geoHash.getBoundingBox();
 
