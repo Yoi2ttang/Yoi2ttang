@@ -122,5 +122,5 @@ public class LoginServiceTest {
 
         then(refreshTokenRepository).should(times(1)).deleteById(refreshToken);
     }
-
 }
+
