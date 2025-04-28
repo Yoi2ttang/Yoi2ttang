@@ -8,8 +8,6 @@ import {
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
-  placeholder?: string
-  className?: string
   content: string
   onContentChange: Dispatch<SetStateAction<string>>
 }
