@@ -122,5 +122,82 @@ public class LoginServiceTest {
 
         then(refreshTokenRepository).should(times(1)).deleteById(refreshToken);
     }
+
+    @Test
+    void preRegisterTest() {
+        LoginRequest request = new LoginRequest("newCode", Environment.WEB);
+        given(kakaoOAuthProvider.fetchKakaoAccessToken(request.getCode(), request.getEnvironment()))
+                .willReturn("newKakaoAccessToken");
+
+        KakaoMemberInfo kakaoMemberInfo = mock(KakaoMemberInfo.class);
+        given(kakaoOAuthProvider.getMemberInfo(anyString()))
+                .willReturn(kakaoMemberInfo);
+        given(kakaoMemberInfo.getSocialLoginId()).willReturn("newSocialId123");
+
+        given(memberRepository.findBySocialId("newSocialId123"))
+                .willReturn(Optional.empty());
+
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+
+        LoginResponse response = loginService.login(request);
+
+        assertThat(response.memberId()).isNull();
+        assertThat(response.accessToken()).isNull();
+        assertThat(response.refreshToken()).isNull();
+        assertThat(response.socialId()).isEqualTo("newSocialId123");
+
+        then(valueOperations).should(times(1)).set(anyString(), any(MemberRedisEntity.class));
+    }
+
+    @Test
+    void finalizeSignupTest() {
+        String newSocialId = "newSocialId123";
+        String newNickname = "cachedNickname";
+        String newProfileImageUrl = "cachedProfileImageUrl";
+        MemberRedisEntity memberRedisEntity = MemberRedisEntity.builder()
+                .socialId(newSocialId)
+                .nickname(newNickname)
+                .profileImageUrl(newProfileImageUrl)
+                .build();
+
+        SignupRequest signupRequest = new SignupRequest(
+                newSocialId,
+                newNickname,
+                newProfileImageUrl,
+                LocalDate.of(1995, 5, 5),
+                Gender.FEMALE,
+                52.5F
+        );
+
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.get("PRE_MEMBER:" + newSocialId)).willReturn(memberRedisEntity);
+
+        Member savedMember = Member.builder()
+                .zordiacId(11L)
+                .socialId(signupRequest.socialId())
+                .birthDate(signupRequest.birthDate())
+                .nickname(signupRequest.nickname())
+                .profileImageUrl(signupRequest.profileImageUrl())
+                .gender(signupRequest.gender())
+                .weight(signupRequest.weight())
+                .disclosure(DisclosureStatus.ALL)
+                .stateMessage(null)
+                .build();
+        ReflectionTestUtils.setField(savedMember, "memberId", 3L);
+
+        given(memberRepository.save(any(Member.class))).willReturn(savedMember);
+        given(jwtUtil.createLoginToken(anyString()))
+                .willReturn(new MemberTokens("refreshToken", "accessToken"));
+
+        LoginResponse response = loginService.finalizeSignup(signupRequest);
+
+        assertThat(response.memberId()).isEqualTo(3L);
+        assertThat(response.accessToken()).isEqualTo("accessToken");
+        assertThat(response.refreshToken()).isEqualTo("refreshToken");
+        assertThat(response.socialId()).isNull();
+
+        then(termService).should(times(1)).persistMemberTerms(any(Member.class), anyString());
+        then(refreshTokenRepository).should(times(1)).save(any(RefreshToken.class));
+    }
 }
 
