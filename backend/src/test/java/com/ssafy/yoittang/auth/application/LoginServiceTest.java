@@ -111,4 +111,14 @@ public class LoginServiceTest {
 
         then(refreshTokenRepository).should(times(1)).save(any());
     }
+
+    @Test
+    void logoutTest() {
+        String refreshToken = "testRefreshToken";
+
+        loginService.logout(refreshToken);
+
+        then(refreshTokenRepository).should(times(1)).deleteById(refreshToken);
+    }
+
 }
