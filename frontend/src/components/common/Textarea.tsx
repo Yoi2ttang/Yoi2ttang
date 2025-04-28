@@ -1,26 +1,32 @@
 import { cn } from "@/lib/utils"
-import { ChangeEvent, Dispatch, SetStateAction } from "react"
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  TextareaHTMLAttributes,
+} from "react"
 
-interface TextareaProps {
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
-  content: string
   placeholder?: string
   className?: string
-  onChange: Dispatch<SetStateAction<string>>
+  content: string
+  onContentChange: Dispatch<SetStateAction<string>>
 }
 
 const Textarea = (data: TextareaProps) => {
   const {
     maxLength = 64,
     placeholder = "텍스트를 입력해 주세요",
-    content,
     className,
-    onChange,
+    content,
+    onContentChange,
+    disabled,
   } = data
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value
-    onChange(
+    onContentChange(
       newContent.length > maxLength
         ? newContent.substring(0, maxLength)
         : newContent,
@@ -35,6 +41,7 @@ const Textarea = (data: TextareaProps) => {
           className,
         )}
         placeholder={placeholder}
+        disabled={disabled}
         value={content}
         onChange={handleChange}
       />
