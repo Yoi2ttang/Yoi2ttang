@@ -45,6 +45,13 @@ public class Member extends BaseTimeEntity {
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @Column(name = "weight", nullable = false)
+    private float weight;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "disclosure", nullable = false)
     private DisclosureStatus disclosure;
 
@@ -58,6 +65,8 @@ public class Member extends BaseTimeEntity {
             LocalDate birthDate,
             String nickname,
             String profileImageUrl,
+            Gender gender,
+            float weight,
             DisclosureStatus disclosure,
             String stateMessage
     ) {
@@ -66,6 +75,8 @@ public class Member extends BaseTimeEntity {
         this.birthDate = birthDate;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
+        this.gender = gender;
+        this.weight = weight;
         this.disclosure = disclosure;
         this.stateMessage = stateMessage;
     }

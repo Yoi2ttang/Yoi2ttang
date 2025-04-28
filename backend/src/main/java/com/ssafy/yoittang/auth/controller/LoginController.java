@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
+import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.AccessTokenResponse;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.service.LoginService;
@@ -41,6 +42,23 @@ public class LoginController {
                 .secure(false) // 로컬에서는 HTTPS가 아니기 때문에 false
                 .httpOnly(true)
                 .sameSite("Lax") // Lax 또는 None 가능. None은 secure=true 필요.
+                .path("/")
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/signup/kakao")
+    public ResponseEntity<LoginResponse> signup(
+            @RequestBody SignupRequest request,
+            HttpServletResponse response
+    ) {
+        LoginResponse loginResponse = loginService.finalizeSignup(request);
+        ResponseCookie cookie = ResponseCookie.from("refresh-token", loginResponse.refreshToken())
+                .maxAge(ONE_WEEK_SECONDS)
+                .secure(false)
+                .httpOnly(true)
+                .sameSite("Lax")
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
