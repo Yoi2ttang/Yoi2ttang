@@ -74,6 +74,8 @@ public class Member extends BaseTimeEntity {
         this.birthDate = birthDate;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
+        this.gender = gender;
+        this.weight = weight;
         this.disclosure = disclosure;
         this.stateMessage = stateMessage;
     }
