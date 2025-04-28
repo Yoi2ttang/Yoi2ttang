@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
@@ -16,9 +17,14 @@ import com.ssafy.yoittang.running.domain.State;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
+import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.tileinfo.domain.TileInfo;
+import com.ssafy.yoittang.tileinfo.domain.TileInfoRepository;
 
+import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,9 +33,10 @@ public class RunningService {
 
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
+    private final TileInfoRepository tileInfoRepository;
 
     @Transactional
-    public Long createFreeRunning(
+    public RunningCreateResponse createFreeRunning(
             FreeRunningCreateRequest freeRunningCreateRequest,
             Member member
     ) {
@@ -49,12 +56,30 @@ public class RunningService {
                 .root(getLineStringByOnePoint(freeRunningCreateRequest.lat(), freeRunningCreateRequest.lng()))
                 .build());
 
+        String geoHash = GeoHash.geoHashStringWithCharacterPrecision(
+                freeRunningCreateRequest.lat(),
+                freeRunningCreateRequest.lng(),
+                7);
 
-        return running.getRunningId();
+        TileInfo tileInfo = tileInfoRepository.findByGeoHash(geoHash)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+
+        return RunningCreateResponse.builder()
+                .runningId(running.getRunningId())
+                .geoHash(geoHash)
+                .sw(GeoPoint.builder()
+                        .lat(tileInfo.getLatSouth())
+                        .lng(tileInfo.getLngWest())
+                        .build())
+                .ne(GeoPoint.builder()
+                        .lat(tileInfo.getLatNorth())
+                        .lng(tileInfo.getLngEast())
+                        .build())
+                .build();
     }
 
     @Transactional
-    public Long createChallengeRunning(
+    public RunningCreateResponse createChallengeRunning(
             ChallengeRunningCreateRequest challengeRunningCreateRequest,
             Member member
     ) {
@@ -75,7 +100,26 @@ public class RunningService {
                 .root(getLineStringByOnePoint(challengeRunningCreateRequest.lat(), challengeRunningCreateRequest.lng()))
                 .build());
 
-        return  running.getRunningId();
+        String geoHash = GeoHash.geoHashStringWithCharacterPrecision(
+                challengeRunningCreateRequest.lat(),
+                challengeRunningCreateRequest.lng(),
+                7);
+
+        TileInfo tileInfo = tileInfoRepository.findByGeoHash(geoHash)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+
+        return  RunningCreateResponse.builder()
+                .runningId(running.getRunningId())
+                .geoHash(geoHash)
+                .sw(GeoPoint.builder()
+                        .lat(tileInfo.getLatSouth())
+                        .lng(tileInfo.getLngWest())
+                        .build())
+                .ne(GeoPoint.builder()
+                        .lat(tileInfo.getLatNorth())
+                        .lng(tileInfo.getLngEast())
+                        .build())
+                .build();
     }
 
     @Transactional

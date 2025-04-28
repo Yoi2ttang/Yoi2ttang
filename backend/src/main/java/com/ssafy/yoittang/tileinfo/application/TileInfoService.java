@@ -101,7 +101,7 @@ public class TileInfoService {
             double lngWest = boundingBox.getWestLongitude();
 
             tileInfoArrayList.add(TileInfo.builder()
-                    .geohash(geoHashString)
+                    .geoHash(geoHashString)
                     .latNorth(latNorth)
                     .latSouth(latSouth)
                     .lngEast(lngEast)

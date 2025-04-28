@@ -1,6 +1,7 @@
 package com.ssafy.yoittang.member.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
