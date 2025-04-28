@@ -1,6 +1,6 @@
 package com.ssafy.yoittang.auth.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +67,7 @@ public class LoginService {
                 Member.builder()
                         .zordiacId(1L)
                         .socialId(socialId)
-                        .birthDate(LocalDateTime.now())
+                        .birthDate(LocalDate.now())
                         .nickname(nickname)
                         .profileImageUrl(profileImageUrl)
                         .disclosure(DisclosureStatus.ALL)

@@ -23,7 +23,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
 
     @Override
     public void bulkInsert(List<TileHistoryRedis> tileHistoryRedisList) {
-        String sql = "INSERT INTO tile_histories (zordiacId, memberId, birthDate, geoHash, runningPointId) "
+        String sql = "INSERT INTO tile_histories (zordiac_id, member_id, birth_date, geoHash, running_point_id) "
                 + "VALUES (? ,? , ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {

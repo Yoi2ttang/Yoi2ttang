@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.runningpoint.application;
 
+import java.time.LocalDate;
+
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -65,9 +67,11 @@ public class RunningPointService {
 
         String redisId = member.getMemberId() + ":" + geoHashString;
 
-        if (tileHistoryRepository.existsByRedisId(redisId)) {
+        if (tileHistoryRepository.existsInZSet(LocalDate.now().toString(), redisId)) {
             return RunningPointCreateResponse.builder().build();
         }
+
+        System.out.println("is ok");
 
         GeoHash geoHash = GeoHash.fromGeohashString(geoHashString);
         BoundingBox boundingBox = geoHash.getBoundingBox();
@@ -77,7 +81,9 @@ public class RunningPointService {
         double lngEast = boundingBox.getEastLongitude();
         double lngWest = boundingBox.getWestLongitude();
 
-        tileHistoryRepository.saveRedis(TileHistoryRedis.builder()
+        tileHistoryRepository.saveRedis(
+                LocalDate.now().toString(),
+                TileHistoryRedis.builder()
                         .tileHistoryId(member.getMemberId() + ":" + geoHashString)
                         .memberId(member.getMemberId())
                         .birthDate(member.getBirthDate())

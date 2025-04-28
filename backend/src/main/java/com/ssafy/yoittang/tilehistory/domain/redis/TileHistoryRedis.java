@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import jakarta.persistence.Column;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@RedisHash(value = "tile_histories", timeToLive = 60 * 60 * 24)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TileHistoryRedis {

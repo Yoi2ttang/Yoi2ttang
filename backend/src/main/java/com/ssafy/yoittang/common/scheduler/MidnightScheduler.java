@@ -1,11 +1,12 @@
 package com.ssafy.yoittang.common.scheduler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Objects;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.ssafy.yoittang.common.domain.ScanResult;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
 import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
@@ -22,16 +23,24 @@ public class MidnightScheduler {
 
     @Scheduled(cron = "00 00 0 * * *")
     public void runAtMidnight() {
-        log.info("매일 자정에 실행되는 작업입니다. 현재 시간: " + java.time.LocalDateTime.now());
+        log.info("매일 자정에 실행되는 작업입니다. 현재 시간: {}", java.time.LocalDateTime.now());
 
-        List<TileHistoryRedis> all = new ArrayList<>();
-        List<TileHistoryRedis> batch;
+        Long cursorId = 0L;
+        Long beforeCursorId = 0L;
+
         do {
-            batch = tileHistoryRepository.getAllTileHistoryRedisInBatches();
-            tileHistoryRepository.bulkInsert(batch); // 예: DB 저장
-            all.addAll(batch);
-        } while (!batch.isEmpty());
+            ScanResult<TileHistoryRedis> temp = tileHistoryRepository.getTileHistoryRedisBatch(
+                    LocalDate.now().toString(),
+                    cursorId,
+                    100);
+            beforeCursorId = cursorId;
 
+            cursorId = temp.nextCursorId();
+            tileHistoryRepository.bulkInsert(temp.resultList());
+            tileHistoryRepository.bulkDelete(temp.resultList());
+        } while (!Objects.equals(cursorId, beforeCursorId));
+
+        tileHistoryRepository.deleteZSet(LocalDate.now().toString());
     }
 
 }
