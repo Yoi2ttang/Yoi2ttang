@@ -1,3 +1,4 @@
+import RootProvider from "@/components/providers/RootProvider"
 import { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
@@ -19,6 +20,10 @@ export const metadata: Metadata = {
   description: "요이땅",
 }
 
+interface RootLayoutProps {
+  children: React.ReactNode
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -26,11 +31,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.className} bg-neutral-100`}>
-        <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
-          <div className="flex-1">{children}</div>
-        </div>
-      </body>
+        <body className={`${pretendard.className} bg-neutral-100`}>
+            <RootProvider>
+              <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+                <div className="flex-1">{children}</div>
+              </div>
+            </RootProvider>
+        </body>
     </html>
   )
 }
+
+export default RootLayout
