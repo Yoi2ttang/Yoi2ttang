@@ -7,13 +7,13 @@ interface HeaderProps {}
 const MainHeader = ({}: HeaderProps) => {
   return (
     <HeaderWrapper>
-      <Link href="/">
+      <Link className="" href="/">
         <Image
-          src="/images/logo.png"
+          src="/images/logo.svg"
           alt="logo"
-          width={45}
-          height={45}
-          className="w-full"
+          width={50}
+          height={50}
+          className="object-contain py-2"
         />
       </Link>
     </HeaderWrapper>

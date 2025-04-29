@@ -1,6 +1,8 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { ChevronLeftIcon } from "lucide-react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import HeaderWrapper from "./HeaderWrapper"
 
 interface StackHeaderProps {
@@ -14,6 +16,8 @@ const StackHeader = ({
   align = "center",
   description,
 }: StackHeaderProps) => {
+  const router = useRouter()
+
   return (
     <HeaderWrapper>
       <div className="flex w-full items-center justify-between">
@@ -24,9 +28,11 @@ const StackHeader = ({
             align === "center" && "justify-between",
           )}>
           <div className="basis-1/3">
-            <Link href="/">
+            <button
+              className="h-full cursor-pointer p-3"
+              onClick={() => router.back()}>
               <ChevronLeftIcon className="size-7" />
-            </Link>
+            </button>
           </div>
           <div className="text-title-sm">{title}</div>
           <div></div>
