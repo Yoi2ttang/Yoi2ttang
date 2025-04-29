@@ -3,8 +3,10 @@ package com.ssafy.yoittang.tile.domain;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
@@ -17,7 +19,7 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<TileGetResponse> getTile(String geohash) {
+    public List<TileGetResponse> getTile(Long zordiacId, String geohash) {
         return queryFactory.select(
                 Projections.constructor(
                         TileGetResponse.class,
@@ -36,7 +38,17 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 )
         )
                 .from(tile)
-                .where(tile.geoHash.like(geohash))
+                .where(
+                        tile.geoHash.like(geohash),
+                        eqZordiacId(zordiacId)
+                )
                 .fetch();
+    }
+
+    private BooleanExpression eqZordiacId(Long zordiacId) {
+        if (Objects.isNull(zordiacId)) {
+            return null;
+        }
+        return tile.zordiacId.eq(zordiacId);
     }
 }

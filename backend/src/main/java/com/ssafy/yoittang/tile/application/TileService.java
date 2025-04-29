@@ -113,12 +113,21 @@ public class TileService {
         tileRepository.bulkInsert(tileArrayList);
     }
 
-    public TileGetResponseWrapper getTile(GeoPoint geoPoint) {
+    public TileGetResponseWrapper getTile(Double lat, Double lng) {
         String geoHashString =
-                GeoHash.geoHashStringWithCharacterPrecision(geoPoint.lat(), geoPoint.lng(), 6) + "%";
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
 
         return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTile(geoHashString))
+                .tileGetResponseList(tileRepository.getTile(null, geoHashString))
+                .build();
+    }
+
+    public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
+        String geoHashString =
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTile(zordiacId, geoHashString))
                 .build();
     }
 
