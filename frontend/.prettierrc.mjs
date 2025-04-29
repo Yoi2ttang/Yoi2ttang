@@ -1,4 +1,5 @@
 export default {
+  plugins: ["prettier-plugin-tailwindcss"],
   // 코드 포맷팅 - 들여쓰기 및 공백
   useTabs: false, // 탭 대신 스페이스 사용
   tabWidth: 2, // 들여쓰기 너비 2칸
