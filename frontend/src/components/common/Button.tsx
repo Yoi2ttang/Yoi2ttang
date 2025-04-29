@@ -5,7 +5,7 @@ import { cva, VariantProps } from "class-variance-authority"
 import { ButtonHTMLAttributes } from "react"
 
 const buttonVariants = cva(
-  "flex justify-center items-center rounded-lg cursor-pointer transition-colors duration-200 font-semibold text-white px-5 py-3",
+  "flex justify-center items-center rounded-xl cursor-pointer transition-colors duration-200 font-semibold text-white px-5 py-3",
   {
     variants: {
       variant: {
