@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend-green:
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile
     container_name: yoittang_backend_green
     ports:
@@ -11,6 +11,6 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
     env_file:
-      - ./backend/dev.env
+      - ../backend/dev.env
     restart: unless-stopped
 
