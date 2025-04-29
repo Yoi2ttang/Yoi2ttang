@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import ch.hsr.geohash.BoundingBox;
 import ch.hsr.geohash.GeoHash;
@@ -111,5 +113,22 @@ public class TileService {
         tileRepository.bulkInsert(tileArrayList);
     }
 
+    public TileGetResponseWrapper getTile(Double lat, Double lng) {
+        String geoHashString =
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTile(null, geoHashString))
+                .build();
+    }
+
+    public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
+        String geoHashString =
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTile(zordiacId, geoHashString))
+                .build();
+    }
 
 }
