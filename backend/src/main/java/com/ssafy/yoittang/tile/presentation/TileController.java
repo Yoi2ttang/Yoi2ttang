@@ -28,7 +28,7 @@ public class TileController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping
+    @GetMapping("/team")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @RequestParam Double lat,
             @RequestParam Double lng
@@ -36,7 +36,7 @@ public class TileController {
         return ResponseEntity.ok(tileService.getTile(lat, lng));
     }
 
-    @GetMapping("/{zordiacId}")
+    @GetMapping("/team/{zordiacId}")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @PathVariable(name = "zordiacId") Long zordiacId,
             @RequestParam Double lat,
