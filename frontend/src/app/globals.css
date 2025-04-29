@@ -25,6 +25,10 @@
   --color-yoi-950: #4b0f04;
   --color-black: #262626;
   --color-white: #fefefe;
+
+  --container-yoi-width: 600px;
+  --spacing-yoi-header-height: 52px;
+  --spacing-yoi-navbar-height: 52px;
 }
 
 @layer components {
