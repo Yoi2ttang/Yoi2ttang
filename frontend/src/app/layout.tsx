@@ -1,36 +1,39 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Metadata } from "next"
+import localFont from "next/font/local"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/pretendard/PretendardVariable.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-pretendard",
+})
 
 export const metadata: Metadata = {
   title: "요이땅",
   description: "요이땅",
-};
-
-interface RootLayoutProps {
-  children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: Readonly<RootLayoutProps>) => {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="ko">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${pretendard.className} bg-neutral-100`}>
+        <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+          <div className="flex-1 pb-16">{children}</div>
+          <nav className="max-w-yoi-width h-yoi-navbar-height fixed bottom-0 w-full">
+            {/* 여기에 컴포넌트 넣기 */}
+          </nav>
+        </div>
       </body>
     </html>
-  );
-};
-
-export default RootLayout;
+  )
+}
