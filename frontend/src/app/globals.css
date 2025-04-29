@@ -3,6 +3,56 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme base {
+  --font-display: "Pretendard", "sans-serif";
+  --font-pretendard: "Pretendard", "sans-serif";
+
+  --text-lg: 18px;
+  --text-md: 18px;
+  --text-sm: 16px;
+  --text-caption: 14px;
+
+  --color-yoi-50: #fff3f1;
+  --color-yoi-100: #ffe4df;
+  --color-yoi-200: #ffcec5;
+  --color-yoi-300: #ffac9d;
+  --color-yoi-400: #ff7c64;
+  --color-yoi-500: #ff5434;
+  --color-yoi-600: #ed3715;
+  --color-yoi-700: #c82a0d;
+  --color-yoi-800: #a5270f;
+  --color-yoi-900: #882614;
+  --color-yoi-950: #4b0f04;
+  --color-black: #262626;
+  --color-white: #fefefe;
+
+  --container-yoi-width: 600px;
+  --spacing-yoi-header-height: 52px;
+  --spacing-yoi-navbar-height: 52px;
+}
+
+@layer components {
+  .text-title-lg {
+    @apply text-[30px] font-semibold;
+  }
+
+  .text-title-md {
+    @apply text-[26px] font-semibold;
+  }
+
+  .text-title-sm {
+    @apply text-[20px] font-semibold;
+  }
+
+  .text-lg {
+    @apply text-lg font-semibold;
+  }
+
+  .text-md {
+    @apply text-md font-normal;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
