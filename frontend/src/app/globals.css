@@ -28,7 +28,7 @@
 
   --container-yoi-width: 600px;
   --spacing-yoi-header-height: 52px;
-  --spacing-yoi-navbar-height: 52px;
+  --spacing-yoi-navbar-height: 56px;
 }
 
 @layer components {
@@ -49,7 +49,7 @@
   }
 
   .text-md {
-    @apply text-md font-normal;
+    @apply font-normal text-md;
   }
 }
 
