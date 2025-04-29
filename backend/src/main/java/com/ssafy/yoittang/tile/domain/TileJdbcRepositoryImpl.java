@@ -39,4 +39,36 @@ public class TileJdbcRepositoryImpl implements TileJdbcRepository {
             }
         });
     }
+
+    //나중에 최적화 필요
+    @Override
+    public void updateTileWithTileHistory() {
+        String sql = """
+            WITH ranked AS (
+                SELECT
+                    geohash,
+                    zordiac_id,
+                    ROW_NUMBER() OVER (PARTITION BY geohash ORDER BY COUNT(zordiac_id) DESC, MIN(birth_date) ASC) AS rn
+                FROM
+                    tile_histories
+                GROUP BY
+                    geohash, zordiac_id
+            )
+            UPDATE tiles t
+            SET zordiac_id = (
+                SELECT r.zordiac_id
+                FROM ranked r
+                WHERE r.geohash = t.geohash
+                AND r.rn = 1
+            )
+            WHERE EXISTS (
+                SELECT 1
+                FROM ranked r
+                WHERE r.geohash = t.geohash
+                AND r.rn = 1
+            );
+            """;
+
+        jdbcTemplate.update(sql);
+    }
 }

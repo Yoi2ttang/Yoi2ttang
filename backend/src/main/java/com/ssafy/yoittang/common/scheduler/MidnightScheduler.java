@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.common.scheduler;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -43,9 +44,6 @@ public class MidnightScheduler {
         } while (!Objects.equals(cursorId, beforeCursorId));
 
         tileHistoryRepository.deleteZSet(LocalDate.now().toString());
-    }
-
-    public void updateTileWithTileHistory() {
-
+        tileRepository.updateTileWithTileHistory();
     }
 }
