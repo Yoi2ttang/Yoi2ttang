@@ -26,7 +26,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={pretendard.className}>{children}</body>
+      <body className={`${pretendard.className} bg-neutral-100`}>
+        <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+          <div className="flex-1 pb-16">{children}</div>
+          <nav className="max-w-yoi-width h-yoi-navbar-height fixed bottom-0 w-full">
+            {/* 여기에 컴포넌트 넣기 */}
+          </nav>
+        </div>
+      </body>
     </html>
   )
 }
