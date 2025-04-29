@@ -7,12 +7,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.yoittang.common.domain.ScanResult;
+import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
 import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @Component
@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MidnightScheduler {
 
     private final TileHistoryRepository tileHistoryRepository;
+    private final TileRepository tileRepository;
 
     @Scheduled(cron = "00 00 0 * * *")
     public void runAtMidnight() {
@@ -41,6 +42,6 @@ public class MidnightScheduler {
         } while (!Objects.equals(cursorId, beforeCursorId));
 
         tileHistoryRepository.deleteZSet(LocalDate.now().toString());
+        tileRepository.updateTileWithTileHistory();
     }
-
 }

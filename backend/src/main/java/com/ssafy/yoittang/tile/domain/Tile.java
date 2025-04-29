@@ -2,8 +2,6 @@ package com.ssafy.yoittang.tile.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -21,16 +19,22 @@ import lombok.NoArgsConstructor;
 public class Tile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tileId;
-
-    @Column(name = "geohash", unique = true, nullable = false)
+    @Column(name = "geohash", nullable = false)
     private String geoHash;
 
     @Column
     private Long zordiacId;
 
-    @Column
-    private Long historyId;
+    @Column(nullable = false)
+    private Double latNorth;
+
+    @Column(nullable = false)
+    private Double latSouth;
+
+    @Column(nullable = false)
+    private Double lngEast;
+
+    @Column(nullable = false)
+    private Double lngWest;
 
 }

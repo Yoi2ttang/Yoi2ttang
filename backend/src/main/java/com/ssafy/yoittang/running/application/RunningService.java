@@ -21,8 +21,8 @@ import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
-import com.ssafy.yoittang.tileinfo.domain.TileInfo;
-import com.ssafy.yoittang.tileinfo.domain.TileInfoRepository;
+import com.ssafy.yoittang.tile.domain.Tile;
+import com.ssafy.yoittang.tile.domain.TileRepository;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class RunningService {
 
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
-    private final TileInfoRepository tileInfoRepository;
+    private final TileRepository tileRepository;
 
     @Transactional
     public RunningCreateResponse createFreeRunning(
@@ -61,19 +61,19 @@ public class RunningService {
                 freeRunningCreateRequest.lng(),
                 7);
 
-        TileInfo tileInfo = tileInfoRepository.findByGeoHash(geoHash)
+        Tile tile = tileRepository.findByGeoHash(geoHash)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
 
         return RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
                 .geoHash(geoHash)
                 .sw(GeoPoint.builder()
-                        .lat(tileInfo.getLatSouth())
-                        .lng(tileInfo.getLngWest())
+                        .lat(tile.getLatSouth())
+                        .lng(tile.getLngWest())
                         .build())
                 .ne(GeoPoint.builder()
-                        .lat(tileInfo.getLatNorth())
-                        .lng(tileInfo.getLngEast())
+                        .lat(tile.getLatNorth())
+                        .lng(tile.getLngEast())
                         .build())
                 .build();
     }
@@ -105,19 +105,19 @@ public class RunningService {
                 challengeRunningCreateRequest.lng(),
                 7);
 
-        TileInfo tileInfo = tileInfoRepository.findByGeoHash(geoHash)
+        Tile tile = tileRepository.findByGeoHash(geoHash)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
 
-        return  RunningCreateResponse.builder()
+        return RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
                 .geoHash(geoHash)
                 .sw(GeoPoint.builder()
-                        .lat(tileInfo.getLatSouth())
-                        .lng(tileInfo.getLngWest())
+                        .lat(tile.getLatSouth())
+                        .lng(tile.getLngWest())
                         .build())
                 .ne(GeoPoint.builder()
-                        .lat(tileInfo.getLatNorth())
-                        .lng(tileInfo.getLngEast())
+                        .lat(tile.getLatNorth())
+                        .lng(tile.getLngEast())
                         .build())
                 .build();
     }
