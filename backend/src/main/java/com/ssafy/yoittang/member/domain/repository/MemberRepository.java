@@ -1,10 +1,13 @@
 package com.ssafy.yoittang.member.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,5 +27,21 @@ public class MemberRepository {
 
     public Member save(Member member) {
         return memberJpaRepository.save(member);
+    }
+
+    public List<MemberAutocompleteResponse> findAutocompleteMembersByKeyword(
+            String keyword,
+            Long lastMemberId,
+            int size
+    ) {
+        return memberQueryRepository.findAutocompleteMembersByKeyword(keyword, lastMemberId, size);
+    }
+
+    public List<MemberSearchResponse> findSearchMembersByKeyword(String keyword, Long lastMemberId, int size) {
+        return memberQueryRepository.findSearchMembersByKeyword(keyword, lastMemberId, size);
+    }
+
+    public List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids) {
+        return memberQueryRepository.findMembersByIds(ids);
     }
 }
