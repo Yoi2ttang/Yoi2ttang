@@ -5,7 +5,7 @@ const RunningButton = () => {
   return (
     <Link
       href="/running/start"
-      className="flex flex-col items-center self-end justify-center mb-1.5 text-white bg-orange-600 rounded-full size-15">
+      className="flex flex-col items-center self-end justify-center mb-1.5 text-white bg-yoi-500 rounded-full size-15">
       <ShoesIcon />
       <p className="text-xs">러닝</p>
     </Link>

@@ -1,4 +1,3 @@
-
 import RootProvider from "@/components/providers/RootProvider"
 import { Metadata } from "next"
 import localFont from "next/font/local"
@@ -32,13 +31,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <RootProvider> {children}
         <body className={`${pretendard.className} bg-neutral-100`}>
-          <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
-            <div className="flex-1">{children}</div>
-          </div>
+            <RootProvider>
+              <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+                <div className="flex-1">{children}</div>
+              </div>
+            </RootProvider>
         </body>
-      </RootProvider>
     </html>
   )
 }
