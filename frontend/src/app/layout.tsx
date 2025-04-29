@@ -24,20 +24,16 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="ko">
-        <body className={`${pretendard.className} bg-neutral-100`}>
-            <RootProvider>
-              <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
-                <div className="flex-1">{children}</div>
-              </div>
-            </RootProvider>
-        </body>
+      <body className={`${pretendard.className} bg-neutral-100`}>
+        <RootProvider>
+          <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+            <div className="flex-1">{children}</div>
+          </div>
+        </RootProvider>
+      </body>
     </html>
   )
 }
