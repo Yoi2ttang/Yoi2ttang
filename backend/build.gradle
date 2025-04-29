@@ -77,6 +77,10 @@ dependencies {
     //geohash
     implementation 'ch.hsr:geohash:1.4.0'
 
+    //S3 설정
+    implementation 'software.amazon.awssdk:s3:2.30.6'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {
