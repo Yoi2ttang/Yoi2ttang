@@ -7,8 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 
+import ch.hsr.geohash.BoundingBox;
+import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +64,7 @@ public class TileService {
 
             getGeoHashString(geoHashStringList, chars, 3, level);
             log.info("insert : wy{} size : {}", Character.toString(c), geoHashStringList.size());
-            tileRepository.bulkInsertWithGeoHash(geoHashStringList);
+            insertBulk(geoHashStringList);
             geoHashStringList = new ArrayList<>();
         }
     }
@@ -82,5 +85,31 @@ public class TileService {
             getGeoHashString(geoHashStringList, result, start + 1, level);
         }
     }
+
+    void insertBulk(ArrayList<String> geoHashStringList) {
+
+        ArrayList<Tile> tileArrayList = new ArrayList<>();
+
+        for (String geoHashString : geoHashStringList) {
+            GeoHash geoHash = GeoHash.fromGeohashString(geoHashString);
+            BoundingBox boundingBox = geoHash.getBoundingBox();
+
+            double latNorth = boundingBox.getNorthLatitude();
+            double latSouth = boundingBox.getSouthLatitude();
+            double lngEast = boundingBox.getEastLongitude();
+            double lngWest = boundingBox.getWestLongitude();
+
+            tileArrayList.add(Tile.builder()
+                            .geoHash(geoHashString)
+                            .latNorth(latNorth)
+                            .latSouth(latSouth)
+                            .lngEast(lngEast)
+                            .lngWest(lngWest)
+                    .build());
+        }
+
+        tileRepository.bulkInsert(tileArrayList);
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.ssafy.yoittang.common.scheduler;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.ssafy.yoittang.tile.domain.TileRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MidnightScheduler {
 
     private final TileHistoryRepository tileHistoryRepository;
+    private final TileRepository tileRepository;
 
     @Scheduled(cron = "00 00 0 * * *")
     public void runAtMidnight() {
@@ -43,4 +45,7 @@ public class MidnightScheduler {
         tileHistoryRepository.deleteZSet(LocalDate.now().toString());
     }
 
+    public void updateTileWithTileHistory() {
+
+    }
 }
