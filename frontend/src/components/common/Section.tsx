@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 
 interface SectionProps {
   leftIcon?: ReactNode
-  title: string
+  title: string | ReactNode
   rightIcon?: ReactNode
   onRightIconClick?: () => void
   children: ReactNode
