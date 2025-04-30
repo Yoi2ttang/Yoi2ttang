@@ -12,8 +12,11 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.yoittang.common.domain.ScanResult;
+import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
+import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
 import com.ssafy.yoittang.tilehistory.domain.jdbc.TileHistoryJdbcRepository;
 import com.ssafy.yoittang.tilehistory.domain.jpa.TileHistoryJpaRepository;
+import com.ssafy.yoittang.tilehistory.domain.query.TileHistoryQueryRepository;
 import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
 import lombok.RequiredArgsConstructor;
@@ -22,10 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TileHistoryRepository {
 
-    private static final String TILE_HISTORIES_KEY = "tile_histories";
+    private static final String TILE_HISTORIES_KEY = "tile_histories:";
 
     private final TileHistoryJpaRepository tileHistoryJpaRepository;
     private final TileHistoryJdbcRepository tileHistoryJdbcRepository;
+    private final TileHistoryQueryRepository tileHistoryQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void saveRedis(String localDate, TileHistoryRedis tileHistoryRedis) {
@@ -34,14 +38,19 @@ public class TileHistoryRepository {
 
         double score = System.currentTimeMillis();
 
-        redisTemplate.opsForZSet().add(TILE_HISTORIES_KEY + ":" + localDate, tileHistoryId, score);
+        redisTemplate.opsForZSet().add(TILE_HISTORIES_KEY + localDate, tileHistoryId, score);
 
-        String dataKey = "tile_histories:" + tileHistoryId;
+        // tile_histories:member:geohash
+        String dataKey = TILE_HISTORIES_KEY + tileHistoryId;
         redisTemplate.opsForValue().set(dataKey, tileHistoryRedis);
     }
 
+    public void bulkInsertToPostGreSQL(List<TileHistoryRedis> batch) {
+        tileHistoryJdbcRepository.bulkInsert(batch);
+    }
+
     public boolean existsInZSet(String localDate, String tileHistoryId) {
-        String zsetKey = "tile_histories:" + localDate;
+        String zsetKey = TILE_HISTORIES_KEY + localDate;
         Double score = redisTemplate.opsForZSet().score(zsetKey, tileHistoryId);
         return score != null;
     }
@@ -53,7 +62,7 @@ public class TileHistoryRepository {
     ) {
 
         Set<Object> tileHistoryIds = redisTemplate.opsForZSet()
-                .reverseRange(TILE_HISTORIES_KEY + ":" + localDate, cursorId, cursorId + count - 1);
+                .reverseRange(TILE_HISTORIES_KEY + localDate, cursorId, cursorId + count - 1);
 
         List<TileHistoryRedis> tileHistories = new ArrayList<>();
         Long nextCursorId = cursorId;
@@ -63,7 +72,7 @@ public class TileHistoryRepository {
 
         if (tileHistoryIds != null && !tileHistoryIds.isEmpty()) {
             for (Object id : tileHistoryIds) {
-                String dataKey = "tile_histories:" + (String) id;
+                String dataKey = TILE_HISTORIES_KEY + (String) id;
                 Object object = redisTemplate.opsForValue().get(dataKey);
                 TileHistoryRedis tileHistory = objectMapper.convertValue(object, TileHistoryRedis.class);
                 if (tileHistory != null) {
@@ -76,9 +85,28 @@ public class TileHistoryRepository {
         return new ScanResult<>(nextCursorId, tileHistories);
     }
 
-    public void bulkInsertToPostGreSQL(List<TileHistoryRedis> batch) {
-        tileHistoryJdbcRepository.bulkInsert(batch);
+    public List<String> getTileHistoryRedis(String geoHash, Long memberId) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        //tile_histories:memberId:geohash(6)*
+        String keyPattern = TILE_HISTORIES_KEY + memberId + ":" + geoHash + "*";
+        Set<String> keys = redisTemplate.keys(keyPattern);
+
+        List<String> geoHashList = new ArrayList<>();
+
+        for (String key : keys) {
+            System.out.println(key);
+            Object object = redisTemplate.opsForValue().get(key);
+            TileHistoryRedis tileHistory = objectMapper.convertValue(object, TileHistoryRedis.class);
+
+            geoHashList.add(tileHistory.getGeoHash());
+        }
+
+        return geoHashList;
     }
+
 
     public void bulkDeleteInRedis(List<TileHistoryRedis> tileHistories) {
         if (tileHistories == null || tileHistories.isEmpty()) {
@@ -90,11 +118,17 @@ public class TileHistoryRepository {
 
         for (TileHistoryRedis tileHistory : tileHistories) {
             String tileHistoryId = tileHistory.getTileHistoryId();
-            deleteKeys.add("tile_histories:" + tileHistoryId); // 개별 저장된 데이터 삭제용
+            deleteKeys.add(TILE_HISTORIES_KEY + tileHistoryId); // 개별 저장된 데이터 삭제용
             removeZSetMembers.add(tileHistoryId); // ZSet 멤버 삭제용
         }
         redisTemplate.delete(deleteKeys);
         redisTemplate.opsForZSet().remove(TILE_HISTORIES_KEY, removeZSetMembers.toArray());
+    }
+
+    public List<PersonalTileGetResponse> getTileHistoryWithQuery(
+            PersonalTileGetRequest personalTileGetRequest,
+            String geoHashString) {
+        return tileHistoryQueryRepository.getTileHistoryWithQuery(personalTileGetRequest, geoHashString);
     }
 
     public void deleteZSet(String localDate) {

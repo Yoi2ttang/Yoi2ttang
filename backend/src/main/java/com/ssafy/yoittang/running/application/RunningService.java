@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.running.application;
 
+import java.time.LocalDate;
+
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -23,9 +25,12 @@ import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
+import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,7 @@ public class RunningService {
 
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
+    private final TileHistoryRepository tileHistoryRepository;
     private final TileRepository tileRepository;
 
     @Transactional
@@ -49,24 +55,28 @@ public class RunningService {
 
         runningRepository.save(running);
 
-        runningPointRepository.save(RunningPoint.builder()
+        RunningPoint runningPoint = RunningPoint.builder()
                 .runningId(running.getRunningId())
                 .sequence(0)
                 .arrivalTime(freeRunningCreateRequest.currentTime())
                 .root(getLineStringByOnePoint(freeRunningCreateRequest.lat(), freeRunningCreateRequest.lng()))
-                .build());
+                .build();
 
-        String geoHash = GeoHash.geoHashStringWithCharacterPrecision(
+        runningPointRepository.save(runningPoint);
+
+        String geoHashString = GeoHash.geoHashStringWithCharacterPrecision(
                 freeRunningCreateRequest.lat(),
                 freeRunningCreateRequest.lng(),
                 7);
 
-        Tile tile = tileRepository.findByGeoHash(geoHash)
+        Tile tile = tileRepository.findByGeoHash(geoHashString)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+
+        saveTileHistoryInRedis(geoHashString, runningPoint.getRunningPointId(), member);
 
         return RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
-                .geoHash(geoHash)
+                .geoHash(geoHashString)
                 .sw(GeoPoint.builder()
                         .lat(tile.getLatSouth())
                         .lng(tile.getLngWest())
@@ -93,24 +103,29 @@ public class RunningService {
 
         runningRepository.save(running);
 
-        runningPointRepository.save(RunningPoint.builder()
+        RunningPoint runningPoint = RunningPoint.builder()
                 .runningId(running.getRunningId())
                 .sequence(0)
                 .arrivalTime(challengeRunningCreateRequest.currentTime())
                 .root(getLineStringByOnePoint(challengeRunningCreateRequest.lat(), challengeRunningCreateRequest.lng()))
-                .build());
+                .build();
 
-        String geoHash = GeoHash.geoHashStringWithCharacterPrecision(
+        runningPointRepository.save(runningPoint);
+
+        String geoHashString = GeoHash.geoHashStringWithCharacterPrecision(
                 challengeRunningCreateRequest.lat(),
                 challengeRunningCreateRequest.lng(),
                 7);
 
-        Tile tile = tileRepository.findByGeoHash(geoHash)
+        Tile tile = tileRepository.findByGeoHash(geoHashString)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+
+        saveTileHistoryInRedis(geoHashString, runningPoint.getRunningPointId(), member);
+
 
         return RunningCreateResponse.builder()
                 .runningId(running.getRunningId())
-                .geoHash(geoHash)
+                .geoHash(geoHashString)
                 .sw(GeoPoint.builder()
                         .lat(tile.getLatSouth())
                         .lng(tile.getLngWest())
@@ -150,5 +165,23 @@ public class RunningService {
         Coordinate[] coordinates = new Coordinate[] { coordinate, coordinate };
 
         return geometryFactory.createLineString(coordinates);
+    }
+
+    void saveTileHistoryInRedis(
+            String geoHashString,
+            Long runningPointId,
+            Member member
+    ) {
+
+        tileHistoryRepository.saveRedis(
+                LocalDate.now().toString(),
+                TileHistoryRedis.builder()
+                        .tileHistoryId(TileHistoryRedis.makeTileHistoryId(member.getMemberId(), geoHashString))
+                        .memberId(member.getMemberId())
+                        .birthDate(member.getBirthDate())
+                        .zordiacId(member.getZordiacId())
+                        .geoHash(geoHashString)
+                        .runningPointId(runningPointId)
+                        .build());
     }
 }
