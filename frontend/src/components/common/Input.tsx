@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
-import { SearchIcon } from "lucide-react"
-import { InputHTMLAttributes } from "react"
+import { InputHTMLAttributes, ReactNode } from "react"
 
 interface InputProps
   extends InputHTMLAttributes<HTMLInputElement>,
@@ -9,27 +8,22 @@ interface InputProps
   className?: string
   placeholder?: string
   hasBorder?: boolean
-  hasSearchIcon?: boolean
-  variant?: "default" | "error" | "success" | "disabled"
+  Icon?: ReactNode
 }
 
 const inputVariants = cva(
-  "transition-all w-full rounded-xl px-4 py-5 focus-within:ring-2 focus-within:ring-neutral-800",
+  "transition-all w-full rounded-xl px-4 py-5 focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-600 focus-within:border-transparent",
   {
     variants: {
       variant: {
-        default: "ring-neutral-200",
-        disabled: "ring-neutral-100 bg-neutral-100",
-        error: "ring-red-400",
-        success: "ring-green-400",
+        default: "border-neutral-200",
+        disabled: "border-transparent bg-neutral-100",
+        error: "border-red-400",
+        success: "border-green-400",
       },
       hasBorder: {
-        true: "ring-2",
+        true: "border-2",
         false: "border-none",
-      },
-      hasSearchIcon: {
-        true: "flex items-center gap-2",
-        false: "",
       },
     },
     defaultVariants: {
@@ -43,17 +37,18 @@ const Input = ({
   className,
   placeholder,
   hasBorder,
-  hasSearchIcon,
+  Icon,
   variant,
   ...props
 }: InputProps) => {
   return (
     <div
       className={cn(
-        inputVariants({ hasBorder, hasSearchIcon, variant }),
+        inputVariants({ hasBorder, variant }),
         className,
+        Icon && "flex items-center gap-2",
       )}>
-      {hasSearchIcon && <SearchIcon className="text-neutral-400" />}
+      <div className="text-neutral-400">{Icon}</div>
       <input
         disabled={variant === "disabled"}
         className="w-full bg-transparent text-sm outline-none"
