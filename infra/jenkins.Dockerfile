@@ -1,6 +1,7 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:latest
 
 USER root
+
 RUN apt-get update && \
     apt-get install -y \
       apt-transport-https \
@@ -12,7 +13,10 @@ RUN apt-get update && \
     echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
       > /etc/apt/sources.list.d/docker.list && \
     apt-get update && \
-    apt-get install -y docker-ce-cli docker-compose-plugin && \
+    apt-get install -y docker-ce-cli docker-compose-plugin
+
+RUN groupadd -g 122 docker && \
     usermod -aG docker jenkins
 
 USER jenkins
+
