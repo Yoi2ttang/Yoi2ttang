@@ -1,4 +1,4 @@
-<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M66.3462 118.4C68.0806 122.332 58.091 130.796 65.9348 132.468C68.7785 133.077 71.1327 131.124 72.4973 128.968C73.6639 127.124 76.2629 121.343 75.5493 119.754" fill="#F2ADAD"/>
 <mask id="mask0_195_11401" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="61" y="116" width="17" height="19">
 <path d="M61.0391 116.889H77.0391V134.072H61.0391V116.889Z" fill="white"/>
