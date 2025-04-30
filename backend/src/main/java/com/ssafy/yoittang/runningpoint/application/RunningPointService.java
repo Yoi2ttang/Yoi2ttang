@@ -82,7 +82,7 @@ public class RunningPointService {
         tileHistoryRepository.saveRedis(
                 LocalDate.now().toString(),
                 TileHistoryRedis.builder()
-                        .tileHistoryId(member.getMemberId() + ":" + geoHashString)
+                        .tileHistoryId(TileHistoryRedis.makeTileHistoryId(member.getMemberId(), geoHashString))
                         .memberId(member.getMemberId())
                         .birthDate(member.getBirthDate())
                         .zordiacId(member.getZordiacId())

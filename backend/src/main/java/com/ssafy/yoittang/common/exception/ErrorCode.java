@@ -25,6 +25,7 @@ public enum ErrorCode {
     NOT_ADMIN_USER(2005, "관리자 권한이 없습니다."),
     INVALID_SIGNUP_TOKEN(2006, "회원가입 시 적절하지 않은 토큰 값입니다."),
     ADDITIONAL_SIGNUP_REQUIRED(2007, "회원 가입 절차를 받아야합니다."),
+    NOT_FOUND_MEMBER(2008, "존재하지 않는 회원입니다."),
 
     UNAUTHORIZED_ACCESS(3000, "접근할 수 없는 리소스입니다."),
     INVALID_REFRESH_TOKEN(3001, "유효하지 않은 Refresh Token입니다."),

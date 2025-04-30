@@ -34,4 +34,8 @@ public class TileHistoryRedis {
 
     @Column(nullable = false)
     private Long runningPointId;
+
+    public static String makeTileHistoryId(Long memberId, String geoHash) {
+        return memberId + ":" + geoHash;
+    }
 }

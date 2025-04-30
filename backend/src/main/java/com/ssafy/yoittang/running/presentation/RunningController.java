@@ -35,18 +35,21 @@ public class RunningController {
     @PostMapping("/free")
     public ResponseEntity<RunningCreateResponse> createFreeRunning(
             @Valid @RequestBody FreeRunningCreateRequest freeRunningCreateRequest,
-            @AuthMember Member member
+            @AuthMember Member loingMember
     ) {
-        RunningCreateResponse response = runningService.createFreeRunning(freeRunningCreateRequest, member);
+        RunningCreateResponse response = runningService.createFreeRunning(freeRunningCreateRequest, loingMember);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/challenge")
     public ResponseEntity<RunningCreateResponse> createChallengeRunning(
             @Valid @RequestBody ChallengeRunningCreateRequest challengeRunningCreateRequest,
-            @AuthMember Member member
+            @AuthMember Member loingMember
     ) {
-        RunningCreateResponse response = runningService.createChallengeRunning(challengeRunningCreateRequest, member);
+        RunningCreateResponse response = runningService.createChallengeRunning(
+                challengeRunningCreateRequest,
+                loingMember
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -55,9 +58,9 @@ public class RunningController {
     public ResponseEntity<Void> endFreeRunning(
             @PathVariable(name = "runningId") Long runningId,
             @Valid @RequestBody RunningEndPatchRequest runningEndPatchRequest,
-            @AuthMember Member member
+            @AuthMember Member loingMember
     ) {
-        runningService.endFreeRunning(runningId, runningEndPatchRequest, member);
+        runningService.endFreeRunning(runningId, runningEndPatchRequest, loingMember);
 
         return ResponseEntity.ok(null);
     }
@@ -65,10 +68,10 @@ public class RunningController {
     @PostMapping("/location")
     public ResponseEntity<RunningPointCreateResponse> createCoordinate(
             @Valid @RequestBody RunningPointCreateRequest runningPointCreateRequest,
-            @AuthMember Member member
+            @AuthMember Member loingMember
     ) {
         RunningPointCreateResponse runningPointCreateResponse
-                = runningPointService.createRunningPoint(runningPointCreateRequest, member);
+                = runningPointService.createRunningPoint(runningPointCreateRequest, loingMember);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(runningPointCreateResponse);
     }

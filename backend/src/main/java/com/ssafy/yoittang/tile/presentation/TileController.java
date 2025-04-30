@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.tile.presentation;
 
+import java.time.LocalDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.auth.annotation.AuthMember;
+import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.tile.application.TileService;
+import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
+import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class TileController {
 
     private final TileService tileService;
+    private final TileHistoryService tileHistoryService;
 
     @PostMapping
     public ResponseEntity<Void> createdTile() {
@@ -43,6 +50,33 @@ public class TileController {
             @RequestParam Double lng
     ) {
         return ResponseEntity.ok(tileService.getTile(zordiacId, lat, lng));
+    }
+
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<PersonalTileGetResponseWrapper> getTile(
+            @PathVariable(name = "memberId") Long memberId,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @RequestParam LocalDate localDate,
+            @AuthMember Member loginMember
+    ) {
+
+        PersonalTileGetRequest personalTileGetRequest = PersonalTileGetRequest.builder()
+                .memberId(memberId)
+                .lat(lat)
+                .lng(lng)
+                .localDate(localDate)
+                .build();
+
+        PersonalTileGetResponseWrapper personalTileGetResponseWrapper = null;
+
+        if (localDate.equals(LocalDate.now())) {
+            personalTileGetResponseWrapper = tileHistoryService.getTileRedis(personalTileGetRequest, loginMember);
+        } else {
+            personalTileGetResponseWrapper = tileHistoryService.getTileQuery(personalTileGetRequest, loginMember);
+        }
+
+        return ResponseEntity.ok(personalTileGetResponseWrapper);
     }
 
 }
