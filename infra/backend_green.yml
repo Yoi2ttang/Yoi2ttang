@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   backend_green:
+    container_name: backend_green
     build:
       context: ../backend
       dockerfile: Dockerfile
