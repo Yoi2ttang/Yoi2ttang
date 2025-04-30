@@ -7,7 +7,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <div className="flex h-dvh flex-col gap-4">
+    <div className="flex flex-col gap-4 pb-12">
       <MainHeader />
       {children}
       <NavigationBar />
