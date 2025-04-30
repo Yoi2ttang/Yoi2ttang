@@ -1,6 +1,5 @@
 interface BadgeProps {
   className?: string
-  bgColorClass?: string
   children?: React.ReactNode
 }
 
