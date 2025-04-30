@@ -23,18 +23,18 @@ public class Follow {
     @Column(name = "follow_id")
     private Long followId;
 
-    @Column(name = "from", nullable = false)
-    private Long from;
+    @Column(name = "from_member", nullable = false)
+    private Long fromMember;
 
-    @Column(name = "to", nullable = false)
-    private Long to;
+    @Column(name = "to_member", nullable = false)
+    private Long toMember;
 
     @Builder
     private Follow(
-            Long from,
-            Long to
+            Long fromMember,
+            Long toMember
     ) {
-        this.from = from;
-        this.to = to;
+        this.fromMember = fromMember;
+        this.toMember = toMember;
     }
 }

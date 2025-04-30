@@ -1,9 +1,20 @@
 package com.ssafy.yoittang.member.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.ssafy.yoittang.member.domain.Follow;
 
 public interface FollowJpaRepository extends JpaRepository<Follow, Long>, FollowQueryRepository {
-    boolean existsByFromAndTo(Long from, Long to);
+    boolean existsByFromMemberAndToMember(Long fromMember, Long toMember);
+
+    void deleteByFromMemberAndToMember(Long fromMember, Long toMember);  // ✅ 올바른 필드명 사용
+
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.toMember = :targetId")
+    Integer countFollowers(@Param("targetId") Long targetId);
+
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.fromMember = :targetId")
+    Integer countFollowings(@Param("targetId") Long targetId);
+
 }

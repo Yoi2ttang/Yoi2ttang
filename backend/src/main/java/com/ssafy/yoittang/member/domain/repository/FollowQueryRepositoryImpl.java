@@ -21,13 +21,13 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
     @Override
     public List<Long> findFollowingMemberIds(Long memberId, Long lastToId, int limit) {
         return queryFactory
-                .select(follow.to)
+                .select(follow.fromMember)
                 .from(follow)
                 .where(
-                        follow.from.eq(memberId),
+                        follow.fromMember.eq(memberId),
                         isInRange(lastToId)
                 )
-                .orderBy(follow.to.asc())
+                .orderBy(follow.toMember.asc())
                 .limit(limit + 1)
                 .fetch();
     }
@@ -35,13 +35,13 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
     @Override
     public List<Long> findFollowerMemberIds(Long memberId, Long lastToId, int limit) {
         return queryFactory
-                .select(follow.from)
+                .select(follow.fromMember)
                 .from(follow)
                 .where(
-                        follow.to.eq(memberId),
+                        follow.toMember.eq(memberId),
                         isInRange(lastToId)
                 )
-                .orderBy(follow.from.asc())
+                .orderBy(follow.fromMember.asc())
                 .limit(limit + 1)
                 .fetch();
     }
@@ -50,6 +50,6 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
         if (lastToId == null) {
             return null;
         }
-        return follow.to.gt(lastToId);
+        return follow.toMember.gt(lastToId);
     }
 }

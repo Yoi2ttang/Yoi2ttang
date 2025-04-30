@@ -1,10 +1,12 @@
 package com.ssafy.yoittang.tilehistory.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,6 +99,37 @@ public class TileHistoryRepository {
 
     public void deleteZSet(String localDate) {
         redisTemplate.delete(TILE_HISTORIES_KEY + ":" + localDate);
+    }
+
+    public Set<String> getTodayGeoHashesFromRedis(Long memberId, String localDate) {
+        Set<String> geoHashes = new HashSet<>();
+        long cursor = 0L;
+        int batchSize = 500;
+
+        while (true) {
+            ScanResult<TileHistoryRedis> result = getTileHistoryRedisBatch(localDate, cursor, batchSize);
+            List<TileHistoryRedis> batch = result.resultList();
+
+            for (TileHistoryRedis redis : batch) {
+                if (redis.getMemberId().equals(memberId)) {
+                    geoHashes.add(redis.getGeoHash());
+                }
+            }
+
+            // 다음 커서 위치로 이동
+            cursor = result.nextCursorId();
+
+            // 결과 수가 배치보다 작으면 마지막이다
+            if (batch.size() < batchSize) {
+                break;
+            }
+        }
+
+        return geoHashes;
+    }
+
+    public List<String> findGeoHashesByMemberId(Long memberId) {
+        return tileHistoryJpaRepository.findGeoHashesByMemberId(memberId);
     }
 
 }

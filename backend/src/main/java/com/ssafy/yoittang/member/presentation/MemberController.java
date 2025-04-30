@@ -3,6 +3,7 @@ package com.ssafy.yoittang.member.presentation;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,15 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/api/v1/member/" + targetId + "/follow")).build();
     }
 
+    @DeleteMapping("/{targetId}/unfollow")
+    public ResponseEntity<Void> deleteFollow(
+            @PathVariable("targetId") Long targetId,
+            @AuthMember Member member
+    ) {
+        memberService.deleteFollow(targetId, member);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/following")
     public ResponseEntity<PageInfo<MemberAutocompleteResponse>> getFollowingList(
             @RequestParam(required = false, name = "pageToken") String pageToken,
@@ -64,5 +75,13 @@ public class MemberController {
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(memberService.getFollowerList(pageToken, member));
+    }
+
+    @GetMapping("/{targetId}/profile")
+    public ResponseEntity<MemberProfileResponse> getMemberProfile(
+            @PathVariable("targetId") Long targetId,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberService.getMemberProfile(targetId, member));
     }
 }

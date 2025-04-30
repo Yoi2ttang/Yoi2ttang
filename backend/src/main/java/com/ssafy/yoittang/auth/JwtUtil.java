@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.yoittang.auth.domain.MemberTokens;
+import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.member.domain.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,9 +43,44 @@ public class JwtUtil {
         return new MemberTokens(refreshToken, accessToken);
     }
 
+    public MemberTokens createLoginToken(Member member) {
+        String refreshToken = createToken("", refreshTokenExpiry);
+        String accessToken = createToken(member, accessTokenExpiry);
+        return new MemberTokens(refreshToken, accessToken);
+    }
+
+    public MemberTokens createLoginToken(JwtRequest jwtRequest) {
+        String refreshToken = createToken("", refreshTokenExpiry);
+        String accessToken = createToken(jwtRequest, accessTokenExpiry);
+        return new MemberTokens(refreshToken, accessToken);
+    }
+
     private String createToken(String subject, Long expiredMs) {
         return Jwts.builder()
                 .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    private String createToken(Member member, Long expiredMs) {
+        return Jwts.builder()
+                .setSubject(member.getMemberId() != null ? member.getMemberId().toString() : "1")
+                .claim("nickname", member.getNickname())
+                .claim("zordiacId", member.getZordiacId() != null ? member.getZordiacId() : null)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    private String createToken(JwtRequest jwtRequest, Long expiredMs) {
+        return Jwts.builder()
+                .setSubject(jwtRequest.memberId().toString())
+                .claim("nickname", jwtRequest.nickname())
+                .claim("zordiacId", jwtRequest.zordiacId().toString())
+                .claim("zordiacTeam", jwtRequest.zordiacName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
