@@ -1,36 +1,32 @@
-import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
 interface SectionProps {
   leftIcon?: ReactNode
   title: string | ReactNode
-  rightIcon?: ReactNode
-  onRightIconClick?: () => void
+  supplement?: ReactNode | string
   children: ReactNode
   className?: string
 }
 
-const Section = (sectionProps: SectionProps) => {
-  const {
-    leftIcon,
-    title,
-    rightIcon,
-    onRightIconClick,
-    children,
-    className = "",
-  } = sectionProps
-
+const Section = ({
+  leftIcon,
+  title,
+  supplement,
+  children,
+  className,
+}: SectionProps) => {
   return (
-    <div className={cn("flex flex-col p-3 gap-3", { className })}>
-      <header className="flex w-full items-center">
-        <div className="flex flex-1 items-center gap-2">
+    <div className={cn("flex flex-col gap-3", { className })}>
+      <header className="flex w-full items-baseline">
+        <div className="flex flex-1 gap-2">
           {leftIcon && <div>{leftIcon}</div>}
-          <div>{title}</div>
+          <div className="text-title-md">{title}</div>
         </div>
-        {rightIcon && (
-          <button type="button" onClick={onRightIconClick}>
-            {rightIcon}
-          </button>
+        {supplement && typeof supplement === "string" ? (
+          <span className="text-caption text-neutral-400">{supplement}</span>
+        ) : (
+          <div>{supplement}</div>
         )}
       </header>
       <div>{children}</div>
