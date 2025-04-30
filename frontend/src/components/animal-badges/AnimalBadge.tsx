@@ -3,6 +3,7 @@ import {
   animalIconMap,
   animalTeamNameMap,
   sizeClassMap,
+  backgroundClassMap,
 } from "@/constants/animalBadge"
 
 interface AnimalBadgeProps {
@@ -19,12 +20,13 @@ const AnimalBadge = ({
   const Icon = animalIconMap[animal]
   const teamName = animalTeamNameMap[animal]
   const { container, icon, text, px } = sizeClassMap[size]
+  const bgClass = backgroundClassMap[animal]
 
   if (!Icon) return null
 
   return (
     <div
-      className={`flex items-center rounded-full py-0.5 bg-${animal} ${container} ${px} ${className}`}>
+      className={`flex items-center rounded-full py-0.5 ${bgClass} ${container} ${px} ${className}`}>
       <Icon className={icon} />
       <div
         className={`flex-1 text-center font-medium ${text} ${

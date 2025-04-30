@@ -1,4 +1,5 @@
 import {
+  AnimalType,
   AnimalIconMap,
   AnimalTeamNameMap,
   AnimalBadgeSize,
@@ -45,6 +46,21 @@ export const animalTeamNameMap: AnimalTeamNameMap = {
   chicken: "닭 팀",
   dog: "개 팀",
   pig: "돼지 팀",
+}
+
+export const backgroundClassMap: Record<AnimalType, string> = {
+  mouse: "bg-mouse",
+  cow: "bg-cow",
+  tiger: "bg-tiger",
+  rabbit: "bg-rabbit",
+  dragon: "bg-dragon",
+  snake: "bg-snake",
+  horse: "bg-horse",
+  sheep: "bg-sheep",
+  monkey: "bg-monkey",
+  chicken: "bg-chicken",
+  dog: "bg-dog",
+  pig: "bg-pig",
 }
 
 export const sizeClassMap: Record<
