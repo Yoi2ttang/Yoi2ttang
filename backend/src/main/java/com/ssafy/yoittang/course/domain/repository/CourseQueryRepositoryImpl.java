@@ -2,6 +2,7 @@ package com.ssafy.yoittang.course.domain.repository;
 
 import static com.ssafy.yoittang.course.domain.QCourse.course;
 import static com.ssafy.yoittang.course.domain.QCourseBookmark.courseBookmark;
+import static com.ssafy.yoittang.running.domain.QRunning.running;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.running.domain.State;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +35,25 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .from(courseBookmark)
                 .join(course).on(courseBookmark.courseId.eq(courseBookmark.courseId))
                 .where(courseBookmark.memberId.eq(memberId))
+                .fetch();
+    }
+
+    @Override
+    public List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        CourseSummaryResponse.class,
+                        course.courseId,
+                        course.courseName,
+                        course.distance,
+                        course.courseImageUrl
+                ))
+                .from(running)
+                .join(course).on(running.courseId.eq(course.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE)
+                )
                 .fetch();
     }
 }
