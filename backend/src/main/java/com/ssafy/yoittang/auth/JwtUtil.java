@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ssafy.yoittang.auth.domain.MemberTokens;
+import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 
@@ -41,9 +42,27 @@ public class JwtUtil {
         return new MemberTokens(refreshToken, accessToken);
     }
 
+    public MemberTokens createLoginToken(JwtRequest jwtRequest) {
+        String refreshToken = createToken("", refreshTokenExpiry);
+        String accessToken = createToken(jwtRequest, accessTokenExpiry);
+        return new MemberTokens(refreshToken, accessToken);
+    }
+
     private String createToken(String subject, Long expiredMs) {
         return Jwts.builder()
                 .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    private String createToken(JwtRequest jwtRequest, Long expiredMs) {
+        return Jwts.builder()
+                .setSubject(jwtRequest.memberId().toString())
+                .claim("nickname", jwtRequest.nickname())
+                .claim("zordiacId", jwtRequest.zordiacId().toString())
+                .claim("zordiacTeam", jwtRequest.zordiacName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)

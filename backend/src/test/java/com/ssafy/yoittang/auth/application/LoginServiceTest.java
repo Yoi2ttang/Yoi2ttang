@@ -11,6 +11,8 @@ import static org.mockito.Mockito.times;
 import java.time.LocalDate;
 import java.util.Optional;
 
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,7 @@ import com.ssafy.yoittang.auth.JwtUtil;
 import com.ssafy.yoittang.auth.domain.Environment;
 import com.ssafy.yoittang.auth.domain.MemberTokens;
 import com.ssafy.yoittang.auth.domain.RefreshToken;
+import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
 import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
@@ -38,6 +41,8 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.term.application.TermService;
+import com.ssafy.yoittang.zordiac.domain.ZordiacName;
+import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
@@ -62,6 +67,9 @@ public class LoginServiceTest {
 
     @Mock
     private ValueOperations<String, MemberRedisEntity> valueOperations;
+
+    @Mock
+    private ZordiacJpaRepository zordiacJpaRepository;
 
     @Mock
     private JwtUtil jwtUtil;
@@ -98,10 +106,21 @@ public class LoginServiceTest {
         given(kakaoOAuthProvider.getMemberInfo(anyString()))
                 .willReturn(kakaoMemberInfo);
 
+
         given(memberRepository.findBySocialId("socialId123"))
                 .willReturn(Optional.of(mockMember));
 
-        given(jwtUtil.createLoginToken(anyString()))
+        given(zordiacJpaRepository.findZordiacNameByZordiacId(1L))
+                .willReturn(ZordiacName.MOUSE);
+
+        JwtRequest expectedJwtRequest = new JwtRequest(
+                1L,
+                "nickname",
+                1L,
+                "MOUSE"
+        );
+
+        given(jwtUtil.createLoginToken(expectedJwtRequest))
                 .willReturn(new MemberTokens("refreshToken", "accessToken"));
 
         LoginResponse response = loginService.login(request);
@@ -186,8 +205,15 @@ public class LoginServiceTest {
         ReflectionTestUtils.setField(savedMember, "memberId", 3L);
 
         given(memberRepository.save(any(Member.class))).willReturn(savedMember);
-        given(jwtUtil.createLoginToken(anyString()))
-                .willReturn(new MemberTokens("refreshToken", "accessToken"));
+        given(zordiacJpaRepository.findZordiacNameByZordiacId(11L)).willReturn(ZordiacName.PIG);
+        given(jwtUtil.createLoginToken(
+                new JwtRequest(
+                        3L,
+                        newNickname,
+                        11L,
+                        "PIG"
+                ))
+        ).willReturn(new MemberTokens("refreshToken", "accessToken"));
 
         LoginResponse response = loginService.finalizeSignup(signupRequest);
 

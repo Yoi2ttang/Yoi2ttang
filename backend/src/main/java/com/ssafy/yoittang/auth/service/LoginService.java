@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.yoittang.auth.JwtUtil;
 import com.ssafy.yoittang.auth.domain.MemberTokens;
 import com.ssafy.yoittang.auth.domain.RefreshToken;
+import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
 import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
@@ -23,6 +24,8 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.term.application.TermService;
+import com.ssafy.yoittang.zordiac.domain.ZordiacName;
+import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,7 @@ public class LoginService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
     private final TermService termService;
+    private final ZordiacJpaRepository zordiacJpaRepository;
     private final JwtUtil jwtUtil;
     private final KakaoOAuthProvider kakaoOAuthProvider;
     private final RedisTemplate<String, MemberRedisEntity> redisTemplate;
@@ -53,7 +57,15 @@ public class LoginService {
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
+            ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+            JwtRequest jwtRequest = new JwtRequest(
+                    member.getMemberId(),
+                    member.getNickname(),
+                    member.getZordiacId(),
+                    zordiacName.toString()
+            );
+            MemberTokens memberTokens = jwtUtil.createLoginToken(jwtRequest);
+            //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
             refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
             return LoginResponse.from(
                     member.getMemberId(),
@@ -138,7 +150,15 @@ public class LoginService {
 
         termService.persistMemberTerms(member, signupRequest.socialId());
 
-        MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
+        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        JwtRequest jwtRequest = new JwtRequest(
+                member.getMemberId(),
+                member.getNickname(),
+                member.getZordiacId(),
+                zordiacName.toString()
+        );
+        MemberTokens memberTokens = jwtUtil.createLoginToken(jwtRequest);
+        //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
         refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
         return LoginResponse.from(
                 member.getMemberId(),
@@ -160,6 +180,4 @@ public class LoginService {
         int[] zordiacIdByRemainder = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
         return (long) zordiacIdByRemainder[birthYear % 12];
     }
-
-
 }
