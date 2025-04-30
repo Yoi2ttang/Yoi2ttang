@@ -5,6 +5,7 @@ import {
   sizeClassMap,
   backgroundClassMap,
 } from "@/constants/animalBadge"
+import Badge from "../common/Badge"
 
 interface AnimalBadgeProps {
   className?: string
@@ -25,8 +26,7 @@ const AnimalBadge = ({
   if (!Icon) return null
 
   return (
-    <div
-      className={`flex items-center rounded-full py-0.5 ${bgClass} ${container} ${px} ${className}`}>
+    <Badge className={`${container} ${px} ${bgClass} ${className}`}>
       <Icon className={icon} />
       <div
         className={`flex-1 text-center font-medium ${text} ${
@@ -34,7 +34,7 @@ const AnimalBadge = ({
         }`}>
         {teamName}
       </div>
-    </div>
+    </Badge>
   )
 }
 
