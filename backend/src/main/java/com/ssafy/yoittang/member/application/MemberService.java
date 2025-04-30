@@ -17,6 +17,7 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.running.domain.RunningRepository;
@@ -152,6 +153,26 @@ public class MemberService {
                 convertToRunningTimeResponse(totalTime),
                 getTotalDistance(targetId),
                 getTileCount(targetId)
+        );
+    }
+
+    public MyProfileResponse getMyProfile(Member member) {
+        Integer followingCount = followJpaRepository.countFollowings(member.getMemberId());
+        Integer followerCount = followJpaRepository.countFollowers(member.getMemberId());
+        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(member.getMemberId());
+
+        return new MyProfileResponse(
+                member.getMemberId(),
+                member.getNickname(),
+                member.getProfileImageUrl(),
+                zordiacName,
+                member.getStateMessage(),
+                followingCount,
+                followerCount,
+                convertToRunningTimeResponse(totalTime),
+                getTotalDistance(member.getMemberId()),
+                getTileCount(member.getMemberId())
         );
     }
 

@@ -18,6 +18,7 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -83,5 +84,10 @@ public class MemberController {
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(memberService.getMemberProfile(targetId, member));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<MyProfileResponse> getMyProfile(@AuthMember Member member) {
+        return ResponseEntity.ok(memberService.getMyProfile(member));
     }
 }
