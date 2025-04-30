@@ -4,7 +4,7 @@ import Image from "next/image"
 
 const LoginPage = () => {
   return (
-    <div className="flex h-dvh flex-col justify-center px-6 pb-6">
+    <div className="flex h-dvh flex-col justify-center px-6">
       <div className="flex flex-1 flex-col justify-evenly">
         <p className="text-title-lg">
           뛰어서 땅따먹기
