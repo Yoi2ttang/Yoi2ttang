@@ -11,6 +11,8 @@ import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.common.model.PageInfo;
+import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
@@ -41,6 +43,7 @@ public class MemberService {
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
+    private final CourseJpaRepositoy courseJpaRepositoy;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
         Long lastMemberId = (pageToken != null) ? Long.parseLong(pageToken) : null;
@@ -140,7 +143,6 @@ public class MemberService {
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
         boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId);
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(targetId);
-
         return new MemberProfileResponse(
                 targetId,
                 targetMember.getNickname(),
@@ -152,7 +154,8 @@ public class MemberService {
                 isFollow,
                 convertToRunningTimeResponse(totalTime),
                 getTotalDistance(targetId),
-                getTileCount(targetId)
+                getTileCount(targetId),
+                getCourseSummaryByMemberId(targetId)
         );
     }
 
@@ -161,7 +164,6 @@ public class MemberService {
         Integer followerCount = followJpaRepository.countFollowers(member.getMemberId());
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(member.getMemberId());
-
         return new MyProfileResponse(
                 member.getMemberId(),
                 member.getNickname(),
@@ -172,7 +174,8 @@ public class MemberService {
                 followerCount,
                 convertToRunningTimeResponse(totalTime),
                 getTotalDistance(member.getMemberId()),
-                getTileCount(member.getMemberId())
+                getTileCount(member.getMemberId()),
+                getCourseSummaryByMemberId(member.getMemberId())
         );
     }
 
@@ -199,6 +202,10 @@ public class MemberService {
         Set<String> set2 = tileHistoryRepository.getTodayGeoHashesFromRedis(targetId, LocalDate.now().toString());
         set1.addAll(set2);
         return set1.size();
+    }
+
+    private List<CourseSummaryResponse> getCourseSummaryByMemberId(Long memberId) {
+        return courseJpaRepositoy.findCompleteCoursesByMemberId(memberId);
     }
 }
 

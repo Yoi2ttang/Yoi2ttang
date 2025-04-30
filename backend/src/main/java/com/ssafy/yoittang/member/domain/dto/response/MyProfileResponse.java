@@ -1,5 +1,8 @@
 package com.ssafy.yoittang.member.domain.dto.response;
 
+import java.util.List;
+
+import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.running.domain.dto.response.RunningTimeResponse;
 import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 
@@ -13,6 +16,7 @@ public record MyProfileResponse(
         Integer followerCount,
         RunningTimeResponse time,
         Integer totalDistance,
-        Integer totalTileCount
+        Integer totalTileCount,
+        List<CourseSummaryResponse> courses
 ) {
 }
