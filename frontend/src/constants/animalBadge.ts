@@ -68,21 +68,21 @@ export const sizeClassMap: Record<
   { container: string; icon: string; text: string; px: string }
 > = {
   sm: {
-    container: "h-6 w-20",
+    container: "h-7 w-20",
     icon: "w-5 h-5",
-    text: "text-xs",
+    text: "text-caption",
     px: "px-1",
   },
   md: {
-    container: "h-7 w-24",
+    container: "h-8 w-24",
     icon: "w-6 h-6",
-    text: "text-xs",
+    text: "text-caption",
     px: "px-2",
   },
   lg: {
     container: "h-9 w-28",
-    icon: "w-7 h-7",
-    text: "text-sm",
+    icon: "w-8 h-8",
+    text: "text-title-xs",
     px: "px-2",
   },
 }

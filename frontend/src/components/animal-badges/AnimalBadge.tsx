@@ -27,12 +27,12 @@ const AnimalBadge = ({
   if (!Icon) return null
 
   return (
-    <Badge className={`${container} ${px} ${bgClass} ${className}`}>
+    <Badge className={`${container} ${px} ${bgClass} ${className} ${text}`}>
       <Icon className={icon} />
       <div
         className={cn(
-          "flex-1 text-center font-medium",
-          text,
+          "flex-1 text-center",
+          "font-semibold",
           animal === "sheep" ? "text-black" : "text-white",
         )}>
         {teamName}
