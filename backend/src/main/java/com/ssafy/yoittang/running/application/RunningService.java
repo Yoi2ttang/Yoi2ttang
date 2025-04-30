@@ -167,7 +167,6 @@ public class RunningService {
         return geometryFactory.createLineString(coordinates);
     }
 
-    @Transactional
     void saveTileHistoryInRedis(
             String geoHashString,
             Long runningPointId,
