@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.tilehistory.application;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,17 @@ public class TileHistoryService {
     private final TileHistoryRepository tileHistoryRepository;
     private final TileRepository tileRepository;
     private final MemberRepository memberRepository;
+
+    public PersonalTileGetResponseWrapper getTile(
+            PersonalTileGetRequest personalTileGetRequest,
+            Member loginMember
+    ) {
+        if (personalTileGetRequest.localDate().equals(LocalDate.now())) {
+            return this.getTileRedis(personalTileGetRequest, loginMember);
+        }
+
+        return this.getTileQuery(personalTileGetRequest, loginMember);
+    }
 
     public PersonalTileGetResponseWrapper getTileQuery(
             PersonalTileGetRequest personalTileGetRequest,

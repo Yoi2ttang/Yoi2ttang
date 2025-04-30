@@ -68,15 +68,7 @@ public class TileController {
                 .localDate(localDate)
                 .build();
 
-        PersonalTileGetResponseWrapper personalTileGetResponseWrapper = null;
-
-        if (localDate.equals(LocalDate.now())) {
-            personalTileGetResponseWrapper = tileHistoryService.getTileRedis(personalTileGetRequest, loginMember);
-        } else {
-            personalTileGetResponseWrapper = tileHistoryService.getTileQuery(personalTileGetRequest, loginMember);
-        }
-
-        return ResponseEntity.ok(personalTileGetResponseWrapper);
+        return ResponseEntity.ok(tileHistoryService.getTile(personalTileGetRequest, loginMember));
     }
 
 }
