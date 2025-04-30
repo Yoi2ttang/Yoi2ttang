@@ -1,9 +1,11 @@
+import { ReactNode } from "react"
+
 interface SectionProps {
-  leftIcon?: React.ReactNode
+  leftIcon?: ReactNode
   title: string
-  rightIcon?: React.ReactNode
+  rightIcon?: ReactNode
   onRightIconClick?: () => void
-  children: React.ReactNode
+  children: ReactNode
   className?: string
 }
 
