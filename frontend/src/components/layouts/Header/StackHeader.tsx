@@ -1,9 +1,9 @@
 "use client"
 
+import HeaderWrapper from "@/components/layouts/Header/HeaderWrapper"
 import { cn } from "@/lib/utils"
 import { ChevronLeftIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import HeaderWrapper from "./HeaderWrapper"
 
 interface StackHeaderProps {
   align?: "left" | "center"

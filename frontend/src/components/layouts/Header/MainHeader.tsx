@@ -1,4 +1,4 @@
-import HeaderWrapper from "@/components/layout/Header/HeaderWrapper"
+import HeaderWrapper from "@/components/layouts/Header/HeaderWrapper"
 import Image from "next/image"
 import Link from "next/link"
 
