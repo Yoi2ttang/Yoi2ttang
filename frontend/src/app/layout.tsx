@@ -1,36 +1,41 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import RootProvider from "@/components/providers/RootProvider"
+import { Metadata } from "next"
+import localFont from "next/font/local"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/pretendard/PretendardVariable.woff2",
+      weight: "100 900",
+      style: "normal",
+    },
+  ],
+  display: "swap",
+  variable: "--font-pretendard",
+})
 
 export const metadata: Metadata = {
   title: "요이땅",
   description: "요이땅",
-};
-
-interface RootLayoutProps {
-  children: React.ReactNode;
 }
 
-const RootLayout = ({ children }: Readonly<RootLayoutProps>) => {
+interface RootLayoutProps {
+  children: React.ReactNode
+}
+
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="ko">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${pretendard.className} bg-neutral-100`}>
+        <RootProvider>
+          <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+            <div className="flex-1">{children}</div>
+          </div>
+        </RootProvider>
       </body>
     </html>
-  );
-};
+  )
+}
 
-export default RootLayout;
+export default RootLayout
