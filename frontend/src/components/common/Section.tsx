@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import { cn } from "@/lib/utils"
 
 interface SectionProps {
   leftIcon?: ReactNode
@@ -23,7 +24,7 @@ const Section = (sectionProps: SectionProps) => {
     <div className={`flex flex-col p-3 gap-3 ${className}`}>
       <header className="flex w-full items-center">
         <div className="flex flex-1 items-center gap-2">
-          {leftIcon}
+          {leftIcon && <div>{leftIcon}</div>}
           <div>{title}</div>
         </div>
         {rightIcon && (
