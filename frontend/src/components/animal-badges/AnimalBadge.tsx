@@ -5,7 +5,7 @@ import {
   sizeClassMap,
 } from "@/constants/animalBadge"
 
-export interface AnimalBadgeProps {
+interface AnimalBadgeProps {
   className?: string
   animal: AnimalType
   size?: AnimalBadgeSize
