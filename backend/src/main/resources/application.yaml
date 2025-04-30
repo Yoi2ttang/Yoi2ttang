@@ -14,3 +14,12 @@ server:
       enabled: true
       charset: UTF-8
       force: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
