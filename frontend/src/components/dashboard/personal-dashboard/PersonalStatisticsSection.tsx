@@ -1,3 +1,4 @@
+import Section from "@/components/common/Section"
 import { PersonalStatistics } from "@/types/dashboard/dashboard.type"
 import DashboardCard from "../DashboardCard"
 interface PersonalStatisticsSectionProps {}
@@ -36,13 +37,7 @@ const PersonalStatisticsSection = ({}: PersonalStatisticsSectionProps) => {
   ]
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="gpa-2 flex items-baseline justify-between">
-        <h2 className="text-title-md">🪧 나의 기록</h2>
-        <span className="text-xs text-neutral-400">
-          가입한 일부터 현재까지 기록입니다
-        </span>
-      </div>
+    <Section title="🪧 나의 기록" supplement="전체 누적 기록">
       <div className="grid grid-cols-2 gap-4">
         {statisticsList.map(({ title, icon, value }) => (
           <DashboardCard key={title} className="flex flex-col gap-2">
@@ -54,7 +49,7 @@ const PersonalStatisticsSection = ({}: PersonalStatisticsSectionProps) => {
           </DashboardCard>
         ))}
       </div>
-    </section>
+    </Section>
   )
 }
 export default PersonalStatisticsSection
