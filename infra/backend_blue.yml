@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend_blue:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
+    ports:
+      - "18081:8080"
+    env_file:
+      - ../backend/dev.env
+    networks:
+      - yoittang_infra
+    restart: unless-stopped
+
+networks:
+  yoittang_infra:
+    external: true
+    name: yoittang_infra
+
