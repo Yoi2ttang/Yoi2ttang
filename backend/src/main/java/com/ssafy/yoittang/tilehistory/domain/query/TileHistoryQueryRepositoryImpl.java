@@ -4,6 +4,7 @@ import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
 import static com.ssafy.yoittang.tilehistory.domain.jpa.QTileHistoryJpa.tileHistoryJpa;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +57,21 @@ public class TileHistoryQueryRepositoryImpl implements TileHistoryQueryRepositor
                                 personalTileGetRequest.localDate().atTime(23, 59, 59))
                 )
                 .fetch();
+    }
+
+    @Override
+    public int countDistinctGeohashLastMonth(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
+        Long count = queryFactory
+                .select(tileHistoryJpa.geoHash.countDistinct())
+                .from(tileHistoryJpa)
+                .join(runningPoint).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningId))
+                .where(
+                        tileHistoryJpa.memberId.eq(memberId),
+                        runningPoint.arrivalTime.goe(startDate),
+                        runningPoint.arrivalTime.lt(endDate)
+                )
+                .fetchOne();
+        return count != null ? count.intValue() : 0;
     }
 
     private BooleanExpression likeGeoHashString(String geoHashString) {
