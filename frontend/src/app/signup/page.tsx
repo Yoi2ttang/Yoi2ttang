@@ -1,53 +1,52 @@
 "use client"
 
-import Button from "@/components/common/Button"
-import InfoForm from "@/components/signup/InfoForm"
+import SignupForm from "@/components/signup/SignupForm"
 import TermForm from "@/components/signup/TermForm"
-import { RequiredTerm, SignupStep } from "@/types/signup/signup"
+import { SignUpData, SignupStep } from "@/types/signup/signup"
 import { useState } from "react"
 
 const SignupPage = () => {
   const [step, setStep] = useState<SignupStep>(SignupStep.TERM)
-
-  const [termChecks, setTermChecks] = useState<RequiredTerm>({
-    privacy: false,
-    location: false,
-    marketing: false,
+  const [signupData, setSignupData] = useState<SignUpData>({
+    agreements: {
+      privacy: false,
+      location: false,
+      marketing: false,
+    },
+    nickname: "",
+    birth: {
+      year: "",
+      month: "",
+      day: "",
+    },
+    gender: "",
+    weight: 0,
   })
-
-  const handleTermCheck = (type: string, checked: boolean) => {
-    if (type === "all") {
-      setTermChecks({
-        privacy: checked,
-        location: checked,
-        marketing: checked,
-      })
-    } else {
-      setTermChecks((prev) => ({
-        ...prev,
-        [type]: checked,
-      }))
-    }
-  }
 
   const renderForm = () => {
     switch (step) {
       case SignupStep.TERM:
-        return <TermForm termChecks={termChecks} onChange={handleTermCheck} />
+        return (
+          <TermForm
+            signupData={signupData}
+            onChange={setSignupData}
+            onNext={() => setStep(step + 1)}
+          />
+        )
       default:
-        return <InfoForm />
+        return (
+          <SignupForm
+            signupData={signupData}
+            onChange={setSignupData}
+            step={step}
+            onPrev={() => setStep(step - 1)}
+            onNext={() => setStep(step + 1)}
+          />
+        )
     }
   }
 
-  return (
-    <div className="relative flex h-dvh flex-col justify-between overflow-hidden p-6">
-      {renderForm()}
-
-      <Button disabled={!termChecks.privacy || !termChecks.location}>
-        다음
-      </Button>
-    </div>
-  )
+  return <div className="h-dvh overflow-hidden">{renderForm()}</div>
 }
 
 export default SignupPage

@@ -7,13 +7,18 @@ export enum SignupStep {
   COMPLETED,
 }
 
-export type RequiredTerm = {
-  privacy: boolean
-  location: boolean
-  marketing: boolean
-}
-
-// 다음 단계로 이동하는 함수를 위한 타입
-export type NextStep = {
-  [key in SignupStep]: SignupStep | null
+export type SignUpData = {
+  agreements: {
+    privacy: boolean
+    location: boolean
+    marketing: boolean
+  }
+  nickname: string
+  birth: {
+    year: string
+    month: string
+    day: string
+  }
+  gender: string
+  weight: number
 }
