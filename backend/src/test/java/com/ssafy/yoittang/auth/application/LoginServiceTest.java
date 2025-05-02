@@ -11,8 +11,6 @@ import static org.mockito.Mockito.times;
 import java.time.LocalDate;
 import java.util.Optional;
 
-
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +38,9 @@ import com.ssafy.yoittang.member.domain.Gender;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
-import com.ssafy.yoittang.term.application.TermService;
+import com.ssafy.yoittang.term.domain.MemberTerm;
+import com.ssafy.yoittang.term.domain.repository.MemberTermJpaRepository;
+import com.ssafy.yoittang.term.domain.request.MemberTermCreateRequest;
 import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
@@ -60,7 +60,7 @@ public class LoginServiceTest {
     private KakaoOAuthProvider kakaoOAuthProvider;
 
     @Mock
-    private TermService termService;
+    private MemberTermJpaRepository memberTermJpaRepository;
 
     @Mock
     private RedisTemplate<String, MemberRedisEntity> redisTemplate;
@@ -179,10 +179,11 @@ public class LoginServiceTest {
                 .profileImageUrl(newProfileImageUrl)
                 .build();
 
+        MemberTermCreateRequest agreements = new MemberTermCreateRequest(true, true, false);
         SignupRequest signupRequest = new SignupRequest(
                 newSocialId,
+                agreements,
                 newNickname,
-                newProfileImageUrl,
                 LocalDate.of(1995, 5, 5),
                 Gender.FEMALE,
                 52.5F
@@ -196,7 +197,7 @@ public class LoginServiceTest {
                 .socialId(signupRequest.socialId())
                 .birthDate(signupRequest.birthDate())
                 .nickname(signupRequest.nickname())
-                .profileImageUrl(signupRequest.profileImageUrl())
+                .profileImageUrl(memberRedisEntity.getProfileImageUrl())
                 .gender(signupRequest.gender())
                 .weight(signupRequest.weight())
                 .disclosure(DisclosureStatus.ALL)
@@ -221,8 +222,7 @@ public class LoginServiceTest {
         assertThat(response.accessToken()).isEqualTo("accessToken");
         assertThat(response.refreshToken()).isEqualTo("refreshToken");
         assertThat(response.socialId()).isNull();
-
-        then(termService).should(times(1)).persistMemberTerms(any(Member.class), anyString());
+        then(memberTermJpaRepository).should(times(3)).save(any(MemberTerm.class));
         then(refreshTokenRepository).should(times(1)).save(any(RefreshToken.class));
     }
 }
