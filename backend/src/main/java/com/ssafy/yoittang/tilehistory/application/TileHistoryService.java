@@ -16,7 +16,8 @@ import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
-
+import com.ssafy.yoittang.tilehistory.domain.dto.reqeust.TileMemberRankingRequest;
+import com.ssafy.yoittang.tilehistory.domain.dto.response.TileMemberRankingResponse;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
@@ -107,6 +108,13 @@ public class TileHistoryService {
                 .zordiacId(member.getZordiacId())
                 .personalTileGetResponseList(personalTileGetResponseList)
                 .build();
+    }
+
+    public TileMemberRankingResponse getTileMemberRankingList(
+            Long zordiacId,
+            TileMemberRankingRequest tileMemberRankingRequest
+    ) {
+        return tileHistoryRepository.getTileMemberRankingList(zordiacId, tileMemberRankingRequest);
     }
 
 }

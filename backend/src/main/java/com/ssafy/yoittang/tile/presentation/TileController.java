@@ -2,6 +2,8 @@ package com.ssafy.yoittang.tile.presentation;
 
 import java.time.LocalDate;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +18,13 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.tile.application.TileService;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
+import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
+import com.ssafy.yoittang.tilehistory.domain.dto.reqeust.TileMemberRankingRequest;
+import com.ssafy.yoittang.tilehistory.domain.dto.response.TileMemberRankingResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,6 +59,33 @@ public class TileController {
         return ResponseEntity.ok(tileService.getTile(zordiacId, lat, lng));
     }
 
+    @GetMapping("/team/cluster")
+    public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
+        @RequestParam Double lat,
+        @RequestParam Double lng,
+        @RequestParam Integer zoomLevel
+    ) {
+        return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
+    }
+
+    @GetMapping("/team/cluster/{zordiacId}")
+    public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
+            @PathVariable Long zordiacId,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @RequestParam Integer zoomLevel
+    ) {
+        return ResponseEntity.ok(tileService.getTileCluster(zordiacId, lat, lng, zoomLevel));
+    }
+
+    @GetMapping("team/{zordiacId}/situation")
+    public ResponseEntity<TileSituationResponse> getTileSituation(
+            @PathVariable Long zordiacId
+    ) {
+        return ResponseEntity.ok(tileService.getTileSituation(zordiacId));
+    }
+
+
     @GetMapping("/member/{memberId}")
     public ResponseEntity<PersonalTileGetResponseWrapper> getTile(
             @PathVariable(name = "memberId") Long memberId,
@@ -71,4 +105,16 @@ public class TileController {
         return ResponseEntity.ok(tileHistoryService.getTile(personalTileGetRequest, loginMember));
     }
 
+    @GetMapping("/rankings")
+    public ResponseEntity<TileRankingResponse> getTeamRanking() {
+        return ResponseEntity.ok(tileService.getTeamRanking());
+    }
+
+    @GetMapping("/rankings/{zordiacId}")
+    public ResponseEntity<TileMemberRankingResponse> getMemberRanking(
+            @PathVariable Long zordiacId,
+            @Valid TileMemberRankingRequest tileMemberRankingRequest
+    ) {
+        return ResponseEntity.ok(tileHistoryService.getTileMemberRankingList(zordiacId, tileMemberRankingRequest));
+    }
 }

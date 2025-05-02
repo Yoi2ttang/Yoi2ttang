@@ -2,21 +2,23 @@ version: '3.8'
 
 services:
   backend_green:
+    container_name: backend_green
     build:
       context: ../backend
       dockerfile: Dockerfile
       args:
         JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
-    ports:
-      - "18082:8080"
     env_file:
-      - ../backend/dev.env
-    networks:
-      - yoittang_infra
+      - /var/jenkins_home/dev.env
+    environment:
+      - SERVER_PORT=18082
     restart: unless-stopped
 
+volumes:
+  jenkins_home:
+
 networks:
-  yoittang_infra:
+  default:
+    name: yoittang_backend_network
     external: true
-    name: yoittang_infra
 
