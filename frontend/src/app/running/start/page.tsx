@@ -44,7 +44,7 @@ const Page = () => {
   )
   return (
     <div className="relative flex h-full w-full flex-col justify-center">
-      <div className="flex flex-1 flex-col gap-4 overflow-hidden pb-48">
+      <div className="flex flex-1 flex-col gap-4 overflow-hidden pb-32">
         <PreRunningInfo />
         <div className="flex flex-1">
           {loc && (
@@ -59,9 +59,9 @@ const Page = () => {
       </div>
       <div className="absolute bottom-16 left-0 w-full space-y-2">
         {/* 타일 변경 버튼 (추후 토글 또는 드롭다운으로 변경 필요) */}
-        <Button className="w-full" onClick={toggleTiles}>
+        {/* <Button className="w-full" onClick={toggleTiles}>
           타일 변경하기
-        </Button>
+        </Button> */}
         <Button className="w-full">참여하기</Button>
       </div>
     </div>
