@@ -8,10 +8,19 @@ services:
       dockerfile: Dockerfile
       args:
         JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
+    volumes:
+      - jenkins_home:/var/jenkins_home:ro
     env_file:
       - /var/jenkins_home/dev.env
-    network_mode: host
     environment:
       - SERVER_PORT=18081
     restart: unless-stopped
+
+volumes:
+  jenkins_home:
+
+networks:
+  default:
+    name: yoittang_backend_network
+    external: true
 
