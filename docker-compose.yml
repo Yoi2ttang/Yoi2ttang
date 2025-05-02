@@ -52,7 +52,7 @@ services:
       args:
         JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
     env_file:
-      - ./backend/dev.env
+      - /home/ubuntu/S12P31A502/backend/dev.env
     environment:
       - SERVER_PORT=18081
     networks:
@@ -67,7 +67,7 @@ services:
       args:
         JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
     env_file:
-      - ./backend/dev.env
+      - /home/ubuntu/S12P31A502/backend/dev.env
     environment:
       - SERVER_PORT=18082
     networks:
