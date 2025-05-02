@@ -44,4 +44,8 @@ public class MemberRepository {
     public List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids) {
         return memberQueryRepository.findMembersByIds(ids);
     }
+
+    public boolean existByNickname(String nickname) {
+        return memberJpaRepository.existsByNickname(nickname);
+    }
 }

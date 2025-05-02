@@ -6,10 +6,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
@@ -17,6 +19,7 @@ import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.AccessTokenResponse;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.service.LoginService;
+import com.ssafy.yoittang.member.application.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ public class LoginController {
     private static final int ONE_WEEK_SECONDS = 604800;
 
     private final LoginService loginService;
+    private final MemberService memberService;
 
     @PostMapping(value = "/login/kakao")
     public ResponseEntity<LoginResponse> kakaoLogin(
@@ -80,5 +84,10 @@ public class LoginController {
     ) {
         loginService.logout(refreshToken);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/check-nickname")
+    public ResponseEntity<Boolean> checkNickname(@RequestParam(name = "nickname") String nickname) {
+        return ResponseEntity.ok(memberService.checkNickname(nickname));
     }
 }
