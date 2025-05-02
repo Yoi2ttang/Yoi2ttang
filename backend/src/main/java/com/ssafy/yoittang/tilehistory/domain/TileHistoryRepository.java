@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +13,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.yoittang.common.domain.ScanResult;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
+import com.ssafy.yoittang.tilehistory.domain.dto.reqeust.TileMemberRankingRequest;
+import com.ssafy.yoittang.tilehistory.domain.dto.response.TileMemberRankingResponse;
 import com.ssafy.yoittang.tilehistory.domain.jdbc.TileHistoryJdbcRepository;
 import com.ssafy.yoittang.tilehistory.domain.jpa.TileHistoryJpaRepository;
 import com.ssafy.yoittang.tilehistory.domain.query.TileHistoryQueryRepository;
@@ -164,6 +165,13 @@ public class TileHistoryRepository {
 
     public List<String> findGeoHashesByMemberId(Long memberId) {
         return tileHistoryJpaRepository.findGeoHashesByMemberId(memberId);
+    }
+
+    public TileMemberRankingResponse getTileMemberRankingList(
+            Long zordiacId,
+            TileMemberRankingRequest tileMemberRankingRequest
+    ) {
+        return tileHistoryJdbcRepository.getTileMemberRankingResponse(zordiacId, tileMemberRankingRequest);
     }
 
 }
