@@ -7,5 +7,6 @@ public record TileHistoryMemberRankingResponse(
         Integer rank,
         Long memberId,
         String nickname,
+        String profileImageUrl,
         Long tileCount
 ) { }

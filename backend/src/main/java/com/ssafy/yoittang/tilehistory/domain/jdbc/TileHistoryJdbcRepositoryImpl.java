@@ -76,13 +76,14 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
                           ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC, th.member_id ASC) AS rank,
                           th.member_id,
                           m.nickname,
+                          m.profile_image_url,
                           COUNT(*) AS count
                         FROM tile_histories AS th
                         JOIN running_points AS rp ON th.running_point_id = rp.running_point_id
                         JOIN members AS m ON th.member_id = m.member_id
                         WHERE rp.arrival_time BETWEEN :start_time AND :end_time
                           AND th.zordiac_id = :zordiac_id
-                        GROUP BY th.member_id, m.nickname
+                        GROUP BY th.member_id, m.nickname, m.profile_image_url
                 """
         );
 
@@ -106,6 +107,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
                         .rank(rs.getInt("rank"))
                         .memberId(rs.getLong("member_id"))
                         .nickname(rs.getString("nickname"))
+                        .profileImageUrl(rs.getString("profile_image_url"))
                         .tileCount(rs.getLong("count"))
                         .build()
         );
