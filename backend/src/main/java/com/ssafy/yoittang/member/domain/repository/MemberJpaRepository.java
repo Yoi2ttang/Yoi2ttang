@@ -8,4 +8,6 @@ import com.ssafy.yoittang.member.domain.Member;
 
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
     Optional<Member> findBySocialId(String socialId);
+
+    boolean existsByNickname(String nickname);
 }

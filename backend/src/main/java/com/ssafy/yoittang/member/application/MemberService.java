@@ -179,6 +179,10 @@ public class MemberService {
         );
     }
 
+    public Boolean checkNickname(String nickname) {
+        return memberRepository.existByNickname(nickname);
+    }
+
     private RunningTimeResponse convertToRunningTimeResponse(Double totalSeconds) {
         if (totalSeconds == null) {
             return new RunningTimeResponse(0, 0, 0);
