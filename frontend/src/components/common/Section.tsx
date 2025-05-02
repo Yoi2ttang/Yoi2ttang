@@ -17,7 +17,7 @@ const Section = ({
   className,
 }: SectionProps) => {
   return (
-    <div className={cn("flex flex-col gap-3", { className })}>
+    <div className={cn("flex flex-col gap-5", className)}>
       <header className="flex w-full items-baseline">
         <div className="flex flex-1 gap-2">
           {leftIcon && <div>{leftIcon}</div>}

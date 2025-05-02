@@ -14,7 +14,7 @@ const OccupyButton = () => {
     <div className="flex flex-col gap-2">
       <Button
         onClick={handleClick}
-        className="flex items-center justify-center gap-2"
+        className="active:bg-yoi-50 flex items-center justify-center gap-2 transition active:scale-95"
         variant="outline">
         <span className="text-title-sm">점령하러가기</span>
         <PersonStanding className="text-yoi-500 size-5" />
