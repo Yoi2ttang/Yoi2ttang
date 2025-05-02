@@ -1,5 +1,7 @@
-import { RequiredTerm } from "@/types/signup/signup"
+import { SignUpData } from "@/types/signup/signup"
 import Image from "next/image"
+import { Dispatch, SetStateAction } from "react"
+import Button from "../common/Button"
 import TermCheckItem from "./TermCheckItem"
 
 const TERM_CHECK_DATA = [
@@ -21,13 +23,35 @@ const TERM_CHECK_DATA = [
 ]
 
 interface TermFormProps {
-  termChecks: RequiredTerm
-  onChange: (type: string, checked: boolean) => void
+  signupData: SignUpData
+  onChange: Dispatch<SetStateAction<SignUpData>>
+  onNext: () => void
 }
 
-const TermForm = ({ termChecks, onChange }: TermFormProps) => {
+const TermForm = ({ signupData, onChange, onNext }: TermFormProps) => {
+  const handleTermCheck = (type: string, checked: boolean) => {
+    if (type === "all") {
+      onChange({
+        ...signupData,
+        agreements: {
+          privacy: checked,
+          location: checked,
+          marketing: checked,
+        },
+      })
+    } else {
+      onChange({
+        ...signupData,
+        agreements: {
+          ...signupData.agreements,
+          [type]: checked,
+        },
+      })
+    }
+  }
+
   return (
-    <>
+    <div className="relative flex h-full flex-col justify-between p-6">
       <div className="mt-8 flex flex-col justify-end gap-6">
         <h1 className="text-title-md">
           참가를 원하시면
@@ -39,8 +63,10 @@ const TermForm = ({ termChecks, onChange }: TermFormProps) => {
           <TermCheckItem
             type="all"
             label="네, 모두 동의합니다."
-            checked={Object.values(termChecks).every((check) => check)}
-            onChange={(checked) => onChange("all", checked)}
+            checked={Object.values(signupData.agreements).every(
+              (check) => check,
+            )}
+            onChange={(checked: boolean) => handleTermCheck("all", checked)}
           />
 
           <hr />
@@ -50,8 +76,14 @@ const TermForm = ({ termChecks, onChange }: TermFormProps) => {
               key={item.id}
               type={item.type}
               label={item.label}
-              checked={termChecks[item.type as keyof typeof termChecks]}
-              onChange={(checked) => onChange(item.type, checked)}
+              checked={
+                signupData.agreements[
+                  item.type as keyof typeof signupData.agreements
+                ]
+              }
+              onChange={(checked: boolean) =>
+                handleTermCheck(item.type, checked)
+              }
             />
           ))}
 
@@ -69,7 +101,16 @@ const TermForm = ({ termChecks, onChange }: TermFormProps) => {
         height={34}
         className="absolute top-1/2 left-1/3 w-96 opacity-5"
       />
-    </>
+
+      <Button
+        disabled={
+          !signupData.agreements.privacy || !signupData.agreements.location
+        }
+        className="w-full"
+        onClick={onNext}>
+        다음
+      </Button>
+    </div>
   )
 }
 
