@@ -14,6 +14,7 @@ import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 
@@ -180,6 +181,13 @@ public class TileService {
                 .rankGap(rankGap)
                 .build();
 
+    }
+
+    public TileRankingResponse getTeamRanking() {
+
+        return TileRankingResponse.builder()
+                .tileTeamSituationResponseList(tileRepository.getTileSituation())
+                .build();
     }
 
     public String getGeoHashStringByZoomLevel(
