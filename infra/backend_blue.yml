@@ -9,9 +9,9 @@ services:
       args:
         JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
     volumes:
-      - /home/ubuntu/S12P31A502/backend/dev.env:/dev/dev.env:ro
+      - /home/ubuntu/S12P31A502/backend/dev.env:/app/envs/dev.env:ro
     env_file:
-      - /dev/dev.env
+      - /app/envs/dev.env
     environment:
       - SERVER_PORT=18081
     restart: unless-stopped
