@@ -10,7 +10,7 @@ interface InitMapOptions {
   onCenterChange?: (center: Coordinates) => void
 }
 
-export const useNaverMap = () => {
+export const useMapTile = () => {
   const mapRef = useRef<NaverMap | null>(null)
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
   const centerChangeCallbackRef = useRef<
