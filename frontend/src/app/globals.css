@@ -40,7 +40,7 @@
   --color-pig: #f5b8c3;
 
   --container-yoi-width: 600px;
-  --spacing-yoi-header-height: 52px;
+  --spacing-yoi-header-height: 56px;
   --spacing-yoi-navbar-height: 56px;
 }
 
@@ -62,7 +62,7 @@
   }
 
   .text-md {
-    @apply font-normal text-md;
+    @apply text-md font-normal;
   }
 }
 
