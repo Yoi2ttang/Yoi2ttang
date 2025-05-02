@@ -1,8 +1,9 @@
 import MainHeader from "@/components/layouts/Header/MainHeader"
 import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
+import { ReactNode } from "react"
 
 interface DashboardLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {

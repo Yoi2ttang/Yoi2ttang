@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
 interface BadgeProps {
   className?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const Badge = ({ className, children }: BadgeProps) => {
