@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
@@ -127,6 +128,9 @@ public class TileService {
     }
 
     public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
+
+        checkZordiacId(zordiacId);
+
         String geoHashString =
                 GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
 
@@ -147,6 +151,8 @@ public class TileService {
 
     public TileClusterGetResponseWrapper getTileCluster(Long zordiacId, Double lat, Double lng, Integer zoomLevel) {
 
+        checkZordiacId(zordiacId);
+
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
                         zordiacId,
@@ -156,6 +162,9 @@ public class TileService {
     }
 
     public TileSituationResponse getTileSituation(Long zordiacId) {
+
+        checkZordiacId(zordiacId);
+
         List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation(zordiacId);
 
         TileTeamSituationResponse myTeam = tileSituationList.stream()
@@ -194,6 +203,13 @@ public class TileService {
         }
 
         return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
+    }
+
+    public void checkZordiacId(Long zordiacId) {
+        if ( 0L <= zordiacId && zordiacId <= 12L) {
+            return;
+        }
+        throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);
     }
 
 }
