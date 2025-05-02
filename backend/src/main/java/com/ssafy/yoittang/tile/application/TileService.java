@@ -165,7 +165,7 @@ public class TileService {
 
         checkZordiacId(zordiacId);
 
-        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation(zordiacId);
+        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
 
         TileTeamSituationResponse myTeam = tileSituationList.stream()
                 .filter(t -> t.zordiacId().equals(zordiacId))
@@ -206,7 +206,7 @@ public class TileService {
     }
 
     public void checkZordiacId(Long zordiacId) {
-        if ( 0L <= zordiacId && zordiacId <= 12L) {
+        if ( 1L <= zordiacId && zordiacId <= 12L) {
             return;
         }
         throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);

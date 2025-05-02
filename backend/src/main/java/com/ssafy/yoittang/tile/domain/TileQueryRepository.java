@@ -11,5 +11,5 @@ public interface TileQueryRepository {
 
     List<TileClusterGetResponse> getTileCluster(Long zordiacId, String geoHashString);
 
-    List<TileTeamSituationResponse> getTileSituation(Long zordiacId);
+    List<TileTeamSituationResponse> getTileSituation();
 }

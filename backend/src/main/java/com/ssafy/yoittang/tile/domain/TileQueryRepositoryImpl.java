@@ -85,7 +85,7 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
     }
 
     @Override
-    public List<TileTeamSituationResponse> getTileSituation(Long zodiacId) {
+    public List<TileTeamSituationResponse> getTileSituation() {
         NumberPath<Long> count = Expressions.numberPath(Long.class, "count");
         NumberPath<Integer> rank = Expressions.numberPath(Integer.class, "rank");
 
