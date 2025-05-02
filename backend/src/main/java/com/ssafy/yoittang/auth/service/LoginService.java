@@ -23,7 +23,9 @@ import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
-import com.ssafy.yoittang.term.application.TermService;
+import com.ssafy.yoittang.term.domain.MemberTerm;
+import com.ssafy.yoittang.term.domain.repository.MemberTermJpaRepository;
+import com.ssafy.yoittang.term.domain.request.MemberTermCreateRequest;
 import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
@@ -39,7 +41,7 @@ public class LoginService {
     private static final Duration TTL = Duration.ofMinutes(30);
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    private final TermService termService;
+    private final MemberTermJpaRepository memberTermJpaRepository;
     private final ZordiacJpaRepository zordiacJpaRepository;
     private final JwtUtil jwtUtil;
     private final KakaoOAuthProvider kakaoOAuthProvider;
@@ -104,22 +106,7 @@ public class LoginService {
         throw new BadRequestException(ErrorCode.FAILED_TO_VALIDATE_TOKEN);
     }
 
-    private LoginResponse preRegister(String socialId, String nickname, String profileImageUrl) {
-        MemberRedisEntity memberRedisEntity = MemberRedisEntity.builder()
-                .socialId(socialId)
-                .nickname(nickname)
-                .profileImageUrl(profileImageUrl)
-                .build();
-        String key = REDIS_PREFIX + memberRedisEntity.getSocialId();
-        redisTemplate.opsForValue().set(key, memberRedisEntity);
-        return LoginResponse.from(
-                null,
-                null,
-                null,
-                socialId
-        );
-    }
-
+    @Transactional
     public LoginResponse finalizeSignup(SignupRequest signupRequest) {
         MemberRedisEntity cache = getMemberRedisEntity(signupRequest.socialId());
 
@@ -127,11 +114,10 @@ public class LoginService {
                 .filter(n -> !n.isBlank())
                 .orElse(cache.getNickname());
 
-        String finalProfileImageUrl = Optional.ofNullable(signupRequest.profileImageUrl())
-                .filter(url -> !url.isBlank())
-                .orElse(cache.getProfileImageUrl());
+        MemberTermCreateRequest agreements = signupRequest.agreements();
 
         int birthYear = signupRequest.birthDate().getYear();
+
         Long zordiacId = calculateZordiacId(birthYear);
 
         Member member = memberRepository.save(
@@ -140,16 +126,14 @@ public class LoginService {
                         .socialId(cache.getSocialId())
                         .birthDate(signupRequest.birthDate())
                         .nickname(finalNickname)
-                        .profileImageUrl(finalProfileImageUrl)
+                        .profileImageUrl(cache.getProfileImageUrl())
                         .gender(signupRequest.gender())
                         .weight(signupRequest.weight())
                         .disclosure(DisclosureStatus.ALL)
                         .stateMessage(null)
                         .build()
         );
-
-        termService.persistMemberTerms(member, signupRequest.socialId());
-
+        saveMemberTerm(agreements, member);
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
         JwtRequest jwtRequest = new JwtRequest(
                 member.getMemberId(),
@@ -168,7 +152,21 @@ public class LoginService {
         );
     }
 
-
+    private LoginResponse preRegister(String socialId, String nickname, String profileImageUrl) {
+        MemberRedisEntity memberRedisEntity = MemberRedisEntity.builder()
+                .socialId(socialId)
+                .nickname(nickname)
+                .profileImageUrl(profileImageUrl)
+                .build();
+        String key = REDIS_PREFIX + memberRedisEntity.getSocialId();
+        redisTemplate.opsForValue().set(key, memberRedisEntity);
+        return LoginResponse.from(
+                null,
+                null,
+                null,
+                socialId
+        );
+    }
 
     private MemberRedisEntity getMemberRedisEntity(String socialId) {
         String redisKey = REDIS_PREFIX + socialId;
@@ -179,5 +177,33 @@ public class LoginService {
     private Long calculateZordiacId(int birthYear) {
         int[] zordiacIdByRemainder = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
         return (long) zordiacIdByRemainder[birthYear % 12];
+    }
+
+    private void saveMemberTerm(MemberTermCreateRequest agreements, Member member) {
+        if (agreements.privacy()) {
+            memberTermJpaRepository.save(
+                    MemberTerm.builder()
+                            .termId(1L)
+                            .memberId(member.getMemberId())
+                            .agree(true)
+                            .build()
+            );
+        }
+        if (agreements.location()) {
+            memberTermJpaRepository.save(
+                    MemberTerm.builder()
+                            .termId(2L)
+                            .memberId(member.getMemberId())
+                            .agree(true)
+                            .build()
+            );
+        }
+        memberTermJpaRepository.save(
+                MemberTerm.builder()
+                        .termId(3L)
+                        .memberId(member.getMemberId())
+                        .agree(agreements.marketing())
+                        .build()
+        );
     }
 }
