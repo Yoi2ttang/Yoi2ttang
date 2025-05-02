@@ -10,7 +10,7 @@ interface MapProps {
   zoom?: number
   strokeColor?: string
   fillColor?: string
-  onCenterChange?: (center: Coordinates) => void // 추가
+  onCenterChange?: (center: Coordinates) => void
 }
 
 const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
