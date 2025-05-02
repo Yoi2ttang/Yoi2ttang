@@ -18,8 +18,8 @@ public class ZordiacJdbcRepositoryImpl implements ZordiacJdbcRepository {
 
     private static final String BULK_INSERT_QURY =
             "INSERT INTO "
-                    + "zordiacs(zordiac_name) "
-                    + "VALUES(?)";
+                    + "zordiacs(zordiac_name, zordiac_image) "
+                    + "VALUES(?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,6 +29,7 @@ public class ZordiacJdbcRepositoryImpl implements ZordiacJdbcRepository {
             public void setValues(PreparedStatement ps, int idx) throws SQLException {
                 Zordiac zordiac = zordiacList.get(idx);
                 ps.setString(1, zordiac.getZordiacName().name());
+                ps.setString(2, zordiac.getZordiacImage());
             }
 
             @Override
