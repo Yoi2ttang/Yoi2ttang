@@ -7,10 +7,13 @@ import java.util.Objects;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
+import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -78,6 +81,29 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                         eqZordiacId(zordiacId)
                 )
                 .groupBy(tile.zordiacId)
+                .fetch();
+    }
+
+    @Override
+    public List<TileTeamSituationResponse> getTileSituation() {
+        NumberPath<Long> count = Expressions.numberPath(Long.class, "count");
+        NumberPath<Integer> rank = Expressions.numberPath(Integer.class, "rank");
+
+        return queryFactory.select(
+                Projections.constructor(
+                        TileTeamSituationResponse.class,
+                        Expressions.numberTemplate(
+                                Integer.class,
+                                "RANK() OVER (ORDER BY COUNT(*) DESC)"
+                        ).as(rank),
+                        tile.zordiacId,
+                        tile.zordiacId.count().as(count)
+                )
+        )
+                .from(tile)
+                .where(tile.zordiacId.isNotNull())
+                .groupBy(tile.zordiacId)
+                .orderBy(count.desc())
                 .fetch();
     }
 

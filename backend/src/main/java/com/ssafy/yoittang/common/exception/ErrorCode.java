@@ -41,7 +41,9 @@ public enum ErrorCode {
     MANDATORY_TERM_NOT_AGREED(5002, "필수 약관에 동의하지 않았습니다."),
 
     TOO_LARGE_GEOHASH(6000, "대한민국을 벗어나는 GeoHash 입니다."),
-    NOT_FOUND_TILE_INFO(6001, "존재하지않는 타일 정보입니다.");
+    NOT_FOUND_TILE_INFO(6001, "존재하지않는 타일 정보입니다."),
+
+    NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다.");
 
     private final int code;
     private final String message;

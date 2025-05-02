@@ -1,16 +1,21 @@
 package com.ssafy.yoittang.tile.application;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
+import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 
 import ch.hsr.geohash.BoundingBox;
 import ch.hsr.geohash.GeoHash;
@@ -123,6 +128,9 @@ public class TileService {
     }
 
     public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
+
+        checkZordiacId(zordiacId);
+
         String geoHashString =
                 GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
 
@@ -143,12 +151,35 @@ public class TileService {
 
     public TileClusterGetResponseWrapper getTileCluster(Long zordiacId, Double lat, Double lng, Integer zoomLevel) {
 
+        checkZordiacId(zordiacId);
+
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
                         zordiacId,
                         getGeoHashStringByZoomLevel(lat, lng, zoomLevel))
                 )
                 .build();
+    }
+
+    public TileSituationResponse getTileSituation(Long zordiacId) {
+
+        checkZordiacId(zordiacId);
+
+        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
+
+        TileTeamSituationResponse myTeam = tileSituationList.stream()
+                .filter(t -> t.zordiacId().equals(zordiacId))
+                .findFirst()
+                .orElse(null);
+
+        Long rankGap = tileSituationList.get(0).tileCount() - Objects.requireNonNull(myTeam).tileCount();
+
+        return TileSituationResponse.builder()
+                .No1Team(tileSituationList.get(0))
+                .myTeam(myTeam)
+                .rankGap(rankGap)
+                .build();
+
     }
 
     public String getGeoHashStringByZoomLevel(
@@ -172,6 +203,13 @@ public class TileService {
         }
 
         return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
+    }
+
+    public void checkZordiacId(Long zordiacId) {
+        if ( 1L <= zordiacId && zordiacId <= 12L) {
+            return;
+        }
+        throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);
     }
 
 }
