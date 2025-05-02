@@ -38,7 +38,7 @@ services:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/ubuntu/S12P31A502/backend/dev.env:/var/jenkins_home/dev.env:ro
-      - /home/ubuntu/S12P31A502/infra/nginx/default.conf:/var/jenkins_home/nginx/default.conf:rw
+      - /home/ubuntu/S12P31A502/infra/nginx:/var/jenkins_home/workspace/yoittang-backend-dev/infra/nginx:rw
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
     networks:
