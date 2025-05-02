@@ -25,19 +25,19 @@ const PersonalStatisticsSection = ({}: PersonalStatisticsSectionProps) => {
       value: `${totalLength}km`,
     },
     {
-      title: "완료한 챌린지 수",
+      title: "완주한 코스",
       icon: "🏆",
       value: `${completedChallenge}개`,
     },
     {
-      title: "모은 타일수",
+      title: "지나온 타일",
       icon: "🪵",
       value: `${totalTile}개`,
     },
   ]
 
   return (
-    <Section title="🪧 나의 기록" supplement="전체 누적 기록">
+    <Section title="🪧 나의 기록" supplement="한달 동안의 기록">
       <div className="grid grid-cols-2 gap-4">
         {statisticsList.map(({ title, icon, value }) => (
           <DashboardCard key={title} className="flex flex-col gap-2">
