@@ -42,6 +42,7 @@ public enum ErrorCode {
 
     TOO_LARGE_GEOHASH(6000, "대한민국을 벗어나는 GeoHash 입니다."),
     NOT_FOUND_TILE_INFO(6001, "존재하지않는 타일 정보입니다."),
+    MUST_BOTH_NULL(6002, "lastCount와 lastMemberId는 함께 존재하거나 함께 null이어야 합니다."),
 
     NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다.");
 

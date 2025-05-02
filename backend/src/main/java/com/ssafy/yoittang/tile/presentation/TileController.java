@@ -2,7 +2,7 @@ package com.ssafy.yoittang.tile.presentation;
 
 import java.time.LocalDate;
 
-
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,8 @@ import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
+import com.ssafy.yoittang.tilehistory.domain.dto.reqeust.TileMemberRankingRequest;
+import com.ssafy.yoittang.tilehistory.domain.dto.response.TileMemberRankingResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -108,5 +110,11 @@ public class TileController {
         return ResponseEntity.ok(tileService.getTeamRanking());
     }
 
-
+    @GetMapping("/rankings/{zordiacId}")
+    public ResponseEntity<TileMemberRankingResponse> getMemberRanking(
+            @PathVariable Long zordiacId,
+            @Valid TileMemberRankingRequest tileMemberRankingRequest
+    ) {
+        return ResponseEntity.ok(tileHistoryService.getTileMemberRankingList(zordiacId, tileMemberRankingRequest));
+    }
 }
