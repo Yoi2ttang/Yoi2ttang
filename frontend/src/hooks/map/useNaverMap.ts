@@ -6,50 +6,66 @@ import { Tile } from "@/types/map/tile"
 
 interface InitMapOptions {
   loc: Coordinates
-  tiles?: Tile[]
   zoom?: number
-  strokeColor?: string
-  fillColor?: string
+  onCenterChange?: (center: Coordinates) => void
 }
 
 export const useNaverMap = () => {
   const mapRef = useRef<NaverMap | null>(null)
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
+  const centerChangeCallbackRef = useRef<
+    ((center: Coordinates) => void) | null
+  >(null)
 
-  const initializeMap = useCallback(({ loc, zoom = 15 }: InitMapOptions) => {
-    if (typeof window === "undefined" || !window.naver) return
+  const initializeMap = useCallback(
+    ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
+      if (typeof window === "undefined" || !window.naver || mapRef.current)
+        return
 
-    const mapOptions = {
-      center: new naver.maps.LatLng(loc),
-      zoom,
-      scaleControl: true,
-      mapDataControl: true,
-      logoControlOptions: {
-        position: naver.maps.Position.BOTTOM_LEFT,
-      },
-    }
+      centerChangeCallbackRef.current = onCenterChange ?? null
 
-    const map = new naver.maps.Map("naver-map", mapOptions)
-    mapRef.current = map
+      const mapOptions = {
+        center: new naver.maps.LatLng(loc.lat, loc.lng),
+        zoom,
+        scaleControl: true,
+        mapDataControl: true,
+        logoControlOptions: {
+          position: naver.maps.Position.BOTTOM_LEFT,
+        },
+      }
 
-    // 현위치 마커
-    new naver.maps.Marker({
-      position: new naver.maps.LatLng(loc),
-      map,
-      icon: {
-        content: `
-              <div class="relative flex justify-center items-center w-6 h-6">
-                <div class="absolute w-6 h-6 bg-yoi-300 rounded-full animate-ping"></div>
-                <div class="relative w-3 h-3 bg-yoi-500 rounded-full z-10"></div>
-              </div>
-            `,
-        size: new naver.maps.Size(24, 24),
-        anchor: new naver.maps.Point(12, 12),
-      },
-    })
-  }, [])
+      const map = new naver.maps.Map("naver-map", mapOptions)
+      mapRef.current = map
 
-  // 타일 렌더링
+      // 중심 좌표 변화 시 좌표 출력
+      naver.maps.Event.addListener(map, "idle", () => {
+        const center = map.getCenter() as naver.maps.LatLng
+        const newCenter = {
+          lat: center.lat(),
+          lng: center.lng(),
+        }
+        centerChangeCallbackRef.current?.(newCenter)
+      })
+
+      // 현위치 마커
+      new naver.maps.Marker({
+        position: new naver.maps.LatLng(loc),
+        map,
+        icon: {
+          content: `
+            <div class="relative flex justify-center items-center w-6 h-6">
+              <div class="absolute w-6 h-6 bg-yoi-300 rounded-full animate-ping"></div>
+              <div class="relative w-3 h-3 bg-yoi-500 rounded-full z-10"></div>
+            </div>
+          `,
+          size: new naver.maps.Size(24, 24),
+          anchor: new naver.maps.Point(12, 12),
+        },
+      })
+    },
+    [],
+  )
+
   const renderTiles = useCallback((tiles: Tile[], color = "#FF7C64") => {
     const map = mapRef.current
     if (!map || typeof window === "undefined" || !window.naver) return
@@ -58,7 +74,7 @@ export const useNaverMap = () => {
     rectanglesRef.current.forEach((rectangle) => rectangle.setMap(null))
     rectanglesRef.current = []
 
-    // 새 타일 그리기
+    // 새 타일 추가
     tiles.forEach(({ sw, ne }) => {
       const rectangle = new naver.maps.Rectangle({
         map,
@@ -72,7 +88,6 @@ export const useNaverMap = () => {
         fillColor: color,
         fillOpacity: 0.6,
       })
-
       rectanglesRef.current.push(rectangle)
     })
   }, [])

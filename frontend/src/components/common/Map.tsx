@@ -10,18 +10,18 @@ interface MapProps {
   zoom?: number
   strokeColor?: string
   fillColor?: string
+  onCenterChange?: (center: Coordinates) => void // 추가
 }
 
-const Map = ({ loc, tiles = [], zoom = 15 }: MapProps) => {
+const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
   const { initializeMap, renderTiles } = useNaverMap()
   const { loaded } = useScriptLoaded()
 
   useEffect(() => {
-    if (loaded && window.naver && window.naver.maps) {
-      initializeMap({ loc, zoom })
-      renderTiles(tiles)
+    if (loaded && loc) {
+      initializeMap({ loc, zoom, onCenterChange })
     }
-  }, [loaded, loc])
+  }, [loaded])
 
   useEffect(() => {
     renderTiles(tiles)
