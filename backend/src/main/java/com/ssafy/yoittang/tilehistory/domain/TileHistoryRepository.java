@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.tilehistory.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -166,4 +167,15 @@ public class TileHistoryRepository {
         return tileHistoryJpaRepository.findGeoHashesByMemberId(memberId);
     }
 
+    public int countDistinctGeohashLastMonth(
+            Long memberId,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    ) {
+        return tileHistoryQueryRepository.countDistinctGeohashLastMonth(
+                memberId,
+                startDate,
+                endDate
+        );
+    }
 }
