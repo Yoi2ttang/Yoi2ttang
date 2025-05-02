@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
+import { debounce } from "lodash-es"
 import Button from "@/components/common/Button"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
 import { Coordinates } from "@/types/map/navermaps"
@@ -13,6 +14,7 @@ const Page = () => {
   const [loc, setLoc] = useState<Coordinates>()
   const [tiles, setTiles] = useState<Tile[]>(tileGetResponseList)
   const [useFirstSet, setUseFirstSet] = useState<boolean>(true)
+  const [center, setCenter] = useState<Coordinates | null>(null)
 
   const initLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -31,10 +33,15 @@ const Page = () => {
     setUseFirstSet(!useFirstSet)
   }
 
-  const handleCenterChange = (center: Coordinates) => {
-    console.log("지도 중심 좌표:", center.lat, center.lng)
-  }
-
+  // 중심 좌표 가져오기
+  const handleCenterChange = useMemo(
+    () =>
+      debounce((center: Coordinates) => {
+        setCenter(center)
+        console.log("지도 중심 좌표: ", center.lat, center.lng)
+      }, 300),
+    [],
+  )
   return (
     <div className="relative flex h-full w-full flex-col justify-center">
       <div className="flex flex-1 flex-col gap-4 overflow-hidden pb-48">
