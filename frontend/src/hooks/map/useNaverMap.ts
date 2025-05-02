@@ -1,0 +1,81 @@
+"use client"
+
+import { useCallback, useRef } from "react"
+import { Coordinates, NaverMap } from "@/types/map/navermaps"
+import { Tile } from "@/types/map/tile"
+
+interface InitMapOptions {
+  loc: Coordinates
+  tiles?: Tile[]
+  zoom?: number
+  strokeColor?: string
+  fillColor?: string
+}
+
+export const useNaverMap = () => {
+  const mapRef = useRef<NaverMap | null>(null)
+  const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
+
+  const initializeMap = useCallback(({ loc, zoom = 15 }: InitMapOptions) => {
+    if (typeof window === "undefined" || !window.naver) return
+
+    const mapOptions = {
+      center: new naver.maps.LatLng(loc),
+      zoom,
+      scaleControl: true,
+      mapDataControl: true,
+      logoControlOptions: {
+        position: naver.maps.Position.BOTTOM_LEFT,
+      },
+    }
+
+    const map = new naver.maps.Map("naver-map", mapOptions)
+    mapRef.current = map
+
+    // 현위치 마커
+    new naver.maps.Marker({
+      position: new naver.maps.LatLng(loc),
+      map,
+      icon: {
+        content: `
+              <div class="relative flex justify-center items-center w-6 h-6">
+                <div class="absolute w-6 h-6 bg-yoi-300 rounded-full animate-ping"></div>
+                <div class="relative w-3 h-3 bg-yoi-500 rounded-full z-10"></div>
+              </div>
+            `,
+        size: new naver.maps.Size(24, 24),
+        anchor: new naver.maps.Point(12, 12),
+      },
+    })
+  }, [])
+
+  // 타일 렌더링
+  const renderTiles = useCallback((tiles: Tile[], color = "#FF7C64") => {
+    const map = mapRef.current
+    if (!map || typeof window === "undefined" || !window.naver) return
+
+    // 기존 타일 제거
+    rectanglesRef.current.forEach((rectangle) => rectangle.setMap(null))
+    rectanglesRef.current = []
+
+    // 새 타일 그리기
+    tiles.forEach(({ sw, ne }) => {
+      const rectangle = new naver.maps.Rectangle({
+        map,
+        bounds: new naver.maps.LatLngBounds(
+          new naver.maps.LatLng(sw.lat, sw.lng),
+          new naver.maps.LatLng(ne.lat, ne.lng),
+        ),
+        strokeColor: color,
+        strokeOpacity: 1,
+        strokeWeight: 2,
+        fillColor: color,
+        fillOpacity: 0.6,
+      })
+
+      rectanglesRef.current.push(rectangle)
+    })
+  }, [])
+
+  return { initializeMap, renderTiles, mapRef }
+}
