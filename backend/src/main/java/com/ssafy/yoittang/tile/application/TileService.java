@@ -1,6 +1,8 @@
 package com.ssafy.yoittang.tile.application;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,8 @@ import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
+import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 
 import ch.hsr.geohash.BoundingBox;
 import ch.hsr.geohash.GeoHash;
@@ -149,6 +153,24 @@ public class TileService {
                         getGeoHashStringByZoomLevel(lat, lng, zoomLevel))
                 )
                 .build();
+    }
+
+    public TileSituationResponse getTileSituation(Long zordiacId) {
+        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation(zordiacId);
+
+        TileTeamSituationResponse myTeam = tileSituationList.stream()
+                .filter(t -> t.zordiacId().equals(zordiacId))
+                .findFirst()
+                .orElse(null);
+
+        Long rankGap = tileSituationList.get(0).tileCount() - Objects.requireNonNull(myTeam).tileCount();
+
+        return TileSituationResponse.builder()
+                .No1Team(tileSituationList.get(0))
+                .myTeam(myTeam)
+                .rankGap(rankGap)
+                .build();
+
     }
 
     public String getGeoHashStringByZoomLevel(

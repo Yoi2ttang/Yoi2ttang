@@ -2,6 +2,7 @@ package com.ssafy.yoittang.tile.presentation;
 
 import java.time.LocalDate;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -70,6 +72,13 @@ public class TileController {
             @RequestParam Integer zoomLevel
     ) {
         return ResponseEntity.ok(tileService.getTileCluster(zordiacId, lat, lng, zoomLevel));
+    }
+
+    @GetMapping("team/{zordiacId}/situation")
+    public ResponseEntity<TileSituationResponse> getTileSituation(
+            @PathVariable Long zordiacId
+    ) {
+        return ResponseEntity.ok(tileService.getTileSituation(zordiacId));
     }
 
 
