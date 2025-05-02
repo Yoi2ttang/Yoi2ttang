@@ -9,6 +9,7 @@ import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import ch.hsr.geohash.BoundingBox;
@@ -128,6 +129,49 @@ public class TileService {
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(zordiacId, geoHashString))
                 .build();
+    }
+
+    public TileClusterGetResponseWrapper getTileCluster(Double lat, Double lng, Integer zoomLevel) {
+
+        return TileClusterGetResponseWrapper.builder()
+                .tileClusterGetResponseList(tileRepository.getTileCluster(
+                        null,
+                        getGeoHashStringByZoomLevel(lat, lng, zoomLevel))
+                )
+                .build();
+    }
+
+    public TileClusterGetResponseWrapper getTileCluster(Long zordiacId, Double lat, Double lng, Integer zoomLevel) {
+
+        return TileClusterGetResponseWrapper.builder()
+                .tileClusterGetResponseList(tileRepository.getTileCluster(
+                        zordiacId,
+                        getGeoHashStringByZoomLevel(lat, lng, zoomLevel))
+                )
+                .build();
+    }
+
+    public String getGeoHashStringByZoomLevel(
+            Double lat,
+            Double lng,
+            Integer zoomLevel
+    ) {
+        return GeoHash.geoHashStringWithCharacterPrecision(lat, lng, getBasePrecisionByZoomLevel(zoomLevel));
+    }
+
+    // 프론트랑 얘기해서 zoomlevel 에 따른 정밀도를 같이 결정해야 함
+    public int getBasePrecisionByZoomLevel(Integer zoomLevel) {
+        int baseZoom = 15;
+        int basePrecision = 4;
+
+        int precision;
+        if (zoomLevel >= baseZoom) {
+            precision = basePrecision + ((zoomLevel - baseZoom) / 2);
+        } else {
+            precision = basePrecision - ((baseZoom - zoomLevel) / 2);
+        }
+
+        return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
     }
 
 }

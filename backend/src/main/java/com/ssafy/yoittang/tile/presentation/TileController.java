@@ -16,6 +16,7 @@ import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.tile.application.TileService;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
 
@@ -52,6 +53,26 @@ public class TileController {
         return ResponseEntity.ok(tileService.getTile(zordiacId, lat, lng));
     }
 
+    @GetMapping("/team/cluster")
+    public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
+        @RequestParam Double lat,
+        @RequestParam Double lng,
+        @RequestParam Integer zoomLevel
+    ) {
+        return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
+    }
+
+    @GetMapping("/team/cluster/{zordiacId}")
+    public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
+            @PathVariable Long zordiacId,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @RequestParam Integer zoomLevel
+    ) {
+        return ResponseEntity.ok(tileService.getTileCluster(zordiacId, lat, lng, zoomLevel));
+    }
+
+
     @GetMapping("/member/{memberId}")
     public ResponseEntity<PersonalTileGetResponseWrapper> getTile(
             @PathVariable(name = "memberId") Long memberId,
@@ -70,5 +91,6 @@ public class TileController {
 
         return ResponseEntity.ok(tileHistoryService.getTile(personalTileGetRequest, loginMember));
     }
+
 
 }
