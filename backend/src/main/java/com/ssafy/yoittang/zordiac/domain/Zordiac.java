@@ -29,8 +29,15 @@ public class Zordiac {
     @Column(name = "zordiac_name", nullable = false)
     private ZordiacName zordiacName;
 
+    @Column(name = "zordiac_image", length = 256, nullable = false)
+    private String zordiacImage;
+
     @Builder
-    private Zordiac(ZordiacName zordiacName) {
+    private Zordiac(
+            ZordiacName zordiacName,
+            String zordiacImage
+    ) {
         this.zordiacName = zordiacName;
+        this.zordiacImage = zordiacImage;
     }
 }
