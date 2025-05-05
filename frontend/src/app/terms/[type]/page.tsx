@@ -1,22 +1,21 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
-import { notFound } from "next/navigation"
 
-interface TermPageProps {
-  params: {
-    type: string
-  }
+// 동적 경로 중 type의 값이 generateStaticParams에 저장된 값이 아니라면 404 페이지로 보낸다.
+export const dynamicParams = false
+
+export const generateStaticParams = async () => {
+  return [{ type: "privacy" }, { type: "location" }, { type: "marketing" }]
 }
 
-const TERM_TYPES = ["privacy", "location", "marketing"]
+interface TermPageProps {
+  params: Promise<{ type: string }>
+}
 
-const TermPage = ({ params }: TermPageProps) => {
-  const termType = params.type
-  if (!TERM_TYPES.includes(termType)) {
-    notFound()
-  }
+const TermPage = async ({ params }: TermPageProps) => {
+  const { type } = await params
 
   return (
-    <div className="h-dvh">
+    <div>
       <StackHeader title="개인정보 처리 방침" />
 
       <div className="flex flex-1 flex-col p-6">
