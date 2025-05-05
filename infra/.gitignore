@@ -1,0 +1,10 @@
+# Nginx 인증서
+nginx/certs/
+
+*.log
+*.tmp
+*.bak
+
+.DS_Store
+*.swp
+

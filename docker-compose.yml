@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/nginx/certs:ro
+    networks:
+      - yoittang_backend_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - yoittang_backend_network
+    restart: unless-stopped
+
+  jenkins:
+    build:
+      context: infra
+      dockerfile: jenkins.Dockerfile
+    image: yoittang_jenkins:latest
+    container_name: jenkins
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/ubuntu/S12P31A502/backend/dev.env:/var/jenkins_home/dev.env:ro
+      - /home/ubuntu/S12P31A502/infra/nginx:/var/jenkins_home/workspace/yoittang-backend-dev/infra/nginx:rw
+    environment:
+      - JENKINS_OPTS=--prefix=/jenkins
+    networks:
+      - yoittang_backend_network
+    restart: unless-stopped
+
+  backend_blue:
+    container_name: backend_blue
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
+    env_file:
+      - /home/ubuntu/S12P31A502/backend/dev.env
+    environment:
+      - SERVER_PORT=18081
+    networks:
+      - yoittang_backend_network
+    restart: unless-stopped
+
+  backend_green:
+    container_name: backend_green
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: build/libs/yoittang-0.0.1-SNAPSHOT.jar
+    env_file:
+      - /home/ubuntu/S12P31A502/backend/dev.env
+    environment:
+      - SERVER_PORT=18082
+    networks:
+      - yoittang_backend_network
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  jenkins_home:
+
+networks:
+  yoittang_backend_network:
+    external: true
+
