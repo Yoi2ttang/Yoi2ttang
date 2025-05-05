@@ -14,6 +14,7 @@ import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceRespo
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyRunningTimeResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDashboardResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.TileChangeRateResponse;
 import com.ssafy.yoittang.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,13 @@ public class MemberDashboardController {
         return ResponseEntity.ok(memberDashboardService.getMonthCompleteCourse(member));
     }
 
+    @GetMapping("/tile-change/daily")
+    public ResponseEntity<TileChangeRateResponse> getDailyTileChangeRate(@AuthMember Member member) {
+        return ResponseEntity.ok(memberDashboardService.getDailyTileChangeRate(member));
+    }
+
+    @GetMapping("/tile-change/weekly")
+    public ResponseEntity<TileChangeRateResponse> getWeeklyTileChangeRate(@AuthMember Member member) {
+        return ResponseEntity.ok(memberDashboardService.getWeeklyTileChangeRate(member));
+    }
 }

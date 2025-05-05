@@ -60,7 +60,7 @@ public class RunningPointQueryRepositoryImpl implements RunningPointQueryReposit
     }
 
     @Override
-    public List<MemberDailyDistanceResponse> findDailyDistancesByMemberId(
+    public List<MemberDailyDistanceResponse> findDailyDistancesByPeriod(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
