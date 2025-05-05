@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ssafy.yoittang.common.domain.ScanResult;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
 import com.ssafy.yoittang.tilehistory.domain.dto.reqeust.TileMemberRankingRequest;
@@ -185,5 +186,13 @@ public class TileHistoryRepository {
                 startDate,
                 endDate
         );
+    }
+
+    public List<MemberDailyTileResponse> findDailyTileCountsByMemberId(
+            Long memberId,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    ) {
+        return tileHistoryQueryRepository.findDailyTileCountsByMemberId(memberId, startDate, endDate);
     }
 }
