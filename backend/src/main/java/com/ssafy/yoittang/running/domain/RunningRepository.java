@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface RunningRepository extends JpaRepository<Running, Long> {
+public interface RunningRepository extends JpaRepository<Running, Long>, RunningQueryRepository {
 
     Optional<Running> findByRunningIdAndMemberId(Long runningId, Long memberId);
 

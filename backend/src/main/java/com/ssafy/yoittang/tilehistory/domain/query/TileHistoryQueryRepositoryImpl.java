@@ -4,6 +4,7 @@ import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
 import static com.ssafy.yoittang.tilehistory.domain.jpa.QTileHistoryJpa.tileHistoryJpa;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
@@ -72,6 +75,30 @@ public class TileHistoryQueryRepositoryImpl implements TileHistoryQueryRepositor
                 )
                 .fetchOne();
         return count != null ? count.intValue() : 0;
+    }
+
+    @Override
+    public List<MemberDailyTileResponse> findDailyTileCountsByMemberId(
+            Long memberId,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    ) {
+        var arrivalDate = Expressions.dateTemplate(LocalDate.class, "cast({0} as date)", runningPoint.arrivalTime);
+        return queryFactory
+                .select(Projections.constructor(
+                        MemberDailyTileResponse.class,
+                        arrivalDate,
+                        tileHistoryJpa.geoHash.countDistinct().intValue()
+                ))
+                .from(tileHistoryJpa)
+                .join(runningPoint).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningPointId))
+                .where(
+                        tileHistoryJpa.memberId.eq(memberId),
+                        runningPoint.arrivalTime.goe(startDate),
+                        runningPoint.arrivalTime.lt(endDate)
+                )
+                .groupBy(arrivalDate)
+                .fetch();
     }
 
     private BooleanExpression likeGeoHashString(String geoHashString) {

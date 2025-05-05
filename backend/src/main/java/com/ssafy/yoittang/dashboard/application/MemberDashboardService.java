@@ -3,13 +3,18 @@ package com.ssafy.yoittang.dashboard.application;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import jakarta.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
 import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
+import com.ssafy.yoittang.dashboard.domain.dto.response.DateAndSeconds;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyRunningTimeResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDashboardResponse;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.RunningRepository;
@@ -28,14 +33,22 @@ public class MemberDashboardService {
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final CourseJpaRepositoy courseJpaRepositoy;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+
+    @PostConstruct
+    private void initTimeRange() {
+        LocalDate now = LocalDate.now();
+        startDate = now.withDayOfMonth(1).minusMonths(1).atStartOfDay(); // 5월 1일 00:00
+        endDate = now.withDayOfMonth(1).atStartOfDay();
+    }
 
     public MemberDashboardResponse getMemberDashboard(Member member) {
         int duration = calculateMembershipDuration(member.getCreatedAt());
-        LocalDateTime[] times = getStartAndEndDate();
-        Double totalDistance = getLastMonthTotalDistance(member.getMemberId(), times[0], times[1]);
-        Double totalTime = getLastMonthRunningSeconds(member.getMemberId(), times[0], times[1]);
-        List<Long> coursedIds = getLastMonthCourseCount(member.getMemberId(), times[0], times[1]);
-        int countTile = tileHistoryRepository.countDistinctGeohashLastMonth(member.getMemberId(), times[0], times[1]);
+        Double totalDistance = getLastMonthTotalDistance(member.getMemberId(), startDate, endDate);
+        Double totalTime = getLastMonthRunningSeconds(member.getMemberId(), startDate, endDate);
+        List<Long> coursedIds = getLastMonthCourseCount(member.getMemberId(), startDate, endDate);
+        int countTile = tileHistoryRepository.countDistinctGeohashLastMonth(member.getMemberId(), startDate, endDate);
         int completeCourseCount = coursedIds.isEmpty() ? 0 : (int) courseJpaRepositoy.countByCourseIdIn(coursedIds);
         return new MemberDashboardResponse(
                 member.getMemberId(),
@@ -45,6 +58,33 @@ public class MemberDashboardService {
                 countTile,
                 completeCourseCount
         );
+    }
+
+    public List<MemberDailyDistanceResponse> getMonthRunDistance(Member member) {
+        return runningPointRepository.findDailyDistancesByMemberId(member.getMemberId(), startDate, endDate);
+    }
+
+    public List<MemberDailyRunningTimeResponse> getMonthRunningTimes(Member member) {
+        List<DateAndSeconds> list =  runningRepository.findDailyRunningSecondsByMemberId(
+                member.getMemberId(),
+                startDate,
+                endDate
+        );
+
+        return list.stream()
+                .map(entry -> new MemberDailyRunningTimeResponse(
+                        entry.date(),
+                        convertToRunningTimeResponse(entry.totalSeconds())
+                ))
+                .toList();
+    }
+
+    public List<MemberDailyTileResponse> getMonthTiles(Member member) {
+        return tileHistoryRepository.findDailyTileCountsByMemberId(member.getMemberId(), startDate, endDate);
+    }
+
+    public List<MemberDailyCompleteCourseResponse> getMonthCompleteCourse(Member member) {
+        return courseJpaRepositoy.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), startDate, endDate);
     }
 
     private int calculateMembershipDuration(LocalDateTime createdAt)  {
@@ -57,20 +97,6 @@ public class MemberDashboardService {
 
     private Double getLastMonthTotalDistance(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
         return runningPointRepository.findLastMonthDistanceByMemberId(memberId, startDate, endDate);
-    }
-
-    private int getTileCount(Long memberId) {
-        Set<String> set1 = new HashSet<>(tileHistoryRepository.findGeoHashesByMemberId(memberId));
-        Set<String> set2 = tileHistoryRepository.getTodayGeoHashesFromRedis(memberId, LocalDate.now().toString());
-        set1.addAll(set2);
-        return set1.size();
-    }
-
-    private LocalDateTime[] getStartAndEndDate() {
-        LocalDate now = LocalDate.now();
-        LocalDateTime startDate = now.withDayOfMonth(1).minusMonths(1).atStartOfDay(); // 5월 1일 00:00
-        LocalDateTime endDate = now.withDayOfMonth(1).atStartOfDay();
-        return new LocalDateTime[] {startDate, endDate};
     }
 
     private RunningTimeResponse convertToRunningTimeResponse(Double totalSeconds) {
