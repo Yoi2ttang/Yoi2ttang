@@ -1,7 +1,22 @@
+"use client"
+
 import Image from "next/image"
 import TileLoading from "@/assets/images/loading/tile-loading.gif"
+import useLogin from "@/hooks/auth/useLogin"
+import { useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 
 const LoginAuthPage = () => {
+  const searchParams = useSearchParams()
+  const code = searchParams.get("code")
+  const { mutate: login } = useLogin()
+
+  useEffect(() => {
+    if (code) {
+      login(code)
+    }
+  }, [code, login])
+
   return (
     <div className="flex h-full flex-col items-center justify-center gap-8 p-6">
       <div className="flex flex-1 flex-col items-center justify-center gap-4">

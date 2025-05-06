@@ -1,4 +1,4 @@
-import { SignUpData, SignupStep } from "@/types/signup/signup"
+import { SignUpData, SignupStep } from "@/types/auth"
 import { Dispatch, SetStateAction } from "react"
 import ProgressBar from "../common/ProgressBar"
 import StackHeader from "../layouts/Header/StackHeader"

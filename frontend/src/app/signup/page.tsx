@@ -3,9 +3,9 @@
 import SignupForm from "@/components/signup/SignupForm"
 import TeamSelectionForm from "@/components/signup/TeamSelectionForm"
 import TermForm from "@/components/signup/TermForm"
-import { SignUpData, SignupStep } from "@/types/signup/signup"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { SignUpData, SignupStep } from "@/types/auth"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 const SignupPage = () => {
   const [step, setStep] = useState<SignupStep>(SignupStep.TERM)
@@ -26,6 +26,17 @@ const SignupPage = () => {
     weight: 0,
   })
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const socialId = searchParams.get("socialId")
+    if (socialId) {
+      setSignupData({
+        ...signupData,
+        socialId,
+      })
+    }
+  }, [searchParams])
 
   const renderForm = () => {
     switch (step) {
@@ -57,7 +68,7 @@ const SignupPage = () => {
     }
   }
 
-  return <div className="h-dvh overflow-hidden">{renderForm()}</div>
+  return <div className="h-full overflow-hidden">{renderForm()}</div>
 }
 
 export default SignupPage

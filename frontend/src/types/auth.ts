@@ -23,3 +23,9 @@ export type SignUpData = {
   gender: string
   weight: number
 }
+
+export type LoginResponse = {
+  memberId: number | null
+  accessToken: string | null
+  socialId: string | null
+}

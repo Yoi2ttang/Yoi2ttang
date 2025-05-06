@@ -1,4 +1,4 @@
-import { SignUpData } from "@/types/signup/signup"
+import { SignUpData } from "@/types/auth"
 import { ChangeEvent, Dispatch, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
