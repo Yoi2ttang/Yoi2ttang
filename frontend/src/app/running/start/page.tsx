@@ -46,16 +46,16 @@ const Page = () => {
     <div className="relative flex h-full w-full flex-col justify-center">
       <div className="flex flex-1 flex-col gap-4 overflow-hidden pb-32">
         <PreRunningInfo />
-        <div className="flex flex-1">
-          {loc && (
+        {loc && (
+          <div className="flex flex-1">
             <Map
               loc={loc}
               tiles={tiles}
               zoom={15}
               onCenterChange={handleCenterChange}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <div className="absolute bottom-16 left-0 w-full space-y-2">
         {/* 타일 변경 버튼 (추후 토글 또는 드롭다운으로 변경 필요) */}
