@@ -8,6 +8,7 @@ export enum SignupStep {
 }
 
 export type SignUpData = {
+  socialId: string
   agreements: {
     privacy: boolean
     location: boolean
