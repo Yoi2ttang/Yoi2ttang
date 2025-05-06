@@ -107,8 +107,6 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
     })
   }
 
-  console.log(signupData.birth)
-
   return (
     <div className="flex flex-1 flex-col justify-between">
       <div className="flex flex-col gap-4">
