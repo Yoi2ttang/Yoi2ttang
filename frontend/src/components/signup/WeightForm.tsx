@@ -44,7 +44,7 @@ const WeightForm = ({ signupData, onChange, onNext }: WeightFormProps) => {
 
         <Input
           type="number"
-          placeholder="미입력 시 성별, 나이를 고려해 평균 체중으로 적용돼요"
+          placeholder="미입력 시 평균 체중이 적용돼요"
           min={MIN_WEIGHT}
           max={MAX_WEIGHT}
           value={!signupData.weight ? "" : signupData.weight}
