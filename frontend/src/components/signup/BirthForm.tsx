@@ -1,7 +1,8 @@
 import { SignUpData } from "@/types/signup/signup"
-import { Dispatch, SetStateAction } from "react"
+import { ChangeEvent, Dispatch, FocusEvent, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
+import { clamp } from "lodash-es"
 
 interface BirthFormProps {
   signupData: SignUpData
@@ -10,27 +11,96 @@ interface BirthFormProps {
 }
 
 const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    switch (e.target.name) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    switch (name) {
+      // 년도의 길이가 4이상이 될 경우 입력 방지
       case "year":
-        onChange({
-          ...signupData,
-          birth: { ...signupData.birth, year: e.target.value },
-        })
+        if (value.length > 4) {
+          return
+        }
         break
+      // 월과 일의 길이가 2이상이 될 경우 입력 방지
       case "month":
-        onChange({
-          ...signupData,
-          birth: { ...signupData.birth, month: e.target.value },
-        })
-        break
       case "day":
-        onChange({
-          ...signupData,
-          birth: { ...signupData.birth, day: e.target.value },
-        })
+        if (value.length > 2) {
+          return
+        }
         break
     }
+
+    onChange({
+      ...signupData,
+      birth: {
+        ...signupData.birth,
+        [name]: value,
+      },
+    })
+  }
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    const number = parseInt(value, 10)
+    let validatedBirth = { ...signupData.birth }
+
+    switch (name) {
+      // 년도의 범위를 벗어날 경우 최대, 최소값으로 보정
+      case "year": {
+        validatedBirth.year = clamp(
+          number,
+          1900,
+          new Date().getFullYear(),
+        ).toString()
+
+        // 년도가 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
+        if (validatedBirth.day) {
+          validatedBirth.day = Math.min(
+            Number(validatedBirth.day),
+            new Date(
+              Number(validatedBirth.year),
+              Number(validatedBirth.month),
+              0,
+            ).getDate(),
+          ).toString()
+        }
+        break
+      }
+      case "month": {
+        // 월의 범위를 벗어날 경우 최대, 최소값으로 보정
+        validatedBirth.month = clamp(number, 1, 12).toString()
+
+        // 월이 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
+        if (validatedBirth.day) {
+          validatedBirth.day = Math.min(
+            Number(validatedBirth.day),
+            new Date(
+              Number(validatedBirth.year),
+              Number(validatedBirth.month),
+              0,
+            ).getDate(),
+          ).toString()
+        }
+        break
+      }
+      case "day": {
+        // 일의 범위를 벗어날 경우 최대, 최소값으로 보정
+        validatedBirth.day = clamp(
+          number,
+          1,
+          new Date(
+            Number(validatedBirth.year),
+            Number(validatedBirth.month),
+            0,
+          ).getDate(),
+        ).toString()
+        break
+      }
+    }
+
+    onChange({
+      ...signupData,
+      birth: validatedBirth,
+    })
   }
 
   return (
@@ -47,22 +117,41 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             type="number"
             placeholder="년도"
             name="year"
+            min={1900}
+            max={new Date().getFullYear()}
             value={signupData.birth.year}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <Input
             type="number"
             placeholder="월"
             name="month"
+            min={1}
+            max={12}
+            variant={!signupData.birth.year ? "disabled" : "default"}
             value={signupData.birth.month}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <Input
             type="number"
             placeholder="일"
             name="day"
+            min={1}
+            max={new Date(
+              Number(signupData.birth.year),
+              Number(signupData.birth.month),
+              0,
+            ).getDate()}
+            variant={
+              !signupData.birth.year || !signupData.birth.month
+                ? "disabled"
+                : "default"
+            }
             value={signupData.birth.day}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
         </div>
       </div>
