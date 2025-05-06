@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import debounce from "lodash/debounce"
+import { debounce } from "lodash-es"
 import Button from "@/components/common/Button"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
 import { Coordinates } from "@/types/map/navermaps"
