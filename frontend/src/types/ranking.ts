@@ -7,3 +7,11 @@ export interface TeamRankingInfo {
   totalTiles: number
   TeamIconComponent: FC<ComponentProps<"svg">>
 }
+
+export interface ContributionUserInfo {
+  rank: number
+  memberId: number
+  nickname: string
+  profileImageUrl: string
+  tileCount: number
+}
