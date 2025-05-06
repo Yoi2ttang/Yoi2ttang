@@ -1,11 +1,15 @@
 "use client"
 
-import { createContext, useState, useContext } from "react"
+import { createContext, useState, useContext, ReactNode } from "react"
 import Script from "next/script"
 
 const ScriptContext = createContext({ loaded: false })
 
-export const ScriptProvider = ({ children }: { children: React.ReactNode }) => {
+interface ScriptProviderProps {
+  children: ReactNode
+}
+
+export const ScriptProvider = ({ children }: ScriptProviderProps) => {
   const [loaded, setLoaded] = useState<boolean>(false)
 
   return (

@@ -3,7 +3,11 @@ import "@/app/globals.css"
 import MainHeader from "@/components/layouts/Header/MainHeader"
 import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
 
-const Layout = ({ children }: { children: ReactNode }) => {
+interface LayoutProps {
+  children: ReactNode
+}
+
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex h-dvh max-h-dvh w-full flex-col">
       <MainHeader />
