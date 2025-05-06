@@ -63,6 +63,36 @@ export const backgroundClassMap: Record<AnimalType, string> = {
   pig: "bg-pig",
 }
 
+export const textClassMap: Record<AnimalType, string> = {
+  mouse: "text-mouse",
+  cow: "text-cow",
+  tiger: "text-tiger",
+  rabbit: "text-rabbit",
+  dragon: "text-dragon",
+  snake: "text-snake",
+  horse: "text-horse",
+  sheep: "text-sheep",
+  monkey: "text-monkey",
+  chicken: "text-chicken",
+  dog: "text-dog",
+  pig: "text-pig",
+}
+
+export const animalNumberMap: Record<number, string> = {
+  0: "monkey",
+  1: "chicken",
+  2: "dog",
+  3: "pig",
+  4: "mouse",
+  5: "cow",
+  6: "tiger",
+  7: "rabbit",
+  8: "dragon",
+  9: "snake",
+  10: "horse",
+  11: "sheep",
+}
+
 export const sizeClassMap: Record<
   AnimalBadgeSize,
   { container: string; icon: string; text: string; px: string }
