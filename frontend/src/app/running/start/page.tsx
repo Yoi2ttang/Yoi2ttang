@@ -16,14 +16,14 @@ const Page = () => {
   const [useFirstSet, setUseFirstSet] = useState<boolean>(true)
   const [center, setCenter] = useState<Coordinates | null>(null)
 
-  const initLocation = () => {
+  const getInitLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       setLoc({ lat: position.coords.latitude, lng: position.coords.longitude })
     })
   }
 
   useEffect(() => {
-    initLocation()
+    getInitLocation()
   }, [])
 
   // 타일 셋 바꾸기 (api 호출 코드로 변경 필요)
