@@ -19,8 +19,9 @@ export const useMapTile = () => {
 
   const initializeMap = useCallback(
     ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
-      if (typeof window === "undefined" || !window.naver || mapRef.current)
+      if (typeof window === "undefined" || !window.naver || mapRef.current) {
         return
+      }
 
       centerChangeCallbackRef.current = onCenterChange ?? null
 
@@ -68,7 +69,9 @@ export const useMapTile = () => {
 
   const renderTiles = useCallback((tiles: Tile[], color = "#FF7C64") => {
     const map = mapRef.current
-    if (!map || typeof window === "undefined" || !window.naver) return
+    if (!map || typeof window === "undefined" || !window.naver) {
+      return
+    }
 
     // 기존 타일 제거
     rectanglesRef.current.forEach((rectangle) => rectangle.setMap(null))
