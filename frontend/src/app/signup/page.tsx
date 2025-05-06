@@ -8,6 +8,7 @@ import { useState } from "react"
 const SignupPage = () => {
   const [step, setStep] = useState<SignupStep>(SignupStep.TERM)
   const [signupData, setSignupData] = useState<SignUpData>({
+    socialId: "",
     agreements: {
       privacy: false,
       location: false,

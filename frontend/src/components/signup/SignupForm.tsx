@@ -6,6 +6,7 @@ import BirthForm from "./BirthForm"
 import GenderForm from "./GenderForm"
 import NicknameForm from "./NicknameForm"
 import WeightForm from "./WeightForm"
+import useSignup from "@/hooks/auth/useSignup"
 
 interface SignupFormProps {
   signupData: SignUpData
@@ -22,6 +23,8 @@ const SignupForm = ({
   onPrev,
   onNext,
 }: SignupFormProps) => {
+  const { mutate: signup } = useSignup(signupData)
+
   // 숫자형 Enum은 양방향 매핑(0: "TERM", "TERM": 0)이 되므로, filter를 사용하여 추출한다.
   const stepCount =
     Object.keys(SignupStep).filter((key) => isNaN(Number(key))).length - 2 // TERM, COMPLETED 제외
@@ -57,11 +60,12 @@ const SignupForm = ({
           <WeightForm
             signupData={signupData}
             onChange={onChange}
-            onNext={onNext}
+            onNext={() => {
+              signup()
+              onNext()
+            }}
           />
         )
-      default:
-        return null
     }
   }
 
