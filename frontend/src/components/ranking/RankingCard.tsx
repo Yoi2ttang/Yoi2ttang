@@ -2,6 +2,7 @@ import Badge from "@/components/common/Badge"
 import { cn } from "@/lib/utils"
 import { TeamRankingInfo } from "@/types/ranking"
 import { ChevronRightIcon } from "lucide-react"
+import Link from "next/link"
 
 interface RankingCardProps {
   rankInfo: TeamRankingInfo
@@ -14,7 +15,8 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
   const rankIcon =
     rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : rank
   return (
-    <div
+    <Link
+      href={`/ranking/teams/${teamId}/contribution`}
       className={cn(
         "flex items-center justify-between rounded-xl px-3 py-4",
         "transition-all duration-300 active:scale-95",
@@ -38,7 +40,7 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
         </Badge>
         <ChevronRightIcon className="size-4" />
       </div>
-    </div>
+    </Link>
   )
 }
 export default RankingCard

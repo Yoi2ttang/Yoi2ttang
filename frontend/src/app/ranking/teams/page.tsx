@@ -6,8 +6,9 @@ import Rabbit from "@/assets/icons/animals/rabbit-icon.svg"
 import Sheep from "@/assets/icons/animals/sheep-icon.svg"
 import Snake from "@/assets/icons/animals/snake-icon.svg"
 import Tiger from "@/assets/icons/animals/tiger-icon.svg"
+import StackHeader from "@/components/layouts/Header/StackHeader"
 import MyTeamCard from "@/components/ranking/MyTeamCard"
-import RankingCard from "@/components/ranking/rankingCard"
+import RankingCard from "@/components/ranking/RankingCard"
 import { TeamRankingInfo } from "@/types/ranking"
 import { Separator } from "@radix-ui/react-separator"
 
@@ -18,16 +19,19 @@ const TeamsRankingPage = ({}: TeamsRankingPageProps) => {
   const myTeam = mockData.find((team) => team.teamId === myTeamId)
 
   return (
-    <div className="flex flex-col gap-4">
-      {myTeam && <MyTeamCard rankInfo={myTeam} />}
+    <div>
+      <StackHeader title="팀 랭킹" align="left" description="12시 기준" />
+      <div className="flex flex-col gap-4 px-4">
+        {myTeam && <MyTeamCard rankInfo={myTeam} />}
 
-      <Separator className="h-px bg-neutral-200" />
+        <Separator className="h-px bg-neutral-200" />
 
-      <div className="py-4">
-        <div className="flex flex-col gap-3">
-          {mockData.map((data) => (
-            <RankingCard key={data.teamId} rankInfo={data} />
-          ))}
+        <div className="py-4">
+          <div className="flex flex-col gap-3">
+            {mockData.map((data) => (
+              <RankingCard key={data.teamId} rankInfo={data} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
