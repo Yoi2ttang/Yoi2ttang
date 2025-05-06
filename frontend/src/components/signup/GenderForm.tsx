@@ -10,7 +10,7 @@ interface GenderFormProps {
 }
 
 const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
-  const handleSelect = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange({ ...signupData, gender: e.target.value })
   }
 
@@ -29,14 +29,15 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             name="gender"
             id="male"
             value="male"
-            onChange={handleSelect}
-            className="hidden"
+            onChange={handleChange}
+            hidden
           />
           <label
             htmlFor="male"
             className={cn(
-              "w-full cursor-pointer rounded-xl border-2 border-transparent bg-white py-4 text-center",
-              signupData.gender === "male" && "border-yoi-500 text-yoi-500",
+              "w-full cursor-pointer rounded-xl border-2 border-neutral-100 bg-white py-4 text-center text-neutral-400",
+              signupData.gender === "male" &&
+                "border-yoi-500 text-yoi-500 font-semibold",
             )}>
             남성
           </label>
@@ -46,37 +47,22 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             name="gender"
             id="female"
             value="female"
-            onChange={handleSelect}
-            className="hidden"
+            onChange={handleChange}
+            hidden
           />
           <label
             htmlFor="female"
             className={cn(
-              "w-full cursor-pointer rounded-xl border-2 border-transparent bg-white py-4 text-center",
-              signupData.gender === "female" && "border-yoi-500 text-yoi-500",
+              "w-full cursor-pointer rounded-xl border-2 border-neutral-100 bg-white py-4 text-center text-neutral-400",
+              signupData.gender === "female" &&
+                "border-yoi-500 text-yoi-500 font-semibold",
             )}>
             여성
           </label>
-
-          {/* <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleClick("남성")}>
-            남성
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleClick("여성")}>
-            여성
-          </Button> */}
         </div>
       </div>
 
-      <Button
-        disabled={!signupData.nickname}
-        className="w-full"
-        onClick={onNext}>
+      <Button disabled={!signupData.gender} className="w-full" onClick={onNext}>
         다음
       </Button>
     </div>
