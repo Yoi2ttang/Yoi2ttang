@@ -1,4 +1,4 @@
-import { SignUpData } from "@/types/signup/signup"
+import { SignUpData } from "@/types/auth"
 import {
   ChangeEvent,
   Dispatch,

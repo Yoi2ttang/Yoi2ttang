@@ -4,8 +4,8 @@ import Link from "next/link"
 
 const LoginPage = () => {
   return (
-    <div className="flex flex-col justify-center p-6 h-dvh">
-      <div className="flex flex-col flex-1 justify-evenly">
+    <div className="flex h-full flex-col justify-center p-6">
+      <div className="flex flex-1 flex-col justify-evenly">
         <p className="text-title-lg">
           뛰어서 땅따먹기
           <br />
@@ -23,19 +23,21 @@ const LoginPage = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-center text-neutral-400">
+          <p className="text-center text-sm text-neutral-400">
             SNS 계정으로 간편하게 로그인 하세요
           </p>
 
-          <Link href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`} className="flex items-center justify-center gap-4 px-5 py-3 bg-kakao-yellow white rounded-xl">
+          <Link
+            href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`}
+            className="bg-kakao-yellow flex items-center justify-center gap-4 rounded-xl px-5 py-3">
             <KakaoIcon />
-            <p className="text-lg text-kakao-brown">카카오로 달려들기</p>
+            <p className="text-kakao-brown text-lg">카카오로 달려들기</p>
           </Link>
         </div>
       </div>
 
-      <p className="text-center text-caption text-neutral-300">
-          ⓒ 2025. Yoittang All rights reserved
+      <p className="text-caption text-center text-neutral-300">
+        ⓒ 2025. Yoittang All rights reserved
       </p>
     </div>
   )

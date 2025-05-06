@@ -1,5 +1,7 @@
+"use client"
+
 import { postSignup } from "@/services/auth/api"
-import { SignUpData } from "@/types/signup/signup"
+import { SignUpData } from "@/types/auth"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { jwtDecode } from "jwt-decode"
 

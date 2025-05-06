@@ -5,12 +5,10 @@ import {
   textClassMap,
 } from "@/constants/animalBadge"
 import Button from "../common/Button"
-import { SignUpData } from "@/types/signup/signup"
+import { SignUpData } from "@/types/auth"
 import { AnimalType } from "@/types/animal"
-import { sign } from "crypto"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { repeat } from "lodash-es"
 
 interface TeamSelectionFormProps {
   signupData: SignUpData
