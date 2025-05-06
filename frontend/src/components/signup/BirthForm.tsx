@@ -40,6 +40,10 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+    if (!value) {
+      return
+    }
+
     const number = parseInt(value, 10)
     let validatedBirth = { ...signupData.birth }
 
@@ -103,6 +107,8 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
     })
   }
 
+  console.log(signupData.birth)
+
   return (
     <div className="flex flex-1 flex-col justify-between">
       <div className="flex flex-col gap-4">
@@ -119,7 +125,7 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             name="year"
             min={1900}
             max={new Date().getFullYear()}
-            value={signupData.birth.year}
+            value={signupData.birth.year || ""}
             onChange={handleChange}
             onBlur={handleBlur}
           />
@@ -127,10 +133,10 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             type="number"
             placeholder="월"
             name="month"
+            variant={!signupData.birth.year ? "disabled" : "default"}
             min={1}
             max={12}
-            variant={!signupData.birth.year ? "disabled" : "default"}
-            value={signupData.birth.month}
+            value={signupData.birth.month || ""}
             onChange={handleChange}
             onBlur={handleBlur}
           />
@@ -138,18 +144,18 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             type="number"
             placeholder="일"
             name="day"
+            variant={
+              !signupData.birth.year || !signupData.birth.month
+                ? "disabled"
+                : "default"
+            }
             min={1}
             max={new Date(
               Number(signupData.birth.year),
               Number(signupData.birth.month),
               0,
             ).getDate()}
-            variant={
-              !signupData.birth.year || !signupData.birth.month
-                ? "disabled"
-                : "default"
-            }
-            value={signupData.birth.day}
+            value={signupData.birth.day || ""}
             onChange={handleChange}
             onBlur={handleBlur}
           />
