@@ -3,6 +3,7 @@ package com.ssafy.yoittang.common.scheduler;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.ssafy.yoittang.tooktilehistory.domain.TookTileHistoryRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class MidnightScheduler {
 
     private final TileHistoryRepository tileHistoryRepository;
     private final TileRepository tileRepository;
+    private final TookTileHistoryRepository tookTileHistoryRepository;
 
     @Scheduled(cron = "00 00 0 * * *")
     public void runAtMidnight() {
@@ -28,10 +30,13 @@ public class MidnightScheduler {
 
         Long cursorId = 0L;
         Long beforeCursorId = 0L;
+        LocalDate today = LocalDate.now();
+        String todayString = today.toString();
+
 
         do {
             ScanResult<TileHistoryRedis> temp = tileHistoryRepository.getTileHistoryRedisBatch(
-                    LocalDate.now().toString(),
+                    todayString,
                     cursorId,
                     100);
             beforeCursorId = cursorId;
@@ -41,7 +46,8 @@ public class MidnightScheduler {
             tileHistoryRepository.bulkDeleteInRedis(temp.resultList());
         } while (!Objects.equals(cursorId, beforeCursorId));
 
-        tileHistoryRepository.deleteZSet(LocalDate.now().toString());
+        tileHistoryRepository.deleteZSet(todayString);
         tileRepository.updateTileWithTileHistory();
+        tookTileHistoryRepository.insertTookTileHistory(today);
     }
 }
