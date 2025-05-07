@@ -8,11 +8,7 @@ interface InitMapOptions {
   onCenterChange?: (center: Coordinates) => void
 }
 
-export const useMapTile = ({
-  loc,
-  zoom = 15,
-  onCenterChange,
-}: InitMapOptions) => {
+export const useMap = ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
   const mapRef = useRef<NaverMap | null>(null)
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
   const markerRef = useRef<naver.maps.Marker | null>(null)

@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Tile } from "@/types/map/tile"
 import { Coordinates } from "@/types/map/navermaps"
-import { useMapTile } from "@/hooks/map/useMapTile"
+import { useMap } from "@/hooks/map/useMap"
 
 interface MapProps {
   loc: Coordinates
@@ -13,7 +13,7 @@ interface MapProps {
 }
 
 const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
-  const { renderTiles, mapRef } = useMapTile({ loc, zoom, onCenterChange })
+  const { renderTiles, mapRef } = useMap({ loc, zoom, onCenterChange })
 
   useEffect(() => {
     renderTiles(tiles)
