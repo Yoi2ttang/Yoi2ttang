@@ -48,17 +48,21 @@ const ProfilePage = () => {
           </div>
 
           <div className="flex">
-            <div className="flex-1 cursor-pointer text-center">
+            <Link
+              href={`/profile/ErOI거/followers`}
+              className="flex-1 cursor-pointer text-center">
               <p className="text-neutral-800">팔로워</p>
               <p className="text-lg">1,024</p>
-            </div>
+            </Link>
 
             <div className="w-0.5 bg-neutral-50" />
 
-            <div className="flex-1 cursor-pointer text-center">
+            <Link
+              href={`/profile/ErOI거/followings`}
+              className="flex-1 cursor-pointer text-center">
               <p className="text-neutral-800">팔로잉</p>
               <p className="text-lg">324</p>
-            </div>
+            </Link>
           </div>
 
           <Button className="w-full">팔로우</Button>
