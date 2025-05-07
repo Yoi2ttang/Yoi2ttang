@@ -75,7 +75,7 @@ public class RunningPointQueryRepositoryImpl implements RunningPointQueryReposit
                                 MemberDailyDistanceResponse.class,
                                 arrivalDate,
                                 Expressions.numberTemplate(Double.class,
-                                        "SUM(ST_Length({0}::geography))", runningPoint.root)
+                                        "SUM(ST_Length(cast({0} as geography)))", runningPoint.root)
                         )
 
                 )

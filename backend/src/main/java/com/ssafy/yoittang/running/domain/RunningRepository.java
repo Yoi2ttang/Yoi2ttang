@@ -16,22 +16,22 @@ public interface RunningRepository extends JpaRepository<Running, Long>, Running
 
 
     @Query(value = """
-            SELECT SUM(EXTRACT(EPOCH FROM (r.endTime - r.startTime)))
-            FROM Running r
-            WHERE r.memberId = :memberId AND r.state = 'COMPLETE'
+            SELECT SUM(EXTRACT(EPOCH FROM (r.end_time - r.start_time)))
+            FROM runnings r
+            WHERE r.member_id = :memberId AND r.state = 'COMPLETE'
         """, nativeQuery = true)
     Double findTotalRunningSecondsByMemberId(@Param("memberId") Long memberId);
 
 
     @Query(value = """
-            SELECT SUM(EXTRACT(EPOCH FROM (r.endTime - r.startTime)))
-            FROM Running r
-            WHERE r.memberId = :memberId
+            SELECT SUM(EXTRACT(EPOCH FROM (r.end_time - r.start_time)))
+            FROM runnings r
+            WHERE r.member_id = :memberId
             AND r.state = 'COMPLETE'
-            AND r.startTime >= :startDate
-            AND r.startTime < :endDate
-            AND r.endTime >= :startDate
-            AND r.endTime < :endDate
+            AND r.start_time >= :startDate
+            AND r.start_time < :endDate
+            AND r.end_time >= :startDate
+            AND r.end_time < :endDate
         """, nativeQuery = true)
     Double findTotalRunningSecondsByMemberIdAndDateRange(
             @Param("memberId") Long memberId,
@@ -40,15 +40,15 @@ public interface RunningRepository extends JpaRepository<Running, Long>, Running
     );
 
     @Query(value = """
-            SELECT r.courseId
-            FROM Running r
-            WHERE r.memberId = :memberId
+            SELECT r.course_id
+            FROM runnings r
+            WHERE r.member_id = :memberId
                 AND r.state = 'COMPLETE'
-                AND r.startTime >= :startDate
-                AND r.startTime < :endDate
-                AND r.endTime >= :startDate
-                AND r.endTime < :endDate
-                AND r.courseId IS NOT NULL
+                AND r.start_time >= :startDate
+                AND r.start_time < :endDate
+                AND r.end_time >= :startDate
+                AND r.end_time < :endDate
+                AND r.course_id IS NOT NULL
         """, nativeQuery = true)
     List<Long> findCourseIdsByMemberIdAndStartTimeBetween(
             @Param("memberId") Long memberId,
