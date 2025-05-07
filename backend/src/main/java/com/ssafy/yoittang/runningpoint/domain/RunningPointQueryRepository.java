@@ -10,7 +10,7 @@ public interface RunningPointQueryRepository {
 
     Double findLastMonthDistanceByMemberId(Long memberId, LocalDateTime startDate, LocalDateTime endDate);
 
-    List<MemberDailyDistanceResponse> findDailyDistancesByMemberId(
+    List<MemberDailyDistanceResponse> findDailyDistancesByPeriod(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
