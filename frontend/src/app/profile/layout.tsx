@@ -1,3 +1,4 @@
+import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
 import { ReactNode } from "react"
 
 interface ProfileLayoutProps {
@@ -5,7 +6,12 @@ interface ProfileLayoutProps {
 }
 
 const ProfileLayout = ({ children }: ProfileLayoutProps) => {
-  return <>{children}</>
+  return (
+    <div className="pb-yoi-navbar-height h-full bg-neutral-50">
+      {children}
+      <NavigationBar />
+    </div>
+  )
 }
 
 export default ProfileLayout
