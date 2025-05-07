@@ -1,26 +1,28 @@
-import Section from "@/components/common/Section"
-import AnimalBadge from "./../../components/animal-badges/AnimalBadge"
-import { ChevronRight, SearchIcon } from "lucide-react"
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
+import BlockIcon from "@/assets/icons/profile/block-icon.svg"
 import SettingIcon from "@/assets/icons/profile/setting-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
-import BlockIcon from "@/assets/icons/profile/block-icon.svg"
+import AnimalBadge from "@/components/animal-badges/AnimalBadge"
+import Button from "@/components/common/Button"
+import Section from "@/components/common/Section"
+import { ChevronRight, SearchIcon } from "lucide-react"
+import Link from "next/link"
 
 const ProfilePage = () => {
   return (
     <>
       {/* 프로필 헤더 */}
       <div className="flex items-center justify-between p-4">
-        <p className="text-title-sm flex-1">프로필</p>
+        <p className="text-title-md flex-1">프로필</p>
 
         <div className="flex gap-4">
-          <button className="size-6 cursor-pointer">
+          <Link href="/profile/search" className="size-6 cursor-pointer">
             <SearchIcon className="size-full stroke-neutral-800" />
-          </button>
+          </Link>
 
-          <button className="size-6 cursor-pointer">
+          <Link href="/profile/setting" className="size-6 cursor-pointer">
             <SettingIcon className="size-full stroke-neutral-800" />
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -45,7 +47,7 @@ const ProfilePage = () => {
             지금까지 몇 자인지 한 번 계산해 보도록 하
           </div>
 
-          <div className="flex">
+          <div className="flex py-2">
             <div className="flex-1 cursor-pointer text-center">
               <p className="text-neutral-800">팔로워</p>
               <p className="text-lg">1,024</p>
@@ -58,12 +60,14 @@ const ProfilePage = () => {
               <p className="text-lg">324</p>
             </div>
           </div>
+
+          <Button className="w-full">팔로우</Button>
         </div>
 
         {/* 러닝 기록 */}
         <Section
           title="러닝 기록"
-          rightIcon={<ChevronRight className="size-5 text-neutral-300" />}
+          supplement={<ChevronRight className="size-5 text-neutral-300" />}
           className="rounded-2xl bg-white p-6">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
@@ -97,7 +101,7 @@ const ProfilePage = () => {
         {/* 완료한 퀘스트 */}
         <Section
           title="완료한 퀘스트"
-          rightIcon={<ChevronRight className="size-5 text-neutral-300" />}
+          supplement={<ChevronRight className="size-5 text-neutral-300" />}
           className="rounded-2xl bg-white p-6">
           <div className="flex gap-4 overflow-hidden">
             {Array.from({ length: 4 }).map((_, index) => (

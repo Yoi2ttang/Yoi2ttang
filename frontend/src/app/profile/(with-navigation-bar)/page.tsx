@@ -3,6 +3,7 @@ import BlockIcon from "@/assets/icons/profile/block-icon.svg"
 import SettingIcon from "@/assets/icons/profile/setting-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
 import AnimalBadge from "@/components/animal-badges/AnimalBadge"
+import Button from "@/components/common/Button"
 import Section from "@/components/common/Section"
 import { ChevronRight, SearchIcon } from "lucide-react"
 import Link from "next/link"
@@ -59,6 +60,8 @@ const ProfilePage = () => {
               <p className="text-lg">324</p>
             </div>
           </div>
+
+          <Button className="w-full">팔로우</Button>
         </div>
 
         {/* 러닝 기록 */}
