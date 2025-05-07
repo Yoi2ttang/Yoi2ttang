@@ -18,16 +18,16 @@ const TeamRankingItem = ({ rankInfo }: TeamRankingItemProps) => {
   const rankIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉"
   const backgroundColor =
     rank === 1
-      ? "bg-gradient-to-br from-yoi-500 to-yoi-400"
+      ? "bg-gradient-to-br from-yoi-300 to-yoi-200"
       : rank === 2
-        ? "bg-gradient-to-br from-yoi-400 to-yoi-300"
+        ? "bg-gradient-to-br from-yoi-300 to-yoi-200"
         : "bg-gradient-to-br from-yoi-300 to-yoi-200"
   const lightShadow = "shadow-md shadow-black/10" // 은은한 그림자
 
   return (
     <div
       className={cn(
-        "aspect-video h-full min-w-full shrink-0 snap-center overflow-hidden rounded-xl",
+        "h-full min-w-full shrink-0 snap-center overflow-hidden rounded-xl",
         backgroundColor,
         lightShadow,
       )}>

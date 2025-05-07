@@ -1,15 +1,18 @@
-import type { FC } from "react"
+import { AnimalType } from "@/types/animal"
 
-interface TeamTitleSectionProps {}
-
-const TeamTitleSection: FC<TeamTitleSectionProps> = ({}) => {
-  const mockData = {
-    username: "창조",
-    teamName: "호랑이",
-    rank: 1,
+interface TeamTitleSectionProps {
+  teamInfo: {
+    username: string
+    teamName: string
+    rank: number
+    tileCount: number
+    zodiac: AnimalType
   }
+}
 
-  const { username, teamName, rank } = mockData
+const TeamTitleSection = ({ teamInfo }: TeamTitleSectionProps) => {
+  const { username, teamName, rank, tileCount } = teamInfo
+
   return (
     <section className="flex flex-col gap-1">
       <h3 className="text-title-md">
