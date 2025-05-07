@@ -43,8 +43,6 @@ next-env.d.ts
 # vscode
 .vscode
 
-# pnpm-lock.yaml
-pnpm-lock.yaml
 
 # cursur
 .cursorrules
