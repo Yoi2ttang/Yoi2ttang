@@ -1,12 +1,33 @@
 import type { NextConfig } from "next"
 
+const isDev = process.env.NODE_ENV === "development"
+
 const nextConfig: NextConfig = {
-  rewrites: async () => [
-    {
-      source: "/api/:slug*",
-      destination: "https://yoi2ttang.com/api/:slug*",
-    },
-  ],
+  output: "standalone", // 서버에 필요한 최소 파일만 패키징
+  compress: true, // gzip 압축 설정
+
+  // 개발 환경에서는 CORS 방지를 위한 리다이렉션 설정
+  rewrites: async () =>
+    isDev
+      ? [
+          {
+            source: "/api/:slug*",
+            destination: "https://yoi2ttang.site/api/:slug*",
+          },
+        ]
+      : [],
+
+  // 이미지 설정
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "yoi2ttang.site",
+        port: "",
+        pathname: "/api/**",
+      },
+    ],
+  },
 
   // TurboPack 설정
   experimental: {
