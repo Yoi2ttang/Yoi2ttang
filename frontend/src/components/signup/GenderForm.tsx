@@ -28,7 +28,7 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             type="radio"
             name="gender"
             id="male"
-            value="male"
+            value="MALE"
             onChange={handleChange}
             hidden
           />
@@ -36,7 +36,7 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             htmlFor="male"
             className={cn(
               "w-full cursor-pointer rounded-xl border-2 border-neutral-100 bg-white py-4 text-center text-neutral-400",
-              signupData.gender === "male" &&
+              signupData.gender === "MALE" &&
                 "border-yoi-500 text-yoi-500 font-semibold",
             )}>
             남성
@@ -46,7 +46,7 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             type="radio"
             name="gender"
             id="female"
-            value="female"
+            value="FEMALE"
             onChange={handleChange}
             hidden
           />
@@ -54,7 +54,7 @@ const GenderForm = ({ signupData, onChange, onNext }: GenderFormProps) => {
             htmlFor="female"
             className={cn(
               "w-full cursor-pointer rounded-xl border-2 border-neutral-100 bg-white py-4 text-center text-neutral-400",
-              signupData.gender === "female" &&
+              signupData.gender === "FEMALE" &&
                 "border-yoi-500 text-yoi-500 font-semibold",
             )}>
             여성
