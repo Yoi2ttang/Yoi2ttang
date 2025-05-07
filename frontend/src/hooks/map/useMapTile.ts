@@ -69,8 +69,8 @@ export const useMapTile = () => {
         icon: {
           content: ` 
             <div class="relative flex justify-center items-center w-6 h-6">
-              <div class="absolute w-6 h-6 bg-yoi-300 rounded-full animate-ping"></div>
-              <div class="relative w-3 h-3 bg-yoi-500 rounded-full z-10"></div>
+              <div class="absolute w-6 h-6 bg-blue-300 rounded-full animate-ping"></div>
+              <div class="relative w-3 h-3 bg-blue-500 rounded-full z-10"></div>
             </div>`,
         },
       })
