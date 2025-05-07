@@ -1,7 +1,6 @@
 package com.ssafy.yoittang.member.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import com.ssafy.yoittang.common.domain.BaseTimeEntity;
+import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -79,5 +79,12 @@ public class Member extends BaseTimeEntity {
         this.weight = weight;
         this.disclosure = disclosure;
         this.stateMessage = stateMessage;
+    }
+
+    public void update(MemberUpdateRequest memberUpdateRequest) {
+        this.nickname = memberUpdateRequest.nickname();
+        this.profileImageUrl = memberUpdateRequest.profileImageUrl();
+        this.stateMessage = memberUpdateRequest.stateMessage();
+        this.disclosure = memberUpdateRequest.disclosureStatus();
     }
 }

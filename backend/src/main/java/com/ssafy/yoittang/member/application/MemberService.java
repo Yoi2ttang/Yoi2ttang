@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
@@ -16,9 +18,11 @@ import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
@@ -30,6 +34,7 @@ import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -223,6 +228,22 @@ public class MemberService {
 
     private List<CourseSummaryResponse> getCourseSummaryByMemberId(Long memberId) {
         return courseJpaRepositoy.findCompleteCoursesByMemberId(memberId);
+    }
+
+    @Transactional
+    public void updateProfile(MemberUpdateRequest memberUpdateRequest, Member member) {
+        member.update(memberUpdateRequest);
+    }
+
+    public MyProfileEditResponse getProfileEdit(Member member) {
+        return new MyProfileEditResponse(
+                member.getMemberId(),
+                member.getNickname(),
+                member.getProfileImageUrl(),
+                member.getBirthDate(),
+                member.getStateMessage(),
+                member.getDisclosure()
+        );
     }
 }
 
