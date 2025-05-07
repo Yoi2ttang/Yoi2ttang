@@ -20,9 +20,9 @@ const ProfilePage = () => {
             <SearchIcon className="size-full stroke-neutral-800" />
           </Link>
 
-          <button className="size-6 cursor-pointer">
+          <Link href="/profile/setting" className="size-6 cursor-pointer">
             <SettingIcon className="size-full stroke-neutral-800" />
-          </button>
+          </Link>
         </div>
       </div>
 
