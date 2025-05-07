@@ -72,8 +72,8 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .select(
                         Projections.constructor(
                                 MemberDailyCompleteCourseResponse.class,
-                                runningDate,
-                                running.count()
+                                runningDate.as("date"),
+                                running.count().intValue().as("completeCourseCount")
                         )
                 )
                 .from(running)

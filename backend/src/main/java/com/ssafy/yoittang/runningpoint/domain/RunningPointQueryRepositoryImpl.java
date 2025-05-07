@@ -74,8 +74,11 @@ public class RunningPointQueryRepositoryImpl implements RunningPointQueryReposit
                         Projections.constructor(
                                 MemberDailyDistanceResponse.class,
                                 arrivalDate,
-                                Expressions.numberTemplate(Double.class,
-                                        "SUM(ST_Length(cast({0} as geography)))", runningPoint.root)
+                                Expressions.numberTemplate(
+                                        Double.class,
+                                        "SUM(ST_Length({0}::geography))",
+                                        Expressions.stringTemplate("{0}", runningPoint.root)
+                                )
                         )
 
                 )
