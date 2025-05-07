@@ -1,8 +1,8 @@
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { Tile } from "@/types/map/tile"
 import { Coordinates } from "@/types/map/navermaps"
 import { useMapTile } from "@/hooks/map/useMapTile"
-import { useScriptLoaded } from "@/components/providers/ScriptProvider"
+import { ScriptContext } from "@/components/providers/ScriptProvider"
 
 interface MapProps {
   loc: Coordinates
@@ -15,7 +15,7 @@ interface MapProps {
 
 const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
   const { initializeMap, renderTiles } = useMapTile()
-  const { loaded } = useScriptLoaded()
+  const { loaded } = useContext(ScriptContext)
 
   useEffect(() => {
     if (loaded && loc) {

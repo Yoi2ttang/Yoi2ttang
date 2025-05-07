@@ -3,7 +3,7 @@
 import { createContext, useState, useContext, ReactNode } from "react"
 import Script from "next/script"
 
-const ScriptContext = createContext({ loaded: false })
+export const ScriptContext = createContext({ loaded: false })
 
 interface ScriptProviderProps {
   children: ReactNode
@@ -25,5 +25,3 @@ export const ScriptProvider = ({ children }: ScriptProviderProps) => {
     </>
   )
 }
-
-export const useScriptLoaded = () => useContext(ScriptContext)
