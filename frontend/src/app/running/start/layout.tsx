@@ -7,7 +7,7 @@ interface LayoutProps {
   children: ReactNode
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const RunningStartLayout = ({ children }: LayoutProps) => {
   return (
     <div className="flex h-dvh max-h-dvh w-full flex-col">
       <MainHeader />
@@ -17,4 +17,4 @@ const Layout = ({ children }: LayoutProps) => {
   )
 }
 
-export default Layout
+export default RunningStartLayout

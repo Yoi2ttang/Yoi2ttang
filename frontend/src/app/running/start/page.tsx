@@ -10,7 +10,7 @@ import { Tile } from "@/types/map/tile"
 // 테스트를 위한 임시 좌표 데이터
 import { tileGetResponseList, tileGetResponseList2 } from "@/constants/tiles"
 
-const Page = () => {
+const RunningStartPage = () => {
   const [loc, setLoc] = useState<Coordinates>()
   const [tiles, setTiles] = useState<Tile[]>(tileGetResponseList)
   const [useFirstSet, setUseFirstSet] = useState<boolean>(true)
@@ -68,4 +68,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default RunningStartPage
