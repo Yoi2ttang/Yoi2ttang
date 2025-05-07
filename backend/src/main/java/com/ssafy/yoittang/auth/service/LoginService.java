@@ -52,7 +52,7 @@ public class LoginService {
                 loginRequest.getCode(),
                 loginRequest.getEnvironment()
         );
-        
+
         KakaoMemberInfo kakaoMemberInfo = kakaoOAuthProvider.getMemberInfo(kakaoAccessToken);
 
         Optional<Member> optionalMember = memberRepository.findBySocialId(kakaoMemberInfo.getSocialLoginId());
