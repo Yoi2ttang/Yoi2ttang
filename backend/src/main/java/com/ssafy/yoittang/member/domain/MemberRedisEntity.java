@@ -1,22 +1,16 @@
 package com.ssafy.yoittang.member.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemberRedisEntity {
     private String socialId;
     private String nickname;
     private String profileImageUrl;
-
-    @Builder
-    private MemberRedisEntity(
-            String socialId,
-            String nickname,
-            String profileImageUrl
-    ) {
-        this.socialId = socialId;
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
-    }
 }

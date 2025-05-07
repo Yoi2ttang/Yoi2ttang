@@ -116,7 +116,7 @@ public class LoginService {
 
         MemberTermCreateRequest agreements = signupRequest.agreements();
 
-        int birthYear = signupRequest.birthDate().getYear();
+        int birthYear = signupRequest.birth().getYear();
 
         Long zordiacId = calculateZordiacId(birthYear);
 
@@ -124,7 +124,7 @@ public class LoginService {
                 Member.builder()
                         .zordiacId(zordiacId)
                         .socialId(cache.getSocialId())
-                        .birthDate(signupRequest.birthDate())
+                        .birthDate(signupRequest.birth())
                         .nickname(finalNickname)
                         .profileImageUrl(cache.getProfileImageUrl())
                         .gender(signupRequest.gender())
