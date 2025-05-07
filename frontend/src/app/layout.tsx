@@ -2,7 +2,6 @@ import RootProvider from "@/components/providers/RootProvider"
 import { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
-import { ScriptProvider } from "@/components/providers/ScriptProvider"
 
 const pretendard = localFont({
   src: [
@@ -29,13 +28,11 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="ko">
       <body className={`${pretendard.className} bg-neutral-100`}>
-        <ScriptProvider>
-          <RootProvider>
-            <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
-              <div className="flex-1">{children}</div>
-            </div>
-          </RootProvider>
-        </ScriptProvider>
+        <RootProvider>
+          <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+            <div className="flex-1">{children}</div>
+          </div>
+        </RootProvider>
       </body>
     </html>
   )

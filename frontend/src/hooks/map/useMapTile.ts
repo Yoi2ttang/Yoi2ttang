@@ -22,7 +22,7 @@ export const useMapTile = () => {
   const initializeMap = useCallback(
     ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
       if (typeof window === "undefined" || !window.naver || mapRef.current) {
-        return
+        throw new Error("네이버 지도 api가 로드되지 않았습니다.")
       }
 
       centerChangeCallbackRef.current = onCenterChange ?? null
