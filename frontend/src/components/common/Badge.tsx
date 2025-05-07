@@ -1,15 +1,16 @@
 import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
 interface BadgeProps {
   className?: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
-const Badge = ({ className = "", children }: BadgeProps) => {
+const Badge = ({ className, children }: BadgeProps) => {
   return (
     <div
       className={cn(
-        "flex h-6 w-20 items-center justify-center rounded-full px-1 py-1 text-white",
+        "flex h-6 w-20 items-center justify-center rounded-full px-1 py-0.5 text-white",
         className,
       )}>
       {children}

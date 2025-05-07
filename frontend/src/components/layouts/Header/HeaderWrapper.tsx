@@ -1,5 +1,7 @@
+import { ReactNode } from "react"
+
 interface HeaderWrapperProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const HeaderWrapper = ({ children }: HeaderWrapperProps) => {
