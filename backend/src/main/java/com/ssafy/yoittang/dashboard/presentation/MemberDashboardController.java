@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/memberDashboard")
+@RequestMapping("/member-dashboard")
 public class MemberDashboardController {
     private final MemberDashboardService memberDashboardService;
 
