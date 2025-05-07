@@ -7,4 +7,5 @@ import lombok.Builder;
 @Builder
 public record TileRankingResponse(
         List<TileTeamSituationResponse> tileTeamSituationResponseList
-) { }
+) {
+}

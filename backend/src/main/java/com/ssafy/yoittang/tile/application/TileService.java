@@ -14,6 +14,7 @@ import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
@@ -190,6 +191,28 @@ public class TileService {
                 .build();
     }
 
+    public TilePreviewResponse getRankingPreview(
+            Long zordiacId,
+            Integer limit
+    ) {
+        checkZordiacId(zordiacId);
+        int size = checkLimit(limit);
+
+        List<TileTeamSituationResponse> tileTeamSituationResponseList = tileRepository.getTileSituation();
+
+        Integer myTeamRanking = tileTeamSituationResponseList.stream()
+                .filter(r -> r.zordiacId().equals(zordiacId))
+                .map(TileTeamSituationResponse::rank)
+                .findFirst()
+                .orElse(null);
+
+        return TilePreviewResponse.builder()
+                .tileTeamSituationResponseList(tileTeamSituationResponseList.subList(0, size))
+                .myTeamRanking(myTeamRanking)
+                .build();
+    }
+
+
     public String getGeoHashStringByZoomLevel(
             Double lat,
             Double lng,
@@ -214,10 +237,21 @@ public class TileService {
     }
 
     public void checkZordiacId(Long zordiacId) {
-        if ( 1L <= zordiacId && zordiacId <= 12L) {
+        if (zordiacId != null &&  1L <= zordiacId && zordiacId <= 12L) {
             return;
         }
         throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);
+    }
+
+    public int checkLimit(Integer limit) {
+        if (limit == null) {
+            return 0;
+        }
+
+        if ( 0 <= limit && limit <= 12 ) {
+            return limit;
+        }
+        throw new BadRequestException(ErrorCode.INVALID_REQUEST);
     }
 
 }
