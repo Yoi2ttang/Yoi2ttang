@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useState, useContext, ReactNode } from "react"
+import { createContext, useState, ReactNode } from "react"
 import Script from "next/script"
 
 export const ScriptContext = createContext({ loaded: false })
