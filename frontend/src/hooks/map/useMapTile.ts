@@ -59,7 +59,9 @@ export const useMapTile = () => {
   // 마커 추가 함수
   const addMarker = (loc: Coordinates) => {
     const map = mapRef.current
-    if (!map) return
+    if (!map) {
+      return
+    }
 
     // 마커가 이미 존재하는지 확인 후 추가
     if (!markerRef.current) {
