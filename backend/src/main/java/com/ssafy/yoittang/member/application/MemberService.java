@@ -12,7 +12,7 @@ import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
-import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
+import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
@@ -43,7 +43,7 @@ public class MemberService {
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
-    private final CourseJpaRepositoy courseJpaRepositoy;
+    private final CourseRepository courseRepository;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
         Long lastMemberId = (pageToken != null) ? Long.parseLong(pageToken) : null;
@@ -209,7 +209,7 @@ public class MemberService {
     }
 
     private List<CourseSummaryResponse> getCourseSummaryByMemberId(Long memberId) {
-        return courseJpaRepositoy.findCompleteCoursesByMemberId(memberId);
+        return courseRepository.findCompleteCoursesByMemberId(memberId);
     }
 }
 

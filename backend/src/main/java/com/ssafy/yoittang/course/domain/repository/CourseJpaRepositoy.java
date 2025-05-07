@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.yoittang.course.domain.Course;
 
-public interface CourseJpaRepositoy extends JpaRepository<Course, Long>, CourseQueryRepository {
+public interface CourseJpaRepositoy extends JpaRepository<Course, Long> {
     long countByCourseIdIn(List<Long> courseIds);
 }

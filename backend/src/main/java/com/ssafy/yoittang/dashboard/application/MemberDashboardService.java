@@ -10,7 +10,7 @@ import jakarta.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
+import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.dashboard.domain.ChangeDirection;
 import com.ssafy.yoittang.dashboard.domain.dto.response.DateAndSeconds;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
@@ -35,7 +35,7 @@ public class MemberDashboardService {
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
-    private final CourseJpaRepositoy courseJpaRepositoy;
+    private final CourseRepository courseRepository;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
@@ -52,7 +52,7 @@ public class MemberDashboardService {
         Double totalTime = getLastMonthRunningSeconds(member.getMemberId(), startDate, endDate);
         List<Long> coursedIds = getLastMonthCourseCount(member.getMemberId(), startDate, endDate);
         int countTile = tileHistoryRepository.countDistinctGeohashLastMonth(member.getMemberId(), startDate, endDate);
-        int completeCourseCount = coursedIds.isEmpty() ? 0 : (int) courseJpaRepositoy.countByCourseIdIn(coursedIds);
+        int completeCourseCount = coursedIds.isEmpty() ? 0 : (int) courseRepository.countByCourseIdIn(coursedIds);
         return new MemberDashboardResponse(
                 member.getMemberId(),
                 duration,
@@ -87,7 +87,7 @@ public class MemberDashboardService {
     }
 
     public List<MemberDailyCompleteCourseResponse> getMonthCompleteCourse(Member member) {
-        return courseJpaRepositoy.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), startDate, endDate);
+        return courseRepository.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), startDate, endDate);
     }
 
     public TileChangeRateResponse getDailyTileChangeRate(Member member) {
