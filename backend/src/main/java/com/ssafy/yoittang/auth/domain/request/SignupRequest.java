@@ -9,7 +9,7 @@ public record SignupRequest(
         String socialId,
         MemberTermCreateRequest agreements,
         String nickname,
-        LocalDate birthDate,
+        LocalDate birth,
         Gender gender,
         Float weight
 ) {

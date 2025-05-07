@@ -195,7 +195,7 @@ public class LoginServiceTest {
         Member savedMember = Member.builder()
                 .zordiacId(11L)
                 .socialId(signupRequest.socialId())
-                .birthDate(signupRequest.birthDate())
+                .birthDate(signupRequest.birth())
                 .nickname(signupRequest.nickname())
                 .profileImageUrl(memberRedisEntity.getProfileImageUrl())
                 .gender(signupRequest.gender())
