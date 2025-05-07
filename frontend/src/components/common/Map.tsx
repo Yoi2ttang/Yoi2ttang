@@ -13,19 +13,11 @@ interface MapProps {
 }
 
 const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
-  const { initializeMap, renderTiles } = useMapTile()
-
-  useEffect(() => {
-    try {
-      initializeMap({ loc, zoom, onCenterChange })
-    } catch (e) {
-      console.error(e)
-    }
-  }, [])
+  const { renderTiles, mapRef } = useMapTile({ loc, zoom, onCenterChange })
 
   useEffect(() => {
     renderTiles(tiles)
-  }, [tiles])
+  }, [tiles, mapRef])
 
   return <div id="naver-map" className="h-full w-full" />
 }

@@ -1,6 +1,4 @@
-"use client"
-
-import { useCallback, useRef } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { Coordinates, NaverMap } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 
@@ -10,7 +8,11 @@ interface InitMapOptions {
   onCenterChange?: (center: Coordinates) => void
 }
 
-export const useMapTile = () => {
+export const useMapTile = ({
+  loc,
+  zoom = 15,
+  onCenterChange,
+}: InitMapOptions) => {
   const mapRef = useRef<NaverMap | null>(null)
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
   const markerRef = useRef<naver.maps.Marker | null>(null)
@@ -111,5 +113,13 @@ export const useMapTile = () => {
     })
   }, [])
 
-  return { initializeMap, renderTiles, mapRef }
+  useEffect(() => {
+    try {
+      initializeMap({ loc, zoom, onCenterChange })
+    } catch (e) {
+      console.error(e)
+    }
+  }, [loc, zoom, onCenterChange])
+
+  return { renderTiles, mapRef }
 }
