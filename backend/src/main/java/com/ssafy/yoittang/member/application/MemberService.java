@@ -5,10 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.yoittang.common.aws.S3ImageUploader;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
@@ -36,6 +37,7 @@ import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 import lombok.RequiredArgsConstructor;
 
 
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -49,6 +51,7 @@ public class MemberService {
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final CourseRepository courseRepository;
+    private final S3ImageUploader s3ImageUploader;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
         Long lastMemberId = (pageToken != null) ? Long.parseLong(pageToken) : null;
@@ -231,8 +234,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateProfile(MemberUpdateRequest memberUpdateRequest, Member member) {
-        member.update(memberUpdateRequest);
+    public void updateProfile(MemberUpdateRequest memberUpdateRequest, MultipartFile file, Member member) {
+        member.updateProfileInfo(memberUpdateRequest);
+        if (file != null) {
+            String newProfileImageUrl = s3ImageUploader.uploadMember(file);
+            member.updateProfileImage(newProfileImageUrl);
+        }
+
     }
 
     public MyProfileEditResponse getProfileEdit(Member member) {
@@ -242,7 +250,9 @@ public class MemberService {
                 member.getProfileImageUrl(),
                 member.getBirthDate(),
                 member.getStateMessage(),
-                member.getDisclosure()
+                member.getDisclosure(),
+                member.getGender(),
+                member.getWeight()
         );
     }
 }

@@ -86,10 +86,14 @@ public class Member extends BaseTimeEntity {
         this.stateMessage = stateMessage;
     }
 
-    public void update(MemberUpdateRequest memberUpdateRequest) {
+    public void updateProfileInfo(MemberUpdateRequest memberUpdateRequest) {
         this.nickname = memberUpdateRequest.nickname();
-        this.profileImageUrl = memberUpdateRequest.profileImageUrl();
         this.stateMessage = memberUpdateRequest.stateMessage();
         this.disclosure = memberUpdateRequest.disclosureStatus();
+        this.weight = memberUpdateRequest.weight();
+    }
+
+    public void updateProfileImage(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }
