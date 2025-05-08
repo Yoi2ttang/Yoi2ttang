@@ -61,6 +61,12 @@ public class Member extends BaseTimeEntity {
     @Column(name = "state_message", length = 64)
     private String stateMessage;
 
+    @Column(name = "running_times", nullable = false)
+    private int runningTimes;
+
+    @Column(name = "running_distances", nullable = false)
+    private int runningDistances;
+
     @Builder
     private Member(
             Long zordiacId,
@@ -84,6 +90,8 @@ public class Member extends BaseTimeEntity {
         this.weight = weight;
         this.disclosure = disclosure;
         this.stateMessage = stateMessage;
+        this.runningTimes = 0;
+        this.runningDistances = 0;
     }
 
     public void updateProfileInfo(MemberUpdateRequest memberUpdateRequest) {
@@ -95,5 +103,10 @@ public class Member extends BaseTimeEntity {
 
     public void updateProfileImage(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateRunningStats(int additionalTime, int additionalDistance) {
+        this.runningTimes += additionalTime;
+        this.runningDistances += additionalDistance;
     }
 }

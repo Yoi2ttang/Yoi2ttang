@@ -68,7 +68,15 @@ public class MemberDashboardService {
 
     public List<MemberDailyDistanceResponse> getMonthRunDistance(Member member, int year, int month) {
         LocalDateTime[] times = getValidMonthlyDateRange(year, month);
-        return runningPointRepository.findDailyDistancesByPeriod(member.getMemberId(), times[0], times[1]);
+
+        List<Object[]> rows = runningPointRepository.findDailyDistancesRaw(member.getMemberId(), times[0], times[1]);
+
+        return rows.stream()
+                .map(row -> new MemberDailyDistanceResponse(
+                        ((java.sql.Date) row[0]).toLocalDate(),
+                        ((Number) row[1]).doubleValue()
+                ))
+                .toList();
     }
 
     public List<MemberDailyRunningTimeResponse> getMonthRunningTimes(Member member, int year, int month) {

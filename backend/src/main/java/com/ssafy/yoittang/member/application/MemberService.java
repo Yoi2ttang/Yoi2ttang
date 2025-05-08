@@ -1,10 +1,12 @@
 package com.ssafy.yoittang.member.application;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -254,6 +256,36 @@ public class MemberService {
                 member.getGender(),
                 member.getWeight()
         );
+    }
+
+    @Scheduled(cron = "0 0 1 * * *")  // 매일 새벽 1시
+    @Transactional
+    public void updateDailyRunningStats() {
+        List<Member> members = memberRepository.findAll();
+        LocalDate targetDate = LocalDate.now().minusDays(1);
+        LocalDateTime startDate = targetDate.atStartOfDay();
+        LocalDateTime endDate = targetDate.plusDays(1).atStartOfDay();
+        for (Member member : members) {
+            Double totalSeconds = runningRepository.findTotalRunningSecondsByMemberIdAndDateRange(
+                    member.getMemberId(),
+                    startDate,
+                    endDate
+            );
+            int additionalTime = totalSeconds != null ? totalSeconds.intValue() : 0;
+
+            List<Object[]> dailyDistances = runningPointRepository.findDailyDistancesRaw(
+                    member.getMemberId(),
+                    startDate,
+                    endDate
+            );
+            int additionalDistance = dailyDistances.stream()
+                    .mapToInt(row -> row[1] != null ? ((Number) row[1]).intValue() : 0)
+                    .sum();
+
+            if (additionalTime > 0 || additionalDistance > 0) {
+                member.updateRunningStats(additionalTime, additionalDistance);
+            }
+        }
     }
 }
 
