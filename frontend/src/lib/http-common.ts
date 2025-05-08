@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const apiClient = axios.create({
-  baseURL: "/",
+  baseURL: "/api/v1",
   timeout: 8 * 1000, // 8초
   withCredentials: true,
 })
