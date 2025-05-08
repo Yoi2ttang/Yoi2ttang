@@ -4,7 +4,7 @@ export const checkNicknameValidity = (nickname: string) => {
 
   if (
     nickname.length < 2 ||
-    nickname.length > 10 ||
+    nickname.length > 16 ||
     !validCharRegex.test(nickname)
   ) {
     return false

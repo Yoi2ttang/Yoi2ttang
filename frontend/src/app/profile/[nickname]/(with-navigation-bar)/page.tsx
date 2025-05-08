@@ -37,9 +37,11 @@ const ProfilePage = () => {
               <AnimalBadge animal="tiger" />
             </div>
 
-            <div className="cursor-pointer self-start">
+            <Link
+              href="/profile/ErOI거/setting"
+              className="cursor-pointer self-start">
               <ChevronRight className="size-5 text-neutral-300" />
-            </div>
+            </Link>
           </div>
 
           <div className="leading-[1.6]">

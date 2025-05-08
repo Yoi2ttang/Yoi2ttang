@@ -1,17 +1,10 @@
+import useCheckNickname from "@/hooks/auth/useCheckNickname"
+import { cn } from "@/lib/utils"
 import { SignUpData } from "@/types/auth"
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react"
+import { debounce } from "lodash-es"
+import { ChangeEvent, Dispatch, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
-import { debounce } from "lodash-es"
-import { checkNicknameValidity } from "@/lib/auth/util"
-import useCheckNicknameDuplication from "@/hooks/auth/useCheckNickname"
-import { cn } from "@/lib/utils"
 
 interface NicknameFormProps {
   signupData: SignUpData
@@ -20,37 +13,11 @@ interface NicknameFormProps {
 }
 
 const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
-  const [message, setMessage] = useState("")
-  const [messageType, setMessageType] = useState<"valid" | "invalid">("valid")
-  const { data: isDuplicated } = useCheckNicknameDuplication(
-    signupData.nickname,
-  )
+  const { message, messageType } = useCheckNickname(signupData.nickname)
 
   const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
     onChange({ ...signupData, nickname: e.target.value })
   }, 300)
-
-  useEffect(() => {
-    if (signupData.nickname === "") {
-      setMessage("")
-      setMessageType("valid")
-      return
-    }
-
-    if (!checkNicknameValidity(signupData.nickname)) {
-      setMessage("닉네임은 한글, 영문, 숫자로 2~10자만 사용 가능해요")
-      setMessageType("invalid")
-      return
-    }
-
-    if (isDuplicated) {
-      setMessage("이미 사용 중인 닉네임이에요")
-      setMessageType("invalid")
-    } else {
-      setMessage("사용 가능한 닉네임이에요")
-      setMessageType("valid")
-    }
-  }, [signupData.nickname, isDuplicated])
 
   return (
     <div className="flex flex-1 flex-col justify-between">
