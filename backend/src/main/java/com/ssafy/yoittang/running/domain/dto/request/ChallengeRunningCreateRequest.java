@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotNull;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
+@Builder
 public record ChallengeRunningCreateRequest(
 
         @Schema(description = "코스Id", example = "2")

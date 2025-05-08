@@ -1,7 +1,9 @@
 package com.ssafy.yoittang.running.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,12 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.ssafy.yoittang.common.exception.NotFoundException;
+import com.ssafy.yoittang.course.domain.Course;
+import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Gender;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.State;
+import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
@@ -54,6 +60,9 @@ public class RunningServiceTest {
 
     @Mock
     private TileRepository tileRepository;
+
+    @Mock
+    private CourseJpaRepositoy courseJpaRepositoy;
 
     private Member mockMember;
 
@@ -135,4 +144,111 @@ public class RunningServiceTest {
         verify(runningPointRepository).save(any(RunningPoint.class));
         verify(tileRepository).findByGeoHash(geoHashString);
     }
+
+    //성공하는 케이스
+    @Test
+    public void createChallengeRunningSuccessTest() {
+        // Given
+        Double lat = 37.501161;
+        Double lng = 127.039668;
+        Long courseID = 2L;
+        LocalDateTime now = LocalDateTime.now();
+
+        Course course = Course.builder()
+                .courseName("2번 코스")
+                .courseImageUrl("https://dlfkeowlsl")
+                .distance(29.2393F)
+                .build();
+        ReflectionTestUtils.setField(course, "courseId", courseID);
+
+        ChallengeRunningCreateRequest request = ChallengeRunningCreateRequest.builder()
+                .courseId(courseID)
+                .lat(lat)
+                .lng(lng)
+                .currentTime(now)
+                .build();
+
+        Running savedRunning = Running.builder()
+                .memberId(mockMember.getMemberId())
+                .startTime(now)
+                .state(State.RUNNING)
+                .build();
+        ReflectionTestUtils.setField(savedRunning, "runningId", 3L); // 가짜 ID 부여
+
+        RunningPoint savedPoint = RunningPoint.builder()
+                .runningId(3L)
+                .sequence(0)
+                .arrivalTime(now)
+                .root(runningService.getLineStringByOnePoint(lat, lng)) // 실제 메서드라면 static으로 따로 빼야 함
+                .build();
+        ReflectionTestUtils.setField(savedPoint, "runningPointId", 11L); // 가짜 ID
+
+        String geoHashString = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 7);
+
+        BoundingBox boundingBox = GeoHash.fromGeohashString(geoHashString).getBoundingBox();
+
+        Tile tile = Tile.builder()
+                .geoHash(geoHashString)
+                .latNorth(boundingBox.getNorthLatitude())
+                .latSouth(boundingBox.getSouthLatitude())
+                .lngEast(boundingBox.getEastLongitude())
+                .lngWest(boundingBox.getWestLongitude())
+                .build();
+
+        // Stub repository behaviors
+        when(courseJpaRepositoy.existsById(courseID)).thenReturn(true);
+        when(runningRepository.save(any(Running.class))).thenReturn(savedRunning);
+        when(runningPointRepository.save(any(RunningPoint.class))).thenReturn(savedPoint);
+        when(tileRepository.findByGeoHash(geoHashString)).thenReturn(Optional.of(tile));
+
+        // When
+        RunningCreateResponse response = runningService.createChallengeRunning(request, mockMember);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.geoHash()).isEqualTo(geoHashString);
+        assertThat(response.sw().lat()).isEqualTo(tile.getLatSouth());
+        assertThat(response.sw().lng()).isEqualTo(tile.getLngWest());
+        assertThat(response.ne().lat()).isEqualTo(tile.getLatNorth());
+        assertThat(response.ne().lng()).isEqualTo(tile.getLngEast());
+
+        verify(courseJpaRepositoy).existsById(courseID);
+        verify(runningRepository).save(any(Running.class));
+        verify(runningPointRepository).save(any(RunningPoint.class));
+        verify(tileRepository).findByGeoHash(geoHashString);
+    }
+
+    //코스가 존재하지 않아서 실패하는 케이스
+    @Test
+    public void createChallengeRunningFailByNotExistCourseTest() {
+        // Given
+        Double lat = 37.501161;
+        Double lng = 127.039668;
+        Long courseID = 2L;
+        LocalDateTime now = LocalDateTime.now();
+
+        ChallengeRunningCreateRequest request = ChallengeRunningCreateRequest.builder()
+                .courseId(courseID)
+                .lat(lat)
+                .lng(lng)
+                .currentTime(now)
+                .build();
+
+        when(courseJpaRepositoy.existsById(courseID)).thenReturn(false);
+
+        // When & Then
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> runningService.createChallengeRunning(request, mockMember)
+        );
+
+        assertThat(exception.getMessage()).contains("존재하지 않는 코스입니다."); // 예외 메시지 확인 (선택)
+
+        verify(courseJpaRepositoy).existsById(courseID);
+        // 아래는 실행되지 않았어야 하므로 생략 또는 never()로 명시 가능
+        verify(runningRepository, never()).save(any());
+        verify(runningPointRepository, never()).save(any());
+        verify(tileRepository, never()).findByGeoHash(any());
+    }
+
 }
