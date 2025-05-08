@@ -3,6 +3,7 @@ package com.ssafy.yoittang.member.domain.dto.response;
 import java.time.LocalDate;
 
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
+import com.ssafy.yoittang.member.domain.Gender;
 
 public record MyProfileEditResponse(
         Long memberId,
@@ -10,6 +11,8 @@ public record MyProfileEditResponse(
         String profileImageUrl,
         LocalDate birthdate,
         String stateMessage,
-        DisclosureStatus disclosureStatus
+        DisclosureStatus disclosureStatus,
+        Gender gender,
+        Float weight
 ) {
 }

@@ -242,7 +242,9 @@ public class MemberService {
                 member.getProfileImageUrl(),
                 member.getBirthDate(),
                 member.getStateMessage(),
-                member.getDisclosure()
+                member.getDisclosure(),
+                member.getGender(),
+                member.getWeight()
         );
     }
 }
