@@ -101,4 +101,69 @@ public class TileServiceTest {
         verify(tileRepository).getTile(isNull(), eq(geoHashString));
     }
 
+    // getTile 성공
+    @Test
+    public void getTileSuccessWithZordiacId() {
+        // given
+        double lat = 37.501161;
+        double lng = 127.039668;
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashString = geoHashPrefix + "%";
+
+        Long zordiacId = 3L;
+
+        List<TileGetResponse> responseList = new ArrayList<>();
+
+        for (int i = 0; i < geohashBase32.length; ++i) {
+            if ((i % 12 + 1) == 3 ) {
+                String newGeoHashString = geoHashPrefix + geohashBase32[i];
+                BoundingBox box = GeoHash.fromGeohashString(newGeoHashString).getBoundingBox();
+
+                responseList.add(new TileGetResponse(
+                        newGeoHashString,
+                        zordiacId,
+                        new GeoPoint(box.getSouthLatitude(), box.getWestLongitude()),
+                        new GeoPoint(box.getNorthLatitude(), box.getEastLongitude())
+                ));
+            }
+        }
+
+        when(tileRepository.getTile(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+
+        // when
+        TileGetResponseWrapper response = tileService.getTile(zordiacId, lat, lng);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.tileGetResponseList()).hasSize(responseList.size());
+        assertThat(response.tileGetResponseList()).containsExactlyElementsOf(responseList);
+
+        verify(tileRepository).getTile(eq(zordiacId), eq(geoHashString));
+    }
+
+    //존재하지 않는 ZordiacId
+    @Test
+    public void getTileSuccessNull1ithZordiacId() {
+        // given
+        double lat = 37.501161;
+        double lng = 127.039668;
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashString = geoHashPrefix + "%";
+
+        Long zordiacId = 18L;
+        List<TileGetResponse> responseList = new ArrayList<>();
+
+        when(tileRepository.getTile(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+
+        // when
+        TileGetResponseWrapper response = tileService.getTile(zordiacId, lat, lng);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.tileGetResponseList()).hasSize(responseList.size());
+        assertThat(response.tileGetResponseList()).containsExactlyElementsOf(responseList);
+
+        verify(tileRepository).getTile(eq(zordiacId), eq(geoHashString));
+    }
+
 }
