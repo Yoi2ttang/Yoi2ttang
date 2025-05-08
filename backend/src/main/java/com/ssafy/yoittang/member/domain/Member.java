@@ -35,6 +35,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "social_id", length = 32, nullable = false)
     private String socialId;
 
+    @Column(name = "email", length = 32, nullable = false)
+    private String email;
+
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
@@ -62,6 +65,7 @@ public class Member extends BaseTimeEntity {
     private Member(
             Long zordiacId,
             String socialId,
+            String email,
             LocalDate birthDate,
             String nickname,
             String profileImageUrl,
@@ -72,6 +76,7 @@ public class Member extends BaseTimeEntity {
     ) {
         this.zordiacId = zordiacId;
         this.socialId = socialId;
+        this.email = email;
         this.birthDate = birthDate;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;

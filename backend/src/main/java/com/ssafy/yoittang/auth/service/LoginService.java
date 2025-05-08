@@ -78,6 +78,7 @@ public class LoginService {
         } else {
             return preRegister(
                     kakaoMemberInfo.getSocialLoginId(),
+                    kakaoMemberInfo.getEmail(),
                     kakaoMemberInfo.getNickname(),
                     kakaoMemberInfo.getProfileImageUrl()
             );
@@ -124,6 +125,7 @@ public class LoginService {
                 Member.builder()
                         .zordiacId(zordiacId)
                         .socialId(cache.getSocialId())
+                        .email(cache.getEmail())
                         .birthDate(signupRequest.birth())
                         .nickname(finalNickname)
                         .profileImageUrl(cache.getProfileImageUrl())
@@ -152,12 +154,14 @@ public class LoginService {
         );
     }
 
-    private LoginResponse preRegister(String socialId, String nickname, String profileImageUrl) {
+    private LoginResponse preRegister(String socialId, String email, String nickname, String profileImageUrl) {
         MemberRedisEntity memberRedisEntity = MemberRedisEntity.builder()
                 .socialId(socialId)
+                .email(email)
                 .nickname(nickname)
                 .profileImageUrl(profileImageUrl)
                 .build();
+
         String key = REDIS_PREFIX + memberRedisEntity.getSocialId();
         redisTemplate.opsForValue().set(key, memberRedisEntity);
         return LoginResponse.from(
