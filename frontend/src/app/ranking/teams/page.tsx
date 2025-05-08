@@ -1,16 +1,8 @@
-import Chicken from "@/assets/icons/animals/chicken-icon.svg"
-import Cow from "@/assets/icons/animals/cow-icon.svg"
-import Dragon from "@/assets/icons/animals/dragon-icon.svg"
-import Horse from "@/assets/icons/animals/horse-icon.svg"
-import Rabbit from "@/assets/icons/animals/rabbit-icon.svg"
-import Sheep from "@/assets/icons/animals/sheep-icon.svg"
-import Snake from "@/assets/icons/animals/snake-icon.svg"
-import Tiger from "@/assets/icons/animals/tiger-icon.svg"
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import MyTeamCard from "@/components/ranking/MyTeamCard"
 import RankingCard from "@/components/ranking/RankingCard"
+import { animalIconMap } from "@/constants/animals"
 import { TeamRankingInfo } from "@/types/ranking"
-import { Separator } from "@radix-ui/react-separator"
 
 interface TeamsRankingPageProps {}
 
@@ -24,7 +16,7 @@ const TeamsRankingPage = ({}: TeamsRankingPageProps) => {
       <div className="flex flex-col gap-4 px-4">
         {myTeam && <MyTeamCard rankInfo={myTeam} />}
 
-        <Separator className="h-px bg-neutral-200" />
+        <hr className="border-neutral-200" />
 
         <div className="py-4">
           <div className="flex flex-col gap-3">
@@ -43,56 +35,56 @@ const mockData = [
   {
     teamId: 1,
     teamName: "호랑이",
-    TeamIconComponent: Tiger,
+    TeamIconComponent: animalIconMap["tiger"],
     totalTiles: 100,
     rank: 1,
   },
   {
     teamId: 2,
     teamName: "소",
-    TeamIconComponent: Cow,
+    TeamIconComponent: animalIconMap["cow"],
     totalTiles: 100,
     rank: 2,
   },
   {
     teamId: 3,
     teamName: "토끼",
-    TeamIconComponent: Rabbit,
+    TeamIconComponent: animalIconMap["rabbit"],
     totalTiles: 100,
     rank: 3,
   },
   {
     teamId: 4,
     teamName: "용",
-    TeamIconComponent: Dragon,
+    TeamIconComponent: animalIconMap["dragon"],
     totalTiles: 100,
     rank: 4,
   },
   {
     teamId: 5,
     teamName: "뱀",
-    TeamIconComponent: Snake,
+    TeamIconComponent: animalIconMap["snake"],
     totalTiles: 100,
     rank: 5,
   },
   {
     teamId: 6,
     teamName: "말",
-    TeamIconComponent: Horse,
+    TeamIconComponent: animalIconMap["horse"],
     totalTiles: 100,
     rank: 6,
   },
   {
     teamId: 7,
     teamName: "양",
-    TeamIconComponent: Sheep,
+    TeamIconComponent: animalIconMap["sheep"],
     totalTiles: 100,
     rank: 7,
   },
   {
     teamId: 8,
     teamName: "치킨",
-    TeamIconComponent: Chicken,
+    TeamIconComponent: animalIconMap["chicken"],
     totalTiles: 100,
     rank: 8,
   },
