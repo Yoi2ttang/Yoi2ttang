@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.dashboard.application.MemberDashboardService;
+import com.ssafy.yoittang.dashboard.domain.TileChangePeriod;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyRunningTimeResponse;
@@ -21,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/memberDashboard")
+@RequestMapping("/dashboard/member")
 public class MemberDashboardController {
     private final MemberDashboardService memberDashboardService;
 
@@ -30,33 +32,45 @@ public class MemberDashboardController {
         return ResponseEntity.ok(memberDashboardService.getMemberDashboard(member));
     }
 
-    @GetMapping("/daily-distances")
-    public ResponseEntity<List<MemberDailyDistanceResponse>> getMonthRunDistance(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getMonthRunDistance(member));
+    @GetMapping("/daily-running-distances")
+    public ResponseEntity<List<MemberDailyDistanceResponse>> getMonthRunDistance(
+            @RequestParam(name = "year") Integer year,
+            @RequestParam(name = "month") Integer month,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberDashboardService.getMonthRunDistance(member, year, month));
     }
 
     @GetMapping("/daily-running-times")
-    public ResponseEntity<List<MemberDailyRunningTimeResponse>> getMonthRunningTimes(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getMonthRunningTimes(member));
+    public ResponseEntity<List<MemberDailyRunningTimeResponse>> getMonthRunningTimes(
+            @RequestParam(name = "year") Integer year,
+            @RequestParam(name = "month") Integer month,
+            @AuthMember Member member) {
+        return ResponseEntity.ok(memberDashboardService.getMonthRunningTimes(member, year, month));
     }
 
     @GetMapping("/daily-tiles-count")
-    public ResponseEntity<List<MemberDailyTileResponse>> getMonthTiles(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getMonthTiles(member));
+    public ResponseEntity<List<MemberDailyTileResponse>> getMonthTiles(
+            @RequestParam(name = "year") Integer year,
+            @RequestParam(name = "month") Integer month,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberDashboardService.getMonthTiles(member, year, month));
     }
 
-    @GetMapping("/daily-courses-count")
-    public ResponseEntity<List<MemberDailyCompleteCourseResponse>> getMonthCompleteCourse(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getMonthCompleteCourse(member));
+    @GetMapping("/daily-course")
+    public ResponseEntity<List<MemberDailyCompleteCourseResponse>> getMonthCompleteCourse(
+            @RequestParam(name = "year") Integer year,
+            @RequestParam(name = "month") Integer month,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberDashboardService.getMonthCompleteCourse(member, year, month));
     }
 
-    @GetMapping("/tile-change/daily")
-    public ResponseEntity<TileChangeRateResponse> getDailyTileChangeRate(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getDailyTileChangeRate(member));
-    }
-
-    @GetMapping("/tile-change/weekly")
-    public ResponseEntity<TileChangeRateResponse> getWeeklyTileChangeRate(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getWeeklyTileChangeRate(member));
+    @GetMapping("/tile-change")
+    public ResponseEntity<TileChangeRateResponse> getTileChangeRate(
+            @RequestParam(name = "period") TileChangePeriod period,
+            @AuthMember Member member) {
+        return ResponseEntity.ok(memberDashboardService.getTileChangeRate(period, member));
     }
 }

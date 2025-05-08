@@ -5,20 +5,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
-import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
+import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
@@ -30,6 +34,7 @@ import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +48,7 @@ public class MemberService {
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
-    private final CourseJpaRepositoy courseJpaRepositoy;
+    private final CourseRepository courseRepository;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
         Long lastMemberId = (pageToken != null) ? Long.parseLong(pageToken) : null;
@@ -135,11 +140,24 @@ public class MemberService {
     public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
-            throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
-        }
         Integer followingCount = followJpaRepository.countFollowings(targetId);
         Integer followerCount = followJpaRepository.countFollowers(targetId);
+        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
+            return new MemberProfileResponse(
+                    targetId,
+                    targetMember.getNickname(),
+                    targetMember.getProfileImageUrl(),
+                    null,
+                    null,
+                    followingCount,
+                    followerCount,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
         boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId);
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(targetId);
@@ -209,7 +227,23 @@ public class MemberService {
     }
 
     private List<CourseSummaryResponse> getCourseSummaryByMemberId(Long memberId) {
-        return courseJpaRepositoy.findCompleteCoursesByMemberId(memberId);
+        return courseRepository.findCompleteCoursesByMemberId(memberId);
+    }
+
+    @Transactional
+    public void updateProfile(MemberUpdateRequest memberUpdateRequest, Member member) {
+        member.update(memberUpdateRequest);
+    }
+
+    public MyProfileEditResponse getProfileEdit(Member member) {
+        return new MyProfileEditResponse(
+                member.getMemberId(),
+                member.getNickname(),
+                member.getProfileImageUrl(),
+                member.getBirthDate(),
+                member.getStateMessage(),
+                member.getDisclosure()
+        );
     }
 }
 

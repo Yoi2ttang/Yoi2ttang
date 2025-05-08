@@ -20,6 +20,7 @@ import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
 import com.ssafy.yoittang.tilehistory.application.TileHistoryService;
@@ -109,6 +110,15 @@ public class TileController {
     public ResponseEntity<TileRankingResponse> getTeamRanking() {
         return ResponseEntity.ok(tileService.getTeamRanking());
     }
+
+    @GetMapping("/rankings/preview")
+    public ResponseEntity<TilePreviewResponse> getRankingPreview(
+            Long zordiacId,
+            Integer limit
+    ) {
+        return ResponseEntity.ok(tileService.getRankingPreview(zordiacId, limit));
+    }
+
 
     @GetMapping("/rankings/{zordiacId}")
     public ResponseEntity<TileMemberRankingResponse> getMemberRanking(

@@ -4,6 +4,8 @@ public record CourseDetailResponse(
         Long courseId,
         String courseName,
         float distance,
-        String courseImageUrl
+        String courseImageUrl,
+        Integer calories,
+        Integer times
 ) {
 }

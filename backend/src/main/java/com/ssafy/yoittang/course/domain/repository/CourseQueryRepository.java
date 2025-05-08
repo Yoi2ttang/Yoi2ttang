@@ -3,6 +3,8 @@ package com.ssafy.yoittang.course.domain.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
+import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
 
@@ -16,4 +18,8 @@ public interface CourseQueryRepository {
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
+    CourseDetailResponse findCourseByCourseId(Long courseId);
+
+    List<CourseClearMemberResponse> findClearedMembersByCourseId(Long courseId, String pageToken, int pageSize);
 }

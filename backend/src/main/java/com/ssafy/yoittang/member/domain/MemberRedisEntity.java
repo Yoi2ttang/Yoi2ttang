@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MemberRedisEntity {
     private String socialId;
+    private String email;
     private String nickname;
     private String profileImageUrl;
 }

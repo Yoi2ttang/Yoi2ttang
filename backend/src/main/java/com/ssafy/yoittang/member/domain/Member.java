@@ -1,7 +1,6 @@
 package com.ssafy.yoittang.member.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import com.ssafy.yoittang.common.domain.BaseTimeEntity;
+import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,6 +34,9 @@ public class Member extends BaseTimeEntity {
 
     @Column(name = "social_id", length = 32, nullable = false)
     private String socialId;
+
+    @Column(name = "email", length = 32, nullable = false)
+    private String email;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
@@ -62,6 +65,7 @@ public class Member extends BaseTimeEntity {
     private Member(
             Long zordiacId,
             String socialId,
+            String email,
             LocalDate birthDate,
             String nickname,
             String profileImageUrl,
@@ -72,6 +76,7 @@ public class Member extends BaseTimeEntity {
     ) {
         this.zordiacId = zordiacId;
         this.socialId = socialId;
+        this.email = email;
         this.birthDate = birthDate;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
@@ -79,5 +84,12 @@ public class Member extends BaseTimeEntity {
         this.weight = weight;
         this.disclosure = disclosure;
         this.stateMessage = stateMessage;
+    }
+
+    public void update(MemberUpdateRequest memberUpdateRequest) {
+        this.nickname = memberUpdateRequest.nickname();
+        this.profileImageUrl = memberUpdateRequest.profileImageUrl();
+        this.stateMessage = memberUpdateRequest.stateMessage();
+        this.disclosure = memberUpdateRequest.disclosureStatus();
     }
 }
