@@ -1,12 +1,12 @@
-import { AnimalType, AnimalBadgeSize } from "@/types/animal"
 import {
   animalIconMap,
   animalTeamNameMap,
-  sizeClassMap,
   backgroundClassMap,
-} from "@/constants/animalBadge"
-import Badge from "../common/Badge"
+  sizeClassMap,
+} from "@/constants/animals"
 import { cn } from "@/lib/utils"
+import { AnimalBadgeSize, AnimalType } from "@/types/animal"
+import Badge from "../common/Badge"
 
 interface AnimalBadgeProps {
   className?: string
