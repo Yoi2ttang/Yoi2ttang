@@ -1,6 +1,5 @@
 "use client"
 
-import CameraIcon from "@/assets/icons/profile/camera-icon.svg"
 import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
 import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
@@ -11,30 +10,29 @@ import { ChangeEvent, useState } from "react"
 import Input from "../common/Input"
 import Textarea from "../common/Textarea"
 import { Switch } from "../ui/switch"
+import ProfileImageUploader from "./ProfileImageUploader"
 
 const EditForm = () => {
   const [profileData, setProfileData] = useState<ProfileData>({
+    profileImage: null,
     nickname: "",
-    profileImage: "",
+    weight: 0,
     statusMessage: "",
-    isPublic: false,
+    disclosureStatus: "ALL",
   })
   const { message, messageType } = useCheckNickname(profileData.nickname)
 
-  const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = (file: File) => {
+    setProfileData({ ...profileData, profileImage: file })
+  }
+
+  const handleNicknameChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
     setProfileData({ ...profileData, nickname: e.target.value })
   }, 300)
 
   return (
     <div className="flex flex-col gap-12 p-6">
-      {/* 프로필 사진 */}
-      <div className="flex justify-center">
-        <div className="relative size-25 rounded-full bg-neutral-200">
-          <button className="absolute right-0 bottom-0 cursor-pointer rounded-full border border-neutral-200 bg-white p-1">
-            <CameraIcon className="size-5" />
-          </button>
-        </div>
-      </div>
+      <ProfileImageUploader initImage="" onChange={handleProfileImageChange} />
 
       {/* 연동된 계정 */}
       <div className="flex flex-col gap-2">
@@ -52,7 +50,7 @@ const EditForm = () => {
           <Input
             variant={messageType === "valid" ? "default" : "error"}
             placeholder="닉네임을 입력해 주세요"
-            onChange={handleChange}
+            onChange={handleNicknameChange}
           />
           <p
             className={cn(

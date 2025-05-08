@@ -1,6 +1,7 @@
 export type ProfileData = {
-  profileImage: string
+  profileImage: File | null
   nickname: string
+  weight: number
   statusMessage: string
-  isPublic: boolean
+  disclosureStatus: string
 }
