@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +16,11 @@ import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -89,5 +92,19 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<MyProfileResponse> getMyProfile(@AuthMember Member member) {
         return ResponseEntity.ok(memberService.getMyProfile(member));
+    }
+
+    @PostMapping("/update-profile")
+    public ResponseEntity<Void> updateProfile(
+            @RequestBody MemberUpdateRequest memberUpdateRequest,
+            @AuthMember Member member
+    ) {
+        memberService.updateProfile(memberUpdateRequest, member);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/edit-profile")
+    public ResponseEntity<MyProfileEditResponse> getProfileEdit(@AuthMember Member member) {
+        return ResponseEntity.ok(memberService.getProfileEdit(member));
     }
 }
