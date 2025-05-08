@@ -19,7 +19,7 @@ const RunnerItem = ({ nickname, animalType, targetId }: RunnerItemProps) => {
           <AnimalBadge animal={animalType} />
         </div>
 
-        <FollowButton targetId={targetId} />
+        {targetId ? <FollowButton targetId={targetId} /> : null}
       </div>
     </div>
   )
