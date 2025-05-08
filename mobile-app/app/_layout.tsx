@@ -14,7 +14,7 @@ import { useColorScheme } from "@/hooks/useColorScheme"
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
 
-export default function RootLayout() {
+const RootLayout = () => {
   const colorScheme = useColorScheme()
 
   useEffect(() => {
@@ -31,3 +31,5 @@ export default function RootLayout() {
     </ThemeProvider>
   )
 }
+
+export default RootLayout
