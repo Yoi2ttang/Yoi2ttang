@@ -6,6 +6,8 @@ import java.util.jar.Manifest;
 
 import jakarta.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -18,16 +20,17 @@ public class YoittangApplication {
 
 	@PostConstruct
 	public void logGitCommitHash() {
+		Logger log = LoggerFactory.getLogger(getClass());
 		try (InputStream manifestStream = getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")) {
 			if (manifestStream != null) {
 				Manifest manifest = new Manifest(manifestStream);
 				Attributes attr = manifest.getMainAttributes();
 				String version = attr.getValue("Implementation-Version");
 				String buildTime = attr.getValue("Built-Time");
-				System.out.println("🛠️ Build Info - Git: " + version + ", Time: " + buildTime);
+				log.info("🛠️ Build Info - Git: {}, Time: {}", version, buildTime);
 			}
 		} catch (Exception e) {
-			System.err.println("⚠️ Could not read build info: " + e.getMessage());
+			log.warn("⚠️ Could not read build info: {}", e.getMessage());
 		}
 	}
 }
