@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -28,7 +29,10 @@ import lombok.Setter;
 public class Running {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "running_seq")
+    @SequenceGenerator(name = "running_seq", sequenceName = "running_seq", allocationSize = 1)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long runningId;
 
     @Column(nullable = false)

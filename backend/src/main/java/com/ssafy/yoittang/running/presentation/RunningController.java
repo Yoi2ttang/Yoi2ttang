@@ -1,5 +1,11 @@
 package com.ssafy.yoittang.running.presentation;
 
+import com.ssafy.yoittang.common.exception.NotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -27,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("running")
 @RequiredArgsConstructor
-public class RunningController {
+public class RunningController implements RunningControllerSwaggerDoc {
 
     private final RunningService runningService;
     private final RunningPointService runningPointService;
