@@ -2,15 +2,18 @@ package com.ssafy.yoittang.member.presentation;
 
 import java.net.URI;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
@@ -24,6 +27,7 @@ import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/member")
@@ -94,12 +98,17 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMyProfile(member));
     }
 
-    @PostMapping("/update-profile")
+    @PatchMapping(
+            value = "/update-profile",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<Void> updateProfile(
-            @RequestBody MemberUpdateRequest memberUpdateRequest,
+            @RequestPart MemberUpdateRequest memberUpdateRequest,
+            @RequestPart(required = false, value = "image") MultipartFile file,
             @AuthMember Member member
     ) {
-        memberService.updateProfile(memberUpdateRequest, member);
+        memberService.updateProfile(memberUpdateRequest, file, member);
         return ResponseEntity.ok().build();
     }
 

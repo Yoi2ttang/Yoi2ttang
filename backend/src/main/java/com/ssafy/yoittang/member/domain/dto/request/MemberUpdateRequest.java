@@ -5,7 +5,7 @@ import com.ssafy.yoittang.member.domain.DisclosureStatus;
 public record MemberUpdateRequest(
         String nickname,
         String stateMessage,
-        String profileImageUrl,
-        DisclosureStatus disclosureStatus
+        DisclosureStatus disclosureStatus,
+        Float weight
 ) {
 }
