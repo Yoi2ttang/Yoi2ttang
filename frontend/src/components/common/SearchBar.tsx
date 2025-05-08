@@ -23,7 +23,7 @@ const SearchBar = ({ placeholder, className }: SearchBarProps) => {
       />
 
       {isFocused && (
-        <div className="absolute top-full mt-2 flex h-fit max-h-52 w-full flex-col gap-3 rounded-b-lg bg-white p-4 shadow-md">
+        <div className="absolute top-full mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white p-4 shadow-md">
           <p
             className="cursor-pointer"
             onMouseDown={() => console.log("타이거JK 선택됨.")}>
