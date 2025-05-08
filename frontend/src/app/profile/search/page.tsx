@@ -16,7 +16,7 @@ const ProfileSearchPage = () => {
               key={index}
               nickname="ErOI거"
               animalType="tiger"
-              targetId={0}
+              targetId={1}
             />
           ))}
 
