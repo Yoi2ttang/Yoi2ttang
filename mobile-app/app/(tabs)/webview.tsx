@@ -3,11 +3,13 @@ import { BackHandler, Platform, StatusBar } from "react-native"
 import { WebView } from "react-native-webview"
 import { useRouter } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context"
+import * as Location from "expo-location"
 
 const WebViewScreen = () => {
   const router = useRouter()
   const webViewRef = useRef<WebView>(null)
   const [canGoBack, setCanGoBack] = useState(false)
+  const [injectedJS, setInjectedJS] = useState("")
 
   const handleBackPress = () => {
     if (canGoBack) {
@@ -34,6 +36,33 @@ const WebViewScreen = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        console.warn("Permission denied for location")
+        return
+      }
+
+      const location = await Location.getCurrentPositionAsync({})
+      const { latitude, longitude } = location.coords
+      console.log("sds", location)
+
+      const script = `
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        type: "location",
+        payload: {
+          lat: ${latitude},
+          lng: ${longitude}
+        }
+      }));
+    `
+      setInjectedJS(script)
+    }
+
+    fetchLocation()
+  }, [])
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar
@@ -48,6 +77,7 @@ const WebViewScreen = () => {
         javaScriptEnabled={true}
         domStorageEnabled={true}
         onNavigationStateChange={handleNavigationStateChange}
+        injectedJavaScript={injectedJS}
         className="flex-1"
       />
     </SafeAreaView>
