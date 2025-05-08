@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
 import { debounce } from "lodash-es"
 import Button from "@/components/common/Button"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
@@ -11,10 +12,12 @@ import { Tile } from "@/types/map/tile"
 import { tileGetResponseList, tileGetResponseList2 } from "@/constants/tiles"
 
 const RunningStartPage = () => {
-  const [loc, setLoc] = useState<Coordinates>()
+  const [loc, setLoc] = useState<Coordinates>({ lat: 37.5665, lng: 126.978 })
   const [tiles, setTiles] = useState<Tile[]>(tileGetResponseList)
   const [useFirstSet, setUseFirstSet] = useState<boolean>(true)
   const [center, setCenter] = useState<Coordinates | null>(null)
+
+  const router = useRouter() // 추가
 
   const getInitLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -31,6 +34,10 @@ const RunningStartPage = () => {
     const newTiles = useFirstSet ? tileGetResponseList2 : tileGetResponseList
     setTiles(newTiles)
     setUseFirstSet(!useFirstSet)
+  }
+
+  const handleParticipate = () => {
+    router.push("/running") // 페이지 이동
   }
 
   // 중심 좌표 가져오기
@@ -59,10 +66,12 @@ const RunningStartPage = () => {
       </div>
       <div className="absolute bottom-16 left-0 w-full space-y-2">
         {/* 타일 변경 버튼 (추후 토글 또는 드롭다운으로 변경 필요) */}
-        <Button className="w-full" onClick={toggleTiles}>
+        {/* <Button className="w-full" onClick={toggleTiles}>
           타일 변경하기
+        </Button> */}
+        <Button className="w-full" onClick={handleParticipate}>
+          참여하기
         </Button>
-        <Button className="w-full">참여하기</Button>
       </div>
     </div>
   )
