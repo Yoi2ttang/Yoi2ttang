@@ -135,11 +135,24 @@ public class MemberService {
     public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
-            throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
-        }
         Integer followingCount = followJpaRepository.countFollowings(targetId);
         Integer followerCount = followJpaRepository.countFollowers(targetId);
+        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
+            return new MemberProfileResponse(
+                    targetId,
+                    targetMember.getNickname(),
+                    targetMember.getProfileImageUrl(),
+                    null,
+                    null,
+                    followingCount,
+                    followerCount,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
         boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId);
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(targetId);
