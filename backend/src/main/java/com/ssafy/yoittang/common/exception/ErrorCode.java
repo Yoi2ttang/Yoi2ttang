@@ -44,7 +44,9 @@ public enum ErrorCode {
     NOT_FOUND_TILE_INFO(6001, "존재하지않는 타일 정보입니다."),
     MUST_BOTH_NULL(6002, "lastCount와 lastMemberId는 함께 존재하거나 함께 null이어야 합니다."),
 
-    NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다.");
+    NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다."),
+
+    NOT_FOUND_COURSE(8000, "존재하지 않는 코스입니다.");
 
     private final int code;
     private final String message;

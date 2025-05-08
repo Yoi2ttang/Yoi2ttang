@@ -1,13 +1,11 @@
 package com.ssafy.yoittang.running.presentation;
 
-import com.ssafy.yoittang.common.exception.NotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
-import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;

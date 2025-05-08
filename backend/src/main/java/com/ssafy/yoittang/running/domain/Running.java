@@ -31,8 +31,6 @@ public class Running {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "running_seq")
     @SequenceGenerator(name = "running_seq", sequenceName = "running_seq", allocationSize = 1)
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long runningId;
 
     @Column(nullable = false)
