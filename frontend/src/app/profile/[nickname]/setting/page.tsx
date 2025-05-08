@@ -1,4 +1,4 @@
-import StackHeader from "@/components/layouts/header/StackHeader"
+import StackHeader from "@/components/layouts/Header/StackHeader"
 import EditForm from "@/components/profile/EditForm"
 
 const ProfileSettingPage = () => {

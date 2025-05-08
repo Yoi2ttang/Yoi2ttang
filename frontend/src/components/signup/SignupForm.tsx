@@ -1,4 +1,4 @@
-import StackHeader from "@/components//layouts/header/StackHeader"
+import StackHeader from "@/components/layouts/Header/StackHeader"
 import useSignup from "@/hooks/auth/useSignup"
 import { SignUpData, SignupStep } from "@/types/auth"
 import { Dispatch, SetStateAction } from "react"

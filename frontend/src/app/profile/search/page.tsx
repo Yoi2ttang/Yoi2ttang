@@ -1,7 +1,7 @@
 import AnimalBadge from "@/components/animal-badges/AnimalBadge"
 import Button from "@/components/common/Button"
 import SearchBar from "@/components/common/SearchBar"
-import StackHeader from "@/components/layouts/header/StackHeader"
+import StackHeader from "@/components/layouts/Header/StackHeader"
 
 const ProfileSearchPage = () => {
   return (

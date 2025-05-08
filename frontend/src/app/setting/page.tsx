@@ -1,5 +1,5 @@
 import Section from "@/components/common/Section"
-import StackHeader from "@/components/layouts/header/StackHeader"
+import StackHeader from "@/components/layouts/Header/StackHeader"
 import { BellIcon, ChevronRight } from "lucide-react"
 
 const SettingPage = () => {
