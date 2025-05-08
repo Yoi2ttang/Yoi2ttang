@@ -13,7 +13,7 @@ const useLogin = () => {
     mutationFn: (code: string) => postLogin(code),
     onSuccess: (data) => {
       // 기존 유저
-      if (data.socialId) {
+      if (!data.socialId) {
         // 액세스 토큰을 로컬 스토리지에 저장
         const accessToken = data.accessToken
         localStorage.setItem("accessToken", accessToken!)
