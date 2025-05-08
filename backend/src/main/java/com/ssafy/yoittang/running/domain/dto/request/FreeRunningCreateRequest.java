@@ -14,7 +14,7 @@ public record FreeRunningCreateRequest(
         @NotNull
         Double lat,
 
-        @Schema(description = "위도", example = "127.039668")
+        @Schema(description = "경도", example = "127.039668")
         @NotNull
         Double lng,
 
