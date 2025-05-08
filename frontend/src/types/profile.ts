@@ -3,5 +3,5 @@ export type ProfileData = {
   nickname: string
   weight: number
   stateMessage: string
-  disclosureStatus: string
+  disclosureStatus: "ALL" | "ONLY_ME"
 }
