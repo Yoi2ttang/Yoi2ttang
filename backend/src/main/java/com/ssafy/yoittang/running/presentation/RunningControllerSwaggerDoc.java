@@ -1,6 +1,5 @@
 package com.ssafy.yoittang.running.presentation;
 
-import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
+import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
 import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
