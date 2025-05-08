@@ -3,8 +3,9 @@
 import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
 import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
+import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth"
 import { ProfileData } from "@/types/profile"
-import { debounce } from "lodash-es"
+import { clamp, debounce } from "lodash-es"
 import { Calendar } from "lucide-react"
 import { ChangeEvent, useState } from "react"
 import Input from "../common/Input"
@@ -17,7 +18,7 @@ const EditForm = () => {
     profileImage: null,
     nickname: "",
     weight: 0,
-    statusMessage: "",
+    stateMessage: "",
     disclosureStatus: "ALL",
   })
   const { message, messageType } = useCheckNickname(profileData.nickname)
@@ -29,6 +30,29 @@ const EditForm = () => {
   const handleNicknameChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
     setProfileData({ ...profileData, nickname: e.target.value })
   }, 300)
+
+  const handleWeightChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    if (value === "") {
+      setProfileData({ ...profileData, weight: 0 })
+      return
+    } else if (value.length > 5) {
+      return
+    }
+
+    const clampedWeight = clamp(
+      Number(Number(value).toFixed(1)),
+      MIN_WEIGHT,
+      MAX_WEIGHT,
+    )
+    if (clampedWeight !== profileData.weight) {
+      setProfileData({ ...profileData, weight: clampedWeight })
+    }
+  }
+
+  const handleStateMessageChange = (stateMessage: string) => {
+    setProfileData({ ...profileData, stateMessage })
+  }
 
   return (
     <div className="flex flex-col gap-12 p-6">
@@ -88,17 +112,22 @@ const EditForm = () => {
       {/* 체중(kg) */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">체중(kg)</p>
-        <Input value="70" />
+        <Input
+          type="number"
+          placeholder="미입력 시 평균 체중이 적용돼요"
+          min={MIN_WEIGHT}
+          max={MAX_WEIGHT}
+          value={!profileData.weight ? "" : profileData.weight}
+          onChange={handleWeightChange}
+        />
       </div>
 
       {/* 상태 메시지 */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">상태 메시지</p>
         <Textarea
-          content={profileData.statusMessage}
-          onContentChange={(content) =>
-            setProfileData({ ...profileData, statusMessage: content })
-          }
+          content={profileData.stateMessage}
+          onContentChange={(content) => handleStateMessageChange(content)}
         />
       </div>
 
@@ -109,10 +138,13 @@ const EditForm = () => {
           <Switch
             className="data-[state=checked]:bg-yoi-500 scale-125"
             onCheckedChange={(checked) =>
-              setProfileData({ ...profileData, isPublic: checked })
+              setProfileData({
+                ...profileData,
+                disclosureStatus: checked ? "ALL" : "ONLY_ME",
+              })
             }
           />
-          <p>{profileData.isPublic ? "공개" : "비공개"}</p>
+          <p>{profileData.disclosureStatus === "ALL" ? "공개" : "비공개"}</p>
         </div>
       </div>
     </div>

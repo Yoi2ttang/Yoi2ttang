@@ -13,7 +13,9 @@ const ProfileImageUploader = ({
   initImage,
   onChange,
 }: ProfileImageUploaderProps) => {
-  const [previewImage, setPreviewImage] = useState(initImage)
+  const [previewImage, setPreviewImage] = useState(
+    initImage || "/images/logo.svg",
+  )
   const fileInput = useRef<HTMLInputElement>(null)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +35,7 @@ const ProfileImageUploader = ({
     <div className="flex flex-col items-center gap-2">
       <div className="relative size-25 rounded-full bg-neutral-200">
         <Image
-          src={previewImage ?? null}
+          src={previewImage}
           alt=""
           className="size-full rounded-full object-cover"
           fill
