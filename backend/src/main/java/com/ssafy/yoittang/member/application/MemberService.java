@@ -22,6 +22,8 @@ import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
+import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
@@ -37,8 +39,6 @@ import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -107,7 +107,7 @@ public class MemberService {
         followJpaRepository.deleteByFromMemberAndToMember(member.getMemberId(), targetId);
     }
 
-    public PageInfo<MemberAutocompleteResponse> getFollowingList(String pageToken, Member member) {
+    public PageInfo<FollowingResponse> getFollowingList(String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
         List<Long> followingMemberIds = followJpaRepository.findFollowingMemberIds(
                 member.getMemberId(),
@@ -116,16 +116,16 @@ public class MemberService {
         );
 
         if (followingMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, FollowingResponse::memberId);
         }
 
-        List<MemberAutocompleteResponse> followingMembers = memberRepository.findMembersByIds(followingMemberIds);
+        List<FollowingResponse> followingMembers = memberRepository.findFollowingByIds(followingMemberIds);
 
-        return PageInfo.of(followingMembers, DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
+        return PageInfo.of(followingMembers, DEFAULT_PAGE_SIZE, FollowingResponse::memberId);
 
     }
 
-    public PageInfo<MemberAutocompleteResponse> getFollowerList(String pageToken, Member member) {
+    public PageInfo<FollowerResponse> getFollowerList(String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
 
         List<Long> followerMemberIds = followJpaRepository.findFollowerMemberIds(
@@ -135,12 +135,12 @@ public class MemberService {
         );
 
         if (followerMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, FollowerResponse::memberId);
         }
 
-        List<MemberAutocompleteResponse> followerMembers = memberRepository.findMembersByIds(followerMemberIds);
+        List<FollowerResponse> followerMembers = memberRepository.findFollowerByIds(followerMemberIds);
 
-        return PageInfo.of(followerMembers, DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
+        return PageInfo.of(followerMembers, DEFAULT_PAGE_SIZE, FollowerResponse::memberId);
     }
 
     public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
