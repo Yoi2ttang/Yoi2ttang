@@ -131,7 +131,7 @@ public class TileService {
 
     public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
 
-        checkZordiacId(zordiacId);
+//        checkZordiacId(zordiacId);
 
         String geoHashString =
                 GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
@@ -165,7 +165,7 @@ public class TileService {
 
     public TileSituationResponse getTileSituation(Long zordiacId) {
 
-        checkZordiacId(zordiacId);
+//        checkZordiacId(zordiacId);
 
         List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
 
