@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
+import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
@@ -28,6 +29,7 @@ import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
 import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
+
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 
@@ -40,6 +42,7 @@ public class RunningService {
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final TileRepository tileRepository;
+    private final CourseJpaRepositoy courseJpaRepositoy;
 
     @Transactional
     public RunningCreateResponse createFreeRunning(
@@ -70,7 +73,7 @@ public class RunningService {
                 7);
 
         Tile tile = tileRepository.findByGeoHash(geoHashString)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_TILE_INFO));
 
         saveTileHistoryInRedis(geoHashString, runningPoint.getRunningPointId(), member);
 
@@ -93,6 +96,8 @@ public class RunningService {
             ChallengeRunningCreateRequest challengeRunningCreateRequest,
             Member member
     ) {
+
+        checkCourse(challengeRunningCreateRequest.courseId());
 
         Running running = Running.builder()
                 .memberId(member.getMemberId())
@@ -138,7 +143,7 @@ public class RunningService {
     }
 
     @Transactional
-    public void endFreeRunning(
+    public void endRunning(
             Long runningId,
             RunningEndPatchRequest runningEndPatchRequest,
             Member member
@@ -146,7 +151,7 @@ public class RunningService {
 
         Running running =
                 runningRepository.findByRunningIdAndMemberId(runningId, member.getMemberId())
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
 
         if (running.getStartTime().isAfter(runningEndPatchRequest.endTime())) {
             throw new BadRequestException(ErrorCode.END_TIME_BEFORE_START_TIME);
@@ -156,7 +161,15 @@ public class RunningService {
         running.setEndTime(runningEndPatchRequest.endTime());
     }
 
-    LineString getLineStringByOnePoint(Double lat, Double lng) {
+    void checkCourse(Long courseId) {
+        if (courseJpaRepositoy.existsById(courseId)) {
+            return;
+        }
+        throw new NotFoundException(ErrorCode.NOT_FOUND_COURSE);
+    }
+
+
+    public LineString getLineStringByOnePoint(Double lat, Double lng) {
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 

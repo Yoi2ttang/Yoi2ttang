@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("running")
 @RequiredArgsConstructor
-public class RunningController {
+public class RunningController implements RunningControllerSwaggerDoc {
 
     private final RunningService runningService;
     private final RunningPointService runningPointService;
@@ -60,7 +60,7 @@ public class RunningController {
             @Valid @RequestBody RunningEndPatchRequest runningEndPatchRequest,
             @AuthMember Member loginMember
     ) {
-        runningService.endFreeRunning(runningId, runningEndPatchRequest, loginMember);
+        runningService.endRunning(runningId, runningEndPatchRequest, loginMember);
 
         return ResponseEntity.ok(null);
     }
