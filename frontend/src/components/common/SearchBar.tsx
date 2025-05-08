@@ -1,6 +1,5 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import { SearchIcon } from "lucide-react"
 import { useState } from "react"
 import Input from "./Input"
@@ -18,7 +17,7 @@ const SearchBar = ({ placeholder, className }: SearchBarProps) => {
       <Input
         Icon={<SearchIcon />}
         placeholder={placeholder}
-        className={cn("bg-white", className)}
+        className={className}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
