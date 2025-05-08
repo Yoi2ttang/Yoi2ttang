@@ -143,7 +143,7 @@ public class RunningService {
     }
 
     @Transactional
-    public void endFreeRunning(
+    public void endRunning(
             Long runningId,
             RunningEndPatchRequest runningEndPatchRequest,
             Member member

@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.repository.CourseJpaRepositoy;
@@ -32,6 +33,7 @@ import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.State;
 import com.ssafy.yoittang.running.domain.dto.request.ChallengeRunningCreateRequest;
 import com.ssafy.yoittang.running.domain.dto.request.FreeRunningCreateRequest;
+import com.ssafy.yoittang.running.domain.dto.request.RunningEndPatchRequest;
 import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
@@ -251,4 +253,97 @@ public class RunningServiceTest {
         verify(tileRepository, never()).findByGeoHash(any());
     }
 
+    //런닝 종료
+    @Test
+    public void endRunningSuccess() {
+        // Given
+        Long runningId = 3L;
+        Long courseId = 2L;
+        LocalDateTime createdAt = LocalDateTime.of(2025, 5, 8, 14, 30);
+        LocalDateTime endTime = createdAt.plusMinutes(15);
+
+        Running savedRunning = Running.builder()
+                .runningId(runningId)
+                .startTime(createdAt)
+                .courseId(courseId)
+                .state(State.RUNNING)
+                .build();
+
+        // 핵심 mock 추가
+        when(runningRepository.findByRunningIdAndMemberId(runningId, mockMember.getMemberId()))
+                .thenReturn(Optional.of(savedRunning));
+
+        RunningEndPatchRequest runningEndPatchRequest = RunningEndPatchRequest.builder()
+                .endTime(endTime)
+                .build();
+
+        // When
+        runningService.endRunning(runningId, runningEndPatchRequest, mockMember);
+
+        // Then
+        assertThat(savedRunning.getRunningId()).isEqualTo(runningId);
+        assertThat(savedRunning.getCourseId()).isEqualTo(courseId);
+        assertThat(savedRunning.getStartTime()).isEqualTo(createdAt);
+        assertThat(savedRunning.getEndTime()).isEqualTo(endTime);
+        assertThat(savedRunning.getState()).isEqualTo(State.COMPLETE);
+    }
+
+    //런닝이 존재 하지 않아 종료 실패
+    @Test
+    public void endRunningFailWithNotFoundRunning() {
+        // Given
+        Long runningId = 3L;
+        Long courseId = 2L;
+        LocalDateTime createdAt = LocalDateTime.of(2025, 5, 8, 14, 30);
+        LocalDateTime endTime = createdAt.plusMinutes(15);
+
+        when(runningRepository.findByRunningIdAndMemberId(runningId, mockMember.getMemberId()))
+                .thenReturn(Optional.empty());
+
+        RunningEndPatchRequest runningEndPatchRequest = RunningEndPatchRequest.builder()
+                .endTime(endTime)
+                .build();
+
+        // When & Then
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> runningService.endRunning(runningId, runningEndPatchRequest, mockMember)
+        );
+
+        assertThat(exception.getMessage()).contains("런닝");
+        verify(runningRepository, never()).save(any());
+    }
+
+    //런닝 종료시간이 시작시간 보다 빨라서 종료 실패
+    @Test
+    public void endRunningFailWithEndTimeBeforeStartTime() {
+        // Given
+        Long runningId = 3L;
+        Long courseId = 2L;
+        LocalDateTime createdAt = LocalDateTime.of(2025, 5, 8, 14, 30);
+        LocalDateTime endTime = createdAt.minusMinutes(15);
+
+        Running savedRunning = Running.builder()
+                .runningId(runningId)
+                .startTime(createdAt)
+                .courseId(courseId)
+                .state(State.RUNNING)
+                .build();
+
+        when(runningRepository.findByRunningIdAndMemberId(runningId, mockMember.getMemberId()))
+                .thenReturn(Optional.of(savedRunning));
+
+        RunningEndPatchRequest runningEndPatchRequest = RunningEndPatchRequest.builder()
+                .endTime(endTime)
+                .build();
+
+        // When & Then
+        BadRequestException exception = assertThrows(
+                BadRequestException.class,
+                () -> runningService.endRunning(runningId, runningEndPatchRequest, mockMember)
+        );
+
+        assertThat(exception.getMessage()).contains("종료");
+        verify(runningRepository, never()).save(any());
+    }
 }

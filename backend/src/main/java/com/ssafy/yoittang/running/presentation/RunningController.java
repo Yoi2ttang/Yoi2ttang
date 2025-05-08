@@ -60,7 +60,7 @@ public class RunningController implements RunningControllerSwaggerDoc {
             @Valid @RequestBody RunningEndPatchRequest runningEndPatchRequest,
             @AuthMember Member loginMember
     ) {
-        runningService.endFreeRunning(runningId, runningEndPatchRequest, loginMember);
+        runningService.endRunning(runningId, runningEndPatchRequest, loginMember);
 
         return ResponseEntity.ok(null);
     }
