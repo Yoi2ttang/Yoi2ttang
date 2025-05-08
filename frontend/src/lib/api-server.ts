@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -18,19 +19,14 @@ interface FetchParams {
   options?: FetchOptions
 }
 
+interface FetchResponse<T> {
+  data: T | null
+  error: ApiError | null
+}
+
 const getAccessToken = async () => {
   const cookieStore = await cookies()
   return cookieStore.get("accessToken")?.value
-}
-
-const setAccessToken = async (accessToken: string) => {
-  const cookieStore = await cookies()
-  cookieStore.set("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 30일
-    path: "/",
-  })
 }
 
 const objectToSearchParams = (
@@ -59,27 +55,12 @@ async function nextFetchInstance(baseUrl?: string) {
       const error = new Error() as ApiError
       error.status = response.status
 
-      if (error.status === 401 && !error._retry) {
-        error._retry = true
-
-        try {
-          const { accessToken } = (await request("POST", "/auth/reissue")) as {
-            accessToken: string
-          }
-
-          setAccessToken(accessToken)
-
-          // Todo : 재시도 로직 추가
-        } catch (reissueError) {
-          window.location.href = "/login"
-        }
-      }
       try {
         error.data = await response.json()
       } catch {
         error.data = await response.text()
       }
-      error.message = `HTTP error! status: ${response.status}`
+      error.message = `🎀 에러 발생! status: ${response.status}`
       throw error
     }
     return response.json()
@@ -89,13 +70,50 @@ async function nextFetchInstance(baseUrl?: string) {
     method: RequestMethod,
     url: string,
     options?: FetchOptions,
-  ) => {
-    const response = await fetch(`${baseUrl}${url}`, {
-      method,
-      ...defaultConfig(),
-      ...options,
-    })
-    return handleResponse<T>(response)
+  ): Promise<FetchResponse<T>> => {
+    try {
+      const res = await fetch(`${baseUrl}${url}`, {
+        method,
+        ...defaultConfig(),
+        ...options,
+      })
+
+      return {
+        data: await handleResponse<T>(res),
+        error: null,
+      }
+    } catch (err) {
+      const error = err as ApiError
+
+      if (error.status === 401 && !error._retry) {
+        error._retry = true
+
+        try {
+          const { data: accessToken } = await request<{
+            accessToken: string | null
+          }>("POST", "/auth/reissue")
+
+          if (accessToken) {
+            fetch(`${BASE_URL}/api/set-cookie`, {
+              method: "POST",
+              body: JSON.stringify({ accessToken }),
+            })
+
+            // 재시도 로직
+            return await request<T>(method, url, options)
+          } else {
+            console.log("토큰 재발급 실패 후 로그인 페이지로 리다이렉트")
+            redirect("/")
+          }
+        } catch (reissueError) {
+          return {
+            data: null,
+            error: new Error("토큰 재발급 실패") as ApiError,
+          }
+        }
+      }
+      return { data: null, error }
+    }
   }
 
   const nextGet = <T>(url: string, FetchParams?: FetchParams) =>
@@ -138,5 +156,5 @@ async function nextFetchInstance(baseUrl?: string) {
 }
 
 export const getApiServer = async () => {
-  return await nextFetchInstance(`${process.env.NEXT_PUBLIC_API_URL}/api/v1`)
+  return await nextFetchInstance(`${BASE_URL}/api/v1`)
 }
