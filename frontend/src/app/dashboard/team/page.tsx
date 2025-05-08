@@ -22,9 +22,9 @@ const TeamDashboardPage = ({}: TeamDashboardPageProps) => {
         <TeamTitleSection teamInfo={mockData} />
         <MyTeamRankCard teamInfo={mockData} />
       </div>
+      <TeamContributionSection />
       <TeamRankingSummarySection />
       <TileMapSection />
-      <TeamContributionSection />
       <TeamActivityChangeSection />
     </main>
   )
