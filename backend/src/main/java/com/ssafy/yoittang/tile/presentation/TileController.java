@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("tiles")
 @RestController
 @RequiredArgsConstructor
-public class TileController {
+public class TileController implements TileControllerSwaggerDoc {
 
     private final TileService tileService;
     private final TileHistoryService tileHistoryService;
