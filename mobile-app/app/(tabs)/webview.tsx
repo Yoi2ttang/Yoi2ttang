@@ -30,7 +30,7 @@ const WebViewScreen = () => {
   const handleNavigationStateChange = (navState: any) => {
     setCanGoBack(navState.canGoBack)
     if (navState.url.endsWith("/running")) {
-      router.replace("/running")
+      router.replace("/running/onboarding")
     }
   }
 
@@ -44,6 +44,9 @@ const WebViewScreen = () => {
       <WebView
         ref={webViewRef}
         source={{ uri: "http://70.12.246.158:3000" }}
+        originWhitelist={["*"]}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
         onNavigationStateChange={handleNavigationStateChange}
         className="flex-1"
       />

@@ -23,7 +23,7 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="running"
+        name="running/index"
         options={{
           title: "Running",
         }}
