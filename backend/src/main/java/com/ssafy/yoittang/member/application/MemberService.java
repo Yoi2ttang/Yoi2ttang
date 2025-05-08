@@ -66,11 +66,12 @@ public class MemberService {
         return PageInfo.of(members, DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
     }
 
-    public PageInfo<MemberSearchResponse> getMemberSearchList(String keyword, String pageToken) {
+    public PageInfo<MemberSearchResponse> getMemberSearchList(String keyword, String pageToken, Member member) {
         Long lastMemberId = (pageToken != null) ? Long.parseLong(pageToken) : null;
         List<MemberSearchResponse> members = memberRepository.findSearchMembersByKeyword(
                 keyword,
                 lastMemberId,
+                member,
                 DEFAULT_PAGE_SIZE
         );
 

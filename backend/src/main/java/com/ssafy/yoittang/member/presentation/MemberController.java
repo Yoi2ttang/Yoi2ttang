@@ -46,9 +46,10 @@ public class MemberController {
     @GetMapping("/search")
     public ResponseEntity<PageInfo<MemberSearchResponse>> getMemberSearchList(
             @RequestParam("keyword") String keyword,
-            @RequestParam(required = false, name = "pageToken") String pageToken
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getMemberSearchList(keyword, pageToken));
+        return ResponseEntity.ok(memberService.getMemberSearchList(keyword, pageToken, member));
     }
 
     @PostMapping("/{targetId}/follow")

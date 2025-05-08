@@ -37,8 +37,13 @@ public class MemberRepository {
         return memberQueryRepository.findAutocompleteMembersByKeyword(keyword, lastMemberId, size);
     }
 
-    public List<MemberSearchResponse> findSearchMembersByKeyword(String keyword, Long lastMemberId, int size) {
-        return memberQueryRepository.findSearchMembersByKeyword(keyword, lastMemberId, size);
+    public List<MemberSearchResponse> findSearchMembersByKeyword(
+            String keyword,
+            Long lastMemberId,
+            Member member,
+            int size
+    ) {
+        return memberQueryRepository.findSearchMembersByKeyword(keyword, lastMemberId, member, size);
     }
 
     public List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids) {

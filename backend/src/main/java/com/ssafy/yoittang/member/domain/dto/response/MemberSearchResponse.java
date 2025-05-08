@@ -6,6 +6,7 @@ public record MemberSearchResponse(
         Long memberId,
         String nickname,
         String profileImageUrl,
-        ZordiacName zordiacName
+        ZordiacName zordiacName,
+        Boolean isFollow
 ) {
 }
