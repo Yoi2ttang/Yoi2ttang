@@ -151,7 +151,7 @@ public class RunningService {
 
         Running running =
                 runningRepository.findByRunningIdAndMemberId(runningId, member.getMemberId())
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
 
         if (running.getStartTime().isAfter(runningEndPatchRequest.endTime())) {
             throw new BadRequestException(ErrorCode.END_TIME_BEFORE_START_TIME);
