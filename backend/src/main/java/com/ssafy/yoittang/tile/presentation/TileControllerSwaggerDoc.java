@@ -52,7 +52,7 @@ public interface TileControllerSwaggerDoc {
             @RequestParam Double lng
     );
 
-    @Operation(summary = "특정 점령 지도 확인", description = "특정 팀이 차지한 좌표 근처에 대한 타일의 정보를 가져옵니다.")
+    @Operation(summary = "전체 점령 클러스터링 확인", description = "팀 상관없이 좌표 근처에 대한 클러스터링 정보를 가져옵니다.")
     @ApiResponses(value = {
         @ApiResponse(
                     responseCode = "200",
