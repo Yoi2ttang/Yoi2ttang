@@ -44,7 +44,10 @@ public enum ErrorCode {
     NOT_FOUND_TILE_INFO(6001, "존재하지않는 타일 정보입니다."),
     MUST_BOTH_NULL(6002, "lastCount와 lastMemberId는 함께 존재하거나 함께 null이어야 합니다."),
 
-    NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다.");
+    NOT_FOUND_ZORDIAC(7000, "존재하지않는 간지입니다."),
+
+    INVALID_DATE_RANGE(8000, "미래의 날짜에 대한 데이터는 조회할 수 없습니다."),
+    INVALID_PERIOD_TYPE(1011, "유효하지 않은 기간 ENUM 값입니다.");
 
     private final int code;
     private final String message;

@@ -10,8 +10,11 @@ import jakarta.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.yoittang.common.exception.BadRequestException;
+import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.dashboard.domain.ChangeDirection;
+import com.ssafy.yoittang.dashboard.domain.TileChangePeriod;
 import com.ssafy.yoittang.dashboard.domain.dto.response.DateAndSeconds;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceResponse;
@@ -63,15 +66,17 @@ public class MemberDashboardService {
         );
     }
 
-    public List<MemberDailyDistanceResponse> getMonthRunDistance(Member member) {
-        return runningPointRepository.findDailyDistancesByPeriod(member.getMemberId(), startDate, endDate);
+    public List<MemberDailyDistanceResponse> getMonthRunDistance(Member member, int year, int month) {
+        LocalDateTime[] times = getValidMonthlyDateRange(year, month);
+        return runningPointRepository.findDailyDistancesByPeriod(member.getMemberId(), times[0], times[1]);
     }
 
-    public List<MemberDailyRunningTimeResponse> getMonthRunningTimes(Member member) {
+    public List<MemberDailyRunningTimeResponse> getMonthRunningTimes(Member member, int year, int month) {
+        LocalDateTime[] times = getValidMonthlyDateRange(year, month);
         List<DateAndSeconds> list =  runningRepository.findDailyRunningSecondsByMemberId(
                 member.getMemberId(),
-                startDate,
-                endDate
+                times[0],
+                times[1]
         );
 
         return list.stream()
@@ -82,15 +87,27 @@ public class MemberDashboardService {
                 .toList();
     }
 
-    public List<MemberDailyTileResponse> getMonthTiles(Member member) {
-        return tileHistoryRepository.findDailyTileCountsByMemberId(member.getMemberId(), startDate, endDate);
+    public List<MemberDailyTileResponse> getMonthTiles(Member member, int year, int month) {
+        LocalDateTime[] times = getValidMonthlyDateRange(year, month);
+        return tileHistoryRepository.findDailyTileCountsByMemberId(member.getMemberId(), times[0], times[1]);
     }
 
-    public List<MemberDailyCompleteCourseResponse> getMonthCompleteCourse(Member member) {
-        return courseRepository.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), startDate, endDate);
+    public List<MemberDailyCompleteCourseResponse> getMonthCompleteCourse(Member member, int year, int month) {
+        LocalDateTime[] times = getValidMonthlyDateRange(year, month);
+        return courseRepository.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), times[0], times[1]);
     }
 
-    public TileChangeRateResponse getDailyTileChangeRate(Member member) {
+
+    public TileChangeRateResponse getTileChangeRate(TileChangePeriod period, Member member) {
+        if (period.equals(TileChangePeriod.DAILY)) {
+            return getDailyTileChangeRate(member);
+        } else if (period.equals(TileChangePeriod.WEEKLY)) {
+            return getWeeklyTileChangeRate(member);
+        }
+        throw new BadRequestException(ErrorCode.INVALID_PERIOD_TYPE);
+    }
+
+    private TileChangeRateResponse getDailyTileChangeRate(Member member) {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
 
@@ -125,7 +142,7 @@ public class MemberDashboardService {
         }
     }
 
-    public TileChangeRateResponse getWeeklyTileChangeRate(Member member) {
+    private TileChangeRateResponse getWeeklyTileChangeRate(Member member) {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
         LocalDate thisWeekStart = today.with(DayOfWeek.MONDAY);
@@ -197,6 +214,22 @@ public class MemberDashboardService {
 
     private List<Long> getLastMonthCourseCount(Long memberId, LocalDateTime startDate, LocalDateTime endDate) {
         return runningRepository.findCourseIdsByMemberIdAndStartTimeBetween(memberId, startDate, endDate);
+    }
+
+    private LocalDateTime[] getValidMonthlyDateRange(int year, int month) {
+        LocalDate today = LocalDate.now();
+        LocalDate requestDate = LocalDate.of(year, month, 1);
+        if (requestDate.isAfter(today.withDayOfMonth(1))) {
+            throw new BadRequestException(ErrorCode.INVALID_DATE_RANGE);
+        }
+        LocalDateTime startDateTime = requestDate.atStartOfDay();
+        LocalDateTime endDateTime;
+        if (year == today.getYear() && month == today.getMonthValue()) {
+            endDateTime = today.minusDays(1).plusDays(1).atStartOfDay();
+        } else {
+            endDateTime = requestDate.plusMonths(1).atStartOfDay();
+        }
+        return new LocalDateTime[] {startDateTime, endDateTime};
     }
 
 }
