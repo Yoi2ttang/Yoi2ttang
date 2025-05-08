@@ -15,6 +15,7 @@ build_backend:
       - backend/build/
     key: $CI_PROJECT_NAME-backend-cache
   before_script:
+    - apk add --no-cache git
     - cd backend
   script:
     - chmod +x ./gradlew
