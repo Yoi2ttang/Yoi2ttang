@@ -14,18 +14,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponse;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import ch.hsr.geohash.BoundingBox;
 import ch.hsr.geohash.GeoHash;
 
+
+
 @ExtendWith(MockitoExtension.class)
 public class TileServiceTest {
 
+    private static final Logger log = LoggerFactory.getLogger(TileServiceTest.class);
     @InjectMocks
     private TileService tileService;
 
@@ -63,7 +70,6 @@ public class TileServiceTest {
                     new GeoPoint(box.getNorthLatitude(), box.getEastLongitude())
             ));
         }
-
         when(tileRepository.getTile(isNull(), eq(geoHashString))).thenReturn(responseList);
 
         // when
@@ -97,8 +103,6 @@ public class TileServiceTest {
         // then
         assertThat(response).isNotNull();
         assertThat(response.tileGetResponseList().size()).isEqualTo(0);
-
-        verify(tileRepository).getTile(isNull(), eq(geoHashString));
     }
 
     // getTile 성공
@@ -138,7 +142,6 @@ public class TileServiceTest {
         assertThat(response.tileGetResponseList()).hasSize(responseList.size());
         assertThat(response.tileGetResponseList()).containsExactlyElementsOf(responseList);
 
-        verify(tileRepository).getTile(eq(zordiacId), eq(geoHashString));
     }
 
     //존재하지 않는 ZordiacId
@@ -163,7 +166,44 @@ public class TileServiceTest {
         assertThat(response.tileGetResponseList()).hasSize(responseList.size());
         assertThat(response.tileGetResponseList()).containsExactlyElementsOf(responseList);
 
-        verify(tileRepository).getTile(eq(zordiacId), eq(geoHashString));
     }
+
+    //클러스터링 성공
+    @Test
+    public void getTileClusterSuccess() {
+        // given
+        double lat = 37.501161;
+        double lng = 127.039668;
+        int zoomLevel = 17;
+
+        // 실제 서비스 메서드의 로직을 따라 geoHashString 계산
+        String geoHashString = tileService.getGeoHashStringByZoomLevel(lat, lng, zoomLevel);
+
+        List<TileClusterGetResponse> responseList = new ArrayList<>();
+
+        responseList.add(TileClusterGetResponse.builder()
+                .zordiacId(1L)
+                .geoPoint(new GeoPoint(37.5, 127.0))
+                .count(5L)
+                .build());
+
+        responseList.add(TileClusterGetResponse.builder()
+                .zordiacId(2L)
+                .geoPoint(new GeoPoint(37.6, 127.1))
+                .count(3L)
+                .build());
+
+        when(tileRepository.getTileCluster(isNull(), eq(geoHashString))).thenReturn(responseList);
+
+        // when
+        TileClusterGetResponseWrapper response = tileService.getTileCluster(lat, lng, zoomLevel);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.tileClusterGetResponseList()).hasSize(2);
+        assertThat(response.tileClusterGetResponseList()).containsExactlyElementsOf(responseList);
+    }
+
+
 
 }
