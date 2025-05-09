@@ -2,7 +2,7 @@ package com.ssafy.yoittang.member.domain.dto.response;
 
 import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 
-public record MemberSearchResponse(
+public record FollowingResponse(
         Long memberId,
         String nickname,
         String profileImageUrl,

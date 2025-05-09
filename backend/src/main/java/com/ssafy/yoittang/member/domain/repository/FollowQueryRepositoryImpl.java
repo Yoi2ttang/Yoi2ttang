@@ -21,7 +21,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
     @Override
     public List<Long> findFollowingMemberIds(Long memberId, Long lastToId, int limit) {
         return queryFactory
-                .select(follow.fromMember)
+                .select(follow.toMember)
                 .from(follow)
                 .where(
                         follow.fromMember.eq(memberId),

@@ -20,6 +20,8 @@ import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
+import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
@@ -46,9 +48,10 @@ public class MemberController {
     @GetMapping("/search")
     public ResponseEntity<PageInfo<MemberSearchResponse>> getMemberSearchList(
             @RequestParam("keyword") String keyword,
-            @RequestParam(required = false, name = "pageToken") String pageToken
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getMemberSearchList(keyword, pageToken));
+        return ResponseEntity.ok(memberService.getMemberSearchList(keyword, pageToken, member));
     }
 
     @PostMapping("/{targetId}/follow")
@@ -70,7 +73,7 @@ public class MemberController {
     }
 
     @GetMapping("/following")
-    public ResponseEntity<PageInfo<MemberAutocompleteResponse>> getFollowingList(
+    public ResponseEntity<PageInfo<FollowingResponse>> getFollowingList(
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
@@ -78,7 +81,7 @@ public class MemberController {
     }
 
     @GetMapping("/follower")
-    public ResponseEntity<PageInfo<MemberAutocompleteResponse>> getFollowerList(
+    public ResponseEntity<PageInfo<FollowerResponse>> getFollowerList(
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
