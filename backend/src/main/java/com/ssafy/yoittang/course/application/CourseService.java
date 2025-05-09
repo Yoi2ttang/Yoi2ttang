@@ -65,7 +65,7 @@ public class CourseService {
         CourseSummaryResponse summaryResponse = courseRepository.findCourseByCourseId(courseId);
         int runningTimes = member.getRunningTimes();;
         int runningDistances = member.getRunningDistances();
-        double paceMinPerKm = (runningDistances > 0)
+        double paceMinPerKm = runningDistances > 0
                 ? (runningTimes / 60.0) / (runningDistances / 1000.0) // 분/km
                 : 10.0; // 기본값: 10분/km
 
