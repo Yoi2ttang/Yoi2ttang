@@ -17,7 +17,7 @@ const RunningStartPage = () => {
   const [useFirstSet, setUseFirstSet] = useState<boolean>(true)
   const [center, setCenter] = useState<Coordinates | null>(null)
 
-  const router = useRouter() // 추가
+  const router = useRouter()
 
   const getInitLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -26,7 +26,26 @@ const RunningStartPage = () => {
   }
 
   useEffect(() => {
+    // 웹 현위치 받아오기
     getInitLocation()
+
+    // expo 웹뷰 현위치 받아오기
+    const handleMessage = (event: any) => {
+      try {
+        const data = JSON.parse(event.data)
+        if (data.lat && data.lng) {
+          setLoc({ lat: data.lat, lng: data.lng })
+        }
+      } catch (err) {
+        console.warn("메시지 파싱 오류:", err)
+      }
+    }
+
+    document.addEventListener("message", handleMessage as EventListener)
+
+    return () => {
+      document.removeEventListener("message", handleMessage as EventListener)
+    }
   }, [])
 
   // 타일 셋 바꾸기 (api 호출 코드로 변경 필요)
@@ -37,7 +56,7 @@ const RunningStartPage = () => {
   }
 
   const handleParticipate = () => {
-    router.push("/running") // 페이지 이동
+    router.push("/running")
   }
 
   // 중심 좌표 가져오기

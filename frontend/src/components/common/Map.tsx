@@ -15,12 +15,14 @@ interface MapProps {
 }
 
 const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
-  const { mapRef } = useMap({ loc, zoom, onCenterChange })
+  const { mapRef, setCenter } = useMap({ loc, zoom, onCenterChange })
   const { addMarker } = useMapMarker({ mapRef })
   const { renderTiles } = useMapTiles({ mapRef })
 
   useEffect(() => {
     if (mapRef.current) {
+      setCenter(loc)
+
       addMarker(loc)
     }
   }, [loc, mapRef])

@@ -9,7 +9,7 @@ interface InitMapOptions {
 }
 
 export const useMap = ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
-  const { mapRef, initializeMap } = useMapInitialize()
+  const { mapRef, initializeMap, setCenter } = useMapInitialize()
 
   useEffect(() => {
     try {
@@ -19,5 +19,8 @@ export const useMap = ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
     }
   }, [loc, zoom, onCenterChange])
 
-  return { mapRef }
+  return {
+    mapRef,
+    setCenter,
+  }
 }
