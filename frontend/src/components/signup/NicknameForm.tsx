@@ -61,17 +61,20 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
           입력해 주세요
         </h1>
 
-        <Input
-          variant={messageType === "valid" ? "default" : "error"}
-          placeholder="닉네임을 입력해 주세요"
-          onChange={handleChange}
-        />
-        <p
-          className={cn(
-            messageType === "valid" ? "text-green-500" : "text-red-500",
-          )}>
-          {message}
-        </p>
+        <div className="relative">
+          <Input
+            variant={messageType === "valid" ? "default" : "error"}
+            placeholder="닉네임을 입력해 주세요"
+            onChange={handleChange}
+          />
+          <p
+            className={cn(
+              "absolute top-full mt-1",
+              messageType === "valid" ? "text-green-500" : "text-red-500",
+            )}>
+            {message}
+          </p>
+        </div>
       </div>
 
       <Button
