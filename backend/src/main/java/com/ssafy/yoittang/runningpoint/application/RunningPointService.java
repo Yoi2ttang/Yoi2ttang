@@ -46,7 +46,7 @@ public class RunningPointService {
             throw new NotFoundException(ErrorCode.RUNNING_NOT_FOUND);
         }
 
-        LineString newRoot
+        LineString newRoute
                 = getLineStringWithTwoPoint(
                 runningPointCreateRequest.beforePoint(),
                 runningPointCreateRequest.nowPoint()
@@ -56,7 +56,7 @@ public class RunningPointService {
                 .runningId(runningPointCreateRequest.runningId())
                 .courseId(runningPointCreateRequest.courseId())
                 .arrivalTime(runningPointCreateRequest.currentTime())
-                .route(newRoot)
+                .route(newRoute)
                 .build();
 
         runningPointRepository.save(runningPoint);
