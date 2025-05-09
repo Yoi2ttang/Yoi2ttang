@@ -70,4 +70,26 @@ public interface TileControllerSwaggerDoc {
             @Parameter(name = "zoomLevel", description = "줌레벨", required = true)
             @RequestParam Integer zoomLevel
     );
+
+    @Operation(summary = "특정 팀 점령 클러스터링 확인", description = "특정 팀 좌표 근처에 대한 클러스터링 정보를 가져옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공하면 클러스터링 수 return",
+                    content = @Content(schema = @Schema(implementation = TileGetResponseWrapper.class))
+            )
+    })
+    ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
+            @Parameter(name = "zordiacId", description = "간지Id", required = true)
+            @PathVariable Long zordiacId,
+
+            @Parameter(name = "lat", description = "위도", required = true)
+            @RequestParam Double lat,
+
+            @Parameter(name = "lng", description = "경도", required = true)
+            @RequestParam Double lng,
+
+            @Parameter(name = "zoomLevel", description = "줌레벨", required = true)
+            @RequestParam Integer zoomLevel
+    );
 }
