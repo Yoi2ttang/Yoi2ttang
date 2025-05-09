@@ -148,6 +148,6 @@ async function nextFetchInstance(baseUrl?: string) {
   }
 }
 
-export const getApiServer = () => {
-  return nextFetchInstance(`${BASE_URL}/api/v1`)
+export const getApiServer = async () => {
+  return await nextFetchInstance(`${BASE_URL}/api/v1`)
 }
