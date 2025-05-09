@@ -52,7 +52,7 @@ public class CourseController {
             @PathVariable("courseId") Long courseId,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getCourseDetail(courseId));
+        return ResponseEntity.ok(courseService.getCourseDetail(courseId, member));
     }
 
     @GetMapping("/{courseId}/cleared-members")
@@ -61,6 +61,9 @@ public class CourseController {
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getClearedMembersByCourseId(courseId, pageToken));
+        return ResponseEntity.ok(courseService.getClearedMembersByCourseId(
+                courseId,
+                pageToken
+        ));
     }
 }
