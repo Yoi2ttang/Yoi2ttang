@@ -28,45 +28,51 @@ export const getDailyDistance = async () => {
 }
 
 // 개인 일별 달린 시간 조회
-export const getDailyTime = async (year: number, month: number) => {
+export const getDailyTime = async (params: { year: number; month: number }) => {
   const nextApiClient = await getApiServer()
 
   const response = await nextApiClient.get<PersonalDailyRunningTimeResponse[]>(
     "/dashboard/member/daily-running-times",
-    { params: { year, month } },
+    { params },
   )
   return response
 }
 
 // 개인 일별 타일 조회
-export const getDailyTile = async (year: number, month: number) => {
+export const getDailyTile = async (params: { year: number; month: number }) => {
   const nextApiClient = await getApiServer()
 
   const response = await nextApiClient.get<PersonalDailyTileResponse[]>(
     "/dashboard/member/daily-tiles-count",
-    { params: { year, month } },
+    { params },
   )
   return response
 }
 
 // 개인 일별 완료한 코스 조회
-export const getDailyCourse = async (year: number, month: number) => {
+export const getDailyCourse = async (params: {
+  year: number
+  month: number
+}) => {
   const nextApiClient = await getApiServer()
 
   const response = await nextApiClient.get<PersonalDailyCourseResponse[]>(
     "/dashboard/member/daily-course",
-    { params: { year, month } },
+    { params },
   )
   return response
 }
 
 // 개인 타일 변화율 조회
-export const getTileChangeRate = async (year: number, month: number) => {
+export const getTileChangeRate = async (params: {
+  year: number
+  month: number
+}) => {
   const nextApiClient = await getApiServer()
 
   const response = await nextApiClient.get<PersonalTileChangeRateResponse>(
     "/dashboard/member/tile-change",
-    { params: { year, month } },
+    { params },
   )
   return response
 }
