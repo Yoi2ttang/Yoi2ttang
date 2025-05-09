@@ -1,6 +1,7 @@
 import RootProvider from "@/components/providers/RootProvider"
 import { Metadata } from "next"
 import localFont from "next/font/local"
+import { ReactNode } from "react"
 import "./globals.css"
 
 const pretendard = localFont({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 }
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const RootLayout = ({ children }: RootLayoutProps) => {
@@ -29,7 +30,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <html lang="ko">
       <body className={`${pretendard.className} bg-neutral-100`}>
         <RootProvider>
-          <div className="max-w-yoi-width mx-auto flex h-dvh max-h-dvh flex-col bg-neutral-50">
+          <div className="max-w-yoi-width mx-auto flex min-h-dvh flex-col bg-neutral-50">
             <div className="flex-1">{children}</div>
           </div>
         </RootProvider>
