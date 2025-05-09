@@ -22,7 +22,7 @@ const Map = ({ loc, tiles = [], zoom = 15, onCenterChange }: MapProps) => {
   useEffect(() => {
     if (mapRef.current) {
       setCenter(loc)
-
+      renderTiles(tiles)
       addMarker(loc)
     }
   }, [loc, mapRef])
