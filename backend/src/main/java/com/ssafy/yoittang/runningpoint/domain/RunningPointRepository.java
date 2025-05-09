@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface RunningPointRepository extends JpaRepository<RunningPoint, Long> {
     @Query(value = """
-        SELECT SUM(ST_Length(rp.root::geography))
+        SELECT SUM(ST_Length(rp.route::geography))
         FROM runnings r
         JOIN running_points rp ON rp.running_id = r.running_id
         WHERE r.member_id = :memberId AND r.state = 'COMPLETE'
@@ -17,7 +17,7 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
     Double findTotalDistanceByMemberId(@Param("memberId") Long memberId);
 
     @Query(value = """
-        SELECT SUM(ST_Length(rp.root::geography))
+        SELECT SUM(ST_Length(rp.route::geography))
         FROM runnings r
         JOIN running_points rp ON rp.running_id = r.running_id
         WHERE r.member_id = :memberId
@@ -34,7 +34,7 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
     @Query(value = """
         SELECT
             CAST(rp.arrival_time AS DATE) AS date,
-            SUM(ST_Length(rp.root::geography)) AS total_distance
+            SUM(ST_Length(rp.route::geography)) AS total_distance
         FROM runnings r
         JOIN running_points rp ON rp.running_id = r.running_id
         WHERE r.member_id = :memberId
