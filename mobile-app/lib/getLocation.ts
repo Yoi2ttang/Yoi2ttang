@@ -3,7 +3,7 @@ import * as Location from "expo-location"
 export const getCurrentLocation = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync()
   if (status !== "granted") {
-    console.warn("Permission to access location was denied")
+    console.warn("위치 접근 권한 없음")
     return null
   }
 

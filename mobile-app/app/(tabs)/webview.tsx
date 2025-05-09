@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { BackHandler, Platform, StatusBar } from "react-native"
+import { BackHandler, StatusBar } from "react-native"
 import { WebView } from "react-native-webview"
 import { useRouter } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -9,7 +9,6 @@ const WebViewScreen = () => {
   const router = useRouter()
   const webViewRef = useRef<WebView>(null)
   const [canGoBack, setCanGoBack] = useState(false)
-  const [injectedJS, setInjectedJS] = useState("")
 
   const handleBackPress = () => {
     if (canGoBack) {
@@ -36,31 +35,41 @@ const WebViewScreen = () => {
     }
   }
 
+  // 위치 감지 및 1초마다 전송
   useEffect(() => {
-    const fetchLocation = async () => {
+    let locationSubscription: Location.LocationSubscription
+
+    const startWatchingLocation = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
-        console.warn("Permission denied for location")
+        console.warn("위치 권한 거부됨")
         return
       }
 
-      const location = await Location.getCurrentPositionAsync({})
-      const { latitude, longitude } = location.coords
-      console.log("sds", location)
+      locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 1000, // 1초마다
+          distanceInterval: 0, // 거리 관계없이 주기적으로
+        },
+        (location) => {
+          const coords = {
+            lat: location.coords.latitude,
+            lng: location.coords.longitude,
+          }
 
-      const script = `
-      window.ReactNativeWebView.postMessage(JSON.stringify({
-        type: "location",
-        payload: {
-          lat: ${latitude},
-          lng: ${longitude}
-        }
-      }));
-    `
-      setInjectedJS(script)
+          console.log("📤 위치 업데이트:", coords)
+          const message = JSON.stringify(coords)
+          webViewRef.current?.postMessage(message)
+        },
+      )
     }
 
-    fetchLocation()
+    startWatchingLocation()
+
+    return () => {
+      locationSubscription?.remove()
+    }
   }, [])
 
   return (
@@ -77,7 +86,12 @@ const WebViewScreen = () => {
         javaScriptEnabled={true}
         domStorageEnabled={true}
         onNavigationStateChange={handleNavigationStateChange}
-        injectedJavaScript={injectedJS}
+        onMessage={(event) => {
+          console.log("📩 웹에서 보낸 메시지:", event.nativeEvent.data)
+        }}
+        onLoadEnd={() => {
+          console.log("✅ 웹 페이지 로드 완료")
+        }}
         className="flex-1"
       />
     </SafeAreaView>
