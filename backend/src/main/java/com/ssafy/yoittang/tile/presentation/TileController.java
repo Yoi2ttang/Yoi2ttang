@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("tiles")
 @RestController
 @RequiredArgsConstructor
-public class TileController {
+public class TileController implements TileControllerSwaggerDoc {
 
     private final TileService tileService;
     private final TileHistoryService tileHistoryService;
@@ -113,8 +113,8 @@ public class TileController {
 
     @GetMapping("/rankings/preview")
     public ResponseEntity<TilePreviewResponse> getRankingPreview(
-            Long zordiacId,
-            Integer limit
+            @RequestParam(required = false) Long zordiacId,
+            @RequestParam(required = false, defaultValue = "3") Integer limit
     ) {
         return ResponseEntity.ok(tileService.getRankingPreview(zordiacId, limit));
     }
