@@ -1,5 +1,7 @@
 "use server"
 
+"use server"
+
 import { cookies } from "next/headers"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
@@ -152,6 +154,6 @@ async function nextFetchInstance(baseUrl?: string) {
   }
 }
 
-export const getApiServer = async () => {
-  return await nextFetchInstance(`${BASE_URL}/api/v1`)
+export const getApiServer = () => {
+  return nextFetchInstance(`${BASE_URL}/api/v1`)
 }
