@@ -204,6 +204,42 @@ public class TileServiceTest {
         assertThat(response.tileClusterGetResponseList()).containsExactlyElementsOf(responseList);
     }
 
+    //클러스터링 성공
+    @Test
+    public void getTileClusterSuccessWithZordiacId() {
+        // given
+        Long zordiacId = 3L;
+        double lat = 37.501161;
+        double lng = 127.039668;
+        int zoomLevel = 17;
+
+        // 실제 서비스 메서드의 로직을 따라 geoHashString 계산
+        String geoHashString = tileService.getGeoHashStringByZoomLevel(lat, lng, zoomLevel);
+
+        List<TileClusterGetResponse> responseList = new ArrayList<>();
+
+        responseList.add(TileClusterGetResponse.builder()
+                .zordiacId(zordiacId)
+                .geoPoint(new GeoPoint(37.5, 127.0))
+                .count(5L)
+                .build());
+
+        responseList.add(TileClusterGetResponse.builder()
+                .zordiacId(zordiacId)
+                .geoPoint(new GeoPoint(37.6, 127.1))
+                .count(3L)
+                .build());
+
+        when(tileRepository.getTileCluster(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+
+        // when
+        TileClusterGetResponseWrapper response = tileService.getTileCluster(zordiacId, lat, lng, zoomLevel);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.tileClusterGetResponseList()).hasSize(2);
+        assertThat(response.tileClusterGetResponseList()).containsExactlyElementsOf(responseList);
+    }
 
 
 }
