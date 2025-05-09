@@ -1,9 +1,9 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import Button from "@/components/common/Button"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
 import RunningStartMapSection from "@/components/running/RunningStartMapSection"
+import { useRouter } from "next/navigation"
 
 const RunningStartPage = () => {
   const router = useRouter()
