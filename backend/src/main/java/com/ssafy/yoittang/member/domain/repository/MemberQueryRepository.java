@@ -11,7 +11,7 @@ import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 public interface MemberQueryRepository {
     List<MemberAutocompleteResponse> findAutocompleteMembersByKeyword(String keyword, Long memberId, int size);
 
-    List<MemberSearchResponse> findSearchMembersByKeyword(String keyword, Long lastMemberId, Member member, int size);
+    List<MemberSearchResponse> findSearchMembersByKeyword(String keyword, Long lastMemberId, Long memberId, int size);
 
     List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids);
 

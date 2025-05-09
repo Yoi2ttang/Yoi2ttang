@@ -53,7 +53,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     public List<MemberSearchResponse> findSearchMembersByKeyword(
             String keyword,
             Long lastMemberId,
-            Member member,
+            Long memberId,
             int size
     ) {
         QMember qMember = QMember.member;
@@ -71,7 +71,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .from(qMember)
                 .leftJoin(qzordiac).on(qzordiac.zordiacId.eq(qMember.zordiacId))
                 .leftJoin(qFollow)
-                .on(qFollow.fromMember.eq(member.getMemberId())
+                .on(qFollow.fromMember.eq(memberId)
                         .and(qFollow.toMember.eq(qMember.memberId)))
                 .where(
                         qMember.nickname.startsWith(keyword),

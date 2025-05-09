@@ -42,10 +42,10 @@ public class MemberRepository {
     public List<MemberSearchResponse> findSearchMembersByKeyword(
             String keyword,
             Long lastMemberId,
-            Member member,
+            Long memberId,
             int size
     ) {
-        return memberQueryRepository.findSearchMembersByKeyword(keyword, lastMemberId, member, size);
+        return memberQueryRepository.findSearchMembersByKeyword(keyword, lastMemberId, memberId, size);
     }
 
     public List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids) {

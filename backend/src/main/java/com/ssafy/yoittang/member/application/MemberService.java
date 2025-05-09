@@ -71,7 +71,7 @@ public class MemberService {
         List<MemberSearchResponse> members = memberRepository.findSearchMembersByKeyword(
                 keyword,
                 lastMemberId,
-                member,
+                member.getMemberId(),
                 DEFAULT_PAGE_SIZE
         );
 
