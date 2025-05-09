@@ -110,7 +110,7 @@ public class RunningServiceTest {
                 .runningId(2L)
                 .sequence(0)
                 .arrivalTime(now)
-                .root(runningService.getLineStringByOnePoint(lat, lng)) // 실제 메서드라면 static으로 따로 빼야 함
+                .route(runningService.getLineStringByOnePoint(lat, lng)) // 실제 메서드라면 static으로 따로 빼야 함
                 .build();
         ReflectionTestUtils.setField(savedPoint, "runningPointId", 10L); // 가짜 ID
 
@@ -181,7 +181,7 @@ public class RunningServiceTest {
                 .runningId(3L)
                 .sequence(0)
                 .arrivalTime(now)
-                .root(runningService.getLineStringByOnePoint(lat, lng)) // 실제 메서드라면 static으로 따로 빼야 함
+                .route(runningService.getLineStringByOnePoint(lat, lng)) // 실제 메서드라면 static으로 따로 빼야 함
                 .build();
         ReflectionTestUtils.setField(savedPoint, "runningPointId", 11L); // 가짜 ID
 

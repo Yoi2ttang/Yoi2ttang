@@ -48,7 +48,7 @@ public class RunningPointService {
 
         LineString newRoot
                 = getLineStringWithTwoPoint(
-                        runningPointCreateRequest.beforePoint(),
+                runningPointCreateRequest.beforePoint(),
                 runningPointCreateRequest.nowPoint()
         );
 
@@ -56,7 +56,7 @@ public class RunningPointService {
                 .runningId(runningPointCreateRequest.runningId())
                 .courseId(runningPointCreateRequest.courseId())
                 .arrivalTime(runningPointCreateRequest.currentTime())
-                .root(newRoot)
+                .route(newRoot)
                 .build();
 
         runningPointRepository.save(runningPoint);
@@ -88,7 +88,7 @@ public class RunningPointService {
                         .zordiacId(member.getZordiacId())
                         .geoHash(geoHashString)
                         .runningPointId(runningPoint.getRunningPointId())
-                .build());
+                        .build());
 
         return RunningPointCreateResponse.builder()
                 .geoHash(geoHashString)
@@ -114,5 +114,4 @@ public class RunningPointService {
 
         return geometryFactory.createLineString(coordinates);
     }
-
 }

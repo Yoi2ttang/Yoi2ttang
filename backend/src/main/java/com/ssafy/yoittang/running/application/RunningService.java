@@ -62,7 +62,7 @@ public class RunningService {
                 .runningId(running.getRunningId())
                 .sequence(0)
                 .arrivalTime(freeRunningCreateRequest.currentTime())
-                .root(getLineStringByOnePoint(freeRunningCreateRequest.lat(), freeRunningCreateRequest.lng()))
+                .route(getLineStringByOnePoint(freeRunningCreateRequest.lat(), freeRunningCreateRequest.lng()))
                 .build();
 
         runningPointRepository.save(runningPoint);
@@ -112,7 +112,10 @@ public class RunningService {
                 .runningId(running.getRunningId())
                 .sequence(0)
                 .arrivalTime(challengeRunningCreateRequest.currentTime())
-                .root(getLineStringByOnePoint(challengeRunningCreateRequest.lat(), challengeRunningCreateRequest.lng()))
+                .route(getLineStringByOnePoint(
+                        challengeRunningCreateRequest.lat(),
+                        challengeRunningCreateRequest.lng())
+                )
                 .build();
 
         runningPointRepository.save(runningPoint);
