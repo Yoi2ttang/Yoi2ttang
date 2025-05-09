@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import QueryProvider from "./QueryProvider"
+import { ScriptProvider } from "./ScriptProvider"
 
 interface RootProviderProps {
   children: ReactNode
@@ -8,7 +9,12 @@ interface RootProviderProps {
 const RootProvider = (data: RootProviderProps) => {
   const { children } = data
 
-  return <QueryProvider>{children}</QueryProvider>
+  return (
+    <QueryProvider>
+      <ScriptProvider />
+      {children}
+    </QueryProvider>
+  )
 }
 
 export default RootProvider

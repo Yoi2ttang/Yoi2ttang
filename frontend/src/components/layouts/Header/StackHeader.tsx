@@ -9,31 +9,35 @@ interface StackHeaderProps {
   align?: "left" | "center"
   title: string
   description?: string
+  onClick?: () => void
 }
 
 const StackHeader = ({
   title,
   align = "center",
   description,
+  onClick,
 }: StackHeaderProps) => {
   const router = useRouter()
 
+  const handleClick = () => {
+    onClick ? onClick() : router.back()
+  }
+
   return (
     <HeaderWrapper>
-      <div className="flex w-full items-center justify-between">
+      <div className="flex h-full w-full items-center justify-between">
         <div
           className={cn(
             `flex w-full items-center gap-4`,
             align === "left" && "justify-start",
             align === "center" && "justify-between",
           )}>
-          <div className="basis-1/3">
-            <button
-              className="h-full cursor-pointer p-3"
-              onClick={() => router.back()}>
-              <ChevronLeftIcon className="size-7" />
-            </button>
-          </div>
+          <button
+            className="flex h-full cursor-pointer items-center justify-center"
+            onClick={handleClick}>
+            <ChevronLeftIcon className="size-7" />
+          </button>
           <div className="text-title-sm">{title}</div>
           <div></div>
         </div>
