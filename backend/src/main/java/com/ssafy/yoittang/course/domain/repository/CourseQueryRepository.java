@@ -13,13 +13,17 @@ public interface CourseQueryRepository {
 
     List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId);
 
+    CourseSummaryResponse findCourseByCourseId(Long courseId);
+
     List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
     );
 
-    CourseDetailResponse findCourseByCourseId(Long courseId);
-
-    List<CourseClearMemberResponse> findClearedMembersByCourseId(Long courseId, String pageToken, int pageSize);
+    List<CourseClearMemberResponse> findClearedMembersByCourseId(
+            Long courseId,
+            String pageToken,
+            int pageSize
+    );
 }

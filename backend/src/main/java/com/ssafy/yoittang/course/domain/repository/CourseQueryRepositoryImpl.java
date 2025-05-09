@@ -16,7 +16,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
-import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
 import com.ssafy.yoittang.running.domain.State;
@@ -65,6 +64,21 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     }
 
     @Override
+    public CourseSummaryResponse findCourseByCourseId(Long courseId) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        CourseSummaryResponse.class,
+                        course.courseId,
+                        course.courseName,
+                        course.distance,
+                        course.courseImageUrl
+                ))
+                .from(course)
+                .where(course.courseId.eq(courseId))
+                .fetchOne();
+    }
+
+    @Override
     public List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
@@ -94,27 +108,11 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     }
 
     @Override
-    public CourseDetailResponse findCourseByCourseId(Long courseId) {
-        return jpaQueryFactory
-                .select(
-                        Projections.constructor(
-                                CourseDetailResponse.class,
-                                course.courseId,
-                                course.courseName,
-                                course.distance,
-                                course.courseImageUrl,
-                                Expressions.constant(30), //현재는 칼로리와 소요 시간 static 값으로 고정 추후 프런트와 협의 후 수정 예정
-                                Expressions.constant(75)
-                        )
-                )
-                .from(course)
-                .where(course.courseId.eq(courseId))
-                .fetchOne();
-
-    }
-
-    @Override
-    public List<CourseClearMemberResponse> findClearedMembersByCourseId(Long courseId, String pageToken, int pageSize) {
+    public List<CourseClearMemberResponse> findClearedMembersByCourseId(
+            Long courseId,
+            String pageToken,
+            int pageSize
+    ) {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(

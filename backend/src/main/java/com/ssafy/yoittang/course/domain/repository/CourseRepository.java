@@ -35,6 +35,10 @@ public class CourseRepository {
         return courseQueryRepository.findCompleteCoursesByMemberId(memberId);
     }
 
+    public CourseSummaryResponse findCourseByCourseId(Long courseId) {
+        return courseQueryRepository.findCourseByCourseId(courseId);
+    }
+
     public List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
@@ -45,10 +49,6 @@ public class CourseRepository {
                 startDate,
                 endDate
         );
-    }
-
-    public CourseDetailResponse findCourseByCourseId(Long courseId) {
-        return courseQueryRepository.findCourseByCourseId(courseId);
     }
 
     public void save(Course course) {
