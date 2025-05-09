@@ -1,5 +1,6 @@
+"use server"
+
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -16,7 +17,6 @@ interface ApiError extends Error {
 interface FetchParams {
   params?: Record<string, string | number | boolean>
   body?: Record<string, unknown>
-  options?: FetchOptions
 }
 
 interface FetchResponse<T> {
@@ -85,64 +85,57 @@ async function nextFetchInstance(baseUrl?: string) {
     } catch (err) {
       const error = err as ApiError
 
-      if (error.status === 401 && !error._retry) {
-        error._retry = true
-
-        try {
-          const { data: accessToken } = await request<{
-            accessToken: string | null
-          }>("POST", "/auth/reissue")
-
-          if (accessToken) {
-            fetch(`${BASE_URL}/api/set-cookie`, {
-              method: "POST",
-              body: JSON.stringify({ accessToken }),
-            })
-
-            // 재시도 로직
-            return await request<T>(method, url, options)
-          } else {
-            console.log("토큰 재발급 실패 후 로그인 페이지로 리다이렉트")
-            redirect("/")
-          }
-        } catch (reissueError) {
-          return {
-            data: null,
-            error: new Error("토큰 재발급 실패") as ApiError,
-          }
-        }
-      }
       return { data: null, error }
     }
   }
 
-  const nextGet = <T>(url: string, FetchParams?: FetchParams) =>
+  const nextGet = <T>(
+    url: string,
+    FetchParams?: FetchParams,
+    options?: FetchOptions,
+  ) =>
     request<T>(
       "GET",
       `${url}?${objectToSearchParams(FetchParams?.params)}`,
-      FetchParams?.options,
+      options,
     )
 
-  const nextPost = <TRes>(url: string, FetchParams?: FetchParams) =>
+  const nextPost = <TRes>(
+    url: string,
+    FetchParams?: FetchParams,
+    options?: FetchOptions,
+  ) =>
     request<TRes>("POST", url, {
-      ...FetchParams?.options,
       body: JSON.stringify(FetchParams?.body),
+      ...options,
     })
 
-  const nextPut = <TRes>(url: string, FetchParams?: FetchParams) =>
+  const nextPut = <TRes>(
+    url: string,
+    FetchParams?: FetchParams,
+    options?: FetchOptions,
+  ) =>
     request<TRes>("PUT", url, {
-      ...FetchParams?.options,
       body: JSON.stringify(FetchParams?.body),
+      ...options,
     })
 
-  const nextDelete = <T>(url: string, FetchParams?: FetchParams) =>
+  const nextDelete = <T>(
+    url: string,
+    FetchParams?: FetchParams,
+    options?: FetchOptions,
+  ) =>
     request<T>("DELETE", url, {
-      ...FetchParams?.options,
+      ...options,
     })
 
-  const nextPatch = <TRes>(url: string, FetchParams?: FetchParams) =>
+  const nextPatch = <TRes>(
+    url: string,
+    FetchParams?: FetchParams,
+    options?: FetchOptions,
+  ) =>
     request<TRes>("PATCH", url, {
-      ...FetchParams?.options,
+      ...options,
       body: JSON.stringify(FetchParams?.body),
     })
 
@@ -155,6 +148,6 @@ async function nextFetchInstance(baseUrl?: string) {
   }
 }
 
-export const getApiServer = async () => {
-  return await nextFetchInstance(`${BASE_URL}/api/v1`)
+export const getApiServer = () => {
+  return nextFetchInstance(`${BASE_URL}/api/v1`)
 }
