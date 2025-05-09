@@ -113,8 +113,8 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/rankings/preview")
     public ResponseEntity<TilePreviewResponse> getRankingPreview(
-            Long zordiacId,
-            Integer limit
+            @RequestParam(required = false) Long zordiacId,
+            @RequestParam(required = false, defaultValue = "3") Integer limit
     ) {
         return ResponseEntity.ok(tileService.getRankingPreview(zordiacId, limit));
     }

@@ -153,7 +153,7 @@ public class TileService {
 
     public TileClusterGetResponseWrapper getTileCluster(Long zordiacId, Double lat, Double lng, Integer zoomLevel) {
 
-        checkZordiacId(zordiacId);
+//        checkZordiacId(zordiacId);
 
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
@@ -174,7 +174,9 @@ public class TileService {
                 .findFirst()
                 .orElse(null);
 
-        Long rankGap = tileSituationList.get(0).tileCount() - Objects.requireNonNull(myTeam).tileCount();
+        Long rankGap = myTeam != null
+                ? tileSituationList.get(0).tileCount() - Objects.requireNonNull(myTeam).tileCount()
+                : null;
 
         return TileSituationResponse.builder()
                 .No1Team(tileSituationList.get(0))
@@ -195,7 +197,7 @@ public class TileService {
             Long zordiacId,
             Integer limit
     ) {
-        checkZordiacId(zordiacId);
+//        checkZordiacId(zordiacId);
         int size = checkLimit(limit);
 
         List<TileTeamSituationResponse> tileTeamSituationResponseList = tileRepository.getTileSituation();
@@ -236,12 +238,12 @@ public class TileService {
         return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
     }
 
-    public void checkZordiacId(Long zordiacId) {
-        if (zordiacId != null &&  1L <= zordiacId && zordiacId <= 12L) {
-            return;
-        }
-        throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);
-    }
+//    public void checkZordiacId(Long zordiacId) {
+//        if (zordiacId != null &&  1L <= zordiacId && zordiacId <= 12L) {
+//            return;
+//        }
+//        throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);
+//    }
 
     public int checkLimit(Integer limit) {
         if (limit == null) {
