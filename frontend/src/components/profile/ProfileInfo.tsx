@@ -3,6 +3,8 @@ import { AnimalType } from "@/types/animal"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Button from "../common/Button"
+import Image from "next/image"
+import KakaoProfileImage from "@/assets/images/profile/kakao_profile.jpg"
 
 interface ProfileInfoProps {
   nickname: string
@@ -18,7 +20,13 @@ const ProfileInfo = ({
   return (
     <div className="flex flex-col gap-6 rounded-2xl bg-white p-6">
       <div className="flex items-center gap-4">
-        <div className="size-15 rounded-full bg-neutral-200" />
+        <Image
+          src={KakaoProfileImage}
+          alt=""
+          width={60}
+          height={60}
+          className="rounded-full"
+        />
 
         <div className="flex flex-1 flex-col gap-1">
           <p className="text-lg">{nickname}</p>
