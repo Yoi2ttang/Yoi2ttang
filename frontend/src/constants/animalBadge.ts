@@ -95,24 +95,20 @@ export const animalNumberMap: Record<number, string> = {
 
 export const sizeClassMap: Record<
   AnimalBadgeSize,
-  { container: string; icon: string; text: string; px: string }
+  { iconSize: string; padding: string; text?: string }
 > = {
   sm: {
-    container: "h-7 w-20",
-    icon: "w-5 h-5",
+    iconSize: "size-5",
+    padding: "pl-1.5 pr-2.5",
     text: "text-caption",
-    px: "px-1",
   },
   md: {
-    container: "h-8 w-24",
-    icon: "w-6 h-6",
-    text: "text-caption",
-    px: "px-2",
+    iconSize: "size-6",
+    padding: "pl-1.5 pr-2.5 py-0.5",
   },
   lg: {
-    container: "h-9 w-28",
-    icon: "w-8 h-8",
-    text: "text-title-xs",
-    px: "px-2",
+    iconSize: "size-8",
+    padding: "pl-2 pr-3 py-0.5",
+    text: "text-title-sm",
   },
 }
