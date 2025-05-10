@@ -10,7 +10,7 @@ const ProfilePage = () => {
 
       <div className="flex flex-col gap-6 p-4">
         <ProfileInfo
-          nickname="ErO2거"
+          nickname="ErOI거"
           animalType="tiger"
           stateMessage="가나다라맙소사 상태 메시지는 최대 64자까지 입력이 가능합니다.
           그래서 지금까지 몇 자인지 한 번 계산해 보도록 하"
