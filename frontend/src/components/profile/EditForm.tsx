@@ -7,13 +7,15 @@ import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth"
 import { ProfileData } from "@/types/profile"
 import { clamp, debounce } from "lodash-es"
 import { Calendar } from "lucide-react"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import Input from "../common/Input"
 import Textarea from "../common/Textarea"
 import { Switch } from "../ui/switch"
 import ProfileImageUploader from "./ProfileImageUploader"
+import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
 
 const EditForm = () => {
+  const { data: initProfileData } = useProfileForEdit()
   const [profileData, setProfileData] = useState<ProfileData>({
     profileImage: null,
     nickname: "",
@@ -22,6 +24,18 @@ const EditForm = () => {
     disclosureStatus: "ALL",
   })
   const { message, messageType } = useCheckNickname(profileData.nickname)
+
+  useEffect(() => {
+    if (initProfileData) {
+      setProfileData({
+        ...profileData,
+        nickname: initProfileData.nickname,
+        weight: initProfileData.weight,
+        stateMessage: initProfileData.stateMessage,
+        disclosureStatus: initProfileData.disclosureStatus as "ALL" | "ONLY_ME",
+      })
+    }
+  }, [initProfileData])
 
   const handleProfileImageChange = (file: File) => {
     setProfileData({ ...profileData, profileImage: file })
