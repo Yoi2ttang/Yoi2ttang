@@ -1,10 +1,9 @@
-const PersonalTitleSection = () => {
-  const mockData = {
-    name: "창조",
-    days: 100,
-  }
+interface PersonalTitleSectionProps {
+  name: string
+  days: number
+}
 
-  const { name, days } = mockData
+const PersonalTitleSection = ({ name, days }: PersonalTitleSectionProps) => {
   return (
     <section className="flex flex-col gap-1">
       <h3 className="text-title-md">
