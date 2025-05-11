@@ -1,6 +1,7 @@
 package com.ssafy.yoittang.member.presentation;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
+import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
@@ -118,5 +120,13 @@ public class MemberController {
     @GetMapping("/profile/edit")
     public ResponseEntity<MyProfileEditResponse> getProfileEdit(@AuthMember Member member) {
         return ResponseEntity.ok(memberService.getProfileEdit(member));
+    }
+
+    @GetMapping("/me/completed-courses")
+    public ResponseEntity<List<CourseSummaryResponse>> getCompleteCourse(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberService.getCompleteCourse(keyword, member));
     }
 }

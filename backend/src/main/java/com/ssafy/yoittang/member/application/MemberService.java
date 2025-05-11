@@ -210,6 +210,10 @@ public class MemberService {
         return memberRepository.existByNickname(nickname);
     }
 
+    public List<CourseSummaryResponse> getCompleteCourse(String keyword, Member member) {
+        return courseRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, member.getMemberId());
+    }
+
     private RunningTimeResponse convertToRunningTimeResponse(Double totalSeconds) {
         if (totalSeconds == null) {
             return new RunningTimeResponse(0, 0, 0);

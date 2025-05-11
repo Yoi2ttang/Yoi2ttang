@@ -133,6 +133,35 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .fetch();
     }
 
+    @Override
+    public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                CourseSummaryResponse.class,
+                                course.courseId,
+                                course.courseName,
+                                course.distance,
+                                course.courseImageUrl
+                        )
+                )
+                .from(running)
+                .join(course).on(running.courseId.eq(course.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        keywordContains(keyword)
+                )
+                .fetch();
+    }
+
+    private BooleanExpression keywordContains(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return null;
+        }
+        return course.courseName.startsWithIgnoreCase(keyword);
+    }
+
     private BooleanExpression isInRange(String pageToken) {
         if (pageToken == null) {
             return null;
