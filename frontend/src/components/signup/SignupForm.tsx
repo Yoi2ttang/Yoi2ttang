@@ -71,7 +71,7 @@ const SignupForm = ({
 
   return (
     <div className="flex h-full flex-col">
-      <StackHeader title="" />
+      <StackHeader title="" onClick={onPrev} />
 
       <div className="flex flex-1 flex-col gap-9 p-6">
         <ProgressBar
