@@ -143,14 +143,14 @@ public class MemberService {
         return PageInfo.of(followerMembers, DEFAULT_PAGE_SIZE, FollowerResponse::memberId);
     }
 
-    public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
-        Member targetMember = memberRepository.findById(targetId)
+    public MemberProfileResponse getMemberProfile(String nickname, Member member) {
+        Member targetMember = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-        Integer followingCount = followJpaRepository.countFollowings(targetId);
-        Integer followerCount = followJpaRepository.countFollowers(targetId);
+        Integer followingCount = followJpaRepository.countFollowings(targetMember.getMemberId());
+        Integer followerCount = followJpaRepository.countFollowers(targetMember.getMemberId());
         if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
             return new MemberProfileResponse(
-                    targetId,
+                    targetMember.getMemberId(),
                     targetMember.getNickname(),
                     targetMember.getProfileImageUrl(),
                     null,
@@ -165,10 +165,13 @@ public class MemberService {
             );
         }
         ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
-        boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId);
-        Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(targetId);
+        boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(
+                member.getMemberId(),
+                targetMember.getMemberId()
+        );
+        Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(targetMember.getMemberId());
         return new MemberProfileResponse(
-                targetId,
+                targetMember.getMemberId(),
                 targetMember.getNickname(),
                 targetMember.getProfileImageUrl(),
                 zordiacName,
@@ -177,9 +180,9 @@ public class MemberService {
                 followerCount,
                 isFollow,
                 convertToRunningTimeResponse(totalTime),
-                getTotalDistance(targetId),
-                getTileCount(targetId),
-                getCourseSummaryByMemberId(targetId)
+                getTotalDistance(targetMember.getMemberId()),
+                getTileCount(targetMember.getMemberId()),
+                getCourseSummaryByMemberId(targetMember.getMemberId())
         );
     }
 

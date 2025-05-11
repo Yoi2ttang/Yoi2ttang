@@ -88,12 +88,12 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getFollowerList(pageToken, member));
     }
 
-    @GetMapping("/{targetId}/profile")
+    @GetMapping("/profile")
     public ResponseEntity<MemberProfileResponse> getMemberProfile(
-            @PathVariable("targetId") Long targetId,
+            @RequestParam(value = "nickname") String nickname,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getMemberProfile(targetId, member));
+        return ResponseEntity.ok(memberService.getMemberProfile(nickname, member));
     }
 
     @GetMapping("/me")
@@ -102,7 +102,7 @@ public class MemberController {
     }
 
     @PatchMapping(
-            value = "/update-profile",
+            value = "/profile",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -115,7 +115,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/edit-profile")
+    @GetMapping("/profile/edit")
     public ResponseEntity<MyProfileEditResponse> getProfileEdit(@AuthMember Member member) {
         return ResponseEntity.ok(memberService.getProfileEdit(member));
     }
