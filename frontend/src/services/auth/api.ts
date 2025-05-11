@@ -1,5 +1,5 @@
 import apiClient from "@/lib/http-common"
-import { LoginResponse, SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth"
 
 export const getIsNicknameDuplicated = async (nickname: string) => {
   const response = await apiClient.get(
@@ -16,10 +16,16 @@ export const postSignup = async (signupData: SignUpData) => {
   return response.data
 }
 
-export const postLogin = async (code: string): Promise<LoginResponse> => {
-  const response = await apiClient.post("/auth/login/kakao", {
-    code,
-    environment: "WEB",
-  })
-  return response.data
+export const postLogin = async (code: string, environment: string = "WEB") => {
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/kakao`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({
+        code,
+        environment,
+      }),
+    },
+  )
 }
