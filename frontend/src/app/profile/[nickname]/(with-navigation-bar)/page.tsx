@@ -2,27 +2,32 @@ import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQ
 import ProfileHeader from "@/components/profile/ProfileHeader"
 import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
+import useProfile from "@/hooks/profile/useProfile"
 
-const ProfilePage = () => {
+interface ProfilePageProps {
+  params: Promise<{
+    nickname: string
+  }>
+}
+
+const ProfilePage = async ({ params }: ProfilePageProps) => {
+  const { nickname } = await params
+  const { data, isError } = await useProfile(nickname)
+
   return (
     <div>
       <ProfileHeader />
 
       <div className="flex flex-col gap-6 p-4">
-        <ProfileInfo
-          nickname="ErOI거"
-          animalType="tiger"
-          stateMessage="가나다라맙소사 상태 메시지는 최대 64자까지 입력이 가능합니다.
-          그래서 지금까지 몇 자인지 한 번 계산해 보도록 하"
-        />
-
-        <ProfileRunningRecordSection
-          runningTime="9일 21시간 4분 23초"
-          runningDistance="2,343"
-          runningBlock="22,231"
-        />
-
-        <ProfileCompletedQuestSection />
+        {!data || isError ? (
+          <div>{nickname}은 존재하지 않는 유저입니다.</div>
+        ) : (
+          <>
+            <ProfileInfo data={data} />
+            <ProfileRunningRecordSection data={data} />
+            <ProfileCompletedQuestSection data={data} />
+          </>
+        )}
       </div>
     </div>
   )

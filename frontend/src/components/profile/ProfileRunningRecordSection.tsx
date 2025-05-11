@@ -3,18 +3,17 @@ import BlockIcon from "@/assets/icons/profile/block-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
 import { ChevronRight } from "lucide-react"
 import Section from "../common/Section"
+import { ProfileResponse } from "@/types/member"
 
 interface ProfileRunningRecordSectionProps {
-  runningTime: string
-  runningDistance: string
-  runningBlock: string
+  data: ProfileResponse
 }
 
 const ProfileRunningRecordSection = ({
-  runningTime,
-  runningDistance,
-  runningBlock,
+  data,
 }: ProfileRunningRecordSectionProps) => {
+  const { time, totalDistance, totalTileCount } = data
+
   return (
     <Section
       title="러닝 기록"
@@ -25,7 +24,9 @@ const ProfileRunningRecordSection = ({
           <TimeIcon className="text-yoi-500 size-10" />
           <div className="flex flex-col">
             <p className="text-yoi-500 font-semibold">지금까지 달린 시간</p>
-            <p>{runningTime}</p>
+            <p>
+              {time.hour}시간 {time.minute}분 {time.seconds}초
+            </p>
           </div>
         </div>
 
@@ -33,7 +34,7 @@ const ProfileRunningRecordSection = ({
           <RouteIcon className="text-yoi-500 size-10" />
           <div className="flex flex-col">
             <p className="text-yoi-500 font-semibold">지금까지 달린 거리</p>
-            <p>{runningDistance}km</p>
+            <p>{totalDistance}km</p>
           </div>
         </div>
 
@@ -41,7 +42,7 @@ const ProfileRunningRecordSection = ({
           <BlockIcon className="text-yoi-500 size-10" />
           <div className="flex flex-col">
             <p className="text-yoi-500 font-semibold">지금까지 밟은 타일 수</p>
-            <p>{runningBlock}개</p>
+            <p>{totalTileCount}개</p>
           </div>
         </div>
       </div>

@@ -3,8 +3,18 @@ import Carousel from "../common/Carousel"
 import Section from "../common/Section"
 import QuestCard from "../quest/QuestCard"
 import Link from "next/link"
+import { ProfileResponse } from "@/types/member"
+import Image from "next/image"
 
-const ProfileCompletedQuestSection = () => {
+interface ProfileCompletedQuestSectionProps {
+  data: ProfileResponse
+}
+
+const ProfileCompletedQuestSection = ({
+  data,
+}: ProfileCompletedQuestSectionProps) => {
+  const { courses } = data
+
   return (
     <Section
       title="완료한 퀘스트"
@@ -16,13 +26,20 @@ const ProfileCompletedQuestSection = () => {
       className="rounded-2xl bg-white p-6">
       <div className="flex gap-4">
         <Carousel>
-          {Array.from({ length: 5 }).map((_, index) => (
+          {courses.map((item) => (
             <QuestCard
-              key={index}
-              title="한강 러닝 코스"
-              distance={4.3}
+              key={item.courseId}
+              title={item.courseName}
+              distance={item.distance}
               showLables={false}>
-              <div className="h-20 w-36 rounded-t-xl bg-neutral-200" />
+              <div className="h-20 w-36 rounded-t-xl">
+                <Image
+                  src={item.courseImageUrl}
+                  alt=""
+                  fill
+                  className="rounded-t-xl object-cover"
+                />
+              </div>
             </QuestCard>
           ))}
         </Carousel>
