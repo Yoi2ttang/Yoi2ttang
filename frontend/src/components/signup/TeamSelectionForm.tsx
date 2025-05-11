@@ -3,7 +3,7 @@ import {
   animalNumberMap,
   animalTeamNameMap,
   textClassMap,
-} from "@/constants/animalBadge"
+} from "@/constants/animals"
 import Button from "../common/Button"
 import { SignUpData } from "@/types/auth"
 import { AnimalType } from "@/types/animal"
