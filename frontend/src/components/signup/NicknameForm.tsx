@@ -4,6 +4,7 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 import Button from "../common/Button"
@@ -20,15 +21,26 @@ interface NicknameFormProps {
 }
 
 const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
+  const [nickname, setNickname] = useState(signupData.nickname)
   const [message, setMessage] = useState("")
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid")
   const { data: isDuplicated } = useCheckNicknameDuplication(
     signupData.nickname,
   )
 
-  const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...signupData, nickname: e.target.value })
-  }, 300)
+  const updateSignupData = useMemo(
+    () =>
+      debounce((value: string) => {
+        onChange({ ...signupData, nickname: value })
+      }, 300),
+    [signupData, onChange],
+  )
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setNickname(value)
+    updateSignupData(value)
+  }
 
   useEffect(() => {
     if (signupData.nickname === "") {
@@ -50,7 +62,7 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
       setMessage("사용 가능한 닉네임이에요")
       setMessageType("valid")
     }
-  }, [signupData.nickname, isDuplicated])
+  }, [signupData, isDuplicated])
 
   return (
     <div className="flex flex-1 flex-col justify-between">
@@ -65,6 +77,7 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
           <Input
             variant={messageType === "valid" ? "default" : "error"}
             placeholder="닉네임을 입력해 주세요"
+            value={nickname}
             onChange={handleChange}
           />
           <p
