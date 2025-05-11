@@ -9,11 +9,14 @@ export const getIsNicknameDuplicated = async (nickname: string) => {
 }
 
 export const postSignup = async (signupData: SignUpData) => {
-  const response = await apiClient.post("/auth/signup/kakao", {
-    ...signupData,
-    birth: `${signupData.birth.year}-${signupData.birth.month}-${signupData.birth.day}`,
+  return await fetch("/auth/signup/kakao", {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify({
+      ...signupData,
+      birth: `${signupData.birth.year}-${signupData.birth.month}-${signupData.birth.day}`,
+    }),
   })
-  return response.data
 }
 
 export const postLogin = async (code: string, environment: string = "WEB") => {
