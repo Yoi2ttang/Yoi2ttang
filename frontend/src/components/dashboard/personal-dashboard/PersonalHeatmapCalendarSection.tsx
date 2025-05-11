@@ -7,12 +7,13 @@ interface PersonalHeatmapCalendarSectionProps {}
 
 const PersonalHeatmapCalendarSection =
   ({}: PersonalHeatmapCalendarSectionProps) => {
+    //
     return (
       <Section
         title="☘️ 발자국"
         supplement={
           <Link
-            href="/dashboard/my/tiles"
+            href="/dashboard/my/heatmap"
             className="text-caption flex items-center gap-1 text-neutral-400">
             <span>자세히 보기</span>
             <ChevronRight className="size-4" />

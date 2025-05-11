@@ -64,10 +64,7 @@ export const getDailyCourse = async (params: {
 }
 
 // 개인 타일 변화율 조회
-export const getTileChangeRate = async (params: {
-  year: number
-  month: number
-}) => {
+export const getTileChangeRate = async (params: { period: "WEEKLY" }) => {
   const nextApiClient = await getApiServer()
 
   const response = await nextApiClient.get<PersonalTileChangeRateResponse>(
@@ -76,3 +73,10 @@ export const getTileChangeRate = async (params: {
   )
   return response
 }
+
+// 팀 대시보드 데이터 가져오기
+// 1. 우리팀 조디악, 랭킹, 타일
+// 2. 우리팀 Top3 멤버 조회
+// 3. 전체 상위 팀 조회
+
+// 5. 우리팀 활동량 변화

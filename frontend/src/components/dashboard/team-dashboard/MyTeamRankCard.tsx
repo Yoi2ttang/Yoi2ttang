@@ -1,7 +1,7 @@
 import Badge from "@/components/common/Badge"
-import { animalIconMap } from "@/constants/animalBadge"
 import { AnimalType } from "@/types/animal"
 import DashboardCard from "../DashboardCard"
+import { animalIconMap } from "@/constants/animals"
 
 interface MyTeamRankCardProps {
   teamInfo: {
