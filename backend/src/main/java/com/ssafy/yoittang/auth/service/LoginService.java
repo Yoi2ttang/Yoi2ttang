@@ -13,6 +13,7 @@ import com.ssafy.yoittang.auth.domain.RefreshToken;
 import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
 import com.ssafy.yoittang.auth.domain.request.SignupRequest;
+import com.ssafy.yoittang.auth.domain.response.LoginClientResponse;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.infrastructure.KakaoMemberInfo;
 import com.ssafy.yoittang.auth.infrastructure.KakaoOAuthProvider;
@@ -70,7 +71,6 @@ public class LoginService {
             //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
             refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
             return LoginResponse.from(
-                    member.getMemberId(),
                     memberTokens.getAccessToken(),
                     memberTokens.getRefreshToken(),
                     null
@@ -147,11 +147,14 @@ public class LoginService {
         //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
         refreshTokenRepository.save(new RefreshToken(member.getMemberId(), memberTokens.getRefreshToken()));
         return LoginResponse.from(
-                member.getMemberId(),
                 memberTokens.getAccessToken(),
                 memberTokens.getRefreshToken(),
                 null
         );
+    }
+
+    public LoginClientResponse getLoginClientResponse(LoginResponse loginResponse) {
+        return LoginClientResponse.from(loginResponse);
     }
 
     private LoginResponse preRegister(String socialId, String email, String nickname, String profileImageUrl) {
@@ -165,7 +168,6 @@ public class LoginService {
         String key = REDIS_PREFIX + memberRedisEntity.getSocialId();
         redisTemplate.opsForValue().set(key, memberRedisEntity);
         return LoginResponse.from(
-                null,
                 null,
                 null,
                 socialId
