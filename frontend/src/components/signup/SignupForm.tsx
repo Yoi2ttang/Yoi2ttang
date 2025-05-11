@@ -23,7 +23,7 @@ const SignupForm = ({
   onPrev,
   onNext,
 }: SignupFormProps) => {
-  const { mutate: signup } = useSignup(signupData)
+  const { signup } = useSignup(signupData)
 
   // 숫자형 Enum은 양방향 매핑(0: "TERM", "TERM": 0)이 되므로, filter를 사용하여 추출한다.
   const stepCount =
