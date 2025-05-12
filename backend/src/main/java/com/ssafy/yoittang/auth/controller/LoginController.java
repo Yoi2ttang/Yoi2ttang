@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
 import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.AccessTokenResponse;
+import com.ssafy.yoittang.auth.domain.response.LoginClientResponse;
 import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.service.LoginService;
 import com.ssafy.yoittang.member.application.MemberService;
@@ -35,7 +36,7 @@ public class LoginController {
     private final MemberService memberService;
 
     @PostMapping(value = "/login/kakao")
-    public ResponseEntity<LoginResponse> kakaoLogin(
+    public ResponseEntity<LoginClientResponse> kakaoLogin(
             @RequestBody LoginRequest loginRequest,
             HttpServletResponse response
     ) {
@@ -49,11 +50,11 @@ public class LoginController {
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(loginService.getLoginClientResponse(loginResponse));
     }
 
     @PostMapping("/signup/kakao")
-    public ResponseEntity<LoginResponse> signup(
+    public ResponseEntity<LoginClientResponse> signup(
             @RequestBody SignupRequest request,
             HttpServletResponse response
     ) {
@@ -66,7 +67,7 @@ public class LoginController {
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(loginService.getLoginClientResponse(loginResponse));
     }
 
     @PostMapping("/reissue")

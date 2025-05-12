@@ -125,7 +125,6 @@ public class LoginServiceTest {
 
         LoginResponse response = loginService.login(request);
 
-        assertThat(response.memberId()).isEqualTo(1L);
         assertThat(response.accessToken()).isEqualTo("accessToken");
         assertThat(response.refreshToken()).isEqualTo("refreshToken");
         assertThat(response.socialId()).isNull();
@@ -160,7 +159,6 @@ public class LoginServiceTest {
 
         LoginResponse response = loginService.login(request);
 
-        assertThat(response.memberId()).isNull();
         assertThat(response.accessToken()).isNull();
         assertThat(response.refreshToken()).isNull();
         assertThat(response.socialId()).isEqualTo("newSocialId123");
@@ -218,7 +216,6 @@ public class LoginServiceTest {
 
         LoginResponse response = loginService.finalizeSignup(signupRequest);
 
-        assertThat(response.memberId()).isEqualTo(3L);
         assertThat(response.accessToken()).isEqualTo("accessToken");
         assertThat(response.refreshToken()).isEqualTo("refreshToken");
         assertThat(response.socialId()).isNull();
