@@ -11,13 +11,11 @@ const apiClient = axios.create({
 // - 개발(http) 환경에서는 브라우저에 저장된 쿠키로부터 accessToken을 가져와 헤더에 추가
 apiClient.interceptors.request.use(
   (config) => {
-    const isProd = process.env.NODE_ENV === "production"
-    if (!isProd) {
-      const accessToken = getCookie("accessToken")
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
-      }
+    const accessToken = getCookie("accessToken")
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
     }
+
     return config
   },
   (error) => {
@@ -44,13 +42,10 @@ apiClient.interceptors.response.use(
         })
         // 원래 요청을 재시도하되, 실패할 경우 로그인 페이지로 이동
         if (response.ok) {
-          const isProd = process.env.NODE_ENV === "production"
-          if (!isProd) {
-            // 갱신된 쿠키에서 accessToken을 가져와 헤더에 추가
-            const accessToken = getCookie("accessToken")
-            if (accessToken) {
-              error.config.headers.Authorization = `Bearer ${accessToken}`
-            }
+          // 갱신된 쿠키에서 accessToken을 가져와 헤더에 추가
+          const accessToken = getCookie("accessToken")
+          if (accessToken) {
+            error.config.headers.Authorization = `Bearer ${accessToken}`
           }
 
           return await apiClient(error.config)
