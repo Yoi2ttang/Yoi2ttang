@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.member.domain.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +18,7 @@ public interface FollowJpaRepository extends JpaRepository<Follow, Long>, Follow
 
     @Query("SELECT COUNT(f) FROM Follow f WHERE f.fromMember = :targetId")
     Integer countFollowings(@Param("targetId") Long targetId);
+
+    Optional<Follow> findByFromMemberAndToMember(Long fromMember, Long toMember);
 
 }

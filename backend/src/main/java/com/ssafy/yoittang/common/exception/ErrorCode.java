@@ -16,7 +16,7 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(1006, "요청 ID에 해당하는 리뷰가 존재하지 않습니다."),
     ORDER_NOT_FOUND(1007, "요청 ID에 해당하는 빵이 존재하지 않습니다."),
     ALREADY_FOLLOWED(1008, "이미 팔로우 되어 요청 오류가 발생했습니다."),
-    ALREADY_REQUESTED(1009, "이미 팔로우 요청 되어 오류가 발생했습니다."),
+    ALREADY_UNFOLLOWED(1009, "이미 언팔로우되어 오류가 발생했습니다."),
 
     UNABLE_TO_GET_USER_INFO(2001, "소셜 로그인 공급자로부터 유저 정보를 받아올 수 없습니다."),
     UNABLE_TO_GET_ACCESS_TOKEN(2002, "소셜 로그인 공급자로부터 인증 토큰을 받아올 수 없습니다."),

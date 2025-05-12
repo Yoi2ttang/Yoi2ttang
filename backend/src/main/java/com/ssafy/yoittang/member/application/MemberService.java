@@ -78,6 +78,7 @@ public class MemberService {
         return PageInfo.of(members, DEFAULT_PAGE_SIZE, MemberSearchResponse::memberId);
     }
 
+    @Transactional
     public void createFollow(Long targetId, Member member) {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -85,26 +86,35 @@ public class MemberService {
             throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
         }
         if (followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId)) {
-            throw new BadRequestException(ErrorCode.ALREADY_FOLLOWED);
+            Follow follow = followJpaRepository.findByFromMemberAndToMember(member.getMemberId(), targetId)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.FOLLOW_REQUEST_NOT_FOUND));
+            if (follow.getIsActive()) {
+                throw new BadRequestException(ErrorCode.ALREADY_FOLLOWED);
+            }
+            follow.updateActive(true);
+        } else {
+            followJpaRepository.save(
+                    Follow.builder()
+                            .fromMember(member.getMemberId())
+                            .toMember(targetId)
+                            .build()
+            );
         }
-        followJpaRepository.save(
-                Follow.builder()
-                        .fromMember(member.getMemberId())
-                        .toMember(targetId)
-                        .build()
-        );
     }
 
-    public void deleteFollow(Long targetId, Member member) {
+    @Transactional
+    public void unfollow(Long targetId, Member member) {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
             throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
         }
-        if (!followJpaRepository.existsByFromMemberAndToMember(member.getMemberId(), targetId)) {
-            throw new BadRequestException(ErrorCode.FOLLOW_HISTORY_NOT_FOUND);
+        Follow follow = followJpaRepository.findByFromMemberAndToMember(member.getMemberId(), targetId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.FOLLOW_HISTORY_NOT_FOUND));
+        if (!follow.getIsActive()) {
+            throw new BadRequestException(ErrorCode.ALREADY_UNFOLLOWED);
         }
-        followJpaRepository.deleteByFromMemberAndToMember(member.getMemberId(), targetId);
+        follow.updateActive(false);
     }
 
     public PageInfo<FollowingResponse> getFollowingList(String pageToken, Member member) {
