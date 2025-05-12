@@ -272,10 +272,11 @@ public class MemberService {
     public MyProfileEditResponse getProfileEdit(Member member) {
         return new MyProfileEditResponse(
                 member.getMemberId(),
+                member.getEmail(),
                 member.getNickname(),
                 member.getProfileImageUrl(),
                 member.getBirthDate(),
-                member.getStateMessage(),
+                member.getStateMessage() != null ? member.getStateMessage() : "",
                 member.getDisclosure(),
                 member.getGender(),
                 member.getWeight()
