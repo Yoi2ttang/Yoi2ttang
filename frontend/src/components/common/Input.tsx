@@ -12,7 +12,7 @@ interface InputProps
 }
 
 const inputVariants = cva(
-  "transition-all w-full rounded-xl px-4 py-5 focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-600 focus-within:border-transparent",
+  "transition-all w-full rounded-xl p-4 focus-within:outline-none focus-within:ring-2 focus-within:ring-neutral-600 focus-within:border-transparent",
   {
     variants: {
       variant: {
