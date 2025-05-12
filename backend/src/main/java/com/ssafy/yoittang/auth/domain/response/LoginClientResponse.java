@@ -1,6 +1,6 @@
 package com.ssafy.yoittang.auth.domain.response;
 
-public record LoginClientResponse(String accessToken, String refreshToken
+public record LoginClientResponse(String accessToken, String socialId
 ) {
     public static LoginClientResponse from(
             LoginResponse loginResponse
