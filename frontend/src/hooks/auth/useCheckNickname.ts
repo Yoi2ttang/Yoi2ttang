@@ -36,7 +36,7 @@ const useCheckNickname = (nickname: string, initNickname: string = "") => {
       setMessage("사용 가능한 닉네임이에요")
       setMessageType("valid")
     }
-  }, [nickname, isDuplicated])
+  }, [nickname, initNickname, isDuplicated])
 
   return { message, messageType }
 }

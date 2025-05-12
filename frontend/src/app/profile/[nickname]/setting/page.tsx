@@ -2,11 +2,12 @@
 
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import EditForm from "@/components/profile/EditForm"
+import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import useEditProfile from "@/hooks/profile/useEditProfile"
 import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
+import { cn } from "@/lib/utils"
 import { ProfileForEditRequest } from "@/types/member"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 const ProfileSettingPage = () => {
   const { data, isPending } = useProfileForEdit()
@@ -19,8 +20,11 @@ const ProfileSettingPage = () => {
     },
     image: null,
   })
+  const { message, messageType } = useCheckNickname(
+    profileData.memberUpdateRequest.nickname,
+    data?.nickname || "",
+  )
   const { mutate: edit } = useEditProfile()
-  const router = useRouter()
 
   const handleEdit = () => {
     edit(profileData)
@@ -40,13 +44,30 @@ const ProfileSettingPage = () => {
     }
   }, [data])
 
+  const canEdit = useMemo(() => {
+    return (
+      messageType === "valid" && // 유효한 닉네임이고,
+      profileData.memberUpdateRequest.nickname && // 닉네임이 있고,
+      (profileData.image || // 프로필 이미지가 변경 되거나
+        profileData.memberUpdateRequest.nickname !== data?.nickname || // 닉네임이 변경 되거나
+        profileData.memberUpdateRequest.weight !== data?.weight || // 체중이 변경 되거나
+        profileData.memberUpdateRequest.stateMessage !== data?.stateMessage || // 상태 메시지가 변경 되거나
+        profileData.memberUpdateRequest.disclosureStatus !==
+          data?.disclosureStatus) // 프로필 공개 여부가 변경 되었을 때
+    )
+  }, [messageType, data, profileData])
+
   return (
     <div>
       <StackHeader
         title="프로필 편집"
         supplement={
           <button
-            className="text-yoi-500 cursor-pointer pr-1"
+            className={cn(
+              "cursor-pointer pr-1",
+              canEdit ? "text-yoi-500" : "text-neutral-200",
+            )}
+            disabled={!canEdit}
             onClick={handleEdit}>
             완료
           </button>
@@ -60,6 +81,8 @@ const ProfileSettingPage = () => {
           initProfileData={data!}
           profileData={profileData}
           onChange={setProfileData}
+          message={message}
+          messageType={messageType}
         />
       )}
     </div>

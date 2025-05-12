@@ -17,19 +17,19 @@ interface EditFormProps {
   initProfileData: ProfileForEditResponse
   profileData: ProfileForEditRequest
   onChange: (profileData: ProfileForEditRequest) => void
+  message: string
+  messageType: "valid" | "invalid"
 }
 
 const EditForm = ({
   initProfileData,
   profileData,
   onChange,
+  message,
+  messageType,
 }: EditFormProps) => {
   const [nickname, setNickname] = useState(
     profileData.memberUpdateRequest.nickname,
-  )
-  const { message, messageType } = useCheckNickname(
-    profileData.memberUpdateRequest.nickname,
-    initProfileData.nickname,
   )
 
   const handleProfileImageChange = (file: File) => {
