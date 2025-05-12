@@ -208,8 +208,11 @@ public class TileService {
                 .findFirst()
                 .orElse(null);
 
+        List<TileTeamSituationResponse> previewList =
+            tileTeamSituationResponseList.subList(0, Math.min(size, tileTeamSituationResponseList.size()));
+
         return TilePreviewResponse.builder()
-                .tileTeamSituationResponseList(tileTeamSituationResponseList.subList(0, size))
+                .tileTeamSituationResponseList(previewList)
                 .myTeamRanking(myTeamRanking)
                 .build();
     }
