@@ -26,4 +26,6 @@ public interface CourseQueryRepository {
             String pageToken,
             int pageSize
     );
+
+    List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId);
 }

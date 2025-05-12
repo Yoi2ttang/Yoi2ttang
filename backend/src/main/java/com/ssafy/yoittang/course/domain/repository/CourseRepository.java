@@ -66,4 +66,8 @@ public class CourseRepository {
         );
         return PageInfo.of(data, DEFAULT_PAGE_SIZE, CourseClearMemberResponse::memberId);
     }
+
+    public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
+        return courseQueryRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, memberId);
+    }
 }
