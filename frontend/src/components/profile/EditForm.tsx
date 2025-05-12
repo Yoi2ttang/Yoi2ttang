@@ -101,8 +101,9 @@ const EditForm = ({
   }, [initProfileData])
 
   return (
-    <div className="flex flex-col gap-12 p-6">
+    <div className="flex flex-col gap-12 px-6">
       <ProfileImageUploader
+        className="-mx-6"
         initImage={initProfileData.profileImageUrl}
         onChange={handleProfileImageChange}
       />
@@ -156,7 +157,7 @@ const EditForm = ({
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-title-sm">체중(kg)</p>
+        <p className="text-title-sm">체중(KG)</p>
         <Input
           type="number"
           placeholder="체중을 입력해 주세요"
@@ -204,6 +205,9 @@ const EditForm = ({
           </p>
         </div>
       </div>
+
+      {/* 여백 */}
+      <div />
     </div>
   )
 }

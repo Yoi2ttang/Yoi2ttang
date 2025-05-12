@@ -1,17 +1,20 @@
 "use client"
 
 import CameraIcon from "@/assets/icons/profile/camera-icon.svg"
+import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { ChangeEvent, useRef, useState } from "react"
 
 interface ProfileImageUploaderProps {
   initImage?: string
   onChange: (file: File) => void
+  className?: string
 }
 
 const ProfileImageUploader = ({
   initImage,
   onChange,
+  className,
 }: ProfileImageUploaderProps) => {
   const [previewImage, setPreviewImage] = useState(
     initImage || "/images/logo.svg",
@@ -32,28 +35,41 @@ const ProfileImageUploader = ({
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative size-25 rounded-full border border-neutral-100">
+    <div className={cn("relative h-44 drop-shadow-xl", className)}>
+      {initImage ? (
         <Image
           src={previewImage}
           alt=""
-          className="size-full rounded-full object-cover"
           fill
+          className="object-cover opacity-15"
         />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleChange}
-          ref={fileInput}
-          hidden
-          readOnly
-        />
+      ) : (
+        <div className="absolute inset-0 bg-neutral-100" />
+      )}
 
-        <button
-          className="absolute right-0 bottom-0 cursor-pointer rounded-full border border-neutral-200 bg-white p-1"
-          onClick={handleClick}>
-          <CameraIcon className="size-5 text-neutral-600" />
-        </button>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+        <div className="relative size-28 rounded-full border border-neutral-100">
+          <Image
+            src={previewImage}
+            alt=""
+            className="size-full rounded-full object-cover"
+            fill
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleChange}
+            ref={fileInput}
+            hidden
+            readOnly
+          />
+
+          <button
+            className="absolute right-0 bottom-0 cursor-pointer rounded-full border border-neutral-200 bg-white p-1"
+            onClick={handleClick}>
+            <CameraIcon className="size-5 text-neutral-800" />
+          </button>
+        </div>
       </div>
     </div>
   )
