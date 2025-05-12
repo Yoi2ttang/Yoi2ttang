@@ -38,9 +38,9 @@ import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
-import com.ssafy.yoittang.zordiac.domain.Zordiac;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.Zodiac;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +52,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final FollowJpaRepository followJpaRepository;
-    private final ZordiacJpaRepository zordiacJpaRepository;
+    private final ZodiacJpaRepository zodiacJpaRepository;
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
@@ -180,7 +180,7 @@ public class MemberService {
                     null
             );
         }
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(targetMember.getZodiacId());
         boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(
                 member.getMemberId(),
                 targetMember.getMemberId()
@@ -190,7 +190,7 @@ public class MemberService {
                 targetMember.getMemberId(),
                 targetMember.getNickname(),
                 targetMember.getProfileImageUrl(),
-                zordiacName,
+                zodiacName,
                 targetMember.getStateMessage(),
                 followingCount,
                 followerCount,
@@ -205,13 +205,13 @@ public class MemberService {
     public MyProfileResponse getMyProfile(Member member) {
         Integer followingCount = followJpaRepository.countFollowings(member.getMemberId());
         Integer followerCount = followJpaRepository.countFollowers(member.getMemberId());
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(member.getMemberId());
         return new MyProfileResponse(
                 member.getMemberId(),
                 member.getNickname(),
                 member.getProfileImageUrl(),
-                zordiacName,
+                zodiacName,
                 member.getStateMessage(),
                 followingCount,
                 followerCount,
@@ -285,13 +285,13 @@ public class MemberService {
     //이 코드는 refactoring 되면 사라질 예정입니다.
     public MemberTempResponse getTempMember(Member member) {
 
-        Zordiac zordiac = zordiacJpaRepository.findById(member.getZordiacId())
+        Zodiac zodiac = zodiacJpaRepository.findById(member.getZodiacId())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC));
 
         List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
 
         TileTeamSituationResponse myTeam = tileSituationList.stream()
-                .filter(t -> t.zordiacId().equals(zordiac.getZordiacId()))
+                .filter(t -> t.zodiacId().equals(zodiac.getZodiacId()))
                 .findFirst()
                 .orElse(null);
 
@@ -301,8 +301,8 @@ public class MemberService {
 
         return MemberTempResponse.builder()
                 .nickname(member.getNickname())
-                .zordiacId(zordiac.getZordiacId())
-                .zordiacName(zordiac.getZordiacName().getKoreanName())
+                .zodiacId(zodiac.getZodiacId())
+                .zodiacName(zodiac.getZodiacName().getKoreanName())
                 .ranking(ranking)
                 .tileCount(tileCount)
                 .build();

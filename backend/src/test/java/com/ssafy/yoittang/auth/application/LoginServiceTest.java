@@ -41,8 +41,8 @@ import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.term.domain.MemberTerm;
 import com.ssafy.yoittang.term.domain.repository.MemberTermJpaRepository;
 import com.ssafy.yoittang.term.domain.request.MemberTermCreateRequest;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
@@ -69,7 +69,7 @@ public class LoginServiceTest {
     private ValueOperations<String, MemberRedisEntity> valueOperations;
 
     @Mock
-    private ZordiacJpaRepository zordiacJpaRepository;
+    private ZodiacJpaRepository zodiacJpaRepository;
 
     @Mock
     private JwtUtil jwtUtil;
@@ -79,7 +79,7 @@ public class LoginServiceTest {
     @BeforeEach
     void setUp() {
         mockMember = Member.builder()
-                .zordiacId(1L)
+                .zodiacId(1L)
                 .socialId("socialId123")
                 .birthDate(LocalDate.of(1995, 1, 1))
                 .nickname("nickname")
@@ -110,8 +110,8 @@ public class LoginServiceTest {
         given(memberRepository.findBySocialId("socialId123"))
                 .willReturn(Optional.of(mockMember));
 
-        given(zordiacJpaRepository.findZordiacNameByZordiacId(1L))
-                .willReturn(ZordiacName.MOUSE);
+        given(zodiacJpaRepository.findZodiacNameByZodiacId(1L))
+                .willReturn(ZodiacName.MOUSE);
 
         JwtRequest expectedJwtRequest = new JwtRequest(
                 1L,
@@ -191,7 +191,7 @@ public class LoginServiceTest {
         given(valueOperations.get("PRE_MEMBER:" + newSocialId)).willReturn(memberRedisEntity);
 
         Member savedMember = Member.builder()
-                .zordiacId(11L)
+                .zodiacId(11L)
                 .socialId(signupRequest.socialId())
                 .birthDate(signupRequest.birth())
                 .nickname(signupRequest.nickname())
@@ -204,7 +204,7 @@ public class LoginServiceTest {
         ReflectionTestUtils.setField(savedMember, "memberId", 3L);
 
         given(memberRepository.save(any(Member.class))).willReturn(savedMember);
-        given(zordiacJpaRepository.findZordiacNameByZordiacId(11L)).willReturn(ZordiacName.PIG);
+        given(zodiacJpaRepository.findZodiacNameByZodiacId(11L)).willReturn(ZodiacName.PIG);
         given(jwtUtil.createLoginToken(
                 new JwtRequest(
                         3L,

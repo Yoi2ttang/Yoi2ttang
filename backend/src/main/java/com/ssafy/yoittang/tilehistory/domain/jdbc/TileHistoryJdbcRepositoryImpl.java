@@ -31,7 +31,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
 
     @Override
     public void bulkInsert(List<TileHistoryRedis> tileHistoryRedisList) {
-        String sql = "INSERT INTO tile_histories (zordiac_id, member_id, birth_date, geohash, running_point_id) "
+        String sql = "INSERT INTO tile_histories (zodiac_id, member_id, birth_date, geohash, running_point_id) "
                 + "VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -41,7 +41,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
 
                 TileHistoryRedis now = tileHistoryRedisList.get(index);
 
-                preparedStatement.setLong(1, now.getZordiacId());
+                preparedStatement.setLong(1, now.getZodiacId());
                 preparedStatement.setLong(2, now.getMemberId());
                 preparedStatement.setDate(3, Date.valueOf(now.getBirthDate()));
                 preparedStatement.setString(4, now.getGeoHash());
@@ -58,7 +58,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
 
     @Override
     public TileMemberRankingResponse getTileMemberRankingResponse(
-            Long zordiacId,
+            Long zodiacId,
             TileMemberRankingRequest tileMemberRankingRequest
     ) {
 
@@ -82,7 +82,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
                         JOIN running_points AS rp ON th.running_point_id = rp.running_point_id
                         JOIN members AS m ON th.member_id = m.member_id
                         WHERE rp.arrival_time BETWEEN :start_time AND :end_time
-                          AND th.zordiac_id = :zordiac_id
+                          AND th.zodiac_id = :zodiac_id
                         GROUP BY th.member_id, m.nickname, m.profile_image_url
                 """
         );
@@ -90,7 +90,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_time", startTime)
                 .addValue("end_time", endTime)
-                .addValue("zordiac_id", zordiacId)
+                .addValue("zodiac_id", zodiacId)
                 .addValue("size", size);
 
         if (tileMemberRankingRequest.lastCount() != null && tileMemberRankingRequest.lastMemberId() != null) {

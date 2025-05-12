@@ -27,8 +27,8 @@ import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.term.domain.MemberTerm;
 import com.ssafy.yoittang.term.domain.repository.MemberTermJpaRepository;
 import com.ssafy.yoittang.term.domain.request.MemberTermCreateRequest;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class LoginService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
     private final MemberTermJpaRepository memberTermJpaRepository;
-    private final ZordiacJpaRepository zordiacJpaRepository;
+    private final ZodiacJpaRepository zodiacJpaRepository;
     private final JwtUtil jwtUtil;
     private final KakaoOAuthProvider kakaoOAuthProvider;
     private final RedisTemplate<String, MemberRedisEntity> redisTemplate;
@@ -60,12 +60,12 @@ public class LoginService {
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+            ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
             JwtRequest jwtRequest = new JwtRequest(
                     member.getMemberId(),
                     member.getNickname(),
-                    member.getZordiacId(),
-                    zordiacName.toString()
+                    member.getZodiacId(),
+                    zodiacName.toString()
             );
             MemberTokens memberTokens = jwtUtil.createLoginToken(jwtRequest);
             //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
@@ -119,11 +119,11 @@ public class LoginService {
 
         int birthYear = signupRequest.birth().getYear();
 
-        Long zordiacId = calculateZordiacId(birthYear);
+        Long zodiacId = calculateZodiacId(birthYear);
 
         Member member = memberRepository.save(
                 Member.builder()
-                        .zordiacId(zordiacId)
+                        .zodiacId(zodiacId)
                         .socialId(cache.getSocialId())
                         .email(cache.getEmail())
                         .birthDate(signupRequest.birth())
@@ -136,12 +136,12 @@ public class LoginService {
                         .build()
         );
         saveMemberTerm(agreements, member);
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
         JwtRequest jwtRequest = new JwtRequest(
                 member.getMemberId(),
                 member.getNickname(),
-                member.getZordiacId(),
-                zordiacName.toString()
+                member.getZodiacId(),
+                zodiacName.toString()
         );
         MemberTokens memberTokens = jwtUtil.createLoginToken(jwtRequest);
         //MemberTokens memberTokens = jwtUtil.createLoginToken(member.getMemberId().toString());
@@ -180,9 +180,9 @@ public class LoginService {
                 .orElseThrow(() -> new BadRequestException(ErrorCode.INVALID_SIGNUP_TOKEN));
     }
 
-    private Long calculateZordiacId(int birthYear) {
-        int[] zordiacIdByRemainder = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
-        return (long) zordiacIdByRemainder[birthYear % 12];
+    private Long calculateZodiacId(int birthYear) {
+        int[] zodiacIdByRemainder = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8};
+        return (long) zodiacIdByRemainder[birthYear % 12];
     }
 
     private void saveMemberTerm(MemberTermCreateRequest agreements, Member member) {

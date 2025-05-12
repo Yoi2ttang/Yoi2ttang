@@ -1,4 +1,4 @@
-package com.ssafy.yoittang.zordiac.domain.repository;
+package com.ssafy.yoittang.zodiac.domain.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -8,33 +8,33 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ssafy.yoittang.zordiac.domain.Zordiac;
+import com.ssafy.yoittang.zodiac.domain.Zodiac;
 
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class ZordiacJdbcRepositoryImpl implements ZordiacJdbcRepository {
+public class ZodiacJdbcRepositoryImpl implements ZodiacJdbcRepository {
 
     private static final String BULK_INSERT_QURY =
             "INSERT INTO "
-                    + "zordiacs(zordiac_name, zordiac_image) "
+                    + "zodiacs(zodiac_name, zodiac_image) "
                     + "VALUES(?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void bulkInsert(List<Zordiac> zordiacList) {
+    public void bulkInsert(List<Zodiac> zodiacList) {
         jdbcTemplate.batchUpdate(BULK_INSERT_QURY, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int idx) throws SQLException {
-                Zordiac zordiac = zordiacList.get(idx);
-                ps.setString(1, zordiac.getZordiacName().name());
-                ps.setString(2, zordiac.getZordiacImage());
+                Zodiac zodiac = zodiacList.get(idx);
+                ps.setString(1, zodiac.getZodiacName().name());
+                ps.setString(2, zodiac.getZodiacImage());
             }
 
             @Override
             public int getBatchSize() {
-                return zordiacList.size();
+                return zodiacList.size();
             }
         });
     }

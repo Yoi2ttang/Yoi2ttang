@@ -1,4 +1,4 @@
-package com.ssafy.yoittang.zordiac.application;
+package com.ssafy.yoittang.zodiac.application;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.yoittang.zordiac.domain.Zordiac;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.Zodiac;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ZordiacService {
-    private final ZordiacJpaRepository zordiacJpaRepository;
+public class ZodiacService {
+    private final ZodiacJpaRepository zodiacJpaRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
     private String prefix;
@@ -27,20 +27,20 @@ public class ZordiacService {
 
     @PostConstruct
     public void init() {
-        prefix = "https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com/image/zordiac/";
+        prefix = "https://" + bucketName + ".s3.ap-northeast-2.amazonaws.com/image/zodiac/";
     }
 
     @Transactional
     public void save() {
-        List<Zordiac> zordiacs = Arrays.stream(ZordiacName.values())
-                .map(name -> Zordiac
+        List<Zodiac> zodiacs = Arrays.stream(ZodiacName.values())
+                .map(name -> Zodiac
                         .builder()
-                        .zordiacName(name)
-                        .zordiacImage(prefix + name.toString() + suffix)
+                        .zodiacName(name)
+                        .zodiacImage(prefix + name.toString() + suffix)
                         .build())
                 .collect(Collectors.toList());
 
-        zordiacJpaRepository.bulkInsert(zordiacs);
+        zodiacJpaRepository.bulkInsert(zodiacs);
     }
 
 

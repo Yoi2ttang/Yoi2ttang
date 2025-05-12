@@ -23,7 +23,7 @@ public class TookTileHistoryQueryRepositoryImpl implements TookTileHistoryQueryR
 
     @Override
     public List<TookTileHistoryGroupByPeriod> getTookTileHistoryGroupByPeriod(
-            Long zordiacId,
+            Long zodiacId,
             LocalDate startDate,
             LocalDate endDate,
             Period period,
@@ -46,7 +46,7 @@ public class TookTileHistoryQueryRepositoryImpl implements TookTileHistoryQueryR
         )
                 .from(tookTileHistory)
                 .where(
-                        eqZordiacId(zordiacId),
+                        eqZodiacId(zodiacId),
                         tookTileHistory.tookDate.between(startDate, endDate)
                 )
                 .groupBy(tookTileHistory.tookDate)
@@ -61,11 +61,11 @@ public class TookTileHistoryQueryRepositoryImpl implements TookTileHistoryQueryR
         return  period.toString();
     }
 
-    BooleanExpression eqZordiacId(Long zordiacId) {
-        if (Objects.isNull(zordiacId)) {
+    BooleanExpression eqZodiacId(Long zodiacId) {
+        if (Objects.isNull(zodiacId)) {
             return null;
         }
-        return tookTileHistory.zordiacId.eq(zordiacId);
+        return tookTileHistory.zodiacId.eq(zodiacId);
     }
 
     OrderSpecifier<LocalDate> orderDate(DateExpression<LocalDate> periodExpression, Order order) {

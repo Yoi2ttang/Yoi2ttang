@@ -1,6 +1,6 @@
-package com.ssafy.yoittang.zordiac.domain;
+package com.ssafy.yoittang.zodiac.domain;
 
-public enum ZordiacName {
+public enum ZodiacName {
     MOUSE("쥐"),
     COW("소"),
     TIGER("호랑이"),
@@ -16,7 +16,7 @@ public enum ZordiacName {
 
     private final String koreanName;
 
-    ZordiacName(String koreanName) {
+    ZodiacName(String koreanName) {
         this.koreanName = koreanName;
     }
 

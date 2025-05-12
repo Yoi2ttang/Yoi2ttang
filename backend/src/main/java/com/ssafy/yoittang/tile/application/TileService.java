@@ -129,15 +129,15 @@ public class TileService {
                 .build();
     }
 
-    public TileGetResponseWrapper getTile(Long zordiacId, Double lat, Double lng) {
+    public TileGetResponseWrapper getTile(Long zodiacId, Double lat, Double lng) {
 
-//        checkZordiacId(zordiacId);
+//        checkZodiacId(zodiacId);
 
         String geoHashString =
                 GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
 
         return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTile(zordiacId, geoHashString))
+                .tileGetResponseList(tileRepository.getTile(zodiacId, geoHashString))
                 .build();
     }
 
@@ -151,26 +151,26 @@ public class TileService {
                 .build();
     }
 
-    public TileClusterGetResponseWrapper getTileCluster(Long zordiacId, Double lat, Double lng, Integer zoomLevel) {
+    public TileClusterGetResponseWrapper getTileCluster(Long zodiacId, Double lat, Double lng, Integer zoomLevel) {
 
-//        checkZordiacId(zordiacId);
+//        checkZodiacId(zodiacId);
 
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
-                        zordiacId,
+                        zodiacId,
                         getGeoHashStringByZoomLevel(lat, lng, zoomLevel))
                 )
                 .build();
     }
 
-    public TileSituationResponse getTileSituation(Long zordiacId) {
+    public TileSituationResponse getTileSituation(Long zodiacId) {
 
-//        checkZordiacId(zordiacId);
+//        checkZodiacId(zodiacId);
 
         List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
 
         TileTeamSituationResponse myTeam = tileSituationList.stream()
-                .filter(t -> t.zordiacId().equals(zordiacId))
+                .filter(t -> t.zodiacId().equals(zodiacId))
                 .findFirst()
                 .orElse(null);
 
@@ -194,16 +194,16 @@ public class TileService {
     }
 
     public TilePreviewResponse getRankingPreview(
-            Long zordiacId,
+            Long zodiacId,
             Integer limit
     ) {
-//        checkZordiacId(zordiacId);
+//        checkZodiacId(zodiacId);
         int size = checkLimit(limit);
 
         List<TileTeamSituationResponse> tileTeamSituationResponseList = tileRepository.getTileSituation();
 
         Integer myTeamRanking = tileTeamSituationResponseList.stream()
-                .filter(r -> r.zordiacId().equals(zordiacId))
+                .filter(r -> r.zodiacId().equals(zodiacId))
                 .map(TileTeamSituationResponse::rank)
                 .findFirst()
                 .orElse(null);
@@ -238,8 +238,8 @@ public class TileService {
         return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
     }
 
-//    public void checkZordiacId(Long zordiacId) {
-//        if (zordiacId != null &&  1L <= zordiacId && zordiacId <= 12L) {
+//    public void checkZodiacId(Long zodiacId) {
+//        if (zodiacId != null &&  1L <= zodiacId && zodiacId <= 12L) {
 //            return;
 //        }
 //        throw new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC);

@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record PersonalTileGetResponseWrapper(
-        Long zordiacId,
+        Long zodiacId,
         List<PersonalTileGetResponse> personalTileGetResponseList
 ) { }

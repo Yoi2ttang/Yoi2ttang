@@ -8,7 +8,7 @@ import com.ssafy.yoittang.tooktilehistory.domain.Order;
 import com.ssafy.yoittang.tooktilehistory.domain.Period;
 
 public record TookTileHistoryGroupByPeriodRequest(
-        Long zordiacId,
+        Long zodiacId,
 
         @NotNull
         LocalDate startDate,

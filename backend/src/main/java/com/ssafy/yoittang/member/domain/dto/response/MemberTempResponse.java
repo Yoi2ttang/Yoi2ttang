@@ -6,8 +6,8 @@ import lombok.Builder;
 @Builder
 public record MemberTempResponse(
     String nickname,
-    Long zordiacId,
+    Long zodiacId,
     Integer ranking,
-    String zordiacName,
+    String zodiacName,
     Long tileCount
 ) { }

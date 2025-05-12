@@ -51,13 +51,13 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTile(lat, lng));
     }
 
-    @GetMapping("/team/{zordiacId}")
+    @GetMapping("/team/{zodiacId}")
     public ResponseEntity<TileGetResponseWrapper> getTile(
-            @PathVariable(name = "zordiacId") Long zordiacId,
+            @PathVariable(name = "zodiacId") Long zodiacId,
             @RequestParam Double lat,
             @RequestParam Double lng
     ) {
-        return ResponseEntity.ok(tileService.getTile(zordiacId, lat, lng));
+        return ResponseEntity.ok(tileService.getTile(zodiacId, lat, lng));
     }
 
     @GetMapping("/team/cluster")
@@ -69,21 +69,21 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
     }
 
-    @GetMapping("/team/cluster/{zordiacId}")
+    @GetMapping("/team/cluster/{zodiacId}")
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
-            @PathVariable Long zordiacId,
+            @PathVariable Long zodiacId,
             @RequestParam Double lat,
             @RequestParam Double lng,
             @RequestParam Integer zoomLevel
     ) {
-        return ResponseEntity.ok(tileService.getTileCluster(zordiacId, lat, lng, zoomLevel));
+        return ResponseEntity.ok(tileService.getTileCluster(zodiacId, lat, lng, zoomLevel));
     }
 
-    @GetMapping("team/{zordiacId}/situation")
+    @GetMapping("team/{zodiacId}/situation")
     public ResponseEntity<TileSituationResponse> getTileSituation(
-            @PathVariable Long zordiacId
+            @PathVariable Long zodiacId
     ) {
-        return ResponseEntity.ok(tileService.getTileSituation(zordiacId));
+        return ResponseEntity.ok(tileService.getTileSituation(zodiacId));
     }
 
 
@@ -113,18 +113,18 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/rankings/preview")
     public ResponseEntity<TilePreviewResponse> getRankingPreview(
-            @RequestParam(required = false) Long zordiacId,
+            @RequestParam(required = false) Long zodiacId,
             @RequestParam(required = false, defaultValue = "3") Integer limit
     ) {
-        return ResponseEntity.ok(tileService.getRankingPreview(zordiacId, limit));
+        return ResponseEntity.ok(tileService.getRankingPreview(zodiacId, limit));
     }
 
 
-    @GetMapping("/rankings/{zordiacId}")
+    @GetMapping("/rankings/{zodiacId}")
     public ResponseEntity<TileMemberRankingResponse> getMemberRanking(
-            @PathVariable Long zordiacId,
+            @PathVariable Long zodiacId,
             @Valid TileMemberRankingRequest tileMemberRankingRequest
     ) {
-        return ResponseEntity.ok(tileHistoryService.getTileMemberRankingList(zordiacId, tileMemberRankingRequest));
+        return ResponseEntity.ok(tileHistoryService.getTileMemberRankingList(zodiacId, tileMemberRankingRequest));
     }
 }

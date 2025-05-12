@@ -5,6 +5,6 @@ import lombok.Builder;
 //이 코드는 refactoring 되면 사라질 예정입니다.
 @Builder
 public record TileTempResponse(
-        Long zordiacId,
+        Long zodiacId,
         Long tileCount
 ) { }
