@@ -47,16 +47,16 @@ public class TileJdbcRepositoryImpl implements TileJdbcRepository {
             WITH ranked AS (
                 SELECT
                     geohash,
-                    zordiac_id,
-                    ROW_NUMBER() OVER (PARTITION BY geohash ORDER BY COUNT(zordiac_id) DESC, MIN(birth_date) ASC) AS rn
+                    zodiac_id,
+                    ROW_NUMBER() OVER (PARTITION BY geohash ORDER BY COUNT(zodiac_id) DESC, MIN(birth_date) ASC) AS rn
                 FROM
                     tile_histories
                 GROUP BY
-                    geohash, zordiac_id
+                    geohash, zodiac_id
             )
             UPDATE tiles t
-            SET zordiac_id = (
-                SELECT r.zordiac_id
+            SET zodiac_id = (
+                SELECT r.zodiac_id
                 FROM ranked r
                 WHERE r.geohash = t.geohash
                 AND r.rn = 1

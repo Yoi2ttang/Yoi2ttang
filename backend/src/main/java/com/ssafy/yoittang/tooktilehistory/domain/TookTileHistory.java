@@ -24,6 +24,6 @@ public class TookTileHistory {
     private LocalDate tookDate;
 
     @Column(nullable = false)
-    private Long zordiacId;
+    private Long zodiacId;
 
 }

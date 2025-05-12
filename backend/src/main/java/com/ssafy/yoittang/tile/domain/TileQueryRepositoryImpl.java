@@ -24,12 +24,12 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<TileGetResponse> getTile(Long zordiacId, String geohash) {
+    public List<TileGetResponse> getTile(Long zodiacId, String geohash) {
         return queryFactory.select(
                 Projections.constructor(
                         TileGetResponse.class,
                         tile.geoHash,
-                        tile.zordiacId,
+                        tile.zodiacId,
                         Projections.constructor(
                                 GeoPoint.class,
                                 tile.latSouth,
@@ -45,27 +45,27 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 .from(tile)
                 .where(
                         tile.geoHash.like(geohash),
-                        eqZordiacId(zordiacId)
+                        eqZodiacId(zodiacId)
                 )
                 .fetch();
     }
 
-    private BooleanExpression eqZordiacId(Long zordiacId) {
-        if (Objects.isNull(zordiacId)) {
+    private BooleanExpression eqZodiacId(Long zodiacId) {
+        if (Objects.isNull(zodiacId)) {
             return null;
         }
-        return tile.zordiacId.eq(zordiacId);
+        return tile.zodiacId.eq(zodiacId);
     }
 
     @Override
     public List<TileClusterGetResponse> getTileCluster(
-            Long zordiacId,
+            Long zodiacId,
             String geoHashString
     ) {
         return queryFactory.select(
                 Projections.constructor(
                         TileClusterGetResponse.class,
-                        tile.zordiacId,
+                        tile.zodiacId,
                         Projections.constructor(
                                 GeoPoint.class,
                                 tile.latNorth.add(tile.latSouth).divide(2).avg(),
@@ -77,10 +77,10 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 .from(tile)
                 .where(
                         tile.geoHash.startsWith(geoHashString)
-                                .and(tile.zordiacId.isNotNull()),
-                        eqZordiacId(zordiacId)
+                                .and(tile.zodiacId.isNotNull()),
+                        eqZodiacId(zodiacId)
                 )
-                .groupBy(tile.zordiacId)
+                .groupBy(tile.zodiacId)
                 .fetch();
     }
 
@@ -96,13 +96,13 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                                 Integer.class,
                                 "RANK() OVER (ORDER BY COUNT(*) DESC)"
                         ).as(rank),
-                        tile.zordiacId,
-                        tile.zordiacId.count().as(count)
+                        tile.zodiacId,
+                        tile.zodiacId.count().as(count)
                 )
         )
                 .from(tile)
-                .where(tile.zordiacId.isNotNull())
-                .groupBy(tile.zordiacId)
+                .where(tile.zodiacId.isNotNull())
+                .groupBy(tile.zodiacId)
                 .orderBy(count.desc())
                 .fetch();
     }

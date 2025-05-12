@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public record TookTileHistoryResponse(
-    Long zordiacId,
+    Long zodiacId,
     List<TookTileHistoryGroupByPeriod> tookTileHistoryGroupByPeriodList
 ) { }

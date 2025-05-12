@@ -22,7 +22,7 @@ public class TookTileHistoryService {
     ) {
         List<TookTileHistoryGroupByPeriod> tookTileHistoryGroupByPeriodList
                 = tookTileHistoryRepository.getTookTileHistoryGroupByPeriod(
-                    tookTileHistoryGroupByPeriodRequest.zordiacId(),
+                    tookTileHistoryGroupByPeriodRequest.zodiacId(),
                     tookTileHistoryGroupByPeriodRequest.startDate(),
                     tookTileHistoryGroupByPeriodRequest.endDate(),
                     tookTileHistoryGroupByPeriodRequest.period(),
@@ -30,7 +30,7 @@ public class TookTileHistoryService {
                 );
 
         return TookTileHistoryResponse.builder()
-                .zordiacId(tookTileHistoryGroupByPeriodRequest.zordiacId())
+                .zodiacId(tookTileHistoryGroupByPeriodRequest.zodiacId())
                 .tookTileHistoryGroupByPeriodList(tookTileHistoryGroupByPeriodList)
                 .build();
     }

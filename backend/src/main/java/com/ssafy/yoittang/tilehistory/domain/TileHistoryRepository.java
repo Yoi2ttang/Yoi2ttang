@@ -170,10 +170,10 @@ public class TileHistoryRepository {
     }
 
     public TileMemberRankingResponse getTileMemberRankingList(
-            Long zordiacId,
+            Long zodiacId,
             TileMemberRankingRequest tileMemberRankingRequest
     ) {
-        return tileHistoryJdbcRepository.getTileMemberRankingResponse(zordiacId, tileMemberRankingRequest);
+        return tileHistoryJdbcRepository.getTileMemberRankingResponse(zodiacId, tileMemberRankingRequest);
     }
 
     public int countDistinctGeohashLastMonth(

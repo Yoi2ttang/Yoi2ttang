@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record TileClusterGetResponse(
-        Long zordiacId,
+        Long zodiacId,
         GeoPoint geoPoint,
         Long count
 ) { }

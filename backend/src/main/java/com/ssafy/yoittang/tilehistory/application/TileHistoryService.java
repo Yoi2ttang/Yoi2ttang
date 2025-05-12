@@ -57,7 +57,7 @@ public class TileHistoryService {
         );
 
         return PersonalTileGetResponseWrapper.builder()
-                .zordiacId(member.getZordiacId())
+                .zodiacId(member.getZodiacId())
                 .personalTileGetResponseList(tileHistoryRepository.getTileHistoryWithQuery(
                         personalTileGetRequest,
                         geoHashString
@@ -105,16 +105,16 @@ public class TileHistoryService {
                 .toList();
 
         return PersonalTileGetResponseWrapper.builder()
-                .zordiacId(member.getZordiacId())
+                .zodiacId(member.getZodiacId())
                 .personalTileGetResponseList(personalTileGetResponseList)
                 .build();
     }
 
     public TileMemberRankingResponse getTileMemberRankingList(
-            Long zordiacId,
+            Long zodiacId,
             TileMemberRankingRequest tileMemberRankingRequest
     ) {
-        return tileHistoryRepository.getTileMemberRankingList(zordiacId, tileMemberRankingRequest);
+        return tileHistoryRepository.getTileMemberRankingList(zodiacId, tileMemberRankingRequest);
     }
 
 }

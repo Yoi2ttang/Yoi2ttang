@@ -113,14 +113,14 @@ public class TileServiceTest {
 
     @Test
     @DisplayName("getTile 성공")
-    public void getTileSuccessWithZordiacId() {
+    public void getTileSuccessWithZodiacId() {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
         String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
         String geoHashString = geoHashPrefix + "%";
 
-        Long zordiacId = 3L;
+        Long zodiacId = 3L;
 
         List<TileGetResponse> responseList = new ArrayList<>();
 
@@ -131,17 +131,17 @@ public class TileServiceTest {
 
                 responseList.add(new TileGetResponse(
                         newGeoHashString,
-                        zordiacId,
+                        zodiacId,
                         new GeoPoint(box.getSouthLatitude(), box.getWestLongitude()),
                         new GeoPoint(box.getNorthLatitude(), box.getEastLongitude())
                 ));
             }
         }
 
-        when(tileRepository.getTile(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+        when(tileRepository.getTile(eq(zodiacId), eq(geoHashString))).thenReturn(responseList);
 
         // when
-        TileGetResponseWrapper response = tileService.getTile(zordiacId, lat, lng);
+        TileGetResponseWrapper response = tileService.getTile(zodiacId, lat, lng);
 
         // then
         assertThat(response).isNotNull();
@@ -152,20 +152,20 @@ public class TileServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 간지로 인해 빈 리스트 리턴")
-    public void getTileSuccessNull1ithZordiacId() {
+    public void getTileSuccessNull1ithZodiacId() {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
         String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
         String geoHashString = geoHashPrefix + "%";
 
-        Long zordiacId = 18L;
+        Long zodiacId = 18L;
         List<TileGetResponse> responseList = new ArrayList<>();
 
-        when(tileRepository.getTile(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+        when(tileRepository.getTile(eq(zodiacId), eq(geoHashString))).thenReturn(responseList);
 
         // when
-        TileGetResponseWrapper response = tileService.getTile(zordiacId, lat, lng);
+        TileGetResponseWrapper response = tileService.getTile(zodiacId, lat, lng);
 
         // then
         assertThat(response).isNotNull();
@@ -188,13 +188,13 @@ public class TileServiceTest {
         List<TileClusterGetResponse> responseList = new ArrayList<>();
 
         responseList.add(TileClusterGetResponse.builder()
-                .zordiacId(1L)
+                .zodiacId(1L)
                 .geoPoint(new GeoPoint(37.5, 127.0))
                 .count(5L)
                 .build());
 
         responseList.add(TileClusterGetResponse.builder()
-                .zordiacId(2L)
+                .zodiacId(2L)
                 .geoPoint(new GeoPoint(37.6, 127.1))
                 .count(3L)
                 .build());
@@ -212,9 +212,9 @@ public class TileServiceTest {
 
     @Test
     @DisplayName("특정 간지 클러스터링 성공")
-    public void getTileClusterSuccessWithZordiacId() {
+    public void getTileClusterSuccessWithZodiacId() {
         // given
-        Long zordiacId = 3L;
+        Long zodiacId = 3L;
         double lat = 37.501161;
         double lng = 127.039668;
         int zoomLevel = 17;
@@ -225,21 +225,21 @@ public class TileServiceTest {
         List<TileClusterGetResponse> responseList = new ArrayList<>();
 
         responseList.add(TileClusterGetResponse.builder()
-                .zordiacId(zordiacId)
+                .zodiacId(zodiacId)
                 .geoPoint(new GeoPoint(37.5, 127.0))
                 .count(5L)
                 .build());
 
         responseList.add(TileClusterGetResponse.builder()
-                .zordiacId(zordiacId)
+                .zodiacId(zodiacId)
                 .geoPoint(new GeoPoint(37.6, 127.1))
                 .count(3L)
                 .build());
 
-        when(tileRepository.getTileCluster(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+        when(tileRepository.getTileCluster(eq(zodiacId), eq(geoHashString))).thenReturn(responseList);
 
         // when
-        TileClusterGetResponseWrapper response = tileService.getTileCluster(zordiacId, lat, lng, zoomLevel);
+        TileClusterGetResponseWrapper response = tileService.getTileCluster(zodiacId, lat, lng, zoomLevel);
 
         // then
         assertThat(response).isNotNull();
@@ -249,9 +249,9 @@ public class TileServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 간지로 인한 빈리스트")
-    public void getTileClusterSuccessWithOutOfRangeZordiacId() {
+    public void getTileClusterSuccessWithOutOfRangeZodiacId() {
         // given
-        Long zordiacId = 15L;
+        Long zodiacId = 15L;
         double lat = 37.501161;
         double lng = 127.039668;
         int zoomLevel = 17;
@@ -261,10 +261,10 @@ public class TileServiceTest {
 
         List<TileClusterGetResponse> responseList = new ArrayList<>();
 
-        when(tileRepository.getTileCluster(eq(zordiacId), eq(geoHashString))).thenReturn(responseList);
+        when(tileRepository.getTileCluster(eq(zodiacId), eq(geoHashString))).thenReturn(responseList);
 
         // when
-        TileClusterGetResponseWrapper response = tileService.getTileCluster(zordiacId, lat, lng, zoomLevel);
+        TileClusterGetResponseWrapper response = tileService.getTileCluster(zodiacId, lat, lng, zoomLevel);
 
         // then
         assertThat(response).isNotNull();
@@ -276,25 +276,25 @@ public class TileServiceTest {
     @DisplayName("팀 타일과 내 팀 타일 비교")
     public void getTileSituationSuccess() {
         //given
-        Long no1ZordiacId = 1L;
-        Long zordiacId = 3L;
+        Long no1ZodiacId = 1L;
+        Long zodiacId = 3L;
 
         List<TileTeamSituationResponse> tileSituationList = new ArrayList<>();
 
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
 
         TileTeamSituationResponse no1Team = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(no1ZordiacId)
+                t -> t.zodiacId().equals(no1ZodiacId)
         ).findFirst().orElse(null);
 
         TileTeamSituationResponse myTeam = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(zordiacId)
+                t -> t.zodiacId().equals(zodiacId)
         ).findFirst().orElse(null);
 
         TileSituationResponse expect = TileSituationResponse.builder()
@@ -306,7 +306,7 @@ public class TileServiceTest {
         when(tileRepository.getTileSituation()).thenReturn(tileSituationList);
 
         //when
-        TileSituationResponse result =  tileService.getTileSituation(zordiacId);
+        TileSituationResponse result =  tileService.getTileSituation(zodiacId);
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expect);
@@ -317,25 +317,25 @@ public class TileServiceTest {
     @DisplayName("1등 팀이랑 내 팀이랑 같을 때")
     public void getTileSituationSuccessWithSameTeam() {
         //given
-        Long no1ZordiacId = 1L;
-        Long zordiacId = 1L;
+        Long no1ZodiacId = 1L;
+        Long zodiacId = 1L;
 
         List<TileTeamSituationResponse> tileSituationList = new ArrayList<>();
 
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
 
         TileTeamSituationResponse no1Team = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(no1ZordiacId)
+                t -> t.zodiacId().equals(no1ZodiacId)
         ).findFirst().orElse(null);
 
         TileTeamSituationResponse myTeam = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(zordiacId)
+                t -> t.zodiacId().equals(zodiacId)
         ).findFirst().orElse(null);
 
         TileSituationResponse expect = TileSituationResponse.builder()
@@ -347,7 +347,7 @@ public class TileServiceTest {
         when(tileRepository.getTileSituation()).thenReturn(tileSituationList);
 
         //when
-        TileSituationResponse result =  tileService.getTileSituation(zordiacId);
+        TileSituationResponse result =  tileService.getTileSituation(zodiacId);
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(expect);
@@ -358,21 +358,21 @@ public class TileServiceTest {
     @DisplayName("존재하지 않는 간지와 비교할 때")
     public void getTileSituationSuccessWithNotExistTeam() {
         //given
-        Long no1ZordiacId = 1L;
-        Long zordiacId = 15L;
+        Long no1ZodiacId = 1L;
+        Long zodiacId = 15L;
 
         List<TileTeamSituationResponse> tileSituationList = new ArrayList<>();
 
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
 
         TileTeamSituationResponse no1Team = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(no1ZordiacId)
+                t -> t.zodiacId().equals(no1ZodiacId)
         ).findFirst().orElse(null);
 
         TileSituationResponse expect = TileSituationResponse.builder()
@@ -384,7 +384,7 @@ public class TileServiceTest {
         when(tileRepository.getTileSituation()).thenReturn(tileSituationList);
 
         //when
-        TileSituationResponse result =  tileService.getTileSituation(zordiacId);
+        TileSituationResponse result =  tileService.getTileSituation(zodiacId);
 
         //then
         assertThat(result).isNotNull();
@@ -400,7 +400,7 @@ public class TileServiceTest {
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
@@ -423,7 +423,7 @@ public class TileServiceTest {
     @DisplayName("팀 랭킹 미리보기 가져오기")
     public void getRankingPreViewSuccess() {
         //given
-        Long zordiacId = 3L;
+        Long zodiacId = 3L;
         int limit = 3;
 
         List<TileTeamSituationResponse> tileSituationList = new ArrayList<>();
@@ -431,13 +431,13 @@ public class TileServiceTest {
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
 
         TileTeamSituationResponse myTeam = tileSituationList.stream().filter(
-                t -> t.zordiacId().equals(zordiacId)
+                t -> t.zodiacId().equals(zodiacId)
         ).findFirst().orElse(null);
 
         TilePreviewResponse expect = TilePreviewResponse.builder()
@@ -448,7 +448,7 @@ public class TileServiceTest {
         when(tileRepository.getTileSituation()).thenReturn(tileSituationList);
 
         //when
-        TilePreviewResponse result = tileService.getRankingPreview(zordiacId, limit);
+        TilePreviewResponse result = tileService.getRankingPreview(zodiacId, limit);
 
         //then
         assertThat(result).isNotNull();
@@ -459,7 +459,7 @@ public class TileServiceTest {
     @DisplayName("존재하지 않은 간지로 인한 타일 미리보기 가져오기")
     public void getRankingPreViewSuccessWithNotExistTeam() {
         //given
-        Long zordiacId = 15L;
+        Long zodiacId = 15L;
         int limit = 3;
 
         List<TileTeamSituationResponse> tileSituationList = new ArrayList<>();
@@ -467,7 +467,7 @@ public class TileServiceTest {
         for ( int i = 1; i <= 12; ++i) {
             tileSituationList.add(TileTeamSituationResponse.builder()
                     .rank(i)
-                    .zordiacId(Integer.toUnsignedLong(i))
+                    .zodiacId(Integer.toUnsignedLong(i))
                     .tileCount(Integer.toUnsignedLong(100 - i))
                     .build());
         }
@@ -480,7 +480,7 @@ public class TileServiceTest {
         when(tileRepository.getTileSituation()).thenReturn(tileSituationList);
 
         //when
-        TilePreviewResponse result = tileService.getRankingPreview(zordiacId, limit);
+        TilePreviewResponse result = tileService.getRankingPreview(zodiacId, limit);
 
         //then
         assertThat(result).isNotNull();

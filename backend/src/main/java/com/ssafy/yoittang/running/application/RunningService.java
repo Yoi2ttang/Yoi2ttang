@@ -195,7 +195,7 @@ public class RunningService {
                         .tileHistoryId(TileHistoryRedis.makeTileHistoryId(member.getMemberId(), geoHashString))
                         .memberId(member.getMemberId())
                         .birthDate(member.getBirthDate())
-                        .zordiacId(member.getZordiacId())
+                        .zodiacId(member.getZodiacId())
                         .geoHash(geoHashString)
                         .runningPointId(runningPointId)
                         .build());

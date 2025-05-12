@@ -29,8 +29,8 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "zordiac_id", nullable = false)
-    private Long zordiacId;
+    @Column(name = "zodiac_id", nullable = false)
+    private Long zodiacId;
 
     @Column(name = "social_id", length = 32, nullable = false)
     private String socialId;
@@ -69,7 +69,7 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     private Member(
-            Long zordiacId,
+            Long zodiacId,
             String socialId,
             String email,
             LocalDate birthDate,
@@ -80,7 +80,7 @@ public class Member extends BaseTimeEntity {
             DisclosureStatus disclosure,
             String stateMessage
     ) {
-        this.zordiacId = zordiacId;
+        this.zodiacId = zodiacId;
         this.socialId = socialId;
         this.email = email;
         this.birthDate = birthDate;
