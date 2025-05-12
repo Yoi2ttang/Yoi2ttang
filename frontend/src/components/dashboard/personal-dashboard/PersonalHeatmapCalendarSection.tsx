@@ -1,13 +1,20 @@
 import Section from "@/components/common/Section"
+import { getDailyTime } from "@/services/dashboard/api"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { use } from "react"
 import ActivityGrid from "./ActivityGrid"
 
 interface PersonalHeatmapCalendarSectionProps {}
 
 const PersonalHeatmapCalendarSection =
   ({}: PersonalHeatmapCalendarSectionProps) => {
-    //
+    const today = new Date()
+    const { year, month } = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+    }
+    const { data } = use(getDailyTime({ year, month }))
     return (
       <Section
         title="☘️ 발자국"
@@ -20,7 +27,7 @@ const PersonalHeatmapCalendarSection =
           </Link>
         }>
         <div className="h-full">
-          <ActivityGrid />
+          <ActivityGrid data={data} />
         </div>
       </Section>
     )

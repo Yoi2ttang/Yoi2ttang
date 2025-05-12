@@ -20,7 +20,7 @@ const PersonalStatisticsSection = ({
     {
       title: "총 활동 거리",
       icon: "🏃",
-      value: `${totalDistance}km`,
+      value: `${totalDistance ?? 0} km`,
     },
     {
       title: "완주한 코스",

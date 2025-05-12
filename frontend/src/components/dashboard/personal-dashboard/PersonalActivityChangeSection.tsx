@@ -1,7 +1,6 @@
 import Section from "@/components/common/Section"
 
 import { getTileChangeRate } from "@/services/dashboard/api"
-import { PersonalTileChangeRateResponse } from "@/types/dashboard/dashboard.type"
 import ActivityChangeItem from "./ActivityChangeItem"
 import ActivityLineChart from "./ActivityLineChart"
 
@@ -9,18 +8,18 @@ interface PersonalActivityChangeSectionProps {}
 
 const PersonalActivityChangeSection =
   async ({}: PersonalActivityChangeSectionProps) => {
-    const { data, isSuccess, error, isError } = await getTileChangeRate({
+    const { data: weeklyData } = await getTileChangeRate({
       period: "WEEKLY",
     })
 
+    const { data: dailyData } = await getTileChangeRate({
+      period: "DAILY",
+    })
+
     const metadata = [
-      { changeDirection: "INCREASE", changeRate: 10, title: "오늘 활동량" },
-      { changeDirection: "DECREASE", changeRate: 10, title: "주간 활동량" },
-    ] as {
-      changeDirection: PersonalTileChangeRateResponse["changeDirection"]
-      changeRate: PersonalTileChangeRateResponse["changeRate"]
-      title: string
-    }[]
+      { ...dailyData, title: "전일 대비 오늘 활동량" },
+      { ...weeklyData, title: "지난 주 대비 오늘 활동량" },
+    ]
 
     return (
       <Section title="📈 활동 변화" supplement={"최근 7일"}>
@@ -32,7 +31,7 @@ const PersonalActivityChangeSection =
                 key={title}
                 title={title}
                 rateOfChange={changeRate}
-                isIncrease={changeDirection === "INCREASE"}
+                changeDirection={changeDirection}
               />
             ))}
           </div>

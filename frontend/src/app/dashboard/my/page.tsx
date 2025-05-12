@@ -4,20 +4,26 @@ import PersonalHeatmapCalendarSection from "@/components/dashboard/personal-dash
 import PersonalStatisticsSection from "@/components/dashboard/personal-dashboard/PersonalStatisticsSection"
 import PersonalTitleSection from "@/components/dashboard/personal-dashboard/PersonalTitleSection"
 import TileMapSection from "@/components/dashboard/TileMapSection"
+import { getPayloadFromAccessToken } from "@/lib/decode-token"
 import { getDashboardData } from "@/services/dashboard/api"
+import console from "console"
+import { use } from "react"
 
 interface PersonalDashboardPageProps {}
 
-const PersonalDashboardPage = async ({}: PersonalDashboardPageProps) => {
-  const { data, isSuccess, error, isError } = await getDashboardData()
+const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
+  const payload = use(getPayloadFromAccessToken())
 
-  // if (isError) {
-  //   return <div className="px-4">알 수 없는 에러가 발생했습니다.</div>
-  // }
+  if (!payload) {
+    console.error("payload is null")
+  }
+  const { nickname, sub } = payload!
+
+  const { data } = use(getDashboardData())
 
   return (
     <main className="flex flex-1 flex-col gap-10 px-4">
-      <PersonalTitleSection name={data.memberId + ""} days={data.duration} />
+      <PersonalTitleSection name={nickname} days={data.duration + 1} />
       <PersonalStatisticsSection dashboardData={data} />
       <OccupyButton />
       <PersonalHeatmapCalendarSection />
