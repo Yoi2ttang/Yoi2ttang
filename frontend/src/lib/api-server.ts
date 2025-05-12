@@ -1,7 +1,5 @@
 "use server"
 
-"use server"
-
 import { cookies } from "next/headers"
 import { objectToSearchParams } from "./utils"
 
@@ -149,6 +147,6 @@ const nextFetchInstance = async (baseUrl?: string) => {
   }
 }
 
-export const getApiServer = () => {
-  return nextFetchInstance(`${BASE_URL}/api/v1`)
+export const getApiServer = async () => {
+  return await nextFetchInstance(`${BASE_URL}/api/v1`)
 }
