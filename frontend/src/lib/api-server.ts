@@ -1,6 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { objectToSearchParams } from "./utils"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -19,9 +20,11 @@ interface FetchParams {
   body?: Record<string, unknown>
 }
 
-interface FetchResponse<T> {
-  data: T | null
-  error: ApiError | null
+interface FetchResponse<T, E> {
+  isSuccess: boolean
+  data: T
+  isError: boolean
+  error: null | E
 }
 
 const getAccessToken = async () => {
@@ -29,16 +32,7 @@ const getAccessToken = async () => {
   return cookieStore.get("accessToken")?.value
 }
 
-const objectToSearchParams = (
-  params?: Record<string, string | number | boolean>,
-) => {
-  if (!params) return ""
-  return new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, String(value)]),
-  ).toString()
-}
-
-async function nextFetchInstance(baseUrl?: string) {
+const nextFetchInstance = async (baseUrl?: string) => {
   const accessToken = await getAccessToken()
 
   // headers 객체는 참조 공유되기 때문에 요청마다 새로 만드는 것이 안전
@@ -50,8 +44,14 @@ async function nextFetchInstance(baseUrl?: string) {
     credentials: "include",
   })
 
-  const handleResponse = async <T>(response: Response): Promise<T> => {
+  const handleResponse = async <T>(
+    response: Response,
+  ): Promise<FetchResponse<T, ApiError>> => {
     if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("UNAUTHORIZED")
+      }
+
       const error = new Error() as ApiError
       error.status = response.status
 
@@ -60,33 +60,33 @@ async function nextFetchInstance(baseUrl?: string) {
       } catch {
         error.data = await response.text()
       }
+
       error.message = `🎀 에러 발생! status: ${response.status}`
-      throw error
+
+      return {
+        data: {} as T,
+        isSuccess: false,
+        isError: true,
+        error,
+      }
     }
-    return response.json()
+
+    const data = await response.json()
+    return { isSuccess: true, data, isError: false, error: null }
   }
 
   const request = async <T>(
     method: RequestMethod,
     url: string,
     options?: FetchOptions,
-  ): Promise<FetchResponse<T>> => {
-    try {
-      const res = await fetch(`${baseUrl}${url}`, {
-        method,
-        ...defaultConfig(),
-        ...options,
-      })
+  ): Promise<FetchResponse<T, ApiError>> => {
+    const res = await fetch(`${baseUrl}${url}`, {
+      method,
+      ...defaultConfig(),
+      ...options,
+    })
 
-      return {
-        data: await handleResponse<T>(res),
-        error: null,
-      }
-    } catch (err) {
-      const error = err as ApiError
-
-      return { data: null, error }
-    }
+    return await handleResponse<T>(res)
   }
 
   const nextGet = <T>(
