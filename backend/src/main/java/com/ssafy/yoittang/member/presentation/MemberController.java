@@ -142,7 +142,7 @@ public class MemberController {
         @ApiResponse(
                     responseCode = "200",
                     description = "성공하면 팀 랭킹 일부와 내 팀 랭킹을 가져옵니다.",
-                    content = @Content(schema = @Schema(implementation = TilePreviewResponse.class))
+                    content = @Content(schema = @Schema(implementation = MemberTempResponse.class))
             )
     })
     @GetMapping("/me/temp")
