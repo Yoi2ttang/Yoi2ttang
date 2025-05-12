@@ -1,0 +1,26 @@
+# Android Studio 관련 설정 파일
+*.iml
+.idea/
+
+# 빌드 결과물
+.gradle/
+build/
+*/build/
+
+# 로컬 환경 의존 파일
+local.properties
+
+# OS/에디터 쓰레기 파일
+.DS_Store
+*.log
+
+# gradle wrapper
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+
+# 실행 파일
+*.apk
+*.ap_
+
+# Windows 실행용 배치 스크립트
+gradlew.bat
