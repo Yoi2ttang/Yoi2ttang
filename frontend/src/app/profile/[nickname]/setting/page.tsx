@@ -22,9 +22,8 @@ const ProfileSettingPage = () => {
   const { mutate: edit } = useEditProfile()
   const router = useRouter()
 
-  const handleSumbit = () => {
+  const handleEdit = () => {
     edit(profileData)
-    router.replace(`/profile/${profileData.memberUpdateRequest.nickname}`)
   }
 
   useEffect(() => {
@@ -46,7 +45,9 @@ const ProfileSettingPage = () => {
       <StackHeader
         title="프로필 편집"
         supplement={
-          <button className="cursor-pointer" onClick={handleSumbit}>
+          <button
+            className="text-yoi-500 cursor-pointer pr-1"
+            onClick={handleEdit}>
             완료
           </button>
         }
