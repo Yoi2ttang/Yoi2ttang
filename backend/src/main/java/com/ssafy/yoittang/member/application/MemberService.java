@@ -27,6 +27,7 @@ import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MemberTempResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
@@ -34,7 +35,10 @@ import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.dto.response.RunningTimeResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
+import com.ssafy.yoittang.zordiac.domain.Zordiac;
 import com.ssafy.yoittang.zordiac.domain.ZordiacName;
 import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
 
@@ -53,6 +57,8 @@ public class MemberService {
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final CourseRepository courseRepository;
+    //이 코드는 refactoring 되면 사라질 예정입니다.
+    private final TileRepository tileRepository;
     private final S3ImageUploader s3ImageUploader;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
@@ -274,6 +280,32 @@ public class MemberService {
                 member.getGender(),
                 member.getWeight()
         );
+    }
+
+    //이 코드는 refactoring 되면 사라질 예정입니다.
+    public MemberTempResponse getTempMember(Member member) {
+
+        Zordiac zordiac = zordiacJpaRepository.findById(member.getZordiacId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC));
+
+        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
+
+        TileTeamSituationResponse myTeam = tileSituationList.stream()
+                .filter(t -> t.zordiacId().equals(zordiac.getZordiacId()))
+                .findFirst()
+                .orElse(null);
+
+        Integer ranking = myTeam == null ? null : myTeam.rank();
+
+        Long tileCount = myTeam == null ? null : myTeam.tileCount();
+
+        return MemberTempResponse.builder()
+                .nickname(member.getNickname())
+                .zordiacId(zordiac.getZordiacId())
+                .zordiacName(zordiac.getZordiacName().getKoreanName())
+                .ranking(ranking)
+                .tileCount(tileCount)
+                .build();
     }
 
     @Scheduled(cron = "0 0 1 * * *")  // 매일 새벽 1시
