@@ -28,4 +28,14 @@ public interface CourseQueryRepository {
     );
 
     List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId);
+
+    float sumDistancesByCourseIds(List<Long> courseIds);
+
+    List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
+            double latitude,
+            double longitude,
+            double radiusKm,
+            double minDistance,
+            double maxDistance
+    );
 }

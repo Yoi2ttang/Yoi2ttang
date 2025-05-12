@@ -70,4 +70,24 @@ public class CourseRepository {
     public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
         return courseQueryRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, memberId);
     }
+
+    public float sumDistancesByCourseIds(List<Long> courseIds) {
+        return courseQueryRepository.sumDistancesByCourseIds(courseIds);
+    }
+
+    public List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
+            double latitude,
+            double longitude,
+            double radiusKm,
+            double minDistance,
+            double maxDistance
+    ) {
+        return courseQueryRepository.findNearbyCoursesWithinDistance(
+                latitude,
+                longitude,
+                radiusKm,
+                minDistance,
+                maxDistance
+        );
+    }
 }

@@ -1,7 +1,9 @@
 package com.ssafy.yoittang.course.application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,10 @@ import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.course.domain.repository.LocationJpaRepository;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.running.domain.Running;
+import com.ssafy.yoittang.running.domain.RunningRepository;
+import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
+import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +33,11 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final LocationJpaRepository locationJpaRepository;
+    private final RunningRepository runningRepository;
+    private final RunningPointRepository runningPointRepository;
     private final S3ImageUploader s3ImageUploader;
+
+    private static final double DISTANCE_THRESHOLD_KM = 10.0;
 
     public List<CourseSummaryResponse> getBookmarkCourse(Member member) {
         return courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId());
@@ -71,7 +81,7 @@ public class CourseService {
 
         int times = (int) Math.round(summaryResponse.distance() * paceMinPerKm); //분/km
 
-        double met = estimateMetsFromPace(paceMinPerKm);
+        double met = estimateMetFromPace(paceMinPerKm);
         int calories = (int)(times * met * 3.5 * member.getWeight() / 200);
 
         return new CourseDetailResponse(
@@ -88,7 +98,45 @@ public class CourseService {
         return courseRepository.findClearedMembersByCourseId(courseId, pageToken);
     }
 
-    private double estimateMetsFromPace(double paceMinPerKm) {
+    public List<CourseSummaryResponse> getRecommendCourse(Member member) {
+        List<Running> recentRunning = runningRepository.findRecentCompleteRunning(member.getMemberId(), 20);
+        if (recentRunning.isEmpty()) {
+            return List.of();
+        }
+        List<RunningPoint> endPoints = runningPointRepository.findLastPointsByRunningIds(
+                recentRunning.stream().map(Running::getRunningId).toList()
+        );
+
+        List<RunningPoint> filtered = filterOutliers(endPoints);
+        if (filtered.isEmpty()) {
+            return List.of();
+        }
+
+        double avgLat = filtered.stream().mapToDouble(p -> p.getRoute().getEndPoint().getY()).average().orElseThrow();
+        double avgLon = filtered.stream().mapToDouble(p -> p.getRoute().getEndPoint().getX()).average().orElseThrow();
+
+        List<Long> courseIds = filtered.stream()
+                .map(RunningPoint::getCourseId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
+
+        float totalDistance = courseRepository.sumDistancesByCourseIds(courseIds);
+
+        double avgDistance = totalDistance / (double) filtered.size();
+        double minDistance = avgDistance * 0.8;
+        double maxDistance = avgDistance * 1.2;
+
+        List<CourseSummaryResponse> nearbyCourses = courseRepository.findNearbyCoursesWithinDistance(
+                avgLat, avgLon, 5.0, minDistance, maxDistance
+        );
+
+        // 7. 무작위 10개 샘플링
+        Collections.shuffle(nearbyCourses);
+        return nearbyCourses.stream().limit(10).toList();
+    }
+
+    private double estimateMetFromPace(double paceMinPerKm) {
         if (paceMinPerKm <= 4.5) {
             return 12.8; // 매우 빠른 달리기 (13~14.5 km/h)
         } else if (paceMinPerKm <= 5.5) {
@@ -98,5 +146,57 @@ public class CourseService {
         } else {
             return 8.3; // 가벼운 조깅 (8~9 km/h)
         }
+    }
+
+    private List<RunningPoint> filterOutliers(List<RunningPoint> points) {
+        if (points.size() <= 1) {
+            return points;
+        }
+
+        double[] weightedAvg = weightedAverageLocation(points);
+
+        double avgLat = weightedAvg[0];
+        double avgLng = weightedAvg[1];
+
+        return points.stream()
+                .filter(p -> {
+                    double lat = p.getRoute().getEndPoint().getY();
+                    double lng = p.getRoute().getEndPoint().getX();
+                    return haversine(lat, lng, avgLat, avgLng) <= DISTANCE_THRESHOLD_KM;
+                })
+                .toList();
+    }
+
+    private double haversine(double lat1, double lng1, double lat2, double lng2) {
+        final int R = 6371; // Radius of the Earth in km
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lngDistance = Math.toRadians(lng2 - lng1);
+        double haversineFormula  = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+        double centralAngle  = 2 * Math.atan2(Math.sqrt(haversineFormula), Math.sqrt(1 - haversineFormula));
+        return R * centralAngle;
+    }
+
+    private double[] weightedAverageLocation(List<RunningPoint> points) {
+        double sumWeight = 0.0;
+        double weightedLat = 0.0;
+        double weightedLng = 0.0;
+
+        double midLat = points.stream().mapToDouble(p -> p.getRoute().getEndPoint().getY()).average().orElse(0);
+        double midLng = points.stream().mapToDouble(p -> p.getRoute().getEndPoint().getX()).average().orElse(0);
+
+        for (RunningPoint point : points) {
+            double lat = point.getRoute().getEndPoint().getY();
+            double lng = point.getRoute().getEndPoint().getX();
+            double distance = haversine(lat, lng, midLat, midLng);
+            double weight = 1 / (1 + distance);
+
+            weightedLat += lat * weight;
+            weightedLng += lng * weight;
+            sumWeight += weight;
+        }
+
+        return new double[] {weightedLat / sumWeight, weightedLng / sumWeight};
     }
 }

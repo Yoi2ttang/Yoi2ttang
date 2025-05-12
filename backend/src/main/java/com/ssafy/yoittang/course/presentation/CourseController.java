@@ -66,4 +66,11 @@ public class CourseController {
                 pageToken
         ));
     }
+
+    @GetMapping("/course/recommend")
+    public ResponseEntity<List<CourseSummaryResponse>> getRecommendCourse(
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getRecommendCourse(member));
+    }
 }

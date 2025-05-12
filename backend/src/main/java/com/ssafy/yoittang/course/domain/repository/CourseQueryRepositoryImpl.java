@@ -4,6 +4,7 @@ import static com.ssafy.yoittang.course.domain.QCourse.course;
 import static com.ssafy.yoittang.course.domain.QCourseBookmark.courseBookmark;
 import static com.ssafy.yoittang.member.domain.QMember.member;
 import static com.ssafy.yoittang.running.domain.QRunning.running;
+import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -152,6 +153,50 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.state.eq(State.COMPLETE),
                         keywordContains(keyword)
                 )
+                .fetch();
+    }
+
+    @Override
+    public float sumDistancesByCourseIds(List<Long> courseIds) {
+        Float sum = jpaQueryFactory
+                .select(course.distance.sum())
+                .from(course)
+                .where(course.courseId.in(courseIds))
+                .fetchOne();
+
+        return sum != null ? sum : 0;
+    }
+
+    @Override
+    public List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
+            double latitude,
+            double longitude,
+            double radiusKm,
+            double minDistance,
+            double maxDistance
+    ) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        CourseSummaryResponse.class,
+                        course.courseId,
+                        course.courseName,
+                        course.distance,
+                        course.courseImageUrl
+                ))
+                .from(runningPoint)
+                .join(course).on(runningPoint.courseId.eq(course.courseId))
+                .where(
+                        course.distance.between(minDistance, maxDistance),
+                        runningPoint.route.isNotNull(),
+                        Expressions.booleanTemplate(
+                                "ST_DistanceSphere({0}, ST_MakePoint({1}, {2})) <= {3}",
+                                runningPoint.route,
+                                longitude,
+                                latitude,
+                                radiusKm * 1000
+                        )
+                )
+                .distinct()
                 .fetch();
     }
 
