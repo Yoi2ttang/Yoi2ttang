@@ -1,11 +1,10 @@
 import Section from "@/components/common/Section"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
-import type { FC } from "react"
 
 interface TileMapSectionProps {}
 
-const TileMapSection: FC<TileMapSectionProps> = ({}) => {
+const TileMapSection = ({}: TileMapSectionProps) => {
   return (
     <Section
       title="🪵 타일 한눈에 보기"

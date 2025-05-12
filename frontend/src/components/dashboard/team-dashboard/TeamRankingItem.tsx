@@ -1,5 +1,5 @@
 import Badge from "@/components/common/Badge"
-import { animalIconMap } from "@/constants/animalBadge"
+import { animalIconMap } from "@/constants/animals"
 import { cn } from "@/lib/utils"
 import { AnimalType } from "@/types/animal"
 
