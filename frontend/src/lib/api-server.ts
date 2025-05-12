@@ -3,6 +3,7 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { objectToSearchParams } from "./utils"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -33,16 +34,7 @@ const getAccessToken = async () => {
   return cookieStore.get("accessToken")?.value
 }
 
-const objectToSearchParams = (
-  params?: Record<string, string | number | boolean>,
-) => {
-  if (!params) return ""
-  return new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, String(value)]),
-  ).toString()
-}
-
-async function nextFetchInstance(baseUrl?: string) {
+const nextFetchInstance = async (baseUrl?: string) => {
   const accessToken = await getAccessToken()
 
   // headers 객체는 참조 공유되기 때문에 요청마다 새로 만드는 것이 안전
@@ -58,6 +50,10 @@ async function nextFetchInstance(baseUrl?: string) {
     response: Response,
   ): Promise<FetchResponse<T, ApiError>> => {
     if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("UNAUTHORIZED")
+      }
+
       const error = new Error() as ApiError
       error.status = response.status
 
