@@ -7,6 +7,7 @@ import com.ssafy.yoittang.member.domain.Gender;
 
 public record MyProfileEditResponse(
         Long memberId,
+        String email,
         String nickname,
         String profileImageUrl,
         LocalDate birthdate,
