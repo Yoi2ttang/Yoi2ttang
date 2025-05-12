@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +26,16 @@ import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MemberTempResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
+import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 
@@ -129,4 +135,21 @@ public class MemberController {
     ) {
         return ResponseEntity.ok(memberService.getCompleteCourse(keyword, member));
     }
+
+    //이 코드는 refactoring 되면 사라질 예정입니다.
+    @Operation(summary = "멤버정보 보기..", description = "이 코드는 refactoring 되면 사라질 예정입니다.")
+    @ApiResponses(value = {
+        @ApiResponse(
+                    responseCode = "200",
+                    description = "성공하면 팀 랭킹 일부와 내 팀 랭킹을 가져옵니다.",
+                    content = @Content(schema = @Schema(implementation = TilePreviewResponse.class))
+            )
+    })
+    @GetMapping("/me/temp")
+    public ResponseEntity<MemberTempResponse> getTempMember(
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberService.getTempMember(member));
+    }
+
 }
