@@ -1,31 +1,18 @@
-import { cookies } from "next/headers"
+import { postReissue } from "@/services/auth/api"
 import { NextResponse } from "next/server"
 
 export const POST = async (request: Request) => {
   try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get("accessToken")
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/reissue`,
-      {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({ accessToken }),
-      },
-    )
-    const data = await response.json()
+    const response = await postReissue()
     const nextResponse = NextResponse.json(null, { status: 200 })
 
     // 쿠키 방식으로 액세스 토큰 생성
-    // 개발 환경(http)에서는 httpOnly를 false로 설정
-    // 배포 환경(https)에서는 httpOnly를 true로 설정
-    const isProd = process.env.NODE_ENV === "production"
-    nextResponse.cookies.set("accessToken", data.accessToken, {
-      httpOnly: isProd,
-      secure: isProd,
-      sameSite: "none",
+    nextResponse.cookies.set("accessToken", response.data.accessToken, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "lax",
       path: "/",
-      maxAge: 60 * 30, // 30분
+      maxAge: 60 * 60, // 60분
     })
 
     return nextResponse
