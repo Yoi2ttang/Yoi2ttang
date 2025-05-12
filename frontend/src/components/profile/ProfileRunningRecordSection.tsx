@@ -1,9 +1,8 @@
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import BlockIcon from "@/assets/icons/profile/block-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
-import { ChevronRight } from "lucide-react"
-import Section from "../common/Section"
 import { ProfileResponse } from "@/types/member"
+import Section from "../common/Section"
 
 interface ProfileRunningRecordSectionProps {
   data: ProfileResponse
@@ -15,10 +14,7 @@ const ProfileRunningRecordSection = ({
   const { time, totalDistance, totalTileCount } = data
 
   return (
-    <Section
-      title="러닝 기록"
-      supplement={<ChevronRight className="size-5 text-neutral-300" />}
-      className="rounded-2xl bg-white p-6">
+    <Section title="러닝 기록" className="rounded-2xl bg-white p-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <TimeIcon className="text-yoi-500 size-10" />

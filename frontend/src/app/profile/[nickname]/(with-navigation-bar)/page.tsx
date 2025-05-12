@@ -2,7 +2,7 @@ import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQ
 import ProfileHeader from "@/components/profile/ProfileHeader"
 import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
-import useProfile from "@/hooks/profile/useProfile"
+import { getProfile } from "@/services/members/api"
 
 interface ProfilePageProps {
   params: Promise<{
@@ -12,7 +12,7 @@ interface ProfilePageProps {
 
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { nickname } = await params
-  const { data, isError } = await useProfile(nickname)
+  const { data, isError } = await getProfile(nickname)
 
   return (
     <div>
@@ -20,7 +20,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
       <div className="flex flex-col gap-6 p-4">
         {!data || isError ? (
-          <div>{nickname}은 존재하지 않는 유저입니다.</div>
+          <p className="text-center">
+            {nickname}님은 존재하지 않는 유저입니다.
+          </p>
         ) : (
           <>
             <ProfileInfo data={data} />

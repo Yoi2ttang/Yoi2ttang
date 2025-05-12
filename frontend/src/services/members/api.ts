@@ -1,3 +1,4 @@
+import { getApiServer } from "@/lib/api-server"
 import apiClient from "@/lib/http-common"
 import {
   MemberAutocompleteRequest,
@@ -6,11 +7,17 @@ import {
   MembersResponse,
   ProfileForEditRequest,
   ProfileForEditResponse,
+  ProfileResponse,
 } from "@/types/member"
 
 // 프로필 조회
 export const getProfile = async (nickname: string) => {
-  return await fetch(`member?nickname=${nickname}`)
+  const apiServer = await getApiServer()
+  return await apiServer.get<ProfileResponse>(`/member/profile`, {
+    params: {
+      nickname,
+    },
+  })
 }
 
 // 팔로워 조회

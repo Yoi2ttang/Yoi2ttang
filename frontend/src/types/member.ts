@@ -2,7 +2,7 @@ export type Profile = {
   memberId: number
   nickname: string
   profileImageUrl: string
-  zordiacName: string
+  zodiacName: string
   stateMessage: string
   followingCount: number
   followerCount: number

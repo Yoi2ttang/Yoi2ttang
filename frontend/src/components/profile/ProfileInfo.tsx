@@ -1,10 +1,10 @@
 import AnimalBadge from "@/components/animal-badges//AnimalBadge"
 import { AnimalType } from "@/types/animal"
+import { ProfileResponse } from "@/types/member"
 import { ChevronRight } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import Button from "../common/Button"
-import Image from "next/image"
-import { ProfileResponse } from "@/types/member"
 
 interface ProfileInfoProps {
   data: ProfileResponse
@@ -14,7 +14,7 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
   const {
     nickname,
     profileImageUrl,
-    zordiacName,
+    zodiacName,
     stateMessage,
     followerCount,
     followingCount,
@@ -33,7 +33,7 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
 
         <div className="flex flex-1 flex-col gap-1">
           <p className="text-lg">{nickname}</p>
-          <AnimalBadge animal={zordiacName as AnimalType} />
+          <AnimalBadge animal={zodiacName as AnimalType} />
         </div>
 
         <div className="cursor-pointer self-start">

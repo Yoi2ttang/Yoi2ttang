@@ -22,7 +22,7 @@ export const objectToSearchParams = (
     return ""
   }
 
-  return new URLSearchParams(
-    Object.entries(params).map(([key, value]) => [key, String(value)]),
-  ).toString()
+  return Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&")
 }
