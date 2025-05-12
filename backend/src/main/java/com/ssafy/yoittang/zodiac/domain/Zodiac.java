@@ -1,4 +1,4 @@
-package com.ssafy.yoittang.zordiac.domain;
+package com.ssafy.yoittang.zodiac.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,28 +16,28 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "zordiacs")
+@Table(name = "zodiacs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Zordiac {
+public class Zodiac {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "zordiac_id")
-    private Long zordiacId;
+    @Column(name = "zodiac_id")
+    private Long zodiacId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "zordiac_name", nullable = false)
-    private ZordiacName zordiacName;
+    @Column(name = "zodiac_name", nullable = false)
+    private ZodiacName zodiacName;
 
-    @Column(name = "zordiac_image", length = 256, nullable = false)
-    private String zordiacImage;
+    @Column(name = "zodiac_image", length = 256, nullable = false)
+    private String zodiacImage;
 
     @Builder
-    private Zordiac(
-            ZordiacName zordiacName,
-            String zordiacImage
+    private Zodiac(
+            ZodiacName zodiacName,
+            String zodiacImage
     ) {
-        this.zordiacName = zordiacName;
-        this.zordiacImage = zordiacImage;
+        this.zodiacName = zodiacName;
+        this.zodiacImage = zodiacImage;
     }
 }

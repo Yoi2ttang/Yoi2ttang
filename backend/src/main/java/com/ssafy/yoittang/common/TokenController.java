@@ -13,8 +13,8 @@ import com.ssafy.yoittang.auth.domain.request.JwtRequest;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Gender;
 import com.ssafy.yoittang.member.domain.Member;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenController {
 
-    private final ZordiacJpaRepository zordiacJpaRepository;
+    private final ZodiacJpaRepository zodiacJpaRepository;
     private final JwtUtil jwtUtil;
 
     @GetMapping("/access-tokens")
@@ -33,7 +33,7 @@ public class TokenController {
             @RequestParam(name = "id") String id
     ) {
         Member member = Member.builder()
-                .zordiacId(1L)
+                .zodiacId(1L)
                 .socialId("1234658789")
                 .birthDate(LocalDate.now())
                 .nickname("KSH")
@@ -43,12 +43,12 @@ public class TokenController {
                 .disclosure(DisclosureStatus.ALL)
                 .stateMessage(null)
                 .build();
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
         return ResponseEntity.ok(jwtUtil.createLoginToken(new JwtRequest(
                 Long.parseLong(id),
                 member.getNickname(),
-                member.getZordiacId(),
-                zordiacName.toString()
+                member.getZodiacId(),
+                zodiacName.toString()
         )));
     }
 }

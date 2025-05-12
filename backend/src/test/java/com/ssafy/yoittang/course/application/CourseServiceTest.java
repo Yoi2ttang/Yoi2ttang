@@ -58,7 +58,7 @@ public class CourseServiceTest {
     @BeforeEach
     void setUp() {
         mockMember = Member.builder()
-                .zordiacId(1L)
+                .zodiacId(1L)
                 .socialId("socialId123")
                 .email("ssafy@ssafy.com")
                 .birthDate(LocalDate.of(1995, 1, 1))

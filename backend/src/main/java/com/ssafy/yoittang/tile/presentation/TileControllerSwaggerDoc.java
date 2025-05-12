@@ -45,8 +45,8 @@ public interface TileControllerSwaggerDoc {
             )
     })
     ResponseEntity<TileGetResponseWrapper> getTile(
-            @Parameter(name = "zordiacId", description = "간지Id", required = true, example = "3")
-            @PathVariable(name = "zordiacId") Long zordiacId,
+            @Parameter(name = "zodiacId", description = "간지Id", required = true, example = "3")
+            @PathVariable(name = "zodiacId") Long zodiacId,
 
             @Parameter(name = "lat", description = "위도", required = true, example = "37.501161")
             @RequestParam Double lat,
@@ -83,8 +83,8 @@ public interface TileControllerSwaggerDoc {
             )
     })
     ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
-            @Parameter(name = "zordiacId", description = "간지Id", required = true, example = "3")
-            @PathVariable Long zordiacId,
+            @Parameter(name = "zodiacId", description = "간지Id", required = true, example = "3")
+            @PathVariable Long zodiacId,
 
             @Parameter(name = "lat", description = "위도", required = true, example = "37.501161")
             @RequestParam Double lat,
@@ -105,8 +105,8 @@ public interface TileControllerSwaggerDoc {
             )
     })
     ResponseEntity<TileSituationResponse> getTileSituation(
-            @Parameter(name = "zordiacId", description = "간지Id", required = true, example = "3")
-            @PathVariable Long zordiacId
+            @Parameter(name = "zodiacId", description = "간지Id", required = true, example = "3")
+            @PathVariable Long zodiacId
     );
 
     @Operation(summary = "12간지 팀 랭킹", description = "팀들의 타일 수와 랭킹을 가지고 옵니다.")
@@ -129,8 +129,8 @@ public interface TileControllerSwaggerDoc {
             )
     })
      ResponseEntity<TilePreviewResponse> getRankingPreview(
-            @Parameter(name = "zordiacId", description = "간지Id", required = false, example = "3")
-            @RequestParam(required = false) Long zordiacId,
+            @Parameter(name = "zodiacId", description = "간지Id", required = false, example = "3")
+            @RequestParam(required = false) Long zodiacId,
 
             @Parameter(name = "limit", description = "가져올 랭킹 수", required = false, example = "3")
             @RequestParam(required = false, defaultValue = "3") Integer limit

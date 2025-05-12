@@ -21,7 +21,7 @@ public class TileHistoryRedis {
     private String tileHistoryId;
 
     @Column(nullable = false)
-    private Long zordiacId;
+    private Long zodiacId;
 
     @Column(nullable = false)
     private Long memberId;

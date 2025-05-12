@@ -71,7 +71,7 @@ public class RunningServiceTest {
     @BeforeEach
     void setUp() {
         mockMember = Member.builder()
-                .zordiacId(515L)
+                .zodiacId(515L)
                 .socialId("socialId123")
                 .birthDate(LocalDate.of(1999, 4, 9))
                 .nickname("dlskwao0409")

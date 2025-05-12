@@ -23,7 +23,7 @@ public class Tile {
     private String geoHash;
 
     @Column
-    private Long zordiacId;
+    private Long zodiacId;
 
     @Column(nullable = false)
     private Double latNorth;

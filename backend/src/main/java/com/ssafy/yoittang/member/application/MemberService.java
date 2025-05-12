@@ -27,6 +27,7 @@ import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
+import com.ssafy.yoittang.member.domain.dto.response.MemberTempResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
@@ -34,9 +35,12 @@ import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.dto.response.RunningTimeResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
-import com.ssafy.yoittang.zordiac.domain.ZordiacName;
-import com.ssafy.yoittang.zordiac.domain.repository.ZordiacJpaRepository;
+import com.ssafy.yoittang.zodiac.domain.Zodiac;
+import com.ssafy.yoittang.zodiac.domain.ZodiacName;
+import com.ssafy.yoittang.zodiac.domain.repository.ZodiacJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,11 +52,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final FollowJpaRepository followJpaRepository;
-    private final ZordiacJpaRepository zordiacJpaRepository;
+    private final ZodiacJpaRepository zodiacJpaRepository;
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final CourseRepository courseRepository;
+    //이 코드는 refactoring 되면 사라질 예정입니다.
+    private final TileRepository tileRepository;
     private final S3ImageUploader s3ImageUploader;
 
     public PageInfo<MemberAutocompleteResponse> getMemberAutocompleteList(String keyword, String pageToken) {
@@ -174,7 +180,7 @@ public class MemberService {
                     null
             );
         }
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(targetMember.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(targetMember.getZodiacId());
         boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(
                 member.getMemberId(),
                 targetMember.getMemberId()
@@ -184,7 +190,7 @@ public class MemberService {
                 targetMember.getMemberId(),
                 targetMember.getNickname(),
                 targetMember.getProfileImageUrl(),
-                zordiacName,
+                zodiacName,
                 targetMember.getStateMessage(),
                 followingCount,
                 followerCount,
@@ -199,13 +205,13 @@ public class MemberService {
     public MyProfileResponse getMyProfile(Member member) {
         Integer followingCount = followJpaRepository.countFollowings(member.getMemberId());
         Integer followerCount = followJpaRepository.countFollowers(member.getMemberId());
-        ZordiacName zordiacName = zordiacJpaRepository.findZordiacNameByZordiacId(member.getZordiacId());
+        ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
         Double totalTime = runningRepository.findTotalRunningSecondsByMemberId(member.getMemberId());
         return new MyProfileResponse(
                 member.getMemberId(),
                 member.getNickname(),
                 member.getProfileImageUrl(),
-                zordiacName,
+                zodiacName,
                 member.getStateMessage(),
                 followingCount,
                 followerCount,
@@ -274,6 +280,32 @@ public class MemberService {
                 member.getGender(),
                 member.getWeight()
         );
+    }
+
+    //이 코드는 refactoring 되면 사라질 예정입니다.
+    public MemberTempResponse getTempMember(Member member) {
+
+        Zodiac zodiac = zodiacJpaRepository.findById(member.getZodiacId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ZORDIAC));
+
+        List<TileTeamSituationResponse> tileSituationList =  tileRepository.getTileSituation();
+
+        TileTeamSituationResponse myTeam = tileSituationList.stream()
+                .filter(t -> t.zodiacId().equals(zodiac.getZodiacId()))
+                .findFirst()
+                .orElse(null);
+
+        Integer ranking = myTeam == null ? null : myTeam.rank();
+
+        Long tileCount = myTeam == null ? null : myTeam.tileCount();
+
+        return MemberTempResponse.builder()
+                .nickname(member.getNickname())
+                .zodiacId(zodiac.getZodiacId())
+                .zodiacName(zodiac.getZodiacName().getKoreanName())
+                .ranking(ranking)
+                .tileCount(tileCount)
+                .build();
     }
 
     @Scheduled(cron = "0 0 1 * * *")  // 매일 새벽 1시

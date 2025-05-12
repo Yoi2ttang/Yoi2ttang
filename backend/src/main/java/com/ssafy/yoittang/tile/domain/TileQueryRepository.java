@@ -7,9 +7,9 @@ import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
 
 public interface TileQueryRepository {
-    List<TileGetResponse> getTile(Long zordiacId, String geohash);
+    List<TileGetResponse> getTile(Long zodiacId, String geohash);
 
-    List<TileClusterGetResponse> getTileCluster(Long zordiacId, String geoHashString);
+    List<TileClusterGetResponse> getTileCluster(Long zodiacId, String geoHashString);
 
     List<TileTeamSituationResponse> getTileSituation();
 }

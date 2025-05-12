@@ -8,7 +8,7 @@ import com.ssafy.yoittang.tooktilehistory.domain.dto.response.TookTileHistoryGro
 public interface TookTileHistoryQueryRepository {
 
     List<TookTileHistoryGroupByPeriod> getTookTileHistoryGroupByPeriod(
-             Long zordiacId,
+             Long zodiacId,
              LocalDate startDate,
              LocalDate endDate,
              Period period,

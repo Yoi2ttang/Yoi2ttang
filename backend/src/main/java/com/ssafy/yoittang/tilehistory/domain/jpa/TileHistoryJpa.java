@@ -28,7 +28,7 @@ public class TileHistoryJpa {
     private Long tileHistoryId;
 
     @Column(nullable = false)
-    private Long zordiacId;
+    private Long zodiacId;
 
     @Column(nullable = false)
     private Long memberId;

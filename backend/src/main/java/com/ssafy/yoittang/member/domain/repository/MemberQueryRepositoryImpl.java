@@ -15,7 +15,7 @@ import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
 import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
-import com.ssafy.yoittang.zordiac.domain.QZordiac;
+import com.ssafy.yoittang.zodiac.domain.QZodiac;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,18 +58,18 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     ) {
         QMember qMember = QMember.member;
         QFollow qFollow = QFollow.follow;
-        QZordiac qzordiac = QZordiac.zordiac;
+        QZodiac qzodiac = QZodiac.zodiac;
         return queryFactory
                 .select(Projections.constructor(
                         MemberSearchResponse.class,
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
-                        qzordiac.zordiacName,
+                        qzodiac.zodiacName,
                         qFollow.followId.isNotNull()
                 ))
                 .from(qMember)
-                .leftJoin(qzordiac).on(qzordiac.zordiacId.eq(qMember.zordiacId))
+                .leftJoin(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
                 .leftJoin(qFollow)
                 .on(qFollow.fromMember.eq(memberId)
                         .and(qFollow.toMember.eq(qMember.memberId)))
@@ -85,7 +85,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     @Override
     public List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids) {
         QMember qMember = QMember.member;
-        QZordiac qzordiac = QZordiac.zordiac;
+        QZodiac qzodiac = QZodiac.zodiac;
         QFollow qFollow = QFollow.follow;
         return queryFactory
                 .select(Projections.constructor(
@@ -93,11 +93,11 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
-                        qzordiac.zordiacName,
+                        qzodiac.zodiacName,
                         qFollow.followId.isNotNull()
                 ))
                 .from(qMember)
-                .join(qzordiac).on(qzordiac.zordiacId.eq(qMember.zordiacId))
+                .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
                 .leftJoin(qFollow)
                 .on(qFollow.fromMember.eq(qMember.memberId)
                         .and(qFollow.toMember.eq(qMember.memberId)))
@@ -109,18 +109,18 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     @Override
     public List<FollowingResponse> findFollowingByIds(List<Long> ids) {
         QMember qMember = QMember.member;
-        QZordiac qzordiac = QZordiac.zordiac;
+        QZodiac qzodiac = QZodiac.zodiac;
         return queryFactory
                 .select(Projections.constructor(
                         FollowingResponse.class,
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
-                        qzordiac.zordiacName,
+                        qzodiac.zodiacName,
                         Expressions.constant(true)
                 ))
                 .from(qMember)
-                .join(qzordiac).on(qzordiac.zordiacId.eq(qMember.zordiacId))
+                .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
                 .where(qMember.memberId.in(ids))
                 .orderBy(qMember.memberId.asc())
                 .fetch();
@@ -129,17 +129,17 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     @Override
     public List<FollowerResponse> findFollowerByIds(List<Long> ids) {
         QMember qMember = QMember.member;
-        QZordiac qzordiac = QZordiac.zordiac;
+        QZodiac qzodiac = QZodiac.zodiac;
         return queryFactory
                 .select(Projections.constructor(
                         FollowerResponse.class,
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
-                        qzordiac.zordiacName
+                        qzodiac.zodiacName
                 ))
                 .from(qMember)
-                .join(qzordiac).on(qzordiac.zordiacId.eq(qMember.zordiacId))
+                .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
                 .where(qMember.memberId.in(ids))
                 .orderBy(qMember.memberId.asc())
                 .fetch();

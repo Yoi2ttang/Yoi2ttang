@@ -10,7 +10,7 @@ public interface TileHistoryJdbcRepository {
     void bulkInsert(List<TileHistoryRedis> tileHistoryRedisList);
 
     TileMemberRankingResponse getTileMemberRankingResponse(
-            Long zordiacId,
+            Long zodiacId,
             TileMemberRankingRequest tileMemberRankingRequest
     );
 }
