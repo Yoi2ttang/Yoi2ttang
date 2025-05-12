@@ -1,12 +1,12 @@
 package com.ssafy.yoittang.member.domain.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ssafy.yoittang.member.domain.Follow;
-
-import java.util.Optional;
 
 public interface FollowJpaRepository extends JpaRepository<Follow, Long>, FollowQueryRepository {
     boolean existsByFromMemberAndToMember(Long fromMember, Long toMember);
