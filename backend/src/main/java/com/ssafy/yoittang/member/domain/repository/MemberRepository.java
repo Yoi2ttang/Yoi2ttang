@@ -67,4 +67,8 @@ public class MemberRepository {
     public List<Member> findAll() {
         return memberJpaRepository.findAll();
     }
+
+    public Optional<Member> findByNickname(String nickname) {
+        return memberJpaRepository.findByNickname(nickname);
+    }
 }
