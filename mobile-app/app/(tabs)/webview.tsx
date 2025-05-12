@@ -73,7 +73,7 @@ const WebViewScreen = () => {
   }, [])
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <>
       <StatusBar
         translucent={false}
         backgroundColor="#fff"
@@ -83,8 +83,8 @@ const WebViewScreen = () => {
         ref={webViewRef}
         source={{ uri: "http://70.12.246.158:3000" }}
         originWhitelist={["*"]}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
+        javaScriptEnabled
+        domStorageEnabled
         onNavigationStateChange={handleNavigationStateChange}
         onMessage={(event) => {
           console.log("📩 웹에서 보낸 메시지:", event.nativeEvent.data)
@@ -94,7 +94,7 @@ const WebViewScreen = () => {
         }}
         className="flex-1"
       />
-    </SafeAreaView>
+    </>
   )
 }
 
