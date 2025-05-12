@@ -65,12 +65,12 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/api/v1/member/" + targetId + "/follow")).build();
     }
 
-    @DeleteMapping("/{targetId}/unfollow")
+    @PatchMapping("/{targetId}/unfollow")
     public ResponseEntity<Void> deleteFollow(
             @PathVariable("targetId") Long targetId,
             @AuthMember Member member
     ) {
-        memberService.deleteFollow(targetId, member);
+        memberService.unfollow(targetId, member);
         return ResponseEntity.noContent().build();
     }
 

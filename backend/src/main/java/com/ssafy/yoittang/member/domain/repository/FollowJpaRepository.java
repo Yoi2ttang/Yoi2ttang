@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.ssafy.yoittang.member.domain.Follow;
 
+import java.util.Optional;
+
 public interface FollowJpaRepository extends JpaRepository<Follow, Long>, FollowQueryRepository {
     boolean existsByFromMemberAndToMember(Long fromMember, Long toMember);
 
@@ -16,5 +18,7 @@ public interface FollowJpaRepository extends JpaRepository<Follow, Long>, Follow
 
     @Query("SELECT COUNT(f) FROM Follow f WHERE f.fromMember = :targetId")
     Integer countFollowings(@Param("targetId") Long targetId);
+
+    Optional<Follow> findByFromMemberAndToMember(Long fromMember, Long toMember);
 
 }

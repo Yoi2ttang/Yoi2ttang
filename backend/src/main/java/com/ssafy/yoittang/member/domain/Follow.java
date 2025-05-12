@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Bool;
 
 @Entity
 @Getter
@@ -29,6 +30,9 @@ public class Follow {
     @Column(name = "to_member", nullable = false)
     private Long toMember;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @Builder
     private Follow(
             Long fromMember,
@@ -36,5 +40,10 @@ public class Follow {
     ) {
         this.fromMember = fromMember;
         this.toMember = toMember;
+        this.isActive = true;
+    }
+
+    public void updateActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 }
