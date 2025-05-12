@@ -117,7 +117,7 @@ public class LoginServiceTest {
                 1L,
                 "nickname",
                 1L,
-                "MOUSE"
+                "쥐"
         );
 
         given(jwtUtil.createLoginToken(expectedJwtRequest))
@@ -210,7 +210,7 @@ public class LoginServiceTest {
                         3L,
                         newNickname,
                         11L,
-                        "PIG"
+                        "돼지"
                 ))
         ).willReturn(new MemberTokens("refreshToken", "accessToken"));
 
