@@ -1,26 +1,48 @@
+"use client"
+
 import AnimalBadge from "@/components/animal-badges//AnimalBadge"
-import { checkSelf } from "@/lib/auth/util"
 import { AnimalType } from "@/types/animal"
 import { ProfileResponse } from "@/types/member"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import Button from "../common/Button"
+import FollowButton from "./FollowButton"
+import { checkSelf } from "@/lib/auth/util"
+import { useEffect, useState } from "react"
 
 interface ProfileInfoProps {
   data: ProfileResponse
 }
 
-const ProfileInfo = async ({ data }: ProfileInfoProps) => {
+const ProfileInfo = ({ data }: ProfileInfoProps) => {
   const {
+    memberId,
     nickname,
     profileImageUrl,
     zodiacName,
     stateMessage,
     followerCount,
     followingCount,
+    isFollow,
   } = data
-  const isMe = await checkSelf(nickname)
+  // 낙관적 업데이트를 위한 상태
+  const [followState, setFollowState] = useState(isFollow)
+  const [isMe, setIsMe] = useState(false)
+
+  useEffect(() => {
+    setIsMe(checkSelf(nickname))
+  }, [nickname])
+
+  const calculateFollowerCount = () => {
+    // 낙관적 업데이트를 수행했을 때의 팔로워 카운트
+    if (followState === isFollow) {
+      return followerCount
+    } else if (isFollow) {
+      return followerCount - 1
+    } else {
+      return followerCount + 1
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl bg-white p-6">
@@ -52,7 +74,7 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
           href={`/profile/${nickname}/followers`}
           className="flex-1 cursor-pointer text-center">
           <p className="text-neutral-800">팔로워</p>
-          <p className="text-lg">{followerCount}</p>
+          <p className="text-lg">{calculateFollowerCount()}</p>
         </Link>
 
         <div className="w-0.5 bg-neutral-50" />
@@ -65,7 +87,14 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
         </Link>
       </div>
 
-      {isMe && <Button className="w-full">팔로우</Button>}
+      {!isMe && (
+        <FollowButton
+          targetId={memberId}
+          followState={followState}
+          onChange={setFollowState}
+          className="w-full"
+        />
+      )}
     </div>
   )
 }

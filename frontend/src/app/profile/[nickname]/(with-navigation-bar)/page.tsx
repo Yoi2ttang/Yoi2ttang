@@ -20,9 +20,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
       <div className="flex flex-col gap-6 p-4">
         {!data || isError ? (
-          <p className="text-center">
-            {nickname}님은 존재하지 않는 유저입니다.
-          </p>
+          <p className="text-center">존재하지 않는 유저입니다.</p>
         ) : (
           <>
             <ProfileInfo data={data} />

@@ -40,8 +40,8 @@ export const postFollow = async (targetId: number) => {
 }
 
 // 언팔로잉
-export const deleteFollow = async (targetId: number) => {
-  return await apiClient.delete(`/member/${targetId}/unfollow`)
+export const patchFollow = async (targetId: number) => {
+  return await apiClient.patch(`/member/${targetId}/unfollow`)
 }
 
 // 키워드에 맞는 유저 닉네임 조회
