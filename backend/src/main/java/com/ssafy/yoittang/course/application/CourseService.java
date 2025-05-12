@@ -124,8 +124,8 @@ public class CourseService {
         float totalDistance = courseRepository.sumDistancesByCourseIds(courseIds);
 
         double avgDistance = totalDistance / (double) filtered.size();
-        double minDistance = avgDistance * 0.8;
-        double maxDistance = avgDistance * 1.2;
+        double minDistance = avgDistance * 0.7;
+        double maxDistance = avgDistance * 1.3;
 
         List<CourseSummaryResponse> nearbyCourses = courseRepository.findNearbyCoursesWithinDistance(
                 avgLat, avgLon, 5.0, minDistance, maxDistance
