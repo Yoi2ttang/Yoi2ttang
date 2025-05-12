@@ -15,26 +15,22 @@ export const GET = async (request: Request) => {
     // 백엔드 서버에 로그인 API 호출
     const response = await postLogin(code)
     // 응답이 실패한 경우 로그인 페이지로 리다이렉트
-    if (!response.ok) {
+    if (response.isError) {
       return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    const data = await response.json()
     // 1. 기존 유저인 경우
-    if (!data.socialId) {
+    if (!response.data.socialId) {
       // 메인 페이지로 리다이렉트 응답 생성
       const nextResponse = NextResponse.redirect(new URL("/", request.url))
 
       // 쿠키 방식으로 액세스 토큰 생성
-      // 개발 환경(http)에서는 httpOnly를 false로 설정
-      // 배포 환경(https)에서는 httpOnly를 true로 설정
-      const isProd = process.env.NODE_ENV === "production"
-      nextResponse.cookies.set("accessToken", data.accessToken, {
-        httpOnly: isProd,
-        secure: isProd,
-        sameSite: "none",
+      nextResponse.cookies.set("accessToken", response.data.accessToken, {
+        httpOnly: false,
+        secure: true,
+        sameSite: "lax",
         path: "/",
-        maxAge: 60 * 30, // 30분
+        maxAge: 60 * 60, // 60분
       })
 
       return nextResponse
@@ -43,7 +39,7 @@ export const GET = async (request: Request) => {
     else {
       // 회원가입 페이지로 리다이렉트 응답 생성
       const nextResponse = NextResponse.redirect(
-        new URL(`/signup?socialId=${data.socialId}`, request.url),
+        new URL(`/signup?socialId=${response.data.socialId}`, request.url),
       )
 
       return nextResponse

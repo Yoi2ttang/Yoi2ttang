@@ -56,13 +56,7 @@ const nextFetchInstance = async (baseUrl?: string) => {
 
       const error = new Error() as ApiError
       error.status = response.status
-
-      try {
-        error.data = await response.json()
-      } catch {
-        error.data = await response.text()
-      }
-
+      error.data = await response.text()
       error.message = `🎀 에러 발생! status: ${response.status}`
 
       return {
@@ -82,9 +76,14 @@ const nextFetchInstance = async (baseUrl?: string) => {
     url: string,
     options?: FetchOptions,
   ): Promise<FetchResponse<T, ApiError>> => {
+    const config = defaultConfig()
     const res = await fetch(`${baseUrl}${url}`, {
       method,
-      ...defaultConfig(),
+      ...config,
+      headers: {
+        ...config.headers,
+        ...(options?.headers ?? {}),
+      },
       ...options,
     })
 

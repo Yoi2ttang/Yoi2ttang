@@ -1,9 +1,10 @@
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 
 const useLogin = () => {
   const searchParams = useSearchParams()
   const code = searchParams.get("code")
+  const router = useRouter()
 
   useEffect(() => {
     const login = async () => {
@@ -13,7 +14,7 @@ const useLogin = () => {
         credentials: "include",
       })
       if (response.redirected) {
-        window.location.href = response.url
+        router.replace(response.url)
       }
     }
 

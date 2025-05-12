@@ -1,6 +1,9 @@
 import { SignUpData } from "@/types/auth"
+import { useRouter } from "next/navigation"
 
 const useSignup = (signupData: SignUpData) => {
+  const router = useRouter()
+
   const signup = async () => {
     const response = await fetch("/api/signup", {
       method: "POST",
@@ -8,7 +11,7 @@ const useSignup = (signupData: SignUpData) => {
       body: JSON.stringify(signupData),
     })
     if (response.redirected) {
-      window.location.href = response.url
+      router.replace(response.url)
     }
   }
 
