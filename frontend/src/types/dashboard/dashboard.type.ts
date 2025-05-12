@@ -52,3 +52,19 @@ export interface PersonalTileChangeRateResponse {
   changeRate: number
   changeDirection: "INCREASE" | "DECREASE" | "NO_CHANGE"
 }
+
+// 팀 타일 지도 응답 타입
+export interface TileMapResponse {
+  tileGetResponseList: {
+    geoHash: string
+    zordiacId: null
+    sw: {
+      lat: number
+      lng: number
+    }
+    ne: {
+      lat: number
+      lng: number
+    }
+  }[]
+}

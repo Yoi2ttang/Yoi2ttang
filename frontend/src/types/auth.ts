@@ -28,3 +28,12 @@ export type LoginResponse = {
   socialId: string
   accessToken: string
 }
+
+export interface Payload {
+  sub: string
+  nickname: string
+  zordiacId: string
+  zordiacTeam: string
+  iat: number
+  exp: number
+}

@@ -1,5 +1,5 @@
 import Badge from "@/components/common/Badge"
-import { animalIconMap } from "@/constants/animalBadge"
+import { animalIconMap } from "@/constants/animals"
 import { AnimalType } from "@/types/animal"
 import DashboardCard from "../DashboardCard"
 
@@ -21,7 +21,7 @@ const MyTeamRankCard = ({ teamInfo }: MyTeamRankCardProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-white/20 p-2 shadow-inner">
-            <AnimalIcon className="size-10 text-white" />
+            {AnimalIcon && <AnimalIcon className="size-10 text-white" />}
           </div>
           <span className="text-title-md text-white">{teamName}</span>
         </div>
