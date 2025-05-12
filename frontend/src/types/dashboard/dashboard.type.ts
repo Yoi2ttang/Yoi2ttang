@@ -4,3 +4,51 @@ export interface PersonalStatistics {
   completedChallenge: number
   totalTile: number
 }
+
+// 개인 대시보드 데이터 가져오기 응답 타입
+export interface PersonalDashboardResponse {
+  memberId: number
+  duration: number
+  totalDistance: number
+  runningDuration: {
+    hour: number
+    minute: number
+    seconds: number
+  }
+  occupiedTileCount: number
+  completeCourseCount: number
+}
+
+// 개인 일별 달린 거리 조회 응답 타입
+export interface PersonalDailyRunningDistanceResponse {
+  date: string
+  distance: number
+}
+
+// 개인 일별 달린 시간 조회 응답 타입
+export interface PersonalDailyRunningTimeResponse {
+  date: string
+  runningDuration: {
+    hour: number
+    minute: number
+    seconds: number
+  }
+}
+
+// 개인 일별 타일 조회 응답 타입
+export interface PersonalDailyTileResponse {
+  date: string
+  occupiedTileCount: number
+}
+
+// 개인 일별 완료한 코스 조회 응답 타입
+export interface PersonalDailyCourseResponse {
+  date: string
+  completeCourseCount: number
+}
+
+// 개인 타일 변화율 조회 응답 타입
+export interface PersonalTileChangeRateResponse {
+  changeRate: number
+  changeDirection: "INCREASE" | "DECREASE" | "NO_CHANGE"
+}

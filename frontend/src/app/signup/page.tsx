@@ -68,7 +68,7 @@ const SignupPage = () => {
     }
   }
 
-  return <div className="h-full overflow-hidden">{renderForm()}</div>
+  return <div className="h-dvh overflow-hidden">{renderForm()}</div>
 }
 
 export default SignupPage

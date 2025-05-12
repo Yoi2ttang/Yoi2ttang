@@ -4,7 +4,7 @@ import Link from "next/link"
 
 const LoginPage = () => {
   return (
-    <div className="flex h-full flex-col justify-center p-6">
+    <div className="flex h-dvh flex-col justify-center p-6">
       <div className="flex flex-1 flex-col justify-evenly">
         <p className="text-title-lg">
           뛰어서 땅따먹기

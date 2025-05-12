@@ -1,3 +1,4 @@
+import { getApiServer } from "@/lib/api-server"
 import apiClient from "@/lib/http-common"
 import { LoginResponse, SignUpData } from "@/types/auth"
 
@@ -9,17 +10,26 @@ export const getIsNicknameDuplicated = async (nickname: string) => {
 }
 
 export const postSignup = async (signupData: SignUpData) => {
-  const response = await apiClient.post("/auth/signup/kakao", {
-    ...signupData,
-    birth: `${signupData.birth.year}-${signupData.birth.month}-${signupData.birth.day}`,
+  const apiServer = await getApiServer()
+  return await apiServer.post<LoginResponse>("/auth/signup/kakao", {
+    body: {
+      ...signupData,
+      birth: `${signupData.birth.year}-${signupData.birth.month.padStart(2, "0")}-${signupData.birth.day.padStart(2, "0")}`,
+    },
   })
-  return response.data
 }
 
-export const postLogin = async (code: string): Promise<LoginResponse> => {
-  const response = await apiClient.post("/auth/login/kakao", {
-    code,
-    environment: "WEB",
+export const postLogin = async (code: string, environment: string = "WEB") => {
+  const apiServer = await getApiServer()
+  return await apiServer.post<LoginResponse>("/auth/login/kakao", {
+    body: {
+      code,
+      environment,
+    },
   })
-  return response.data
+}
+
+export const postReissue = async () => {
+  const apiServer = await getApiServer()
+  return await apiServer.post<LoginResponse>("/auth/reissue")
 }

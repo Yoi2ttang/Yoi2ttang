@@ -1,8 +1,8 @@
 import { SignUpData } from "@/types/auth"
+import { clamp } from "lodash-es"
 import { ChangeEvent, Dispatch, FocusEvent, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
-import { clamp } from "lodash-es"
 
 interface BirthFormProps {
   signupData: SignUpData
@@ -97,6 +97,7 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             0,
           ).getDate(),
         ).toString()
+
         break
       }
     }

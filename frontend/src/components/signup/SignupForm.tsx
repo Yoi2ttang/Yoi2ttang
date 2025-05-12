@@ -23,7 +23,7 @@ const SignupForm = ({
   onPrev,
   onNext,
 }: SignupFormProps) => {
-  const { mutate: signup } = useSignup(signupData)
+  const { signup } = useSignup(signupData)
 
   // 숫자형 Enum은 양방향 매핑(0: "TERM", "TERM": 0)이 되므로, filter를 사용하여 추출한다.
   const stepCount =
@@ -71,7 +71,7 @@ const SignupForm = ({
 
   return (
     <div className="flex h-full flex-col">
-      <StackHeader title="" />
+      <StackHeader title="" onClick={onPrev} />
 
       <div className="flex flex-1 flex-col gap-9 p-6">
         <ProgressBar

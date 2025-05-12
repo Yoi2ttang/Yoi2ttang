@@ -25,9 +25,8 @@ export type SignUpData = {
 }
 
 export type LoginResponse = {
-  memberId: number | null
-  accessToken: string | null
-  socialId: string | null
+  socialId: string
+  accessToken: string
 }
 
 export const MIN_WEIGHT = 1

@@ -1,8 +1,13 @@
-import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
 import { SignUpData } from "@/types/auth"
-import { debounce } from "lodash-es"
-import { ChangeEvent, Dispatch, SetStateAction } from "react"
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
 
@@ -13,11 +18,48 @@ interface NicknameFormProps {
 }
 
 const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
-  const { message, messageType } = useCheckNickname(signupData.nickname)
+  const [nickname, setNickname] = useState(signupData.nickname)
+  const [message, setMessage] = useState("")
+  const [messageType, setMessageType] = useState<"valid" | "invalid">("valid")
+  const { data: isDuplicated } = useCheckNicknameDuplication(
+    signupData.nickname,
+  )
 
-  const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...signupData, nickname: e.target.value })
-  }, 300)
+  const updateSignupData = useMemo(
+    () =>
+      debounce((value: string) => {
+        onChange({ ...signupData, nickname: value })
+      }, 300),
+    [signupData, onChange],
+  )
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setNickname(value)
+    updateSignupData(value)
+  }
+
+  useEffect(() => {
+    if (signupData.nickname === "") {
+      setMessage("")
+      setMessageType("valid")
+      return
+    }
+
+    if (!checkNicknameValidity(signupData.nickname)) {
+      setMessage("닉네임은 한글, 영문, 숫자로 2~10자만 사용 가능해요")
+      setMessageType("invalid")
+      return
+    }
+
+    if (isDuplicated) {
+      setMessage("이미 사용 중인 닉네임이에요")
+      setMessageType("invalid")
+    } else {
+      setMessage("사용 가능한 닉네임이에요")
+      setMessageType("valid")
+    }
+  }, [signupData, isDuplicated])
 
   return (
     <div className="flex flex-1 flex-col justify-between">
@@ -28,17 +70,21 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
           입력해 주세요
         </h1>
 
-        <Input
-          variant={messageType === "valid" ? "default" : "error"}
-          placeholder="닉네임을 입력해 주세요"
-          onChange={handleChange}
-        />
-        <p
-          className={cn(
-            messageType === "valid" ? "text-green-500" : "text-red-500",
-          )}>
-          {message}
-        </p>
+        <div className="relative">
+          <Input
+            variant={messageType === "valid" ? "default" : "error"}
+            placeholder="닉네임을 입력해 주세요"
+            value={nickname}
+            onChange={handleChange}
+          />
+          <p
+            className={cn(
+              "absolute top-full mt-1",
+              messageType === "valid" ? "text-green-500" : "text-red-500",
+            )}>
+            {message}
+          </p>
+        </div>
       </div>
 
       <Button
