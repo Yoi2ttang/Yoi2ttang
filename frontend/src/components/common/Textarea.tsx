@@ -39,6 +39,7 @@ const Textarea = (data: TextareaProps) => {
         disabled={disabled}
         value={content}
         onChange={handleChange}
+        maxLength={maxLength}
       />
 
       <p

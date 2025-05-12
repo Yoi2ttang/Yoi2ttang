@@ -5,7 +5,7 @@ import { getIsNicknameDuplicated } from "@/services/auth/api"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 
-const useCheckNickname = (nickname: string) => {
+const useCheckNickname = (nickname: string, initNickname: string = "") => {
   const [message, setMessage] = useState("")
   const [messageType, setMessageType] = useState<"valid" | "invalid">("valid")
 
@@ -17,7 +17,7 @@ const useCheckNickname = (nickname: string) => {
   })
 
   useEffect(() => {
-    if (nickname === "") {
+    if (nickname === "" || nickname === initNickname) {
       setMessage("")
       setMessageType("valid")
       return

@@ -33,6 +33,7 @@ export type ProfileForEdit = {
   disclosureStatus: string
   gender: string
   weight: number
+  email: string
 }
 
 export type MemberPreview = {
@@ -60,11 +61,13 @@ export type MemberSearchRequest = {
 }
 
 export type ProfileForEditRequest = {
-  profileImageFile: File | null
-  nickname: string
-  weight: number
-  stateMessage: string
-  disclosureStatus: "ALL" | "ONLY_ME"
+  memberUpdateRequest: {
+    nickname: string
+    weight: number
+    stateMessage: string
+    disclosureStatus: "ALL" | "ONLY_ME"
+  }
+  image: File | null
 }
 
 // response type

@@ -66,10 +66,21 @@ export const getUsers = async ({
 
 // 프로필 수정 페이지 진입 시 프로필 조회
 export const getProfileForEdit = async (): Promise<ProfileForEditResponse> => {
-  return await apiClient.get("/member/edit-profile")
+  const response = await apiClient.get("/member/profile/edit")
+  return response.data
 }
 
 // 프로필 수정
 export const updateProfile = async (data: ProfileForEditRequest) => {
-  return await apiClient.patch("/member/update-profile", data)
+  const formData = new FormData()
+  const memberData = new Blob([JSON.stringify(data.memberUpdateRequest)], {
+    type: "application/json",
+  })
+
+  formData.append("memberUpdateRequest", memberData)
+  if (data.image) {
+    formData.append("image", data.image)
+  }
+
+  return await apiClient.patch("/member/profile", formData)
 }

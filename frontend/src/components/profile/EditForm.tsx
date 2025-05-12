@@ -4,51 +4,65 @@ import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
 import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
 import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth"
-import { ProfileData } from "@/types/profile"
+import { ProfileForEditRequest, ProfileForEditResponse } from "@/types/member"
 import { clamp, debounce } from "lodash-es"
 import { Calendar } from "lucide-react"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import Input from "../common/Input"
 import Textarea from "../common/Textarea"
 import { Switch } from "../ui/switch"
 import ProfileImageUploader from "./ProfileImageUploader"
-import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
 
-const EditForm = () => {
-  const { data: initProfileData } = useProfileForEdit()
-  const [profileData, setProfileData] = useState<ProfileData>({
-    profileImage: null,
-    nickname: "",
-    weight: 0,
-    stateMessage: "",
-    disclosureStatus: "ALL",
-  })
-  const { message, messageType } = useCheckNickname(profileData.nickname)
+interface EditFormProps {
+  initProfileData: ProfileForEditResponse
+  profileData: ProfileForEditRequest
+  onChange: (profileData: ProfileForEditRequest) => void
+}
 
-  useEffect(() => {
-    if (initProfileData) {
-      setProfileData({
-        ...profileData,
-        nickname: initProfileData.nickname,
-        weight: initProfileData.weight,
-        stateMessage: initProfileData.stateMessage,
-        disclosureStatus: initProfileData.disclosureStatus as "ALL" | "ONLY_ME",
-      })
-    }
-  }, [initProfileData])
+const EditForm = ({
+  initProfileData,
+  profileData,
+  onChange,
+}: EditFormProps) => {
+  const [nickname, setNickname] = useState(
+    profileData.memberUpdateRequest.nickname,
+  )
+  const { message, messageType } = useCheckNickname(
+    profileData.memberUpdateRequest.nickname,
+    initProfileData.nickname,
+  )
 
   const handleProfileImageChange = (file: File) => {
-    setProfileData({ ...profileData, profileImage: file })
+    onChange({ ...profileData, image: file })
   }
 
-  const handleNicknameChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    setProfileData({ ...profileData, nickname: e.target.value })
-  }, 300)
+  const updateProfileData = useMemo(
+    () =>
+      debounce((value: string) => {
+        onChange({
+          ...profileData,
+          memberUpdateRequest: {
+            ...profileData.memberUpdateRequest,
+            nickname: value,
+          },
+        })
+      }, 300),
+    [profileData],
+  )
+
+  const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setNickname(value)
+    updateProfileData(value)
+  }
 
   const handleWeightChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value === "") {
-      setProfileData({ ...profileData, weight: 0 })
+      onChange({
+        ...profileData,
+        memberUpdateRequest: { ...profileData.memberUpdateRequest, weight: 0 },
+      })
       return
     } else if (value.length > 5) {
       return
@@ -59,35 +73,55 @@ const EditForm = () => {
       MIN_WEIGHT,
       MAX_WEIGHT,
     )
-    if (clampedWeight !== profileData.weight) {
-      setProfileData({ ...profileData, weight: clampedWeight })
+    if (clampedWeight !== profileData.memberUpdateRequest.weight) {
+      onChange({
+        ...profileData,
+        memberUpdateRequest: {
+          ...profileData.memberUpdateRequest,
+          weight: clampedWeight,
+        },
+      })
     }
   }
 
   const handleStateMessageChange = (stateMessage: string) => {
-    setProfileData({ ...profileData, stateMessage })
+    onChange({
+      ...profileData,
+      memberUpdateRequest: {
+        ...profileData.memberUpdateRequest,
+        stateMessage,
+      },
+    })
   }
+
+  useEffect(() => {
+    if (initProfileData) {
+      setNickname(initProfileData.nickname)
+    }
+  }, [initProfileData])
 
   return (
     <div className="flex flex-col gap-12 p-6">
-      <ProfileImageUploader initImage="" onChange={handleProfileImageChange} />
+      <ProfileImageUploader
+        initImage={initProfileData.profileImageUrl}
+        onChange={handleProfileImageChange}
+      />
 
-      {/* 연동된 계정 */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">연동된 계정</p>
         <div className="flex items-center gap-2">
           <KakaoIcon className="size-5" />
-          <p>ssafy12@naver.com</p>
+          <p>{initProfileData.email}</p>
         </div>
       </div>
 
-      {/* 닉네임 */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">닉네임</p>
         <div className="relative">
           <Input
             variant={messageType === "valid" ? "default" : "error"}
             placeholder="닉네임을 입력해 주세요"
+            value={nickname}
             onChange={handleNicknameChange}
           />
           <p
@@ -100,11 +134,10 @@ const EditForm = () => {
         </div>
       </div>
 
-      {/* 생년월일 */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">생년월일</p>
         <Input
-          value="1998-01-01"
+          value={initProfileData.birthdate}
           variant="disabled"
           Icon={<Calendar className="size-4" />}
           className="text-neutral-400"
@@ -112,26 +145,28 @@ const EditForm = () => {
         />
       </div>
 
-      {/* 성별 */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">성별</p>
         <Input
-          value="남성"
+          value={initProfileData.gender === "MALE" ? "남성" : "여성"}
           variant="disabled"
           className="text-neutral-400"
           readOnly
         />
       </div>
 
-      {/* 체중(kg) */}
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">체중(kg)</p>
         <Input
           type="number"
-          placeholder="미입력 시 평균 체중이 적용돼요"
+          placeholder="체중을 입력해 주세요"
           min={MIN_WEIGHT}
           max={MAX_WEIGHT}
-          value={!profileData.weight ? "" : profileData.weight}
+          value={
+            !profileData.memberUpdateRequest.weight
+              ? ""
+              : profileData.memberUpdateRequest.weight
+          }
           onChange={handleWeightChange}
         />
       </div>
@@ -140,7 +175,7 @@ const EditForm = () => {
       <div className="flex flex-col gap-2">
         <p className="text-title-sm">상태 메시지</p>
         <Textarea
-          content={profileData.stateMessage}
+          content={profileData.memberUpdateRequest.stateMessage}
           onContentChange={(content) => handleStateMessageChange(content)}
         />
       </div>
@@ -151,14 +186,22 @@ const EditForm = () => {
         <div className="flex items-center gap-4">
           <Switch
             className="data-[state=checked]:bg-yoi-500 scale-125"
+            checked={profileData.memberUpdateRequest.disclosureStatus === "ALL"}
             onCheckedChange={(checked) =>
-              setProfileData({
+              onChange({
                 ...profileData,
-                disclosureStatus: checked ? "ALL" : "ONLY_ME",
+                memberUpdateRequest: {
+                  ...profileData.memberUpdateRequest,
+                  disclosureStatus: checked ? "ALL" : "ONLY_ME",
+                },
               })
             }
           />
-          <p>{profileData.disclosureStatus === "ALL" ? "공개" : "비공개"}</p>
+          <p>
+            {profileData.memberUpdateRequest.disclosureStatus === "ALL"
+              ? "공개"
+              : "비공개"}
+          </p>
         </div>
       </div>
     </div>

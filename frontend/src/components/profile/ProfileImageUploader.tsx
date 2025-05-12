@@ -33,7 +33,7 @@ const ProfileImageUploader = ({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative size-25 rounded-full bg-neutral-200">
+      <div className="relative size-25 rounded-full border border-neutral-100">
         <Image
           src={previewImage}
           alt=""
@@ -52,7 +52,7 @@ const ProfileImageUploader = ({
         <button
           className="absolute right-0 bottom-0 cursor-pointer rounded-full border border-neutral-200 bg-white p-1"
           onClick={handleClick}>
-          <CameraIcon className="size-5" />
+          <CameraIcon className="size-5 text-neutral-600" />
         </button>
       </div>
     </div>

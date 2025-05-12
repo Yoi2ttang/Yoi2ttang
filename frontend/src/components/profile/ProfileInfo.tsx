@@ -1,4 +1,5 @@
 import AnimalBadge from "@/components/animal-badges//AnimalBadge"
+import { checkSelf } from "@/lib/auth/util"
 import { AnimalType } from "@/types/animal"
 import { ProfileResponse } from "@/types/member"
 import { ChevronRight } from "lucide-react"
@@ -19,6 +20,7 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
     followerCount,
     followingCount,
   } = data
+  const isMe = await checkSelf(nickname)
 
   return (
     <div className="flex flex-col gap-6 rounded-2xl bg-white p-6">
@@ -28,20 +30,22 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
           alt=""
           width={60}
           height={60}
-          className="rounded-full"
+          className="size-15 rounded-full border border-neutral-100 object-cover"
         />
 
         <div className="flex flex-1 flex-col gap-1">
-          <p className="text-lg">{nickname}</p>
+          <p className="line-clamp-1 text-lg break-all">{nickname}</p>
           <AnimalBadge animal={zodiacName as AnimalType} />
         </div>
 
-        <div className="cursor-pointer self-start">
+        <Link
+          href={`/profile/${nickname}/setting`}
+          className="cursor-pointer self-start">
           <ChevronRight className="size-5 text-neutral-300" />
-        </div>
+        </Link>
       </div>
 
-      <div className="leading-[1.6]">{stateMessage}</div>
+      <div className="leading-[1.6] break-all">{stateMessage}</div>
 
       <div className="flex">
         <Link
@@ -61,7 +65,7 @@ const ProfileInfo = async ({ data }: ProfileInfoProps) => {
         </Link>
       </div>
 
-      <Button className="w-full">팔로우</Button>
+      {isMe && <Button className="w-full">팔로우</Button>}
     </div>
   )
 }
