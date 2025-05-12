@@ -67,7 +67,7 @@ public class CourseController {
         ));
     }
 
-    @GetMapping("/course/recommend")
+    @GetMapping("/recommend")
     public ResponseEntity<List<CourseSummaryResponse>> getRecommendCourse(
             @AuthMember Member member
     ) {
