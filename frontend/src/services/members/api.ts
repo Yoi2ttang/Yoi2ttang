@@ -13,7 +13,7 @@ import {
 // 프로필 조회
 export const getProfile = async (nickname: string) => {
   const apiServer = await getApiServer()
-  return await apiServer.get<ProfileResponse>(`/member/profile`, {
+  return await apiServer.get<ProfileResponse>(`/members/profiles`, {
     params: {
       nickname,
     },
@@ -24,33 +24,33 @@ export const getProfile = async (nickname: string) => {
 export const getFollowers = async (
   targetId: number,
 ): Promise<MembersResponse> => {
-  return await apiClient.get(`/member/${targetId}/followers`)
+  return await apiClient.get(`/members/${targetId}/followers`)
 }
 
 // 팔로잉 조회
 export const getFollowings = async (
   targetId: number,
 ): Promise<MembersResponse> => {
-  return await apiClient.get(`/member/${targetId}/followings`)
+  return await apiClient.get(`/members/${targetId}/followings`)
 }
 
 // 팔로잉
 export const postFollow = async (targetId: number) => {
-  return await apiClient.post(`/member/${targetId}/follow`)
+  return await apiClient.post(`/members/${targetId}/follow`)
 }
 
 // 언팔로잉
 export const patchFollow = async (targetId: number) => {
-  return await apiClient.patch(`/member/${targetId}/unfollow`)
+  return await apiClient.patch(`/members/${targetId}/unfollow`)
 }
 
-// 키워드에 맞는 유저 닉네임 조회
+// 키워드에 맞는 유저 닉네임 조회(자동완성)
 export const getUserNicknames = async ({
   keyword,
   pageToken,
 }: MemberAutocompleteRequest): Promise<MemberAutocompleteResponse> => {
   return await apiClient.get(
-    `/member/autocomplete?keyword=${keyword}&pageToken=${pageToken}`,
+    `/members/autocomplete?keyword=${keyword}&pageToken=${pageToken}`,
   )
 }
 
@@ -60,13 +60,13 @@ export const getUsers = async ({
   pageToken,
 }: MemberSearchRequest): Promise<MembersResponse> => {
   return await apiClient.get(
-    `/member/search?keyword=${keyword}&pageToken=${pageToken}`,
+    `/members/search?keyword=${keyword}&pageToken=${pageToken}`,
   )
 }
 
 // 프로필 수정 페이지 진입 시 프로필 조회
 export const getProfileForEdit = async (): Promise<ProfileForEditResponse> => {
-  const response = await apiClient.get("/member/profile/edit")
+  const response = await apiClient.get("/members/profiles/edit")
   return response.data
 }
 
@@ -76,11 +76,10 @@ export const updateProfile = async (data: ProfileForEditRequest) => {
   const memberData = new Blob([JSON.stringify(data.memberUpdateRequest)], {
     type: "application/json",
   })
-
   formData.append("memberUpdateRequest", memberData)
   if (data.image) {
     formData.append("image", data.image)
   }
 
-  return await apiClient.patch("/member/profile", formData)
+  return await apiClient.patch("/members/profiles", formData)
 }
