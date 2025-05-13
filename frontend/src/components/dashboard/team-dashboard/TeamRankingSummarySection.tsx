@@ -6,7 +6,7 @@ import { use } from "react"
 import TeamRankingItem from "./TeamRankingItem"
 
 interface TeamRankingSummarySectionProps {
-  zodiacId: string
+  zodiacId: number
 }
 
 const TeamRankingSummarySection = ({
@@ -31,7 +31,7 @@ const TeamRankingSummarySection = ({
       <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
         {rankingData?.length ? (
           rankingData.map((rankInfo) => (
-            <TeamRankingItem key={rankInfo.rank} rankInfo={rankInfo} />
+            <TeamRankingItem key={rankInfo.zodiacId} rankInfo={rankInfo} />
           ))
         ) : (
           <div className="flex w-full flex-col gap-4 text-center">

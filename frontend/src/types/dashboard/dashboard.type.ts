@@ -1,3 +1,5 @@
+import { Tile } from "../map/tile"
+
 export interface PersonalStatistics {
   totalTime: number
   totalLength: number
@@ -55,18 +57,7 @@ export interface PersonalTileChangeRateResponse {
 
 // 팀 타일 지도 응답 타입
 export interface TileMapResponse {
-  tileGetResponseList: {
-    geoHash: string
-    zordiacId: null
-    sw: {
-      lat: number
-      lng: number
-    }
-    ne: {
-      lat: number
-      lng: number
-    }
-  }[]
+  tileGetResponseList: Tile[]
 }
 
 // 팀 활동량 변화 요청 타입
