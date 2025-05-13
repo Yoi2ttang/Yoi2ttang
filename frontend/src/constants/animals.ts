@@ -28,7 +28,7 @@ interface AnimalMetaDataType {
   textColor: string
 }
 
-const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
+export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
   MONKEY: {
     id: 0,
     en: "MONKEY",
