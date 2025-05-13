@@ -27,8 +27,8 @@ public class CourseRepository {
         return courseJpaRepositoy.countByCourseIdIn(courseIds);
     }
 
-    public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId) {
-        return courseQueryRepository.findBookmarkedCoursesByMemberId(memberId);
+    public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit) {
+        return courseQueryRepository.findBookmarkedCoursesByMemberId(memberId, limit);
     }
 
     public List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId) {
