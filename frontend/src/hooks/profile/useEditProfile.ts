@@ -23,7 +23,9 @@ const useEditProfile = () => {
       })
 
       // 닉네임이 변경됐을 수도 있으므로 리이슈를 통해 jwt 토큰 갱신
-      await fetch("/api/reissue")
+      await fetch("/api/reissue", {
+        method: "POST",
+      })
 
       router.replace(`/profile/${variables.memberId}`)
     },
