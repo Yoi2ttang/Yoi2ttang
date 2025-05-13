@@ -83,29 +83,4 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 .groupBy(tile.zodiacId)
                 .fetch();
     }
-
-    @Override
-    public List<TileTeamSituationResponse> getTileSituation() {
-        NumberPath<Long> count = Expressions.numberPath(Long.class, "count");
-        NumberPath<Integer> rank = Expressions.numberPath(Integer.class, "rank");
-
-        return queryFactory.select(
-                Projections.constructor(
-                        TileTeamSituationResponse.class,
-                        Expressions.numberTemplate(
-                                Integer.class,
-                                "RANK() OVER (ORDER BY COUNT(*) DESC)"
-                        ).as(rank),
-                        tile.zodiacId,
-                        tile.zodiacId.count().as(count)
-                )
-        )
-                .from(tile)
-                .where(tile.zodiacId.isNotNull())
-                .groupBy(tile.zodiacId)
-                .orderBy(count.desc())
-                .fetch();
-    }
-
-
 }
