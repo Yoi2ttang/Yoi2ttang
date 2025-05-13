@@ -102,18 +102,17 @@ public class LoginService {
                     .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
             String tokenNickname = jwtUtil.getClaim(accessToken, "nickname", String.class);
+            String tokenZodiacName = jwtUtil.getClaim(accessToken, "zodiacTeam", String.class);
 
             if (member.getNickname().equals(tokenNickname)) {
                 return accessToken; // nickname 동일 재발급 불필요
             }
 
-            // nickname 변경됨  재발급
-            ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
             JwtRequest jwtRequest = new JwtRequest(
                     member.getMemberId(),
                     member.getNickname(),
                     member.getZodiacId(),
-                    zodiacName.toString()
+                    tokenZodiacName
             );
             return jwtUtil.reissueAccessToken(jwtRequest);
         }

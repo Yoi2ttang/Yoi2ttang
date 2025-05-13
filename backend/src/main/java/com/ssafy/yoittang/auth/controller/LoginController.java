@@ -72,7 +72,6 @@ public class LoginController {
         return ResponseEntity.ok(loginService.getLoginClientResponse(loginResponse));
     }
 
-    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/reissue")
     public ResponseEntity<AccessTokenResponse> reissueToken(
             @CookieValue("refresh-token") String refreshToken,
