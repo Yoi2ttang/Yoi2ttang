@@ -3,9 +3,7 @@ import apiClient from "@/lib/http-common"
 import {
   FollowListRequest,
   MemberAutocompleteRequest,
-  MemberAutocompleteResponse,
   MemberSearchRequest,
-  MembersResponse,
   ProfileForEditRequest,
   ProfileForEditResponse,
   ProfileResponse,
@@ -58,17 +56,14 @@ export const patchFollow = async (targetId: number) => {
 export const getUserNicknames = async ({
   keyword,
   pageToken,
-}: MemberAutocompleteRequest): Promise<MemberAutocompleteResponse> => {
+}: MemberAutocompleteRequest) => {
   return await apiClient.get(
     `/members/autocomplete?keyword=${keyword}&pageToken=${pageToken}`,
   )
 }
 
 // 키워드에 맞는 유저 조회
-export const getUsers = async ({
-  keyword,
-  pageToken,
-}: MemberSearchRequest): Promise<MembersResponse> => {
+export const getUsers = async ({ keyword, pageToken }: MemberSearchRequest) => {
   return await apiClient.get(
     `/members/search?keyword=${keyword}&pageToken=${pageToken}`,
   )

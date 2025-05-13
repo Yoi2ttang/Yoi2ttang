@@ -1,8 +1,8 @@
 "use client"
 
+import Input from "@/components/common/Input"
 import { SearchIcon } from "lucide-react"
-import { useState } from "react"
-import Input from "./Input"
+import { usePathname, useRouter } from "next/navigation"
 
 interface SearchBarProps {
   placeholder?: string
@@ -10,48 +10,30 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ placeholder, className }: SearchBarProps) => {
-  const [isFocused, setIsFocused] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.currentTarget)
+    const keyword = formData.get("search")?.toString()
+    if (!keyword) {
+      return
+    }
+
+    router.replace(`${pathname}?keyword=${keyword}`)
+  }
 
   return (
-    <div className="relative">
+    <form onSubmit={handleSubmit}>
       <Input
+        name="search"
         Icon={<SearchIcon />}
         placeholder={placeholder}
         className={className}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       />
-
-      {isFocused && (
-        <div className="absolute top-full mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white p-4 shadow-md">
-          <p
-            className="cursor-pointer"
-            onMouseDown={() => console.log("타이거JK 선택됨.")}>
-            타이거JK
-          </p>
-          <p
-            className="cursor-pointer"
-            onMouseDown={() => console.log("타이거JJ 선택됨.")}>
-            타이거JJ
-          </p>
-          <p
-            className="cursor-pointer"
-            onMouseDown={() => console.log("타이거JJ 선택됨.")}>
-            타이거JJ
-          </p>
-          <p
-            className="cursor-pointer"
-            onMouseDown={() => console.log("타이거JJ 선택됨.")}>
-            타이거JJ
-          </p>
-          <p
-            className="cursor-pointer"
-            onMouseDown={() => console.log("타이거JJ 선택됨.")}>
-            타이거JJ
-          </p>
-        </div>
-      )}
-    </div>
+    </form>
   )
 }
 
