@@ -29,6 +29,7 @@ export interface ZodiacContributionRankingResponse {
 
 export interface TeamRankingResponse {
   tileTeamSituationResponseList: TeamRanking[]
+  myTeamRanking: number | null
 }
 
 export interface MyTeamInfoResponse {
