@@ -12,7 +12,7 @@ interface TeamsContributionPageProps {
 const TeamsContributionPage = ({ params }: TeamsContributionPageProps) => {
   const { teamId } = use(params)
   // TODO: teamId 기준 팀 기여도 데이터 가져오기
-  const { data, isSuccess } = use(getZodiacContributionRanking(teamId))
+  const { data, isSuccess } = use(getZodiacContributionRanking(+teamId))
 
   const userContributionList = isSuccess
     ? data.pageInfoArgs.data.length > 0

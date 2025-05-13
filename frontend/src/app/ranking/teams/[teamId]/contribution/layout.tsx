@@ -1,5 +1,6 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
-import { use, type ReactNode } from "react"
+import TeamsContributionSkeleton from "@/components/ranking/TeamsContributionSkeleton"
+import { Suspense, use, type ReactNode } from "react"
 
 interface TeamsContributionLayoutProps {
   children: ReactNode
@@ -21,7 +22,9 @@ const TeamsContributionLayout = ({
         align="left"
         description="12시 기준"
       />
-      <div className="px-4">{children}</div>
+      <div className="px-4">
+        <Suspense fallback={<TeamsContributionSkeleton />}>{children}</Suspense>
+      </div>
     </div>
   )
 }
