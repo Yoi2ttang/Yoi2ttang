@@ -1,18 +1,20 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import MyTeamCard from "@/components/ranking/MyTeamCard"
 import RankingCard from "@/components/ranking/RankingCard"
+import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
 import { getTeamRanking } from "@/services/ranking/api"
 import { use } from "react"
 
 interface TeamsRankingPageProps {}
 
 const TeamsRankingPage = ({}: TeamsRankingPageProps) => {
+  const { zodiacId } = use(getPayloadOrRedirect())
   const { data } = use(getTeamRanking())
 
-  const { tileTeamSituationResponseList, myTeamRanking } = data
+  const { tileTeamSituationResponseList } = data
 
   const myTeam = tileTeamSituationResponseList?.find(
-    (team) => team.rank === myTeamRanking,
+    (team) => team.zodiacId === Number(zodiacId),
   )
 
   return (
