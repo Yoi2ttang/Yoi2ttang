@@ -3,6 +3,7 @@ package com.ssafy.yoittang.course.presentation;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,10 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getBookmarkCourse(member));
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<Void> createCourse(
             @RequestPart("courseCreateRequest") CourseCreateRequest courseCreateRequest,
             @RequestPart("courseImage") MultipartFile courseImage,
@@ -72,5 +76,14 @@ public class CourseController {
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getRecommendCourse(member));
+    }
+
+    @GetMapping
+    public ResponseEntity<PageInfo<CourseSummaryResponse>> getCourseByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getCourseByKeyword(keyword, pageToken));
     }
 }

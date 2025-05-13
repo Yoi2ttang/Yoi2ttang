@@ -136,6 +136,10 @@ public class CourseService {
         return nearbyCourses.stream().limit(10).toList();
     }
 
+    public PageInfo<CourseSummaryResponse> getCourseByKeyword(String keyword, String pageToken) {
+        return courseRepository.findCourseByKeyword(keyword, pageToken);
+    }
+
     private double estimateMetFromPace(double paceMinPerKm) {
         if (paceMinPerKm <= 4.5) {
             return 12.8; // 매우 빠른 달리기 (13~14.5 km/h)

@@ -90,4 +90,13 @@ public class CourseRepository {
                 maxDistance
         );
     }
+
+    public PageInfo<CourseSummaryResponse> findCourseByKeyword(String keyword, String pageToken) {
+        var data = courseQueryRepository.findCourseByKeyword(
+                keyword,
+                pageToken,
+                DEFAULT_PAGE_SIZE
+        );
+        return PageInfo.of(data, DEFAULT_PAGE_SIZE, CourseSummaryResponse::courseId);
+    }
 }
