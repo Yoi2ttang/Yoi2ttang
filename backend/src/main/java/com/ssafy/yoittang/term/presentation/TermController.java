@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("term")
+@RequestMapping("terms")
 public class TermController {
 
     private final TermService termService;

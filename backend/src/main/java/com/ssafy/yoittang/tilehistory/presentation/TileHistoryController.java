@@ -10,7 +10,7 @@ import com.ssafy.yoittang.common.scheduler.MidnightScheduler;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("tile-history")
+@RequestMapping("tile-histories")
 @RequiredArgsConstructor
 public class TileHistoryController {
 

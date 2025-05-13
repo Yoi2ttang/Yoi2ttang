@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dashboard/member")
+@RequestMapping("/dashboards/members")
 public class MemberDashboardController {
     private final MemberDashboardService memberDashboardService;
 
@@ -49,7 +49,7 @@ public class MemberDashboardController {
         return ResponseEntity.ok(memberDashboardService.getMonthRunningTimes(member, year, month));
     }
 
-    @GetMapping("/daily-tiles-count")
+    @GetMapping("/daily-tiles-counts")
     public ResponseEntity<List<MemberDailyTileResponse>> getMonthTiles(
             @RequestParam(name = "year") Integer year,
             @RequestParam(name = "month") Integer month,
@@ -58,7 +58,7 @@ public class MemberDashboardController {
         return ResponseEntity.ok(memberDashboardService.getMonthTiles(member, year, month));
     }
 
-    @GetMapping("/daily-course")
+    @GetMapping("/daily-courses")
     public ResponseEntity<List<MemberDailyCompleteCourseResponse>> getMonthCompleteCourse(
             @RequestParam(name = "year") Integer year,
             @RequestParam(name = "month") Integer month,
@@ -67,7 +67,7 @@ public class MemberDashboardController {
         return ResponseEntity.ok(memberDashboardService.getMonthCompleteCourse(member, year, month));
     }
 
-    @GetMapping("/tile-change")
+    @GetMapping("/tile-changes")
     public ResponseEntity<TileChangeRateResponse> getTileChangeRate(
             @RequestParam(name = "period") TileChangePeriod period,
             @AuthMember Member member) {

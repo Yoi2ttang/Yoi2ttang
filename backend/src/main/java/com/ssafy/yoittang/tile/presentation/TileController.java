@@ -43,7 +43,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/team")
+    @GetMapping("/teams")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @RequestParam Double lat,
             @RequestParam Double lng
@@ -51,7 +51,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTile(lat, lng));
     }
 
-    @GetMapping("/team/{zodiacId}")
+    @GetMapping("/teams/{zodiacId}")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @PathVariable(name = "zodiacId") Long zodiacId,
             @RequestParam Double lat,
@@ -60,7 +60,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTile(zodiacId, lat, lng));
     }
 
-    @GetMapping("/team/cluster")
+    @GetMapping("/teams/cluster")
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
         @RequestParam Double lat,
         @RequestParam Double lng,
@@ -69,7 +69,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
     }
 
-    @GetMapping("/team/cluster/{zodiacId}")
+    @GetMapping("/teams/cluster/{zodiacId}")
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
             @PathVariable Long zodiacId,
             @RequestParam Double lat,
@@ -79,7 +79,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTileCluster(zodiacId, lat, lng, zoomLevel));
     }
 
-    @GetMapping("team/{zodiacId}/situation")
+    @GetMapping("teams/{zodiacId}/situation")
     public ResponseEntity<TileSituationResponse> getTileSituation(
             @PathVariable Long zodiacId
     ) {
@@ -87,7 +87,7 @@ public class TileController implements TileControllerSwaggerDoc {
     }
 
 
-    @GetMapping("/member/{memberId}")
+    @GetMapping("/members/{memberId}")
     public ResponseEntity<PersonalTileGetResponseWrapper> getTile(
             @PathVariable(name = "memberId") Long memberId,
             @RequestParam Double lat,
@@ -111,7 +111,7 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTeamRanking());
     }
 
-    @GetMapping("/rankings/preview")
+    @GetMapping("/rankings/previews")
     public ResponseEntity<TilePreviewResponse> getRankingPreview(
             @RequestParam(required = false) Long zodiacId,
             @RequestParam(required = false, defaultValue = "3") Integer limit
