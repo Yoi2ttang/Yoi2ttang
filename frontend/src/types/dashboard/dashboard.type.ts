@@ -63,7 +63,7 @@ export interface TileMapResponse {
 // 팀 활동량 변화 요청 타입
 export interface TeamActivityChangeRequest {
   zodiacId: number
-  startDate: string
+  startDate: string // "2025-05-01"
   endDate: string
   period: "DAY" | "WEEK" | "MONTH" | "YEAR"
   order: "ASC" | "DESC"
@@ -72,7 +72,7 @@ export interface TeamActivityChangeRequest {
 // 팀 활동량 변화 응답 타입
 export interface TeamActivityChangeResponse {
   zodiacId: number
-  tookTileHistoryGroupByPeriodList: {
+  pointList: {
     count: number
     date: string
   }[]

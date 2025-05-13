@@ -67,11 +67,14 @@ export const getTileChangeRate = async (params: {
 
 // 5. 우리팀 활동량 변화
 export const getTeamActivityChange = async (
-  params?: TeamActivityChangeRequest,
+  params: TeamActivityChangeRequest,
 ) => {
   const nextApiClient = await getApiServer()
 
-  return nextApiClient.get<TeamActivityChangeResponse>("/took-tile-histories", {
-    params: params ? { ...params } : undefined,
-  })
+  return nextApiClient.get<TeamActivityChangeResponse>(
+    "/dashboards/teams/courses",
+    {
+      params: params ? { ...params } : undefined,
+    },
+  )
 }
