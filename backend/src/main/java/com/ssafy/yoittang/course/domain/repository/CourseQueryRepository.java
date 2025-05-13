@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
-import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
-import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 
 public interface CourseQueryRepository {
     List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId);
@@ -15,7 +14,7 @@ public interface CourseQueryRepository {
 
     CourseSummaryResponse findCourseByCourseId(Long courseId);
 
-    List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
+    List<CoursePointResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate

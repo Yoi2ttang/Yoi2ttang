@@ -2,8 +2,7 @@ package com.ssafy.yoittang.dashboard.domain.dto.response;
 
 import java.time.LocalDate;
 
-public record MemberDailyCompleteCourseResponse(
+public record CoursePointResponse(
         LocalDate date,
-        Integer completeCourseCount
-) {
-}
+        Integer count
+) { }

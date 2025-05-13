@@ -18,7 +18,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
-import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 import com.ssafy.yoittang.running.domain.State;
 
 import lombok.RequiredArgsConstructor;
@@ -80,7 +80,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     }
 
     @Override
-    public List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
+    public List<CoursePointResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
@@ -90,9 +90,9 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                MemberDailyCompleteCourseResponse.class,
-                                runningDate.as("date"),
-                                running.count().intValue().as("completeCourseCount")
+                                CoursePointResponse.class,
+                                runningDate.as("time"),
+                                running.count().intValue().as("count")
                         )
                 )
                 .from(running)

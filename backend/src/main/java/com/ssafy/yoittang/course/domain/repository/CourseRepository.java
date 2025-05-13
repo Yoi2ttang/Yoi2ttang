@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
-import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
-import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +39,7 @@ public class CourseRepository {
         return courseQueryRepository.findCourseByCourseId(courseId);
     }
 
-    public List<MemberDailyCompleteCourseResponse> findDailyCompletedCourseCountsByMemberId(
+    public List<CoursePointResponse> findDailyCompletedCourseCountsByMemberId(
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
