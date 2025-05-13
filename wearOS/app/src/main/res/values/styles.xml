@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="MainActivityTheme.Starting" parent="@android:style/Theme.DeviceDefault" />
+</resources>
