@@ -40,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
@@ -80,7 +80,7 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/following")
+    @GetMapping("/followings")
     public ResponseEntity<PageInfo<FollowingResponse>> getFollowingList(
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
@@ -88,7 +88,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getFollowingList(pageToken, member));
     }
 
-    @GetMapping("/follower")
+    @GetMapping("/followers")
     public ResponseEntity<PageInfo<FollowerResponse>> getFollowerList(
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
@@ -96,7 +96,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getFollowerList(pageToken, member));
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profiles")
     public ResponseEntity<MemberProfileResponse> getMemberProfile(
             @RequestParam(value = "nickname") String nickname,
             @AuthMember Member member
@@ -110,7 +110,7 @@ public class MemberController {
     }
 
     @PatchMapping(
-            value = "/profile",
+            value = "/profiles",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -123,7 +123,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/profile/edit")
+    @GetMapping("/profiles/edit")
     public ResponseEntity<MyProfileEditResponse> getProfileEdit(@AuthMember Member member) {
         return ResponseEntity.ok(memberService.getProfileEdit(member));
     }

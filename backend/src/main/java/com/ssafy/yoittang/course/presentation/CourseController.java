@@ -25,12 +25,12 @@ import com.ssafy.yoittang.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/course")
+@RequestMapping("/courses")
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
 
-    @GetMapping("/bookmark")
+    @GetMapping("/bookmarks")
     public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(
             @AuthMember Member member
     ) {
@@ -67,7 +67,7 @@ public class CourseController {
         ));
     }
 
-    @GetMapping("/recommend")
+    @GetMapping("/recommends")
     public ResponseEntity<List<CourseSummaryResponse>> getRecommendCourse(
             @AuthMember Member member
     ) {

@@ -13,7 +13,7 @@ import com.ssafy.yoittang.tooktilehistory.domain.dto.resquest.TookTileHistoryGro
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("took-tile-history")
+@RequestMapping("took-tile-histories")
 @RestController
 @RequiredArgsConstructor
 public class TookTileHistoryController {

@@ -25,7 +25,7 @@ import com.ssafy.yoittang.runningpoint.domain.dto.reseponse.RunningPointCreateRe
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("running")
+@RequestMapping("runnings")
 @RequiredArgsConstructor
 public class RunningController implements RunningControllerSwaggerDoc {
 
@@ -41,7 +41,7 @@ public class RunningController implements RunningControllerSwaggerDoc {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/challenge")
+    @PostMapping("/challenges")
     public ResponseEntity<RunningCreateResponse> createChallengeRunning(
             @Valid @RequestBody ChallengeRunningCreateRequest challengeRunningCreateRequest,
             @AuthMember Member loginMember
@@ -65,7 +65,7 @@ public class RunningController implements RunningControllerSwaggerDoc {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/location")
+    @PostMapping("/locations")
     public ResponseEntity<RunningPointCreateResponse> createCoordinate(
             @Valid @RequestBody RunningPointCreateRequest runningPointCreateRequest,
             @AuthMember Member loginMember
