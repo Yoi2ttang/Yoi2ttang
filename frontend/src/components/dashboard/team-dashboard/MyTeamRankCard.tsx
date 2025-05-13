@@ -1,6 +1,5 @@
 import Badge from "@/components/common/Badge"
-import { animalIconMap } from "@/constants/animals"
-import { AnimalType } from "@/types/animal"
+import { animalMetaData, animalNumberMap } from "@/constants/animals"
 import DashboardCard from "../DashboardCard"
 
 interface MyTeamRankCardProps {
@@ -9,13 +8,14 @@ interface MyTeamRankCardProps {
     teamName: string
     rank: number
     tileCount: number
-    zodiac: AnimalType
+    zodiacId: number
   }
 }
 
 const MyTeamRankCard = ({ teamInfo }: MyTeamRankCardProps) => {
-  const { teamName, rank, tileCount, zodiac } = teamInfo
-  const AnimalIcon = animalIconMap[zodiac]
+  const { teamName, rank, tileCount, zodiacId } = teamInfo
+  const zodiacName = animalNumberMap[zodiacId]
+  const AnimalIcon = animalMetaData[zodiacName].icon
   return (
     <DashboardCard className="bg-yoi-400 flex flex-col gap-4 rounded-xl">
       <div className="flex items-center justify-between">

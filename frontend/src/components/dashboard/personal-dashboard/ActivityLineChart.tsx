@@ -4,8 +4,6 @@ import { ChartData, ChartOptions } from "chart.js"
 import type { FC } from "react"
 import { Line } from "react-chartjs-2"
 
-interface ActivityLineChartProps {}
-
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -15,6 +13,7 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js"
+import { TeamActivityChangeResponse } from "@/types/dashboard/dashboard.type"
 
 ChartJS.register(
   CategoryScale, // 범주 차트
@@ -25,14 +24,21 @@ ChartJS.register(
   Legend, // 범례
 )
 
-const ActivityLineChart: FC<ActivityLineChartProps> = ({}) => {
-  const label = ["4.27", "4.28", "4.29", "4.30", "5.1", "5.2"]
+interface ActivityLineChartProps {
+  activityData: TeamActivityChangeResponse["tookTileHistoryGroupByPeriodList"]
+}
+
+const ActivityLineChart: FC<ActivityLineChartProps> = ({ activityData }) => {
+  const label = activityData?.map((item) => {
+    const date = item.date.split("-")
+    return `${date[1]}. ${date[2]}`
+  })
   const data = {
     labels: label,
     datasets: [
       {
         label: "점령한 타일",
-        data: [1, 4, 5, 4, 3, 5],
+        data: activityData?.map((item) => item.count),
         borderColor: "#ffac9d",
         fill: true,
         tension: 0.4, // 선 곡률

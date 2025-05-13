@@ -32,8 +32,8 @@ export type LoginResponse = {
 export interface Payload {
   sub: string
   nickname: string
-  zordiacId: string
-  zordiacTeam: string
+  zodiacId: string
+  zodiacTeam: string
   iat: number
   exp: number
 }

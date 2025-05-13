@@ -20,7 +20,7 @@ import Tiger from "@/assets/icons/animals/tiger-icon.svg"
 import { FC, SVGProps } from "react"
 
 interface AnimalMetaDataType {
-  id: number
+  id: string
   en: AnimalType
   icon: FC<SVGProps<SVGSVGElement>>
   teamName: string
@@ -28,9 +28,9 @@ interface AnimalMetaDataType {
   textColor: string
 }
 
-const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
+export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
   MONKEY: {
-    id: 0,
+    id: "0",
     en: "MONKEY",
     icon: Monkey,
     teamName: "원숭이",
@@ -38,7 +38,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-monkey",
   },
   CHICKEN: {
-    id: 1,
+    id: "1",
     en: "CHICKEN",
     icon: Chicken,
     teamName: "닭",
@@ -46,7 +46,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-chicken",
   },
   DOG: {
-    id: 2,
+    id: "2",
     en: "DOG",
     icon: Dog,
     teamName: "개",
@@ -54,7 +54,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-dog",
   },
   PIG: {
-    id: 3,
+    id: "3",
     en: "PIG",
     icon: Pig,
     teamName: "돼지",
@@ -62,7 +62,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-pig",
   },
   MOUSE: {
-    id: 4,
+    id: "4",
     en: "MOUSE",
     icon: Mouse,
     teamName: "쥐",
@@ -70,7 +70,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-mouse",
   },
   COW: {
-    id: 5,
+    id: "5",
     en: "COW",
     icon: Cow,
     teamName: "소",
@@ -78,7 +78,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-cow",
   },
   TIGER: {
-    id: 6,
+    id: "6",
     en: "TIGER",
     icon: Tiger,
     teamName: "호랑이",
@@ -86,7 +86,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-tiger",
   },
   RABBIT: {
-    id: 7,
+    id: "7",
     en: "RABBIT",
     icon: Rabbit,
     teamName: "토끼",
@@ -94,7 +94,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-rabbit",
   },
   DRAGON: {
-    id: 8,
+    id: "8",
     en: "DRAGON",
     icon: Dragon,
     teamName: "용",
@@ -102,7 +102,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-dragon",
   },
   SNAKE: {
-    id: 9,
+    id: "9",
     en: "SNAKE",
     icon: Snake,
     teamName: "뱀",
@@ -110,7 +110,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-snake",
   },
   HORSE: {
-    id: 10,
+    id: "10",
     en: "HORSE",
     icon: Horse,
     teamName: "말",
@@ -118,7 +118,7 @@ const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-horse",
   },
   SHEEP: {
-    id: 11,
+    id: "11",
     en: "SHEEP",
     icon: Sheep,
     teamName: "양",
@@ -187,19 +187,19 @@ export const textClassMap: Record<AnimalType, string> = {
   PIG: animalMetaData.PIG.textColor,
 } as const
 
-export const animalNumberMap: Record<number, AnimalType> = {
-  0: animalMetaData.MONKEY.en,
-  1: animalMetaData.CHICKEN.en,
-  2: animalMetaData.DOG.en,
-  3: animalMetaData.PIG.en,
-  4: animalMetaData.MOUSE.en,
-  5: animalMetaData.COW.en,
-  6: animalMetaData.TIGER.en,
-  7: animalMetaData.RABBIT.en,
-  8: animalMetaData.DRAGON.en,
-  9: animalMetaData.SNAKE.en,
-  10: animalMetaData.HORSE.en,
-  11: animalMetaData.SHEEP.en,
+export const animalNumberMap: Record<string, AnimalType> = {
+  "0": animalMetaData.MONKEY.en,
+  "1": animalMetaData.CHICKEN.en,
+  "2": animalMetaData.DOG.en,
+  "3": animalMetaData.PIG.en,
+  "4": animalMetaData.MOUSE.en,
+  "5": animalMetaData.COW.en,
+  "6": animalMetaData.TIGER.en,
+  "7": animalMetaData.RABBIT.en,
+  "8": animalMetaData.DRAGON.en,
+  "9": animalMetaData.SNAKE.en,
+  "10": animalMetaData.HORSE.en,
+  "11": animalMetaData.SHEEP.en,
 } as const
 
 export const sizeClassMap: Record<
