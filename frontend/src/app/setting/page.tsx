@@ -8,7 +8,6 @@ const SettingPage = () => {
 
       <div className="flex flex-col gap-6 p-4">
         <AccountManagementSection />
-        <AccountManagementSection />
       </div>
     </div>
   )
