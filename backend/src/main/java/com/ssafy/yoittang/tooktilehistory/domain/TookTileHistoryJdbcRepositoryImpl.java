@@ -3,8 +3,9 @@ package com.ssafy.yoittang.tooktilehistory.domain;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 
 import lombok.RequiredArgsConstructor;
 
