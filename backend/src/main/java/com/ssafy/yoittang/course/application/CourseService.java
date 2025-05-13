@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.yoittang.common.aws.S3ImageUploader;
 import com.ssafy.yoittang.common.model.PageInfo;
+import com.ssafy.yoittang.course.domain.BookmarkViewType;
 import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.Location;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
@@ -39,8 +40,12 @@ public class CourseService {
 
     private static final double DISTANCE_THRESHOLD_KM = 10.0;
 
-    public List<CourseSummaryResponse> getBookmarkCourse(Member member) {
-        return courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId());
+    public List<CourseSummaryResponse> getBookmarkCourse(BookmarkViewType type, Member member) {
+        if (type.equals(BookmarkViewType.ALL)) {
+            return courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId(), null);
+        } else {
+            return courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId(), 4);
+        }
     }
 
     //추후 로직 수정 예정
