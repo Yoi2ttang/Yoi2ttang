@@ -27,7 +27,9 @@ const ProfileSettingPage = () => {
   const { mutate: edit } = useEditProfile()
 
   const handleEdit = () => {
-    edit(profileData)
+    if (data?.memberId) {
+      edit({ data: profileData, memberId: data.memberId })
+    }
   }
 
   useEffect(() => {

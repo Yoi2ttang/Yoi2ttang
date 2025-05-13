@@ -8,16 +8,24 @@ const useEditProfile = () => {
   const router = useRouter()
 
   return useMutation({
-    mutationFn: (data: ProfileForEditRequest) => updateProfile(data),
+    mutationFn: ({
+      data,
+      memberId,
+    }: {
+      data: ProfileForEditRequest
+      memberId: number
+    }) => updateProfile(data),
     mutationKey: ["edit-profile"],
-    onSuccess: (_, variables) => {
+    onSuccess: async (_, variables) => {
       // 이후 프로필 편집 페이지 진입 시, 새롭게 리패치하도록 무효화
       queryClient.invalidateQueries({
         queryKey: ["profile-for-edit"],
       })
 
-      router.replace(`/profile/${variables.memberUpdateRequest.nickname}`)
-      router.refresh()
+      // 닉네임이 변경됐을 수도 있으므로 리이슈를 통해 jwt 토큰 갱신
+      await fetch("/api/reissue")
+
+      router.replace(`/profile/${variables.memberId}`)
     },
   })
 }
