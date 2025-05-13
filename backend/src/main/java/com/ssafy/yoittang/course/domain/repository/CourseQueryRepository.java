@@ -38,4 +38,10 @@ public interface CourseQueryRepository {
             double minDistance,
             double maxDistance
     );
+
+    List<CourseSummaryResponse> findCourseByKeyword(
+            String keyword,
+            String pageToken,
+            int pageSize
+    );
 }

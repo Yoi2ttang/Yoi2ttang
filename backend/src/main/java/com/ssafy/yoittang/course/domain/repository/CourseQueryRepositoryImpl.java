@@ -200,6 +200,27 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .fetch();
     }
 
+    @Override
+    public List<CourseSummaryResponse> findCourseByKeyword(String keyword, String pageToken, int pageSize) {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                CourseSummaryResponse.class,
+                                course.courseId,
+                                course.courseName,
+                                course.distance,
+                                course.courseImageUrl
+                        )
+                )
+                .from(course)
+                .where(isInRange(pageToken),
+                        keywordContains(keyword)
+                )
+                .orderBy(course.courseId.asc())
+                .limit(pageSize + 1)
+                .fetch();
+    }
+
     private BooleanExpression keywordContains(String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return null;
