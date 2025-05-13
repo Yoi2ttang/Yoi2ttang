@@ -42,7 +42,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         course.courseImageUrl
                 ))
                 .from(courseBookmark)
-                .join(course).on(courseBookmark.courseId.eq(courseBookmark.courseId))
+                .join(course).on(course.courseId.eq(courseBookmark.courseId))
                 .where(courseBookmark.memberId.eq(memberId));
 
         Optional.ofNullable(limit).ifPresent(query::limit);
