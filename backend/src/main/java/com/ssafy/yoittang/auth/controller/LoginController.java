@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.auth.controller;
 
+
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.service.LoginService;
 import com.ssafy.yoittang.member.application.MemberService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,13 +72,14 @@ public class LoginController {
         return ResponseEntity.ok(loginService.getLoginClientResponse(loginResponse));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/reissue")
     public ResponseEntity<AccessTokenResponse> reissueToken(
             @CookieValue("refresh-token") String refreshToken,
             @RequestHeader("Authorization") String authHeader
     ) {
-        String reisuuedToken = loginService.reissueAccessToken(refreshToken, authHeader);
-        return ResponseEntity.ok(new AccessTokenResponse(reisuuedToken));
+        String reissuedToken = loginService.reissueAccessToken(refreshToken, authHeader);
+        return ResponseEntity.ok(new AccessTokenResponse(reissuedToken));
     }
 
     @PostMapping("/logout")
