@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.dashboard.application.MemberDashboardService;
 import com.ssafy.yoittang.dashboard.domain.TileChangePeriod;
-import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberCoursePoints;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyRunningTimeResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
@@ -59,7 +59,7 @@ public class MemberDashboardController {
     }
 
     @GetMapping("/daily-courses")
-    public ResponseEntity<List<MemberDailyCompleteCourseResponse>> getMonthCompleteCourse(
+    public ResponseEntity<MemberCoursePoints> getMonthCompleteCourse(
             @RequestParam(name = "year") Integer year,
             @RequestParam(name = "month") Integer month,
             @AuthMember Member member

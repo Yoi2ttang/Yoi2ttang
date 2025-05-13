@@ -19,13 +19,13 @@ public interface TileRepository extends JpaRepository<Tile, Long>, TileJdbcRepos
             UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
         )
         SELECT
-            zl.zodiac_id AS zodiacId,
-            COUNT(t.zodiac_id) AS count,
-            RANK() OVER (ORDER BY COUNT(t.zodiac_id) DESC) AS rank
+            CAST(RANK() OVER (ORDER BY COUNT(t.zodiac_id) DESC) AS INT) AS rank,
+            CAST(zl.zodiac_id AS BIGINT)                                AS zodiacId,
+            CAST(COUNT(t.zodiac_id) AS BIGINT)                          AS tileCount
         FROM zodiac_list zl
         LEFT JOIN tiles t ON zl.zodiac_id = t.zodiac_id
         GROUP BY zl.zodiac_id
-        ORDER BY count DESC, zodiacId ASC
+        ORDER BY tileCount DESC, zodiacId ASC
         """,
             nativeQuery = true
     )

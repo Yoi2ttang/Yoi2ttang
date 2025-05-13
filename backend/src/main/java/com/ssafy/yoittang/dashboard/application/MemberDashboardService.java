@@ -15,8 +15,9 @@ import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.dashboard.domain.ChangeDirection;
 import com.ssafy.yoittang.dashboard.domain.TileChangePeriod;
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.DateAndSeconds;
-import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyCompleteCourseResponse;
+import com.ssafy.yoittang.dashboard.domain.dto.response.MemberCoursePoints;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyDistanceResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyRunningTimeResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
@@ -100,9 +101,14 @@ public class MemberDashboardService {
         return tileHistoryRepository.findDailyTileCountsByMemberId(member.getMemberId(), times[0], times[1]);
     }
 
-    public List<MemberDailyCompleteCourseResponse> getMonthCompleteCourse(Member member, int year, int month) {
+    public MemberCoursePoints getMonthCompleteCourse(Member member, int year, int month) {
         LocalDateTime[] times = getValidMonthlyDateRange(year, month);
-        return courseRepository.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), times[0], times[1]);
+        List<CoursePointResponse> pointList
+                = courseRepository.findDailyCompletedCourseCountsByMemberId(member.getMemberId(), times[0], times[1]);
+
+        return MemberCoursePoints.builder()
+                .pointList(pointList)
+                .build();
     }
 
 

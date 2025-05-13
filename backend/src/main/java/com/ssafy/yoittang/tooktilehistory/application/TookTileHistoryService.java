@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 import com.ssafy.yoittang.tooktilehistory.domain.TookTileHistoryRepository;
-import com.ssafy.yoittang.tooktilehistory.domain.dto.response.TookTileHistoryGroupByPeriod;
 import com.ssafy.yoittang.tooktilehistory.domain.dto.response.TookTileHistoryResponse;
 import com.ssafy.yoittang.tooktilehistory.domain.dto.resquest.TookTileHistoryGroupByPeriodRequest;
 
@@ -20,8 +20,8 @@ public class TookTileHistoryService {
     public TookTileHistoryResponse getTookTileHistoryByGroupByPeriod(
             TookTileHistoryGroupByPeriodRequest tookTileHistoryGroupByPeriodRequest
     ) {
-        List<TookTileHistoryGroupByPeriod> tookTileHistoryGroupByPeriodList
-                = tookTileHistoryRepository.getTookTileHistoryGroupByPeriod(
+        List<CoursePointResponse> pointList
+                = tookTileHistoryRepository.getTookTileHistoryGroupByPeriodJdbc(
                     tookTileHistoryGroupByPeriodRequest.zodiacId(),
                     tookTileHistoryGroupByPeriodRequest.startDate(),
                     tookTileHistoryGroupByPeriodRequest.endDate(),
@@ -31,7 +31,7 @@ public class TookTileHistoryService {
 
         return TookTileHistoryResponse.builder()
                 .zodiacId(tookTileHistoryGroupByPeriodRequest.zodiacId())
-                .tookTileHistoryGroupByPeriodList(tookTileHistoryGroupByPeriodList)
+                .pointList(pointList)
                 .build();
     }
 

@@ -13,14 +13,14 @@ import com.ssafy.yoittang.tooktilehistory.domain.dto.resquest.TookTileHistoryGro
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("took-tile-histories")
+@RequestMapping("dashboards/teams")
 @RestController
 @RequiredArgsConstructor
 public class TookTileHistoryController {
 
     private final TookTileHistoryService tookTileHistoryService;
 
-    @GetMapping
+    @GetMapping("/courses")
     public ResponseEntity<TookTileHistoryResponse> getTookTileHistoryGroupByPeriod(
             @Valid TookTileHistoryGroupByPeriodRequest tookTileHistoryGroupByPeriodRequest
     ) {
