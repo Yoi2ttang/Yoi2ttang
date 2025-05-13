@@ -1,4 +1,4 @@
-import { getFollowers } from "@/services/members/api"
+import { getFollowers } from "@/services/member/api"
 import { useParams } from "next/navigation"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { getUserNicknames } from "@/services/members/api"
+import { getUserNicknames } from "@/services/member/api"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 
 const useSearchNickname = (keyword: string) => {

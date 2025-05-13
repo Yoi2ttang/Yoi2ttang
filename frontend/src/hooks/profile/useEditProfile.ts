@@ -1,4 +1,4 @@
-import { updateProfile } from "@/services/members/api"
+import { updateProfile } from "@/services/member/api"
 import { ProfileForEditRequest } from "@/types/member"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"

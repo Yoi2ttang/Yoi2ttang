@@ -1,4 +1,4 @@
-import { getProfileForEdit } from "@/services/members/api"
+import { getProfileForEdit } from "@/services/member/api"
 import { useQuery } from "@tanstack/react-query"
 
 const useProfileForEdit = () => {

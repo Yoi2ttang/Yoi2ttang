@@ -1,4 +1,4 @@
-import { patchFollow, postFollow } from "@/services/members/api"
+import { patchFollow, postFollow } from "@/services/member/api"
 import { useMutation } from "@tanstack/react-query"
 
 interface UseFollowProps {

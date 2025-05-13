@@ -1,4 +1,4 @@
-import { getUsers } from "@/services/members/api"
+import { getUsers } from "@/services/member/api"
 import { useSearchParams } from "next/navigation"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 
