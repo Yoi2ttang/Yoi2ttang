@@ -1,5 +1,5 @@
-import { useRef, RefObject } from "react"
 import { Coordinates } from "@/types/map/navermaps"
+import { RefObject, useEffect, useRef } from "react"
 
 interface useMapMarkerProps {
   mapRef: RefObject<naver.maps.Map | null>
@@ -34,6 +34,18 @@ export const useMapMarker = ({ mapRef }: useMapMarkerProps) => {
       markerRef.current.setPosition(new naver.maps.LatLng(loc))
     }
   }
+
+  useEffect(() => {
+    // 현재 위치를 기반으로 마커 추가
+    if (mapRef.current) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        addMarker({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        })
+      })
+    }
+  }, [])
 
   return { addMarker }
 }
