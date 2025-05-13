@@ -29,7 +29,6 @@ import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberTempResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
-import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -80,28 +79,30 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/followings")
+    @GetMapping("/{targetId}/followings")
     public ResponseEntity<PageInfo<FollowingResponse>> getFollowingList(
+            @PathVariable("targetId") Long targetId,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(memberService.getFollowingList(pageToken, member));
     }
 
-    @GetMapping("/followers")
+    @GetMapping("/{targetId}/followers")
     public ResponseEntity<PageInfo<FollowerResponse>> getFollowerList(
+            @PathVariable("targetId") Long targetId,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(memberService.getFollowerList(pageToken, member));
     }
 
-    @GetMapping("/profiles")
+    @GetMapping("/{targetId}/profiles")
     public ResponseEntity<MemberProfileResponse> getMemberProfile(
-            @RequestParam(value = "nickname") String nickname,
+            @PathVariable("targetId") Long targetId,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getMemberProfile(nickname, member));
+        return ResponseEntity.ok(memberService.getMemberProfile(targetId, member));
     }
 
     @GetMapping("/me")

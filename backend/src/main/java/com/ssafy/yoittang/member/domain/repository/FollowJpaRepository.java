@@ -11,12 +11,14 @@ import com.ssafy.yoittang.member.domain.Follow;
 public interface FollowJpaRepository extends JpaRepository<Follow, Long>, FollowQueryRepository {
     boolean existsByFromMemberAndToMember(Long fromMember, Long toMember);
 
+    boolean existsByFromMemberAndToMemberAndIsActiveTrue(Long fromMember, Long toMember);
+
     void deleteByFromMemberAndToMember(Long fromMember, Long toMember);  // ✅ 올바른 필드명 사용
 
-    @Query("SELECT COUNT(f) FROM Follow f WHERE f.toMember = :targetId")
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.toMember = :targetId AND f.isActive = true")
     Integer countFollowers(@Param("targetId") Long targetId);
 
-    @Query("SELECT COUNT(f) FROM Follow f WHERE f.fromMember = :targetId")
+    @Query("SELECT COUNT(f) FROM Follow f WHERE f.fromMember = :targetId AND f.isActive = true")
     Integer countFollowings(@Param("targetId") Long targetId);
 
     Optional<Follow> findByFromMemberAndToMember(Long fromMember, Long toMember);

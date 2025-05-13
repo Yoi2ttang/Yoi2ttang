@@ -48,7 +48,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final int DEFAULT_AUTO_COMPLETE_SIZE = 5;
+    private static final int DEFAULT_AUTO_PROFILE_SIZE = 20;
 
     private final MemberRepository memberRepository;
     private final FollowJpaRepository followJpaRepository;
@@ -66,10 +67,10 @@ public class MemberService {
         List<MemberAutocompleteResponse> members = memberRepository.findAutocompleteMembersByKeyword(
                 keyword,
                 lastMemberId,
-                DEFAULT_PAGE_SIZE
+                DEFAULT_AUTO_COMPLETE_SIZE
         );
 
-        return PageInfo.of(members, DEFAULT_PAGE_SIZE, MemberAutocompleteResponse::memberId);
+        return PageInfo.of(members, DEFAULT_AUTO_COMPLETE_SIZE, MemberAutocompleteResponse::memberId);
     }
 
     public PageInfo<MemberSearchResponse> getMemberSearchList(String keyword, String pageToken, Member member) {
@@ -78,10 +79,10 @@ public class MemberService {
                 keyword,
                 lastMemberId,
                 member.getMemberId(),
-                DEFAULT_PAGE_SIZE
+                DEFAULT_AUTO_PROFILE_SIZE
         );
 
-        return PageInfo.of(members, DEFAULT_PAGE_SIZE, MemberSearchResponse::memberId);
+        return PageInfo.of(members, DEFAULT_AUTO_PROFILE_SIZE, MemberSearchResponse::memberId);
     }
 
     @Transactional
@@ -128,16 +129,16 @@ public class MemberService {
         List<Long> followingMemberIds = followJpaRepository.findFollowingMemberIds(
                 member.getMemberId(),
                 lastToId,
-                DEFAULT_PAGE_SIZE
+                DEFAULT_AUTO_PROFILE_SIZE
         );
 
         if (followingMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, FollowingResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowingResponse::memberId);
         }
 
         List<FollowingResponse> followingMembers = memberRepository.findFollowingByIds(followingMemberIds);
 
-        return PageInfo.of(followingMembers, DEFAULT_PAGE_SIZE, FollowingResponse::memberId);
+        return PageInfo.of(followingMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowingResponse::memberId);
 
     }
 
@@ -147,20 +148,20 @@ public class MemberService {
         List<Long> followerMemberIds = followJpaRepository.findFollowerMemberIds(
                 member.getMemberId(),
                 lastToId,
-                DEFAULT_PAGE_SIZE
+                DEFAULT_AUTO_PROFILE_SIZE
         );
 
         if (followerMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_PAGE_SIZE, FollowerResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowerResponse::memberId);
         }
 
         List<FollowerResponse> followerMembers = memberRepository.findFollowerByIds(followerMemberIds);
 
-        return PageInfo.of(followerMembers, DEFAULT_PAGE_SIZE, FollowerResponse::memberId);
+        return PageInfo.of(followerMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowerResponse::memberId);
     }
 
-    public MemberProfileResponse getMemberProfile(String nickname, Member member) {
-        Member targetMember = memberRepository.findByNickname(nickname)
+    public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
+        Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Integer followingCount = followJpaRepository.countFollowings(targetMember.getMemberId());
         Integer followerCount = followJpaRepository.countFollowers(targetMember.getMemberId());
@@ -181,7 +182,7 @@ public class MemberService {
             );
         }
         ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(targetMember.getZodiacId());
-        boolean isFollow = followJpaRepository.existsByFromMemberAndToMember(
+        boolean isFollow = followJpaRepository.existsByFromMemberAndToMemberAndIsActiveTrue(
                 member.getMemberId(),
                 targetMember.getMemberId()
         );
