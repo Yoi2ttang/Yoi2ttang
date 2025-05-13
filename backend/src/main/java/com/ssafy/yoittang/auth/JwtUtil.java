@@ -69,8 +69,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String reissueAccessToken(String subject) {
-        return createToken(subject, accessTokenExpiry);
+    public String reissueAccessToken(JwtRequest jwtRequest) {
+        return createToken(jwtRequest, accessTokenExpiry);
     }
 
     public String getSubject(String token) {
@@ -109,5 +109,11 @@ public class JwtUtil {
             return true;
         }
         return false;
+    }
+
+    public <T> T getClaim(String token, String claimName, Class<T> clazz) {
+        return parseToken(token)
+                .getBody()
+                .get(claimName, clazz);
     }
 }
