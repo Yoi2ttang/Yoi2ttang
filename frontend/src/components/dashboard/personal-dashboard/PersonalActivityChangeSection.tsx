@@ -21,10 +21,20 @@ const PersonalActivityChangeSection =
       { ...weeklyData, title: "지난 주 대비 오늘 활동량" },
     ]
 
+    const mockData = [
+      {
+        count: 10,
+        date: "2025-05-01",
+      },
+      {
+        count: 20,
+        date: "2025-05-02",
+      },
+    ]
     return (
       <Section title="📈 활동 변화" supplement={"최근 7일"}>
         <div className="flex flex-col gap-4 rounded-xl">
-          <ActivityLineChart />
+          <ActivityLineChart activityData={mockData} />
           <div className="flex h-full w-full flex-col items-center gap-3">
             {metadata.map(({ title, changeDirection, changeRate }) => (
               <ActivityChangeItem

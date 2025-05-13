@@ -3,7 +3,7 @@ import TeamActivityChangeSection from "@/components/dashboard/team-dashboard/Tea
 import TeamContributionSection from "@/components/dashboard/team-dashboard/TeamContributionSection"
 import TeamRankingSummarySection from "@/components/dashboard/team-dashboard/TeamRankingSummarySection"
 import TeamTitleSection from "@/components/dashboard/team-dashboard/TeamTitleSection"
-import TileMapSection from "@/components/dashboard/TileMapSection"
+import TileMapSectionWrapper from "@/components/dashboard/TileMapSectionWrapper"
 import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
 import { getMyTeamInfo } from "@/services/ranking/api"
 import { use } from "react"
@@ -30,9 +30,9 @@ const TeamDashboardPage = ({}: TeamDashboardPageProps) => {
         <TeamTitleSection teamInfo={teamInfo} />
         <MyTeamRankCard teamInfo={teamInfo} />
       </div>
-      <TeamContributionSection zodiacId={"1"} />
-      <TeamRankingSummarySection zodiacId={"1"} />
-      <TileMapSection />
+      <TeamContributionSection zodiacId={zodiacId} />
+      <TeamRankingSummarySection zodiacId={zodiacId} />
+      <TileMapSectionWrapper type="team" />
       <TeamActivityChangeSection />
     </main>
   )

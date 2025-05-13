@@ -5,7 +5,7 @@ import Link from "next/link"
 import { use } from "react"
 import TeamContributionItem from "./TeamContributionItem"
 interface TeamContributionSectionProps {
-  zodiacId: string
+  zodiacId: number
 }
 
 const TeamContributionSection = ({
@@ -20,7 +20,7 @@ const TeamContributionSection = ({
       title="✨ 우리 팀 TOP 3"
       supplement={
         <Link
-          href={`/ranking/teams/${"1"}/contribution`}
+          href={`/ranking/teams/${zodiacId}/contribution`}
           className="text-caption flex items-center gap-1 text-neutral-400">
           <span>전체보기</span>
           <ChevronRight className="size-4" />
@@ -29,7 +29,7 @@ const TeamContributionSection = ({
       <div className="flex flex-col gap-4">
         {contributionData?.length ? (
           contributionData.map((data) => (
-            <TeamContributionItem key={data.rank} data={data} />
+            <TeamContributionItem key={data.memberId} data={data} />
           ))
         ) : (
           <div className="flex flex-col gap-4 text-center">

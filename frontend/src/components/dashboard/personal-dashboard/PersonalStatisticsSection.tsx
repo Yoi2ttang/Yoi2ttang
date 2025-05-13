@@ -16,13 +16,15 @@ const PersonalStatisticsSection = ({
   } = dashboardData
 
   const totalRunningTime =
-    runningDuration.hour * 60 + runningDuration.minute + runningDuration.seconds
+    runningDuration?.hour * 60 +
+    runningDuration?.minute +
+    runningDuration?.seconds
 
   const statisticsList = [
     {
       title: "총 활동 시간",
       icon: "🎆",
-      value: `${totalRunningTime} 분`,
+      value: `${totalRunningTime ? totalRunningTime : 0} 분`,
     },
     {
       title: "총 활동 거리",
@@ -32,12 +34,12 @@ const PersonalStatisticsSection = ({
     {
       title: "완주한 코스",
       icon: "🏆",
-      value: `${completeCourseCount}개`,
+      value: `${completeCourseCount ?? 0}개`,
     },
     {
       title: "점령한 타일",
       icon: "🪵",
-      value: `${occupiedTileCount}개`,
+      value: `${occupiedTileCount ?? 0}개`,
     },
   ]
 
