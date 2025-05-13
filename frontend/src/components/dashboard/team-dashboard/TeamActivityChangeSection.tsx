@@ -1,36 +1,40 @@
 import Section from "@/components/common/Section"
-import ActivityChangeItem from "../personal-dashboard/ActivityChangeItem"
+import { getTeamActivityChange } from "@/services/dashboard/api"
+import { TeamActivityChangeResponse } from "@/types/dashboard/dashboard.type"
+import { use } from "react"
 import ActivityLineChart from "../personal-dashboard/ActivityLineChart"
 
 interface TeamActivityChangeSectionProps {}
 
+const metadata = [
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+  { count: 100, date: "2024-01-01" },
+] as TeamActivityChangeResponse["tookTileHistoryGroupByPeriodList"]
+
 const TeamActivityChangeSection = ({}: TeamActivityChangeSectionProps) => {
-  const metadata = [
-    {
-      title: "오늘 활동량",
-      rateOfChange: 100,
-      isIncrease: true,
-    },
-    {
-      title: "주간 활동량",
-      rateOfChange: 10,
-      isIncrease: false,
-    },
-  ]
+  const { data: activityData } = use(getTeamActivityChange())
+
   return (
     <Section title="📈 활동 변화" supplement={"최근 7일"}>
       <div className="flex flex-col gap-4 rounded-xl">
-        <ActivityLineChart />
-        <div className="flex h-full w-full flex-col items-center gap-3">
+        <ActivityLineChart
+          activityData={activityData?.tookTileHistoryGroupByPeriodList}
+        />
+        {/* <div className="flex h-full w-full flex-col items-center gap-3">
           {metadata.map(({ title, rateOfChange, isIncrease }) => (
             <ActivityChangeItem
               key={title}
               title={title}
               rateOfChange={rateOfChange}
-              isIncrease={isIncrease}
+              changeDirection={"NO_CHANGE"}
             />
           ))}
-        </div>
+        </div> */}
       </div>
     </Section>
   )
