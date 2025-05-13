@@ -1,23 +1,29 @@
 import Section from "@/components/common/Section"
 import { getTeamActivityChange } from "@/services/dashboard/api"
-import { TeamActivityChangeResponse } from "@/types/dashboard/dashboard.type"
+import { PersonalTileChangeRateResponse } from "@/types/dashboard/dashboard.type"
 import { use } from "react"
+import ActivityChangeItem from "../personal-dashboard/ActivityChangeItem"
 import ActivityLineChart from "../personal-dashboard/ActivityLineChart"
 
 interface TeamActivityChangeSectionProps {}
 
-const metadata = [
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-  { count: 100, date: "2024-01-01" },
-] as TeamActivityChangeResponse["tookTileHistoryGroupByPeriodList"]
-
 const TeamActivityChangeSection = ({}: TeamActivityChangeSectionProps) => {
   const { data: activityData } = use(getTeamActivityChange())
+
+  const dailyData = {
+    changeRate: 10,
+    changeDirection: "INCREASE",
+  } as PersonalTileChangeRateResponse
+
+  const weeklyData = {
+    changeRate: 10,
+    changeDirection: "INCREASE",
+  } as PersonalTileChangeRateResponse
+
+  const metadata = [
+    { ...dailyData, title: "전일 대비 오늘 활동량" },
+    { ...weeklyData, title: "지난 주 대비 오늘 활동량" },
+  ]
 
   return (
     <Section title="📈 활동 변화" supplement={"최근 7일"}>
@@ -25,16 +31,16 @@ const TeamActivityChangeSection = ({}: TeamActivityChangeSectionProps) => {
         <ActivityLineChart
           activityData={activityData?.tookTileHistoryGroupByPeriodList}
         />
-        {/* <div className="flex h-full w-full flex-col items-center gap-3">
-          {metadata.map(({ title, rateOfChange, isIncrease }) => (
+        <div className="flex h-full w-full flex-col items-center gap-3">
+          {metadata.map(({ title, changeRate, changeDirection }) => (
             <ActivityChangeItem
               key={title}
               title={title}
-              rateOfChange={rateOfChange}
-              changeDirection={"NO_CHANGE"}
+              rateOfChange={changeRate}
+              changeDirection={changeDirection}
             />
           ))}
-        </div> */}
+        </div>
       </div>
     </Section>
   )

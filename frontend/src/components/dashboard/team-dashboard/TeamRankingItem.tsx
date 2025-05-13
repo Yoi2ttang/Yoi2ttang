@@ -45,7 +45,7 @@ const TeamRankingItem = ({ rankInfo }: TeamRankingItemProps) => {
         {/* 팀 이름 및 동물 아이콘 */}
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-white/20 p-2 shadow-inner">
-            <AnimalIcon className="size-10 text-white" />
+            {AnimalIcon && <AnimalIcon className="size-10 text-white" />}
           </div>
           <span className="text-title-md text-white">{teamName} 팀</span>
         </div>

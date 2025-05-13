@@ -5,15 +5,13 @@ import Link from "next/link"
 import { use } from "react"
 import TeamContributionItem from "./TeamContributionItem"
 interface TeamContributionSectionProps {
-  zodiacId: number
+  zodiacId: string
 }
 
 const TeamContributionSection = ({
   zodiacId,
 }: TeamContributionSectionProps) => {
   const { data } = use(getZodiacContributionRanking(zodiacId))
-
-  console.log(data)
 
   const contributionData = data?.pageInfoArgs?.data
 

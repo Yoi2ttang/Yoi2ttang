@@ -14,17 +14,15 @@ const TeamDashboardPage = ({}: TeamDashboardPageProps) => {
   const { nickname, zodiacTeam, sub } = use(getPayloadOrRedirect())
   const { data } = use(getMyTeamInfo())
 
-  const { totalTileCount, zodiacName } = data
+  const { zodiacId, ranking, tileCount } = data
 
   const teamInfo = {
     username: nickname,
     teamName: zodiacTeam,
-    rank: 1,
-    tileCount: totalTileCount, // Todo: 팀 tile 개수 인지 확인
-    zodiac: zodiacName,
+    rank: ranking,
+    tileCount: tileCount,
+    zodiacId: zodiacId,
   }
-
-  console.log(data)
 
   return (
     <main className="flex flex-1 flex-col gap-10 px-4">
@@ -32,8 +30,8 @@ const TeamDashboardPage = ({}: TeamDashboardPageProps) => {
         <TeamTitleSection teamInfo={teamInfo} />
         <MyTeamRankCard teamInfo={teamInfo} />
       </div>
-      <TeamContributionSection zodiacId={1} />
-      <TeamRankingSummarySection zodiacId={1} />
+      <TeamContributionSection zodiacId={"1"} />
+      <TeamRankingSummarySection zodiacId={"1"} />
       <TileMapSection />
       <TeamActivityChangeSection />
     </main>
