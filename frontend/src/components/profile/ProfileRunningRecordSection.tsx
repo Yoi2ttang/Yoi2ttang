@@ -1,7 +1,7 @@
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import BlockIcon from "@/assets/icons/profile/block-icon.svg"
-import TimeIcon from "@/assets/icons/profile/time-icon.svg"
 import LockIcon from "@/assets/icons/profile/lock-icon.svg"
+import TimeIcon from "@/assets/icons/profile/time-icon.svg"
 import { ProfileResponse } from "@/types/member"
 import Section from "../common/Section"
 
@@ -47,8 +47,8 @@ const ProfileRunningRecordSection = ({
           </div>
         </div>
       ) : (
-        <div className="flex gap-4">
-          <LockIcon className="bg-neutral-300" />
+        <div className="flex items-center justify-center gap-2">
+          <LockIcon className="size-5 text-neutral-300" />
           <p className="text-neutral-300">비공개로 설정 돼있어요</p>
         </div>
       )}
