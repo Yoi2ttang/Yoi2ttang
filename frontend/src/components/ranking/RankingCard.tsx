@@ -41,7 +41,7 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
       </div>
       <div className="flex items-center gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
-          {tileCount}타일
+          {tileCount} 타일
         </Badge>
         <ChevronRightIcon className="size-4" />
       </div>
