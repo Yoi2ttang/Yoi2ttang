@@ -8,14 +8,21 @@ interface PersonalStatisticsSectionProps {
 const PersonalStatisticsSection = ({
   dashboardData,
 }: PersonalStatisticsSectionProps) => {
-  const { completeCourseCount, duration, occupiedTileCount, totalDistance } =
-    dashboardData
+  const {
+    completeCourseCount,
+    occupiedTileCount,
+    runningDuration,
+    totalDistance,
+  } = dashboardData
+
+  const totalRunningTime =
+    runningDuration.hour * 60 + runningDuration.minute + runningDuration.seconds
 
   const statisticsList = [
     {
       title: "총 활동 시간",
       icon: "🎆",
-      value: `${duration} 시간`,
+      value: `${totalRunningTime} 분`,
     },
     {
       title: "총 활동 거리",
