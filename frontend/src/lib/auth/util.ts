@@ -1,6 +1,6 @@
 import { Payload } from "@/types/auth"
-import { getCookie } from "../utils"
 import { jwtDecode } from "jwt-decode"
+import { getCookie } from "../utils"
 
 export const checkNicknameValidity = (nickname: string) => {
   // 한글, 영어, 숫자만 입력 가능한 정규표현식
@@ -28,7 +28,7 @@ export const getPayload = () => {
   return decoded
 }
 
-export const checkSelf = (nickname: string) => {
+export const checkSelf = (memberId: number) => {
   const payload = getPayload()
-  return payload ? payload.nickname === nickname : false
+  return payload ? payload.sub === String(memberId) : false
 }

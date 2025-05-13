@@ -36,6 +36,11 @@ const nextConfig: NextConfig = {
         hostname: "ssacle.s3.ap-northeast-2.amazonaws.com",
         port: "",
       },
+      {
+        protocol: "http",
+        hostname: "dummyimage.com",
+        port: "",
+      },
     ],
   },
 

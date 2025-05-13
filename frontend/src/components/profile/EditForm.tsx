@@ -1,7 +1,6 @@
 "use client"
 
 import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
-import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
 import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth"
 import { ProfileForEditRequest, ProfileForEditResponse } from "@/types/member"

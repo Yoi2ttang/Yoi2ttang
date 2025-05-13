@@ -1,13 +1,13 @@
-import { AnimalType } from "@/types/animal"
-import AnimalBadge from "../animal-badges/AnimalBadge"
-import FollowButton from "./FollowButton"
-import Image from "next/image"
 import KakaoProfileImage from "@/assets/images/profile/kakao_profile.jpg"
+import { AnimalType } from "@/types/animal"
+import Image from "next/image"
+import AnimalBadge from "../animal-badges/AnimalBadge"
 
 interface RunnerItemProps {
+  targetId: number
   nickname: string
   animalType: AnimalType
-  targetId: number
+  profileImageUrl: string
 }
 
 const RunnerItem = ({ nickname, animalType, targetId }: RunnerItemProps) => {
@@ -27,7 +27,7 @@ const RunnerItem = ({ nickname, animalType, targetId }: RunnerItemProps) => {
           <AnimalBadge animal={animalType} />
         </div>
 
-        {targetId ? <FollowButton targetId={targetId} /> : null}
+        {/* {targetId ? <FollowButton targetId={targetId} /> : null} */}
       </div>
     </div>
   )

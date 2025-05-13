@@ -1,6 +1,7 @@
 import { getApiServer } from "@/lib/api-server"
 import apiClient from "@/lib/http-common"
 import {
+  FollowListRequest,
   MemberAutocompleteRequest,
   MemberAutocompleteResponse,
   MemberSearchRequest,
@@ -11,27 +12,36 @@ import {
 } from "@/types/member"
 
 // 프로필 조회
-export const getProfile = async (nickname: string) => {
+export const getProfile = async (memberId: number) => {
   const apiServer = await getApiServer()
-  return await apiServer.get<ProfileResponse>(`/members/profiles`, {
-    params: {
-      nickname,
-    },
-  })
+  return await apiServer.get<ProfileResponse>(`/members/${memberId}/profiles`)
 }
 
 // 팔로워 조회
-export const getFollowers = async (
-  targetId: number,
-): Promise<MembersResponse> => {
-  return await apiClient.get(`/members/${targetId}/followers`)
+export const getFollowers = async (followListRequest: FollowListRequest) => {
+  const response = await apiClient.get(
+    `/members/${followListRequest.targetId}/followers`,
+    {
+      params: {
+        pageToken: followListRequest.pageToken,
+      },
+    },
+  )
+  return response.data
 }
 
 // 팔로잉 조회
-export const getFollowings = async (
-  targetId: number,
-): Promise<MembersResponse> => {
-  return await apiClient.get(`/members/${targetId}/followings`)
+export const getFollowings = async (followListRequest: FollowListRequest) => {
+  const response = await apiClient.get(
+    `/members/${followListRequest.targetId}/followings`,
+    {
+      params: {
+        pageToken: followListRequest.pageToken,
+        keyword: followListRequest.keyword,
+      },
+    },
+  )
+  return response.data
 }
 
 // 팔로잉

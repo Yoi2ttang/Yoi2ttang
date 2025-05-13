@@ -40,7 +40,7 @@ export type MemberPreview = {
   memberId: number
   nickname: string
   profileImageUrl: string
-  zordiacName: string
+  zodiacName: string
   isFollow: boolean
 }
 
@@ -56,6 +56,12 @@ export type MemberAutocompleteRequest = {
 }
 
 export type MemberSearchRequest = {
+  keyword: string
+  pageToken: number
+}
+
+export type FollowListRequest = {
+  targetId: number
   keyword: string
   pageToken: number
 }

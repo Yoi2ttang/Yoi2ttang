@@ -1,18 +1,18 @@
 import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQuestSection"
 import ProfileHeader from "@/components/profile/ProfileHeader"
-import ProfileInfo from "@/components/profile/ProfileInfo"
+import ProfileInfoWrapper from "@/components/profile/ProfileInfoWrapper"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
 import { getProfile } from "@/services/members/api"
 
 interface ProfilePageProps {
   params: Promise<{
-    nickname: string
+    memberId: number
   }>
 }
 
 const ProfilePage = async ({ params }: ProfilePageProps) => {
-  const { nickname } = await params
-  const { data, isError } = await getProfile(nickname)
+  const { memberId } = await params
+  const { data, isError } = await getProfile(memberId)
 
   return (
     <div>
@@ -23,7 +23,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           <p className="text-center">존재하지 않는 유저입니다.</p>
         ) : (
           <>
-            <ProfileInfo data={data} />
+            {/* <ProfileInfo data={data} /> */}
+            <ProfileInfoWrapper data={data} />
             <ProfileRunningRecordSection data={data} />
             <ProfileCompletedQuestSection data={data} />
           </>

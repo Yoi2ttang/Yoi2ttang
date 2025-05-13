@@ -1,10 +1,10 @@
 "use client"
 
+import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
-import Image from "next/image"
 
 interface NavigationProfileButtonProps {
   href: string
@@ -21,7 +21,7 @@ const NavigationProfileButton = ({
 
   return (
     <Link
-      href={`${href}/${data?.nickname}`}
+      href={`${href}/${data?.memberId}`}
       className="flex flex-col items-center gap-0.5">
       {isPending || !data?.profileImageUrl ? (
         <div className="size-7 rounded-full bg-neutral-300" />
