@@ -13,7 +13,7 @@ public enum ErrorCode {
     FOLLOW_REQUEST_NOT_FOUND(1003, "요청 ID에 해당하는 팔로우 요청이 존재하지 않습니다."),
     FOLLOW_HISTORY_NOT_FOUND(1004, "팔로우 기록을 찾을 수 없습니다."),
     MEMBER_PRIVATE_PROFILE(1005, "비공개 계정입니다."),
-    REVIEW_NOT_FOUND(1006, "요청 ID에 해당하는 리뷰가 존재하지 않습니다."),
+    DUPLICATE_NICKNAME(1006, "존재하는 닉네임입니다."),
     ORDER_NOT_FOUND(1007, "요청 ID에 해당하는 빵이 존재하지 않습니다."),
     ALREADY_FOLLOWED(1008, "이미 팔로우 되어 요청 오류가 발생했습니다."),
     ALREADY_UNFOLLOWED(1009, "이미 언팔로우되어 오류가 발생했습니다."),

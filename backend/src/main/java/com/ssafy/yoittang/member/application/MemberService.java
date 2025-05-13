@@ -262,6 +262,9 @@ public class MemberService {
 
     @Transactional
     public void updateProfile(MemberUpdateRequest memberUpdateRequest, MultipartFile file, Member member) {
+        if (memberRepository.existByNickname(memberUpdateRequest.nickname())) {
+            throw new BadRequestException(ErrorCode.DUPLICATE_NICKNAME);
+        }
         member.updateProfileInfo(memberUpdateRequest);
         if (file != null) {
             String newProfileImageUrl = s3ImageUploader.uploadMember(file);
