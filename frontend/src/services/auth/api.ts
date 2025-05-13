@@ -33,3 +33,8 @@ export const postReissue = async () => {
   const apiServer = await getApiServer()
   return await apiServer.post<LoginResponse>("/auth/reissue")
 }
+
+export const postLogout = async () => {
+  const apiServer = await getApiServer()
+  return await apiServer.post("/auth/logout")
+}

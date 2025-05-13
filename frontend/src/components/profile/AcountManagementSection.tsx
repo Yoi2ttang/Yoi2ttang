@@ -1,16 +1,28 @@
 "use client"
 
-import { BellIcon, ChevronRight, InfoIcon, LogOutIcon } from "lucide-react"
+import { InfoIcon, LogOutIcon } from "lucide-react"
 import Section from "../common/Section"
 import { useState } from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 const AccountManagementSection = () => {
   const [curIndex, setCurIndex] = useState(-1)
+  const router = useRouter()
 
-  const handleClick = (index: number) => {
+  const handleChangeIndex = (index: number) => {
     setCurIndex(index === curIndex ? -1 : index)
+  }
+
+  const handleLogout = async () => {
+    const response = await fetch("/api/logout", {
+      method: "POST",
+    })
+    if (response.ok) {
+      alert("안전하게 로그아웃 되었어요")
+      router.push("/login")
+    }
   }
 
   return (
@@ -19,7 +31,7 @@ const AccountManagementSection = () => {
         <div className="flex flex-col gap-4">
           <div
             className="flex cursor-pointer items-center gap-3"
-            onClick={() => handleClick(0)}>
+            onClick={() => handleChangeIndex(0)}>
             <InfoIcon className="size-4" />
             <p>약관 및 정책</p>
           </div>
@@ -39,7 +51,7 @@ const AccountManagementSection = () => {
 
         <div
           className="flex cursor-pointer items-center gap-3"
-          onClick={() => handleClick(0)}>
+          onClick={handleLogout}>
           <LogOutIcon className="size-4" />
           <p>로그아웃</p>
         </div>
