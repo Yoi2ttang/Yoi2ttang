@@ -33,7 +33,7 @@ const AnimalBadge = ({
         className={cn(
           "flex-1 text-center",
           "font-semibold",
-          animal === "sheep" ? "text-black" : "text-white",
+          animal === "SHEEP" ? "text-black" : "text-white",
         )}>
         {teamName}
       </div>
