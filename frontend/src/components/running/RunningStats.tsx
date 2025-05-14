@@ -51,7 +51,7 @@ const RunningStats = ({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flexflex-col">
         <div className="text-lg text-neutral-500">획득 타일</div>
         <div className="flex items-center gap-2">
           <div className="bg-yoi-500 size-4 rotate-12"></div>

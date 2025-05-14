@@ -60,7 +60,8 @@ const RunningInfoSlide = ({
           calories={calories}
           speed={speed}
         />
-        {showMap && loc && <RunningStatsMap loc={loc} />}
+        <div className="text-title-sm text-neutral-500">평균 페이스</div>
+        <div className="flex flex-1 rounded-xl bg-neutral-200"></div>
         <RunningActions />
       </div>
       <button
