@@ -5,10 +5,20 @@ import Button from "@/components/common/Button"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
 import RunningStartMapSection from "@/components/running/RunningStartMapSection"
 
+declare const AndroidBridge: {
+  onUrlChanged: (url: string) => void
+}
+
 const RunningStartPage = () => {
   const router = useRouter()
 
   const handleParticipate = () => {
+    if (
+      typeof window !== "undefined" &&
+      (window as any).AndroidBridge?.onUrlChanged
+    ) {
+      ;(window as any).AndroidBridge.onUrlChanged(window.location.pathname)
+    }
     router.push("/running")
   }
 
