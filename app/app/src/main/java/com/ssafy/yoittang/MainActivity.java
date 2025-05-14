@@ -1,6 +1,7 @@
 package com.ssafy.yoittang;
 
 import android.annotation.SuppressLint;
+import android.app.NativeActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -19,9 +21,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
@@ -51,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
-
         showLocationPermissionExplanation();
 
         CookieManager cookieManager = CookieManager.getInstance();
@@ -60,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         String cookies = CookieManager.getInstance().getCookie(SpringServerUrl);
 
         webView = new WebView(this);
-        setContentView(webView);
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setFitsSystemWindows(true);
+        rootLayout.addView(webView);
+        setContentView(rootLayout);
 
         CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
 
@@ -74,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                     webView.goBack();
                 } else {
                     setEnabled(false); // 콜백을 끄고
-                    onBackPressed();   // 기본 동작 실행 (finish 등)
                 }
             }
         });
@@ -91,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Log.d("WebView", "로딩 요청 URL: " + request.getUrl().getPath());
+
+                // 예: 특정 URL일 때 네이티브 화면 전환
+                if( Objects.requireNonNull(request.getUrl().getPath()).contains("/running") ){
+                    Intent intent = new Intent(view.getContext(), RunningActivity.class);
+                    view.getContext().startActivity(intent);
+                    return true; // WebView에서 이 URL은 로딩하지 않음
+                }
+
+                return false;
+
+            }
+
         });
 
 // 2. WebChromeClient 설정 (위치 권한, 알림창 등 담당)
@@ -100,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 // 항상 위치 권한 허용
                 callback.invoke(origin, true, false);
             }
+
         });
 
         webView.loadUrl("https://yoi2ttang.site");
