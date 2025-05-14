@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
 
   // 이미지 설정
   images: {
+    domains: ["k.kakaocdn.net"],
     remotePatterns: [
       {
         protocol: "https",

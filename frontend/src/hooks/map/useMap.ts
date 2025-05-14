@@ -27,6 +27,5 @@ export const useMap = ({
 
   return {
     mapRef,
-    setCenter,
   }
 }

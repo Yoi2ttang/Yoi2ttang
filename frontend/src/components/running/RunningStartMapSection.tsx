@@ -1,13 +1,13 @@
 "use client"
 
-import { Coordinates } from "@/types/map/navermaps"
 import { useEffect, useState } from "react"
-import Map from "../common/Map"
-import { tileGetResponseList } from "@/constants/tiles"
+import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { getTeamTileMap } from "@/services/tile/api"
+import Map from "@/components/common/Map"
+import { tileGetResponseList } from "@/constants/tiles"
 
-const RunningMap = () => {
+const RunningStartMapSection = () => {
   const [loc, setLoc] = useState<Coordinates>()
   const [tiles, setTiles] = useState<Tile[]>(tileGetResponseList)
 
@@ -28,10 +28,15 @@ const RunningMap = () => {
   if (!loc) return null
 
   return (
-    <div className="flex h-full w-full flex-1">
-      <Map loc={loc} tiles={tiles} onCenterChange={handleCenterChange} />
+    <div className="flex flex-1">
+      <Map
+        loc={loc}
+        tiles={tiles}
+        zoom={15}
+        onCenterChange={handleCenterChange}
+      />
     </div>
   )
 }
 
-export default RunningMap
+export default RunningStartMapSection
