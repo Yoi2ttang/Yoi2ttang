@@ -2,8 +2,8 @@ import PeopleIcon from "@/assets/icons/navigation-bar/people-icon.svg"
 import PersonIcon from "@/assets/icons/navigation-bar/person-icon.svg"
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import NavigationButton from "./NavigationButton"
-import NavigationRunningButton from "./NavigationRunningButton"
 import NavigationProfileButton from "./NavigationProfileButton"
+import NavigationRunningButton from "./NavigationRunningButton"
 
 const NavigationBar = () => {
   return (

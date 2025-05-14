@@ -60,8 +60,9 @@ const SignupForm = ({
           <WeightForm
             signupData={signupData}
             onChange={onChange}
-            onNext={() => {
-              signup()
+            onNext={async () => {
+              // 쿠키가 모두 SET된 뒤에 다음 스텝으로 이동
+              await signup()
               onNext()
             }}
           />

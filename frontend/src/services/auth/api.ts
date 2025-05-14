@@ -19,7 +19,12 @@ export const postSignup = async (signupData: SignUpData) => {
   })
 }
 
-export const postLogin = async (code: string, environment: string = "WEB") => {
+export const postLogin = async (
+  code: string,
+  environment: string = process.env.NODE_ENV === "development"
+    ? "LOCAL_WEB"
+    : "WEB",
+) => {
   const apiServer = await getApiServer()
   return await apiServer.post<LoginResponse>("/auth/login/kakao", {
     body: {
