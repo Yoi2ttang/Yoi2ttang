@@ -21,6 +21,7 @@ services:
     container_name: redis
     ports:
       - "6379:6379"
+    command: ["redis-server", "--appendonly", "no", "--maxmemory", "2gb", "--maxmemory-policy", "allkeys-lru"]
     volumes:
       - redis_data:/data
       - /etc/localtime:/etc/localtime:ro
