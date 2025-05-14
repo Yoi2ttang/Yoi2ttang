@@ -27,6 +27,8 @@ import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,7 @@ public class CourseService {
     private final CourseTileJpaRepository courseTileJpaRepository;
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
+    private final TileRepository tileRepository;
     private final S3ImageUploader s3ImageUploader;
 
     private static final double DISTANCE_THRESHOLD_KM = 10.0;
@@ -148,6 +151,26 @@ public class CourseService {
 
     public PageInfo<CourseSummaryResponse> getCourseByKeyword(String keyword, String pageToken) {
         return courseRepository.findCourseByKeyword(keyword, pageToken);
+    }
+
+    public TileGetResponseWrapper getTilesNearBy(Long courseId, GeoPoint geoPoint) {
+        String geoHashString =
+                GeoHash.geoHashStringWithCharacterPrecision(geoPoint.lat(), geoPoint.lng(), 6) + "%";
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTileByCourseId(courseId, geoHashString))
+                .build();
+
+//        List<String> geoHashList = getGeoHashes(courseId, geoHashString);
+//
+//        return TileGetResponseWrapper.builder()
+//                .tileGetResponseList(tileRepository.getTilesInGeoHashes(geoHashList))
+//                .build();
+    }
+
+
+    private List<String> getGeoHashes(Long courseId, String geoHashString) {
+        return courseTileJpaRepository.findGeoHashesByCourseIdAndGeoHashPrefix(courseId, geoHashString);
     }
 
     private double estimateMetFromPace(double paceMinPerKm) {
