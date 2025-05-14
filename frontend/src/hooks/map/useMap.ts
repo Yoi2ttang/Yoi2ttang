@@ -25,5 +25,7 @@ export const useMap = ({
     }
   }, [])
 
-  return { mapRef }
+  return {
+    mapRef,
+  }
 }
