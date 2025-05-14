@@ -30,15 +30,30 @@ export const useMapMarker = ({ mapRef, loc }: useMapMarkerProps) => {
       markerRef.current = marker
     } else {
       markerRef.current.setPosition(position)
-      map.setCenter(position)
     }
+
+    // 마커가 이동해도 지도의 중심을 맞춰줌
+    map.setCenter(position)
   }
 
   useEffect(() => {
     if (loc) {
       addMarker(loc)
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const currentLoc = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }
+          addMarker(currentLoc)
+        },
+        (err) => {
+          console.error("현재 위치 가져오기 실패:", err)
+        },
+      )
     }
-  }, [loc])
+  }, [loc, mapRef])
 
   return { addMarker }
 }
