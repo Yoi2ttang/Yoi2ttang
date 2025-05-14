@@ -2,6 +2,16 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+ARG NEXT_PUBLIC_MAP_CLIENT_ID
+ARG NEXT_PUBLIC_KAKAO_CLIENT_ID
+ARG NEXT_PUBLIC_KAKAO_REDIRECT_URI
+ARG NEXT_PUBLIC_API_URL
+
+ENV NEXT_PUBLIC_MAP_CLIENT_ID=$NEXT_PUBLIC_MAP_CLIENT_ID
+ENV NEXT_PUBLIC_KAKAO_CLIENT_ID=$NEXT_PUBLIC_KAKAO_CLIENT_ID
+ENV NEXT_PUBLIC_KAKAO_REDIRECT_URI=$NEXT_PUBLIC_KAKAO_REDIRECT_URI
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # pnpm 설치 (corepack 사용)
 RUN corepack enable
 RUN corepack prepare pnpm@latest --activate
@@ -11,7 +21,6 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 # 프로젝트 파일 복사 및 Next.js 빌드 실행
-COPY .env.production .env
 COPY . .
 RUN pnpm build
 
@@ -30,4 +39,3 @@ EXPOSE 3000
 
 # Next.js standalone 실행
 CMD ["node", "./server.js"]
-
