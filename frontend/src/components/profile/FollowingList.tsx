@@ -13,7 +13,7 @@ import RunnerItem from "./RunnerItem"
 const FollowingList = () => {
   const { targetRef, data, isLoading, isFetchingNextPage } = useFollowingList()
   const isEmpty = !data?.pages.some(
-    (page: MemberAutocompleteResponse) => page?.data.length > 0,
+    (page: MembersResponse) => page?.data.length > 0,
   )
 
   return (
