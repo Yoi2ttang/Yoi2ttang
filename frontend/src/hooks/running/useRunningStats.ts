@@ -22,7 +22,15 @@ const getDistance = (loc1: Coordinates, loc2: Coordinates) => {
   return R * c
 }
 
-export const useRunningStats = (weightKg = 50) => {
+interface useRunningStatsProps {
+  isPaused?: boolean
+  weightKg?: number
+}
+
+export const useRunningStats = ({
+  isPaused,
+  weightKg = 50,
+}: useRunningStatsProps) => {
   const locRef = useRef<Coordinates>({ lat: 37.5665, lng: 126.978 })
   const prevLoc = useRef<Coordinates | null>(null)
 
@@ -37,6 +45,8 @@ export const useRunningStats = (weightKg = 50) => {
 
   useEffect(() => {
     const id = setInterval(() => {
+      if (isPaused) return
+
       setRunningTime((prev) => prev + 1)
 
       const nextLoc = {
@@ -63,7 +73,7 @@ export const useRunningStats = (weightKg = 50) => {
     }, 1000)
 
     return () => clearInterval(id)
-  }, [weightKg])
+  }, [isPaused, weightKg])
 
   return { runningTime, distance, calories, speed, currentLoc }
 }

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import clsx from "clsx"
 import RunningStats from "./RunningStats"
-import RunningStatsMap from "./RunningStatsMap"
 import RunningActions from "./RunningActions"
 import { Coordinates } from "@/types/map/navermaps"
 import { ArrowRight } from "lucide-react"
@@ -12,6 +11,8 @@ interface RunningInfoSlideProps {
   distance: number
   calories: number
   speed: number
+  isPaused: boolean
+  setIsPaused: Dispatch<SetStateAction<boolean>>
 }
 
 const RunningInfoSlide = ({
@@ -20,6 +21,8 @@ const RunningInfoSlide = ({
   distance,
   calories,
   speed,
+  isPaused,
+  setIsPaused,
 }: RunningInfoSlideProps) => {
   const [loc, setLoc] = useState<Coordinates>()
   const [visible, setVisible] = useState(false)
@@ -62,7 +65,7 @@ const RunningInfoSlide = ({
         />
         <div className="text-title-sm text-neutral-500">평균 페이스</div>
         <div className="flex flex-1 rounded-xl bg-neutral-200"></div>
-        <RunningActions />
+        <RunningActions isPaused={isPaused} setIsPaused={setIsPaused} />
       </div>
       <button
         onClick={handleClose}

@@ -10,6 +10,8 @@ import { Coordinates } from "@/types/map/navermaps"
 
 const RunningView = () => {
   const [loc, setLoc] = useState<Coordinates>()
+  const [isPaused, setIsPaused] = useState(false)
+  const [showOverlay, setShowOverlay] = useState(false)
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -20,10 +22,8 @@ const RunningView = () => {
     })
   }, [])
 
-  const [showOverlay, setShowOverlay] = useState(false)
-
   const { runningTime, distance, calories, speed, currentLoc } =
-    useRunningStats()
+    useRunningStats({ isPaused })
 
   useEffect(() => {
     console.log("RunningTime:", currentLoc)
@@ -50,6 +50,8 @@ const RunningView = () => {
           distance={distance}
           calories={calories}
           speed={speed}
+          setIsPaused={setIsPaused}
+          isPaused={isPaused}
         />
       )}
     </div>
