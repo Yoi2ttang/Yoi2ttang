@@ -13,9 +13,9 @@ const useLogin = () => {
         method: "GET",
         credentials: "include",
       })
-      if (response.redirected) {
-        router.replace(response.url)
-      }
+      // if (response.redirected) {
+      router.replace(response.url)
+      // }
     }
 
     login()

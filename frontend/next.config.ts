@@ -16,7 +16,12 @@ const nextConfig: NextConfig = {
             destination: "https://yoi2ttang.site/api/:slug*",
           },
         ]
-      : [],
+      : [
+          {
+            source: "/api/:slug*",
+            destination: "https://yoi2ttang.site/api/:slug*",
+          },
+        ],
 
   // 이미지 설정
   images: {
