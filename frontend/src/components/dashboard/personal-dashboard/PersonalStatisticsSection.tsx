@@ -1,38 +1,45 @@
 import Section from "@/components/common/Section"
-import { PersonalStatistics } from "@/types/dashboard/dashboard.type"
+import { PersonalDashboardResponse } from "@/types/dashboard/dashboard.type"
 import DashboardCard from "../DashboardCard"
-interface PersonalStatisticsSectionProps {}
+interface PersonalStatisticsSectionProps {
+  dashboardData: PersonalDashboardResponse
+}
 
-const PersonalStatisticsSection = ({}: PersonalStatisticsSectionProps) => {
-  const mockData: PersonalStatistics = {
-    totalTime: 100,
-    totalLength: 100,
-    completedChallenge: 100,
-    totalTile: 100,
-  }
+const PersonalStatisticsSection = ({
+  dashboardData,
+}: PersonalStatisticsSectionProps) => {
+  const {
+    completeCourseCount,
+    occupiedTileCount,
+    runningDuration,
+    totalDistance,
+  } = dashboardData
 
-  const { totalTime, totalLength, completedChallenge, totalTile } = mockData
+  const totalRunningTime =
+    runningDuration?.hour * 60 +
+    runningDuration?.minute +
+    runningDuration?.seconds
 
   const statisticsList = [
     {
       title: "총 활동 시간",
       icon: "🎆",
-      value: `${totalTime}시간`,
+      value: `${totalRunningTime ? totalRunningTime : 0} 분`,
     },
     {
       title: "총 활동 거리",
       icon: "🏃",
-      value: `${totalLength}km`,
+      value: `${totalDistance ?? 0} km`,
     },
     {
       title: "완주한 코스",
       icon: "🏆",
-      value: `${completedChallenge}개`,
+      value: `${completeCourseCount ?? 0}개`,
     },
     {
-      title: "지나온 타일",
+      title: "점령한 타일",
       icon: "🪵",
-      value: `${totalTile}개`,
+      value: `${occupiedTileCount ?? 0}개`,
     },
   ]
 

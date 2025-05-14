@@ -1,8 +1,11 @@
 import { cn } from "@/lib/utils"
+import { PersonalDailyRunningTimeResponse } from "@/types/dashboard/dashboard.type"
 
-interface ActivityGridProps {}
+interface ActivityGridProps {
+  data: PersonalDailyRunningTimeResponse[]
+}
 
-const ActivityGrid = ({}: ActivityGridProps) => {
+const ActivityGrid = ({ data }: ActivityGridProps) => {
   const grid = Array.from({ length: 7 }, (_, row) =>
     Array.from({ length: 8 }, (_, col) => {
       const index = row * 10 + col

@@ -3,28 +3,36 @@ import TeamActivityChangeSection from "@/components/dashboard/team-dashboard/Tea
 import TeamContributionSection from "@/components/dashboard/team-dashboard/TeamContributionSection"
 import TeamRankingSummarySection from "@/components/dashboard/team-dashboard/TeamRankingSummarySection"
 import TeamTitleSection from "@/components/dashboard/team-dashboard/TeamTitleSection"
-import TileMapSection from "@/components/dashboard/TileMapSection"
-import { AnimalType } from "@/types/animal"
+import TileMapSectionWrapper from "@/components/dashboard/TileMapSectionWrapper"
+import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
+import { getMyTeamInfo } from "@/services/ranking/api"
+import { use } from "react"
 
 interface TeamDashboardPageProps {}
 
 const TeamDashboardPage = ({}: TeamDashboardPageProps) => {
-  const mockData = {
-    username: "창조",
-    teamName: "호랑이",
-    rank: 1,
-    tileCount: 100,
-    zodiac: "tiger" as AnimalType,
+  const { nickname, zodiacTeam, sub } = use(getPayloadOrRedirect())
+  const { data } = use(getMyTeamInfo())
+
+  const { zodiacId, ranking, tileCount } = data
+
+  const teamInfo = {
+    username: nickname,
+    teamName: zodiacTeam,
+    rank: ranking,
+    tileCount: tileCount,
+    zodiacId: zodiacId,
   }
+
   return (
     <main className="flex flex-1 flex-col gap-10 px-4">
       <div className="flex flex-col gap-2">
-        <TeamTitleSection teamInfo={mockData} />
-        <MyTeamRankCard teamInfo={mockData} />
+        <TeamTitleSection teamInfo={teamInfo} />
+        <MyTeamRankCard teamInfo={teamInfo} />
       </div>
-      <TeamContributionSection />
-      <TeamRankingSummarySection />
-      <TileMapSection />
+      <TeamContributionSection zodiacId={zodiacId} />
+      <TeamRankingSummarySection zodiacId={zodiacId} />
+      <TileMapSectionWrapper type="team" />
       <TeamActivityChangeSection />
     </main>
   )

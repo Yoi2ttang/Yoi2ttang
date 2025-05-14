@@ -3,26 +3,24 @@ import PersonalActivityChangeSection from "@/components/dashboard/personal-dashb
 import PersonalHeatmapCalendarSection from "@/components/dashboard/personal-dashboard/PersonalHeatmapCalendarSection"
 import PersonalStatisticsSection from "@/components/dashboard/personal-dashboard/PersonalStatisticsSection"
 import PersonalTitleSection from "@/components/dashboard/personal-dashboard/PersonalTitleSection"
-import TileMapSection from "@/components/dashboard/TileMapSection"
-import { getApiServer } from "@/lib/api-server"
+import TileMapSectionWrapper from "@/components/dashboard/TileMapSectionWrapper"
+import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
+import { getDashboardData } from "@/services/dashboard/api"
+import { use } from "react"
 
 interface PersonalDashboardPageProps {}
 
-const PersonalDashboardPage = async ({}: PersonalDashboardPageProps) => {
-  const apiServer = await getApiServer()
-  const { data, error } = await apiServer.get("/member/me")
-
-  if (error) {
-    console.log(error.data)
-  }
+const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
+  const { data } = use(getDashboardData())
+  const { nickname } = use(getPayloadOrRedirect())
 
   return (
     <main className="flex flex-1 flex-col gap-10 px-4">
-      <PersonalTitleSection />
-      <PersonalStatisticsSection />
+      <PersonalTitleSection name={nickname ?? ""} days={data.duration + 1} />
+      <PersonalStatisticsSection dashboardData={data} />
       <OccupyButton />
       <PersonalHeatmapCalendarSection />
-      <TileMapSection />
+      <TileMapSectionWrapper type="my" />
       <PersonalActivityChangeSection />
     </main>
   )

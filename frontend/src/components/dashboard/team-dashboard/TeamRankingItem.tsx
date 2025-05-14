@@ -1,21 +1,24 @@
 import Badge from "@/components/common/Badge"
-import { animalIconMap } from "@/constants/animalBadge"
+import {
+  animalIconMap,
+  animalNumberMap,
+  animalTeamNameMap,
+} from "@/constants/animals"
 import { cn } from "@/lib/utils"
 import { AnimalType } from "@/types/animal"
+import { TeamRankingResponse } from "@/types/ranking"
 
 interface TeamRankingItemProps {
-  rankInfo: {
-    rank: number
-    teamName: string
-    zodiac: string
-    tileCount: number
-  }
+  rankInfo: TeamRankingResponse["tileTeamSituationResponseList"][number]
 }
 
 const TeamRankingItem = ({ rankInfo }: TeamRankingItemProps) => {
-  const { rank, teamName, zodiac, tileCount } = rankInfo
-  const AnimalIcon = animalIconMap[zodiac as AnimalType]
+  const { rank, zodiacId, tileCount } = rankInfo
+  const AnimalIcon = animalIconMap[animalNumberMap[zodiacId] as AnimalType]
+
   const rankIcon = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉"
+  const teamName = animalTeamNameMap[animalNumberMap[zodiacId]]
+
   const backgroundColor =
     rank === 1
       ? "bg-gradient-to-br from-yoi-300 to-yoi-200"
@@ -42,7 +45,7 @@ const TeamRankingItem = ({ rankInfo }: TeamRankingItemProps) => {
         {/* 팀 이름 및 동물 아이콘 */}
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-white/20 p-2 shadow-inner">
-            <AnimalIcon className="size-10 text-white" />
+            {AnimalIcon && <AnimalIcon className="size-10 text-white" />}
           </div>
           <span className="text-title-md text-white">{teamName} 팀</span>
         </div>

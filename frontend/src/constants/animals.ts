@@ -1,97 +1,206 @@
 import {
-  AnimalType,
+  AnimalBadgeSize,
   AnimalIconMap,
   AnimalTeamNameMap,
-  AnimalBadgeSize,
+  AnimalType,
 } from "@/types/animal"
 
-import Mouse from "@/assets/icons/animals/mouse-icon.svg"
-import Cow from "@/assets/icons/animals/cow-icon.svg"
-import Tiger from "@/assets/icons/animals/tiger-icon.svg"
-import Rabbit from "@/assets/icons/animals/rabbit-icon.svg"
-import Dragon from "@/assets/icons/animals/dragon-icon.svg"
-import Snake from "@/assets/icons/animals/snake-icon.svg"
-import Horse from "@/assets/icons/animals/horse-icon.svg"
-import Sheep from "@/assets/icons/animals/sheep-icon.svg"
-import Monkey from "@/assets/icons/animals/monkey-icon.svg"
 import Chicken from "@/assets/icons/animals/chicken-icon.svg"
+import Cow from "@/assets/icons/animals/cow-icon.svg"
 import Dog from "@/assets/icons/animals/dog-icon.svg"
+import Dragon from "@/assets/icons/animals/dragon-icon.svg"
+import Horse from "@/assets/icons/animals/horse-icon.svg"
+import Monkey from "@/assets/icons/animals/monkey-icon.svg"
+import Mouse from "@/assets/icons/animals/mouse-icon.svg"
 import Pig from "@/assets/icons/animals/pig-icon.svg"
+import Rabbit from "@/assets/icons/animals/rabbit-icon.svg"
+import Sheep from "@/assets/icons/animals/sheep-icon.svg"
+import Snake from "@/assets/icons/animals/snake-icon.svg"
+import Tiger from "@/assets/icons/animals/tiger-icon.svg"
+import { FC, SVGProps } from "react"
+
+interface AnimalMetaDataType {
+  id: string
+  en: AnimalType
+  icon: FC<SVGProps<SVGSVGElement>>
+  teamName: string
+  bgColor: string
+  textColor: string
+}
+
+export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
+  MOUSE: {
+    id: "1",
+    en: "MOUSE",
+    icon: Mouse,
+    teamName: "쥐",
+    bgColor: "bg-mouse",
+    textColor: "text-mouse",
+  },
+  COW: {
+    id: "2",
+    en: "COW",
+    icon: Cow,
+    teamName: "소",
+    bgColor: "bg-cow",
+    textColor: "text-cow",
+  },
+  TIGER: {
+    id: "3",
+    en: "TIGER",
+    icon: Tiger,
+    teamName: "호랑이",
+    bgColor: "bg-tiger",
+    textColor: "text-tiger",
+  },
+  RABBIT: {
+    id: "4",
+    en: "RABBIT",
+    icon: Rabbit,
+    teamName: "토끼",
+    bgColor: "bg-rabbit",
+    textColor: "text-rabbit",
+  },
+  DRAGON: {
+    id: "5",
+    en: "DRAGON",
+    icon: Dragon,
+    teamName: "용",
+    bgColor: "bg-dragon",
+    textColor: "text-dragon",
+  },
+  SNAKE: {
+    id: "6",
+    en: "SNAKE",
+    icon: Snake,
+    teamName: "뱀",
+    bgColor: "bg-snake",
+    textColor: "text-snake",
+  },
+  HORSE: {
+    id: "7",
+    en: "HORSE",
+    icon: Horse,
+    teamName: "말",
+    bgColor: "bg-horse",
+    textColor: "text-horse",
+  },
+  SHEEP: {
+    id: "8",
+    en: "SHEEP",
+    icon: Sheep,
+    teamName: "양",
+    bgColor: "bg-sheep",
+    textColor: "text-sheep",
+  },
+  MONKEY: {
+    id: "9",
+    en: "MONKEY",
+    icon: Monkey,
+    teamName: "원숭이",
+    bgColor: "bg-monkey",
+    textColor: "text-monkey",
+  },
+  CHICKEN: {
+    id: "10",
+    en: "CHICKEN",
+    icon: Chicken,
+    teamName: "닭",
+    bgColor: "bg-chicken",
+    textColor: "text-chicken",
+  },
+  DOG: {
+    id: "11",
+    en: "DOG",
+    icon: Dog,
+    teamName: "개",
+    bgColor: "bg-dog",
+    textColor: "text-dog",
+  },
+  PIG: {
+    id: "12",
+    en: "PIG",
+    icon: Pig,
+    teamName: "돼지",
+    bgColor: "bg-pig",
+    textColor: "text-pig",
+  },
+}
 
 export const animalIconMap: AnimalIconMap = {
-  mouse: Mouse,
-  cow: Cow,
-  tiger: Tiger,
-  rabbit: Rabbit,
-  dragon: Dragon,
-  snake: Snake,
-  horse: Horse,
-  sheep: Sheep,
-  monkey: Monkey,
-  chicken: Chicken,
-  dog: Dog,
-  pig: Pig,
-}
+  MOUSE: animalMetaData.MOUSE.icon,
+  COW: animalMetaData.COW.icon,
+  TIGER: animalMetaData.TIGER.icon,
+  RABBIT: animalMetaData.RABBIT.icon,
+  DRAGON: animalMetaData.DRAGON.icon,
+  SNAKE: animalMetaData.SNAKE.icon,
+  HORSE: animalMetaData.HORSE.icon,
+  SHEEP: animalMetaData.SHEEP.icon,
+  MONKEY: animalMetaData.MONKEY.icon,
+  CHICKEN: animalMetaData.CHICKEN.icon,
+  DOG: animalMetaData.DOG.icon,
+  PIG: animalMetaData.PIG.icon,
+} as const
 
 export const animalTeamNameMap: AnimalTeamNameMap = {
-  mouse: "쥐 팀",
-  cow: "소 팀",
-  tiger: "호랑이 팀",
-  rabbit: "토끼 팀",
-  dragon: "용 팀",
-  snake: "뱀 팀",
-  horse: "말 팀",
-  sheep: "양 팀",
-  monkey: "원숭이 팀",
-  chicken: "닭 팀",
-  dog: "개 팀",
-  pig: "돼지 팀",
-}
+  MOUSE: animalMetaData.MOUSE.teamName,
+  COW: animalMetaData.COW.teamName,
+  TIGER: animalMetaData.TIGER.teamName,
+  RABBIT: animalMetaData.RABBIT.teamName,
+  DRAGON: animalMetaData.DRAGON.teamName,
+  SNAKE: animalMetaData.SNAKE.teamName,
+  HORSE: animalMetaData.HORSE.teamName,
+  SHEEP: animalMetaData.SHEEP.teamName,
+  MONKEY: animalMetaData.MONKEY.teamName,
+  CHICKEN: animalMetaData.CHICKEN.teamName,
+  DOG: animalMetaData.DOG.teamName,
+  PIG: animalMetaData.PIG.teamName,
+} as const
 
 export const backgroundClassMap: Record<AnimalType, string> = {
-  mouse: "bg-mouse",
-  cow: "bg-cow",
-  tiger: "bg-tiger",
-  rabbit: "bg-rabbit",
-  dragon: "bg-dragon",
-  snake: "bg-snake",
-  horse: "bg-horse",
-  sheep: "bg-sheep",
-  monkey: "bg-monkey",
-  chicken: "bg-chicken",
-  dog: "bg-dog",
-  pig: "bg-pig",
-}
+  MOUSE: animalMetaData.MOUSE.bgColor,
+  COW: animalMetaData.COW.bgColor,
+  TIGER: animalMetaData.TIGER.bgColor,
+  RABBIT: animalMetaData.RABBIT.bgColor,
+  DRAGON: animalMetaData.DRAGON.bgColor,
+  SNAKE: animalMetaData.SNAKE.bgColor,
+  HORSE: animalMetaData.HORSE.bgColor,
+  SHEEP: animalMetaData.SHEEP.bgColor,
+  MONKEY: animalMetaData.MONKEY.bgColor,
+  CHICKEN: animalMetaData.CHICKEN.bgColor,
+  DOG: animalMetaData.DOG.bgColor,
+  PIG: animalMetaData.PIG.bgColor,
+} as const
 
 export const textClassMap: Record<AnimalType, string> = {
-  mouse: "text-mouse",
-  cow: "text-cow",
-  tiger: "text-tiger",
-  rabbit: "text-rabbit",
-  dragon: "text-dragon",
-  snake: "text-snake",
-  horse: "text-horse",
-  sheep: "text-sheep",
-  monkey: "text-monkey",
-  chicken: "text-chicken",
-  dog: "text-dog",
-  pig: "text-pig",
-}
+  MOUSE: animalMetaData.MOUSE.textColor,
+  COW: animalMetaData.COW.textColor,
+  TIGER: animalMetaData.TIGER.textColor,
+  RABBIT: animalMetaData.RABBIT.textColor,
+  DRAGON: animalMetaData.DRAGON.textColor,
+  SNAKE: animalMetaData.SNAKE.textColor,
+  HORSE: animalMetaData.HORSE.textColor,
+  SHEEP: animalMetaData.SHEEP.textColor,
+  MONKEY: animalMetaData.MONKEY.textColor,
+  CHICKEN: animalMetaData.CHICKEN.textColor,
+  DOG: animalMetaData.DOG.textColor,
+  PIG: animalMetaData.PIG.textColor,
+} as const
 
-export const animalNumberMap: Record<number, string> = {
-  0: "monkey",
-  1: "chicken",
-  2: "dog",
-  3: "pig",
-  4: "mouse",
-  5: "cow",
-  6: "tiger",
-  7: "rabbit",
-  8: "dragon",
-  9: "snake",
-  10: "horse",
-  11: "sheep",
-}
+export const animalNumberMap: Record<string, AnimalType> = {
+  [animalMetaData.MONKEY.id]: animalMetaData.MONKEY.en,
+  [animalMetaData.CHICKEN.id]: animalMetaData.CHICKEN.en,
+  [animalMetaData.DOG.id]: animalMetaData.DOG.en,
+  [animalMetaData.PIG.id]: animalMetaData.PIG.en,
+  [animalMetaData.MOUSE.id]: animalMetaData.MOUSE.en,
+  [animalMetaData.COW.id]: animalMetaData.COW.en,
+  [animalMetaData.TIGER.id]: animalMetaData.TIGER.en,
+  [animalMetaData.RABBIT.id]: animalMetaData.RABBIT.en,
+  [animalMetaData.DRAGON.id]: animalMetaData.DRAGON.en,
+  [animalMetaData.SNAKE.id]: animalMetaData.SNAKE.en,
+  [animalMetaData.HORSE.id]: animalMetaData.HORSE.en,
+  [animalMetaData.SHEEP.id]: animalMetaData.SHEEP.en,
+} as const
 
 export const sizeClassMap: Record<
   AnimalBadgeSize,
@@ -115,4 +224,4 @@ export const sizeClassMap: Record<
     text: "text-title-xs",
     px: "px-2",
   },
-}
+} as const

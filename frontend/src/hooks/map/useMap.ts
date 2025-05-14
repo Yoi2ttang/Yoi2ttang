@@ -1,23 +1,29 @@
-import { useEffect } from "react"
+"use client"
+
 import { Coordinates } from "@/types/map/navermaps"
+import { useEffect } from "react"
 import { useMapInitialize } from "./useMapInitialize"
 
 interface InitMapOptions {
+  mapDiv?: string | HTMLElement
   loc: Coordinates
   zoom?: number
   onCenterChange?: (center: Coordinates) => void
 }
 
-export const useMap = ({ loc, zoom = 15, onCenterChange }: InitMapOptions) => {
-  const { mapRef, initializeMap, setCenter } = useMapInitialize()
+export const useMap = ({
+  loc,
+  zoom = 15,
+  onCenterChange,
+  mapDiv,
+}: InitMapOptions) => {
+  const { mapRef, initializeMap } = useMapInitialize()
 
   useEffect(() => {
-    try {
-      initializeMap({ loc, zoom, onCenterChange })
-    } catch (e) {
-      console.error(e)
+    if (!mapRef.current) {
+      initializeMap({ loc, zoom, onCenterChange, mapDiv })
     }
-  }, [loc, zoom, onCenterChange])
+  }, [])
 
   return {
     mapRef,
