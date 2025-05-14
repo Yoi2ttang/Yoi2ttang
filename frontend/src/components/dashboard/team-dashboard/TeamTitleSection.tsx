@@ -1,17 +1,15 @@
-import { AnimalType } from "@/types/animal"
-
 interface TeamTitleSectionProps {
   teamInfo: {
     username: string
     teamName: string
     rank: number
     tileCount: number
-    zodiac: AnimalType
+    zodiacId: number
   }
 }
 
 const TeamTitleSection = ({ teamInfo }: TeamTitleSectionProps) => {
-  const { username, teamName, rank, tileCount } = teamInfo
+  const { username, teamName, rank } = teamInfo
 
   return (
     <section className="flex flex-col gap-1">

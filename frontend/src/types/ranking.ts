@@ -1,10 +1,13 @@
 import { ComponentProps, FC } from "react"
 
-export interface TeamRankingInfo {
+export interface TeamRanking {
   rank: number
-  teamId: number
+  zodiacId: number
+  tileCount: number
+}
+
+export interface TeamRankingInfo extends TeamRanking {
   teamName: string
-  totalTiles: number
   TeamIconComponent: FC<ComponentProps<"svg">>
 }
 
@@ -13,5 +16,25 @@ export interface ContributionUserInfo {
   memberId: number
   nickname: string
   profileImageUrl: string
+  tileCount: number
+}
+
+export interface ZodiacContributionRankingResponse {
+  pageInfoArgs: {
+    pageToken: null
+    data: ContributionUserInfo[]
+    hasNext: boolean
+  }
+}
+
+export interface TeamRankingResponse {
+  tileTeamSituationResponseList: TeamRanking[]
+}
+
+export interface MyTeamInfoResponse {
+  nickname: string
+  zodiacId: number
+  ranking: number
+  zodiacName: string
   tileCount: number
 }

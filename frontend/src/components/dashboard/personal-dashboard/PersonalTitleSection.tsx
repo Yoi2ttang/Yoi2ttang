@@ -11,7 +11,8 @@ const PersonalTitleSection = ({ name, days }: PersonalTitleSectionProps) => {
       </h3>
       <p className="text-title-sm">
         <span className="">요이땅</span>과&nbsp;
-        <span className="text-yoi-500">{days}일</span>동안 달리고 있어요
+        <span className="text-yoi-500">{days ? days : "-"}일</span>동안 달리고
+        있어요
       </p>
     </section>
   )

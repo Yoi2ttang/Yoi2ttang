@@ -1,47 +1,43 @@
 import Section from "@/components/common/Section"
+import { getZodiacContributionRanking } from "@/services/ranking/api"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { use } from "react"
 import TeamContributionItem from "./TeamContributionItem"
+interface TeamContributionSectionProps {
+  zodiacId: number
+}
 
-interface TeamContributionSectionProps {}
+const TeamContributionSection = ({
+  zodiacId,
+}: TeamContributionSectionProps) => {
+  const { data } = use(getZodiacContributionRanking(zodiacId))
 
-const TeamContributionSection = ({}: TeamContributionSectionProps) => {
-  const mockData = [
-    {
-      rank: 1,
-      nickname: "홍길동",
-      tileCount: 100,
-      profileImageUrl: null,
-    },
-    {
-      rank: 2,
-      nickname: "이순신",
-      tileCount: 90,
-      profileImageUrl: null,
-    },
-    {
-      rank: 3,
-      nickname: "김유신",
-      tileCount: 80,
-      profileImageUrl: null,
-    },
-  ]
+  const contributionData = data?.pageInfoArgs?.data
 
   return (
     <Section
       title="✨ 우리 팀 TOP 3"
       supplement={
         <Link
-          href={`/ranking/teams/${"1"}/contribution`}
+          href={`/ranking/teams/${zodiacId}/contribution`}
           className="text-caption flex items-center gap-1 text-neutral-400">
           <span>전체보기</span>
           <ChevronRight className="size-4" />
         </Link>
       }>
       <div className="flex flex-col gap-4">
-        {mockData.map((data) => (
-          <TeamContributionItem key={data.rank} data={data} />
-        ))}
+        {contributionData?.length ? (
+          contributionData.map((data) => (
+            <TeamContributionItem key={data.memberId} data={data} />
+          ))
+        ) : (
+          <div className="flex flex-col gap-4 text-center">
+            <p className="text-caption text-neutral-400">
+              팀 기여도 랭킹 데이터가 없습니다.
+            </p>
+          </div>
+        )}
       </div>
     </Section>
   )

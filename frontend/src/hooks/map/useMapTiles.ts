@@ -1,14 +1,15 @@
-import { useRef, useCallback, RefObject } from "react"
 import { Tile } from "@/types/map/tile"
+import { RefObject, useEffect, useRef } from "react"
 
 interface useMapTilesProps {
   mapRef: RefObject<naver.maps.Map | null>
+  tiles: Tile[]
 }
 
-export const useMapTiles = ({ mapRef }: useMapTilesProps) => {
+export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
 
-  const renderTiles = useCallback((tiles: Tile[], color = "#FF7C64") => {
+  const renderTiles = (tiles: Tile[], color = "#FF7C64") => {
     const map = mapRef.current
     if (!map || typeof window === "undefined" || !window.naver) {
       return
@@ -34,7 +35,13 @@ export const useMapTiles = ({ mapRef }: useMapTilesProps) => {
       })
       rectanglesRef.current.push(rectangle)
     })
-  }, [])
+  }
+
+  useEffect(() => {
+    if (mapRef.current) {
+      renderTiles(tiles)
+    }
+  }, [tiles])
 
   return { renderTiles }
 }

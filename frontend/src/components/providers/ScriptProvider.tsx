@@ -6,13 +6,12 @@ export const ScriptProvider = () => {
     <>
       <Head>
         <link
-          rel="preload"
-          as="script"
+          rel="preconnect"
           href={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_MAP_CLIENT_ID}`}
         />
       </Head>
       <Script
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_MAP_CLIENT_ID}`}
       />
     </>
