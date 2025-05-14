@@ -1,35 +1,40 @@
 "use client"
 
+import { useState } from "react"
 import { Coordinates } from "@/types/map/navermaps"
-import { useEffect, useState } from "react"
-import Map from "../common/Map"
 import { tileGetResponseList } from "@/constants/tiles"
 import { Tile } from "@/types/map/tile"
 import { getTeamTileMap } from "@/services/tile/api"
+import { useMap } from "@/hooks/map/useMap"
+import { useMapMarker } from "@/hooks/map/useMapMarker"
+import { useMapTiles } from "@/hooks/map/useMapTiles"
 
-const RunningMap = () => {
-  const [loc, setLoc] = useState<Coordinates>()
+interface RunningMapProps {
+  loc: Coordinates
+}
+
+const RunningMap = ({ loc }: RunningMapProps) => {
   const [tiles, setTiles] = useState<Tile[]>(tileGetResponseList)
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLoc({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      })
-    })
-  }, [])
 
   const handleCenterChange = async (center: Coordinates) => {
     const res = await getTeamTileMap(center)
     setTiles(res.tileGetResponseList)
   }
 
+  const { mapRef } = useMap({
+    loc,
+    zoom: 15,
+    onCenterChange: handleCenterChange,
+    mapDiv: "running-stats-map",
+  })
+  useMapMarker({ mapRef })
+  useMapTiles({ mapRef, tiles })
+
   if (!loc) return null
 
   return (
-    <div className="flex h-full w-full flex-1">
-      <Map loc={loc} tiles={tiles} onCenterChange={handleCenterChange} />
+    <div className="flex h-full w-full">
+      <div id="running-stats-map" className="h-full w-full" />
     </div>
   )
 }

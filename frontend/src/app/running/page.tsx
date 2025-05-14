@@ -28,7 +28,7 @@ const RunningPage = () => {
     return <Countdown count={count} />
   }
 
-  return <RunningView runningTime={runningTime} />
+  return <RunningView />
 }
 
 export default RunningPage

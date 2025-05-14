@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { useMap } from "@/hooks/map/useMap"

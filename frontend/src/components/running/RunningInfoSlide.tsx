@@ -4,17 +4,24 @@ import RunningStats from "./RunningStats"
 import RunningStatsMap from "./RunningStatsMap"
 import RunningActions from "./RunningActions"
 import { Coordinates } from "@/types/map/navermaps"
-import { tileGetResponseList } from "@/constants/tiles"
-import { Tile } from "@/types/map/tile"
 import { ArrowRight } from "lucide-react"
 
 interface RunningInfoSlideProps {
   onClose: () => void
+  runningTime: number
+  distance: number
+  calories: number
+  speed: number
 }
 
-const RunningInfoSlide = ({ onClose }: RunningInfoSlideProps) => {
+const RunningInfoSlide = ({
+  onClose,
+  runningTime,
+  distance,
+  calories,
+  speed,
+}: RunningInfoSlideProps) => {
   const [loc, setLoc] = useState<Coordinates>()
-
   const [visible, setVisible] = useState(false)
   const [showMap, setShowMap] = useState(false)
 
@@ -47,12 +54,17 @@ const RunningInfoSlide = ({ onClose }: RunningInfoSlideProps) => {
           visible ? "translate-x-0" : "translate-x-full",
         )}>
         <div className="text-2xl font-semibold">러닝 기록</div>
-        <RunningStats />
+        <RunningStats
+          runningTime={runningTime}
+          distance={distance}
+          calories={calories}
+          speed={speed}
+        />
         {showMap && loc && <RunningStatsMap loc={loc} />}
         <RunningActions />
       </div>
       <button
-        onClick={() => handleClose()}
+        onClick={handleClose}
         className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white p-2 shadow-md transition active:scale-95">
         <span className="text-2xl font-bold">
           <ArrowRight />
