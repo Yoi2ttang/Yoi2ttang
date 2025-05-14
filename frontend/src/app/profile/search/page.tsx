@@ -6,9 +6,9 @@ import UserSearchBar from "@/components/profile/UserSearchBar"
 import useSearchUser from "@/hooks/auth/useSearchUser"
 import { AnimalType } from "@/types/animal"
 import { MemberPreview, MembersResponse } from "@/types/member"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 
-const ProfileSearchPage = () => {
+const SearchContent = () => {
   const [keyword, setKeyword] = useState("")
   const { targetRef, data, isLoading, isFetchingNextPage } = useSearchUser()
 
@@ -53,6 +53,14 @@ const ProfileSearchPage = () => {
         </div>
       </div>
     </div>
+  )
+}
+
+const ProfileSearchPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   )
 }
 

@@ -28,7 +28,12 @@ const ProfileSettingPage = () => {
 
   const handleEdit = () => {
     if (data?.memberId) {
-      edit({ data: profileData, memberId: data.memberId })
+      edit({
+        data: profileData,
+        memberId: data.memberId,
+        isNicknameChanged:
+          profileData.memberUpdateRequest.nickname !== data?.nickname,
+      })
     }
   }
 

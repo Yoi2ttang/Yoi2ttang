@@ -8,7 +8,7 @@ interface TeamsRankingPageProps {}
 const TeamsRankingPage = ({}: TeamsRankingPageProps) => {
   return (
     <>
-      <StackHeader title="팀 랭킹" align="left" description="12시 기준" />
+      <StackHeader title="팀 랭킹" supplement="12시 기준" />
       <Suspense fallback={<TeamsRakingSkeleton />}>
         <TeamsRankingContent />
       </Suspense>

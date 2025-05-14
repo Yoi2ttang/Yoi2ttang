@@ -5,9 +5,9 @@ import TeamSelectionForm from "@/components/signup/TeamSelectionForm"
 import TermForm from "@/components/signup/TermForm"
 import { SignUpData, SignupStep } from "@/types/auth"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 
-const SignupPage = () => {
+const SignupContent = () => {
   const [step, setStep] = useState<SignupStep>(SignupStep.TERM)
   const [signupData, setSignupData] = useState<SignUpData>({
     socialId: "",
@@ -69,6 +69,14 @@ const SignupPage = () => {
   }
 
   return <div className="h-dvh overflow-hidden">{renderForm()}</div>
+}
+
+const SignupPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignupContent />
+    </Suspense>
+  )
 }
 
 export default SignupPage
