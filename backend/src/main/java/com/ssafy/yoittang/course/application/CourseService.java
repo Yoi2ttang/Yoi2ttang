@@ -2,6 +2,7 @@ package com.ssafy.yoittang.course.application;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,19 +14,21 @@ import com.ssafy.yoittang.common.aws.S3ImageUploader;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.domain.BookmarkViewType;
 import com.ssafy.yoittang.course.domain.Course;
-import com.ssafy.yoittang.course.domain.Location;
+import com.ssafy.yoittang.course.domain.CourseTile;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
-import com.ssafy.yoittang.course.domain.repository.LocationJpaRepository;
+import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 
+import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class CourseService {
 
     private final CourseRepository courseRepository;
-    private final LocationJpaRepository locationJpaRepository;
+    private final CourseTileJpaRepository courseTileJpaRepository;
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final S3ImageUploader s3ImageUploader;
@@ -63,17 +66,19 @@ public class CourseService {
                 .courseImageUrl(imageUrl)
                 .build();
         courseRepository.save(course);
-        List<Location> locations = new ArrayList<>();
-        for (Double[] point : courseCreateRequest.points()) {
-            locations.add(
-                    Location.builder()
+        LinkedHashSet<CourseTile> courseTiles = new LinkedHashSet<>();
+        for (GeoPoint geoPoint : courseCreateRequest.geoPoints()) {
+            double lat = geoPoint.lat();
+            double lng = geoPoint.lng();
+            String geoHash = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 7);
+            courseTiles.add(
+                    CourseTile.builder()
                             .courseId(course.getCourseId())
-                            .latitude(point[0])
-                            .longitude(point[1])
+                            .geoHash(geoHash)
                             .build()
             );
         }
-        locationJpaRepository.bulkInsert(locations);
+        courseTileJpaRepository.bulkInsert(new ArrayList<>(courseTiles));
     }
 
     public CourseDetailResponse getCourseDetail(Long courseId, Member member) {

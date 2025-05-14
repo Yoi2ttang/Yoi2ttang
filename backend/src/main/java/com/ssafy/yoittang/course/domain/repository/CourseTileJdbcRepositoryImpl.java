@@ -8,35 +8,34 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ssafy.yoittang.course.domain.Location;
+import com.ssafy.yoittang.course.domain.CourseTile;
 
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class LocationJdbcRepositoryImpl implements LocationJdbcRepository {
+public class CourseTileJdbcRepositoryImpl implements CourseTileJdbcRepository {
 
     private static final String BULK_INSERT_QUERY =
             "INSERT INTO "
-            + "locations(course_id, latitude, longitude) "
-            + "VALUES(?, ?, ?)";
+            + "course_tiles(course_id, geohash) "
+            + "VALUES(?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void bulkInsert(List<Location> locations) {
+    public void bulkInsert(List<CourseTile> courseTiles) {
         jdbcTemplate.batchUpdate(BULK_INSERT_QUERY, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int index) throws SQLException {
-                Location location = locations.get(index);
-                ps.setLong(1, location.getCourseId());
-                ps.setDouble(2, location.getLatitude());
-                ps.setDouble(3, location.getLongitude());
+                CourseTile courseTile = courseTiles.get(index);
+                ps.setLong(1, courseTile.getCourseId());
+                ps.setString(2, courseTile.getGeoHash());
             }
 
             @Override
             public int getBatchSize() {
-                return locations.size();
+                return courseTiles.size();
             }
         });
     }

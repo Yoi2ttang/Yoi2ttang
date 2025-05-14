@@ -14,32 +14,27 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "locations")
+@Table(name = "course_tiles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Location {
+public class CourseTile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id")
-    private Long locationId;
+    @Column(name = "course_tile_id")
+    private Long courseTileId;
 
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
-    @Column(name = "latitude", nullable = false)
-    private Double latitude;
-
-    @Column(name = "longitude", nullable = false)
-    private Double longitude;
+    @Column(name = "geohash", nullable = false)
+    private String geoHash;
 
     @Builder
-    private Location(
+    private CourseTile(
             Long courseId,
-            Double latitude,
-            Double longitude
+            String geoHash
     ) {
         this.courseId = courseId;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.geoHash = geoHash;
     }
 }

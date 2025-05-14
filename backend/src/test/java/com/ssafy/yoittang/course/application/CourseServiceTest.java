@@ -33,10 +33,11 @@ import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
-import com.ssafy.yoittang.course.domain.repository.LocationJpaRepository;
+import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Gender;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceTest {
@@ -48,7 +49,7 @@ public class CourseServiceTest {
     private CourseRepository courseRepository;
 
     @Mock
-    private LocationJpaRepository locationJpaRepository;
+    private CourseTileJpaRepository courseTileJpaRepository;
 
     @Mock
     private S3ImageUploader s3ImageUploader;
@@ -73,17 +74,17 @@ public class CourseServiceTest {
 
     @Test
     void createCourseSuccess() {
-        List<Double[]> samplePoints = List.of(
-                new Double[]{37.5665, 126.9780}, // 서울시청
-                new Double[]{37.5651, 126.9895}, // 을지로입구역
-                new Double[]{37.5642, 126.9981}, // 종로3가
-                new Double[]{37.5704, 126.9920}, // 종묘
-                new Double[]{37.5720, 126.9769}  // 경복궁
+        List<GeoPoint> coordinateRequests = List.of(
+                new GeoPoint(37.5665, 126.9780), // 서울시청
+                new GeoPoint(37.5651, 126.9895), // 을지로입구역
+                new GeoPoint(37.5642, 126.9981), // 종로3가
+                new GeoPoint(37.5704, 126.9920), // 종묘
+                new GeoPoint(37.5720, 126.9769)  // 경복궁
         );
         CourseCreateRequest courseCreateRequest = new CourseCreateRequest(
                 "코스1",
-                1500.0F,
-                samplePoints
+                coordinateRequests,
+                1500.0F
         );
         MultipartFile mockImage = mock(MultipartFile.class);
         String imageUrl = "https://example.com";
@@ -91,24 +92,24 @@ public class CourseServiceTest {
         courseService.createCourse(courseCreateRequest, mockImage, mockMember);
         verify(s3ImageUploader, times(1)).uploadCourse(mockImage);
         verify(courseRepository, times(1)).save(any(Course.class));
-        verify(locationJpaRepository, times(1))
-                .bulkInsert(argThat(list -> list.size() == samplePoints.size()));
+        verify(courseTileJpaRepository, times(1))
+                .bulkInsert(argThat(list -> list.size() == coordinateRequests.size()));
     }
 
     @Test
     void createCourseWhenS3UploadFails() {
-        List<Double[]> samplePoints = List.of(
-                new Double[]{37.5665, 126.9780}, // 서울시청
-                new Double[]{37.5651, 126.9895}, // 을지로입구역
-                new Double[]{37.5642, 126.9981}, // 종로3가
-                new Double[]{37.5704, 126.9920}, // 종묘
-                new Double[]{37.5720, 126.9769}  // 경복궁
+        List<GeoPoint> coordinateRequests = List.of(
+                new GeoPoint(37.5665, 126.9780), // 서울시청
+                new GeoPoint(37.5651, 126.9895), // 을지로입구역
+                new GeoPoint(37.5642, 126.9981), // 종로3가
+                new GeoPoint(37.5704, 126.9920), // 종묘
+                new GeoPoint(37.5720, 126.9769)  // 경복궁
         );
 
         CourseCreateRequest courseCreateRequest = new CourseCreateRequest(
                 "실패 코스1",
-                1500.0F,
-                samplePoints
+                coordinateRequests,
+                1500.0F
         );
         MultipartFile mockImage = mock(MultipartFile.class);
         when(s3ImageUploader.uploadCourse(mockImage))
@@ -119,15 +120,16 @@ public class CourseServiceTest {
         });
 
         verify(courseRepository, never()).save(any());
-        verify(locationJpaRepository, never()).bulkInsert(anyList());
+        verify(courseTileJpaRepository, never()).bulkInsert(anyList());
     }
 
     @Test
     void createCourseWithEmptyPointsShouldNotSaveLocations() {
         CourseCreateRequest courseCreateRequest = new CourseCreateRequest(
                 "실패 코스1",
-                1500.0F,
-                new ArrayList<>()
+                new ArrayList<>(),
+                1500.0F
+
         );
         MultipartFile mockImage = mock(MultipartFile.class);
         String imageUrl = "https://example.com";
@@ -135,8 +137,7 @@ public class CourseServiceTest {
         courseService.createCourse(courseCreateRequest, mockImage, mockMember);
         verify(s3ImageUploader, times(1)).uploadCourse(mockImage);
         verify(courseRepository, times(1)).save(any(Course.class));
-        verify(locationJpaRepository).bulkInsert(eq(Collections.emptyList()));
-
+        verify(courseTileJpaRepository).bulkInsert(eq(Collections.emptyList()));
     }
 
     @Test
