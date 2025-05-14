@@ -27,7 +27,7 @@ const RunningMap = ({ loc }: RunningMapProps) => {
     onCenterChange: handleCenterChange,
     mapDiv: "running-stats-map",
   })
-  useMapMarker({ mapRef })
+  useMapMarker({ mapRef, loc: loc })
   useMapTiles({ mapRef, tiles })
 
   if (!loc) return null
