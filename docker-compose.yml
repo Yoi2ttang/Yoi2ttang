@@ -41,7 +41,8 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/ubuntu/S12P31A502/backend/dev.env:/var/jenkins_home/dev.env:ro
+      - /home/ubuntu/S12P31A502/backend/dev.env:/var/jenkins_home/backend/dev.env:ro
+      - /home/ubuntu/S12P31A502/frontend/.env:/var/jenkins_home/frontend/.env:ro
       - /opt/yoittang/infra/nginx:/opt/yoittang/infra/nginx:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
@@ -50,6 +51,17 @@ services:
     networks:
       - yoittang_backend_network
     restart: unless-stopped
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - /home/ubuntu/S12P31A502/frontend/.env
+    networks:
+      - yoittang_backend_network
 
   backend_blue:
     container_name: backend_blue
