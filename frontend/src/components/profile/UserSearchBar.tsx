@@ -1,12 +1,14 @@
 "use client"
 
 import useSearchNickname from "@/hooks/auth/useSearchNickname"
+import { cn } from "@/lib/utils"
 import { MemberAutocomplete, MemberAutocompleteResponse } from "@/types/member"
 import { debounce } from "lodash-es"
 import { SearchIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useState } from "react"
 import Input from "../common/Input"
+import Skeleton from "../common/skeleton"
 
 interface UserSearchBarProps {
   placeholder?: string
@@ -40,6 +42,10 @@ const UserSearchBar = ({
     router.push(`/profile/${memberId}`)
   }
 
+  const isEmpty = !data?.pages.some(
+    (page: MemberAutocompleteResponse) => page.data.length > 0,
+  )
+
   return (
     <form onSubmit={handleSubmit} className="relative">
       <Input
@@ -52,10 +58,14 @@ const UserSearchBar = ({
       />
 
       {isFocused && (
-        <div className="absolute top-full z-9999 mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white px-4 shadow-md">
+        <div
+          className={cn(
+            "absolute top-full z-9999 mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white px-4 shadow-md",
+            isEmpty && "py-4",
+          )}>
           {isLoading ? (
-            Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} className="h-4 animate-pulse bg-neutral-300" />
+            Array.from({ length: 5 }).map((_, index) => (
+              <Skeleton key={index} className="h-4" />
             ))
           ) : (
             <>
