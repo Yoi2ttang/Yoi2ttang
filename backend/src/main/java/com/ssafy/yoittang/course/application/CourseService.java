@@ -153,19 +153,19 @@ public class CourseService {
         return courseRepository.findCourseByKeyword(keyword, pageToken);
     }
 
-    public TileGetResponseWrapper getTilesNearBy(Long courseId, GeoPoint geoPoint) {
+    public TileGetResponseWrapper getTilesNearBy(Long courseId, Double lat, Double lng) {
         String geoHashString =
-                GeoHash.geoHashStringWithCharacterPrecision(geoPoint.lat(), geoPoint.lng(), 6) + "%";
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+
+//        return TileGetResponseWrapper.builder()
+//                .tileGetResponseList(tileRepository.getTileByCourseId(courseId, geoHashString))
+//                .build(); //경과 시간: 0.588초
+
+        List<String> geoHashList = getGeoHashes(courseId, geoHashString);
 
         return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTileByCourseId(courseId, geoHashString))
-                .build();
-
-//        List<String> geoHashList = getGeoHashes(courseId, geoHashString);
-//
-//        return TileGetResponseWrapper.builder()
-//                .tileGetResponseList(tileRepository.getTilesInGeoHashes(geoHashList))
-//                .build();
+                .tileGetResponseList(tileRepository.getTilesInGeoHashes(geoHashList))
+                .build(); //0.289c초
     }
 
 

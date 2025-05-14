@@ -91,7 +91,7 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                         Projections.constructor(
                                 TileGetResponse.class,
                                 tile.geoHash,
-                                Expressions.constant(null),
+                                Expressions.template(Long.class, "null"),
                                 Projections.constructor(
                                         GeoPoint.class,
                                         tile.latSouth,
@@ -104,10 +104,11 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                                 )
                         )
                 )
-                .from(tile)
-                .join(courseTile).on(courseTile.courseId.eq(courseId))
+                .distinct()
+                .from(courseTile)
+                .leftJoin(tile).on(courseTile.courseId.eq(courseId), courseTile.geoHash.eq(tile.geoHash))
                 .where(
-                        tile.geoHash.like(geohash)
+                        courseTile.geoHash.like(geohash)
                 )
                 .fetch();
     }
@@ -118,7 +119,7 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                         Projections.constructor(
                                 TileGetResponse.class,
                                 tile.geoHash,
-                                Expressions.constant(null),
+                                Expressions.template(Long.class, "null"),
                                 Projections.constructor(
                                         GeoPoint.class,
                                         tile.latSouth,

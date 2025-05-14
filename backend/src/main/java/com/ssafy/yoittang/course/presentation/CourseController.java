@@ -94,9 +94,10 @@ public class CourseController {
     @GetMapping("/{courseId}/nearBy/tiles")
     public ResponseEntity<TileGetResponseWrapper> getTilesNearBy(
             @PathVariable("courseId") Long courseId,
-            @RequestParam GeoPoint geoPoint,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getTilesNearBy(courseId, geoPoint));
+        return ResponseEntity.ok(courseService.getTilesNearBy(courseId, lat, lng));
     }
 }
