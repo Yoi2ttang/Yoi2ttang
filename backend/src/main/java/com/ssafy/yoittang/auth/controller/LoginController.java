@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.yoittang.auth.domain.Environment;
 import com.ssafy.yoittang.auth.domain.request.LoginRequest;
 import com.ssafy.yoittang.auth.domain.request.SignupRequest;
 import com.ssafy.yoittang.auth.domain.response.AccessTokenResponse;
@@ -23,7 +24,6 @@ import com.ssafy.yoittang.auth.domain.response.LoginResponse;
 import com.ssafy.yoittang.auth.service.LoginService;
 import com.ssafy.yoittang.member.application.MemberService;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,11 +44,14 @@ public class LoginController {
     ) {
         var loginResponse = loginService.login(loginRequest);
 
+        boolean isProd = Environment.WEB.equals(loginRequest.getEnvironment());
+
         ResponseCookie cookie = ResponseCookie.from("refresh-token", loginResponse.refreshToken())
                 .maxAge(ONE_WEEK_SECONDS)
-                .secure(false) // 로컬에서는 HTTPS가 아니기 때문에 false
+                .secure(isProd) // 로컬에서는 HTTPS가 아니기 때문에 false
                 .httpOnly(true)
-                .sameSite("Lax") // Lax 또는 None 가능. None은 secure=true 필요.
+                .sameSite(isProd ? "None" : "Lax")
+                .domain(isProd ? "yoi2ttang.site" : null)// Lax 또는 None 가능. None은 secure=true 필요.
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -63,9 +66,10 @@ public class LoginController {
         LoginResponse loginResponse = loginService.finalizeSignup(request);
         ResponseCookie cookie = ResponseCookie.from("refresh-token", loginResponse.refreshToken())
                 .maxAge(ONE_WEEK_SECONDS)
-                .secure(false)
+                .secure(true) // 로컬에서는 HTTPS가 아니기 때문에 false
                 .httpOnly(true)
-                .sameSite("Lax")
+                .sameSite("None")
+                .domain("yoi2ttang.site")// Lax 또는 None 가능. None은 secure=true 필요.
                 .path("/")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
