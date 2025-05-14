@@ -21,8 +21,10 @@ export const GET = async (request: Request) => {
 
     // 1. 기존 유저인 경우
     if (!response.data.socialId) {
-      // 메인 페이지로 리다이렉트 응답 생성
-      const nextResponse = NextResponse.redirect(new URL("/", request.url))
+      // 대시보드 페이지로 리다이렉트 응답 생성
+      const nextResponse = NextResponse.redirect(
+        new URL("/dashboard/my", request.url),
+      )
 
       // 쿠키 방식으로 액세스 토큰 생성
       nextResponse.cookies.set("accessToken", response.data.accessToken, {

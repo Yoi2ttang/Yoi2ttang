@@ -1,7 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { objectToSearchParams } from "./utils"
+import { objectToSearchParams } from "./utils-server"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 

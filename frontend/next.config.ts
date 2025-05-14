@@ -26,6 +26,21 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/api/**",
       },
+      {
+        protocol: "http",
+        hostname: "img1.kakaocdn.net",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "ssacle.s3.ap-northeast-2.amazonaws.com",
+        port: "",
+      },
+      {
+        protocol: "http",
+        hostname: "dummyimage.com",
+        port: "",
+      },
     ],
   },
 

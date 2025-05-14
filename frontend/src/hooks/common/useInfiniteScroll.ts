@@ -22,7 +22,7 @@ const useInfiniteScroll = <TQueryFnData>(
   const targetRef = useRef<HTMLDivElement>(null)
   const response = useInfiniteQuery({
     enabled,
-    ...params,
+    ...data,
   })
 
   useEffect(() => {
@@ -39,10 +39,11 @@ const useInfiniteScroll = <TQueryFnData>(
         response.fetchNextPage()
       }
     }, option)
+
     observer.observe(targetRef.current)
 
     return () => observer.disconnect()
-  }, [enabled, response.hasNextPage])
+  }, [enabled, response])
 
   return { targetRef, ...response }
 }

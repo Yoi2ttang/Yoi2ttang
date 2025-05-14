@@ -1,22 +1,30 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
+import { getTerm } from "@/services/term/api"
 
 // 동적 경로 중 type의 값이 generateStaticParams에 저장된 값이 아니라면 404 페이지로 보낸다.
 export const dynamicParams = false
 
 export const generateStaticParams = async () => {
-  return [{ type: "privacy" }, { type: "location" }, { type: "marketing" }]
+  return [{ termId: "1" }, { termId: "2" }, { termId: "3" }]
+}
+
+const termList: Record<string, string> = {
+  "1": "개인정보 처리 방침",
+  "2": "위치 기반 서비스 이용약관",
+  "3": "마케팅 홍보 활용 동의",
 }
 
 interface TermPageProps {
-  params: Promise<{ type: string }>
+  params: Promise<{ termId: string }>
 }
 
 const TermPage = async ({ params }: TermPageProps) => {
-  const { type } = await params
+  const { termId } = await params
+  // const term = await getTerm(termId)
 
   return (
     <div>
-      <StackHeader title="개인정보 처리 방침" />
+      <StackHeader title={`${termList[termId]}`} />
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex flex-col gap-6">

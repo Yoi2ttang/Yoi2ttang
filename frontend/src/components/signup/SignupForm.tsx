@@ -1,12 +1,12 @@
+import StackHeader from "@/components/layouts/Header/StackHeader"
+import useSignup from "@/hooks/auth/useSignup"
 import { SignUpData, SignupStep } from "@/types/auth"
 import { Dispatch, SetStateAction } from "react"
 import ProgressBar from "../common/ProgressBar"
-import StackHeader from "../layouts/Header/StackHeader"
 import BirthForm from "./BirthForm"
 import GenderForm from "./GenderForm"
 import NicknameForm from "./NicknameForm"
 import WeightForm from "./WeightForm"
-import useSignup from "@/hooks/auth/useSignup"
 
 interface SignupFormProps {
   signupData: SignUpData
