@@ -10,8 +10,9 @@ const useSignup = (signupData: SignUpData) => {
       credentials: "include",
       body: JSON.stringify(signupData),
     })
-    if (response.redirected) {
-      router.replace(response.url)
+    const data = await response.json()
+    if (data.redirectTo) {
+      router.replace(data.redirectTo)
     }
   }
 

@@ -15,8 +15,6 @@ const useLogin = () => {
       })
 
       const data = await response.json()
-
-      console.log(data.redirectTo)
       if (data.redirectTo) {
         router.replace(data.redirectTo)
       }

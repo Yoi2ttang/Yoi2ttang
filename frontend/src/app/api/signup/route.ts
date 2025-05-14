@@ -10,12 +10,14 @@ export const POST = async (request: Request) => {
     const response = await postSignup(signupData)
     // 응답이 실패한 경우 로그인 페이지로 리다이렉트
     if (response.isError) {
-      return NextResponse.redirect(new URL("/login", request.url))
+      return NextResponse.json({
+        redirectTo: "/login",
+      })
     }
     // 대시보드 페이지로 리다이렉트 응답 생성
-    const nextResponse = NextResponse.redirect(
-      new URL("/dashboard/my", request.url),
-    )
+    const nextResponse = NextResponse.json({
+      redirectTo: "/dashboard/my",
+    })
 
     // 쿠키 방식으로 액세스 토큰 생성
     nextResponse.cookies.set("accessToken", response.data.accessToken, {
@@ -28,9 +30,11 @@ export const POST = async (request: Request) => {
 
     return nextResponse
   } catch (error) {
-    console.error(error)
+    console.error("회원가입 실패: ", error)
 
     // 에러 발생 시, 로그인 페이지로 리다이렉트 응답 생성
-    return NextResponse.redirect(new URL("/login", request.url))
+    return NextResponse.json({
+      redirectTo: "/login",
+    })
   }
 }
