@@ -4,11 +4,7 @@ import PreRunningRankingInfo from "./PreRunningRankingInfo"
 import PreRunningTileInfo from "./PreRunningTileInfo"
 
 const PreRunningInfo = () => {
-  const { mutate: fetchTeamSituation, data } = useGetTeamSituation()
-
-  useEffect(() => {
-    fetchTeamSituation(2)
-  }, [])
+  const { data, isLoading, isError } = useGetTeamSituation(2)
 
   return (
     <div className="flex w-full flex-col gap-6">

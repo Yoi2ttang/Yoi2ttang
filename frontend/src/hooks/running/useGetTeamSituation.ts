@@ -1,12 +1,13 @@
 "use client"
 
-import { useMutation } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { getTeamSituation } from "@/services/running/api"
 
-const useGetTeamSituation = () => {
-  return useMutation({
-    mutationKey: ["teamSituation"],
-    mutationFn: (zodiacId: number) => getTeamSituation(zodiacId),
+const useGetTeamSituation = (zodiacId: number) => {
+  return useQuery({
+    queryKey: ["teamSituation", zodiacId],
+    queryFn: () => getTeamSituation(zodiacId),
+    staleTime: 1000 * 60,
   })
 }
 
