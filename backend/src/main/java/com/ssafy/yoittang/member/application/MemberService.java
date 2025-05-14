@@ -163,6 +163,7 @@ public class MemberService {
     public MemberProfileResponse getMemberProfile(Long targetId, Member member) {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        ZodiacName targetZodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(targetMember.getZodiacId());
         Integer followingCount = followJpaRepository.countFollowings(targetMember.getMemberId());
         Integer followerCount = followJpaRepository.countFollowers(targetMember.getMemberId());
         if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME)) {
@@ -170,7 +171,7 @@ public class MemberService {
                     targetMember.getMemberId(),
                     targetMember.getNickname(),
                     targetMember.getProfileImageUrl(),
-                    null,
+                    targetZodiacName,
                     null,
                     followingCount,
                     followerCount,
@@ -262,6 +263,11 @@ public class MemberService {
 
     @Transactional
     public void updateProfile(MemberUpdateRequest memberUpdateRequest, MultipartFile file, Member member) {
+        if (!member.getNickname().equals(memberUpdateRequest.nickname())
+                && memberRepository.existByNickname(memberUpdateRequest.nickname())
+        ) {
+            throw new BadRequestException(ErrorCode.DUPLICATE_NICKNAME);
+        }
         member.updateProfileInfo(memberUpdateRequest);
         if (file != null) {
             String newProfileImageUrl = s3ImageUploader.uploadMember(file);

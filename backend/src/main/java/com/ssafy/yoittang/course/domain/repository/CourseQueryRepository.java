@@ -8,7 +8,7 @@ import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 
 public interface CourseQueryRepository {
-    List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId);
+    List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit);
 
     List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId);
 

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.application.CourseService;
+import com.ssafy.yoittang.course.domain.BookmarkViewType;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
@@ -33,9 +34,10 @@ public class CourseController {
 
     @GetMapping("/bookmarks")
     public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(
+            @RequestParam BookmarkViewType type,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getBookmarkCourse(member));
+        return ResponseEntity.ok(courseService.getBookmarkCourse(type, member));
     }
 
     @PostMapping(
@@ -80,7 +82,7 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<PageInfo<CourseSummaryResponse>> getCourseByKeyword(
-            @RequestParam("keyword") String keyword,
+            @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {

@@ -3,6 +3,7 @@ package com.ssafy.yoittang.auth.service;
 import java.time.Duration;
 import java.util.Optional;
 
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import com.ssafy.yoittang.auth.infrastructure.KakaoOAuthProvider;
 import com.ssafy.yoittang.auth.repository.RefreshTokenRepository;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.MemberRedisEntity;
@@ -95,13 +97,39 @@ public class LoginService {
         jwtUtil.validateRefreshToken(refreshToken);
 
         if (jwtUtil.isAccessTokenValid(accessToken)) {
-            return accessToken;
+            Long memberId = Long.parseLong(jwtUtil.getSubject(accessToken));
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+
+            String tokenNickname = jwtUtil.getClaim(accessToken, "nickname", String.class);
+            String tokenZodiacName = jwtUtil.getClaim(accessToken, "zodiacTeam", String.class);
+
+            if (member.getNickname().equals(tokenNickname)) {
+                return accessToken; // nickname 동일 재발급 불필요
+            }
+
+            JwtRequest jwtRequest = new JwtRequest(
+                    member.getMemberId(),
+                    member.getNickname(),
+                    member.getZodiacId(),
+                    tokenZodiacName
+            );
+            return jwtUtil.reissueAccessToken(jwtRequest);
         }
 
         if (jwtUtil.isAccessTokenExpired(accessToken)) {
             RefreshToken foundRefreshToken = refreshTokenRepository.findById(refreshToken)
                     .orElseThrow(() -> new BadRequestException(ErrorCode.INVALID_REFRESH_TOKEN));
-            return jwtUtil.reissueAccessToken(foundRefreshToken.getMemberId().toString());
+            Member member = memberRepository.findById(foundRefreshToken.getMemberId())
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+            ZodiacName zodiacName = zodiacJpaRepository.findZodiacNameByZodiacId(member.getZodiacId());
+            JwtRequest jwtRequest = new JwtRequest(
+                    member.getMemberId(),
+                    member.getNickname(),
+                    member.getZodiacId(),
+                    zodiacName.toString()
+            );
+            return jwtUtil.reissueAccessToken(jwtRequest);
         }
 
         throw new BadRequestException(ErrorCode.FAILED_TO_VALIDATE_TOKEN);
