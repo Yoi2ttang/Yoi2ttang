@@ -25,13 +25,9 @@ const RunningView = () => {
   const { runningTime, distance, calories, speed, currentLoc } =
     useRunningStats({ isPaused })
 
-  useEffect(() => {
-    console.log("RunningTime:", currentLoc)
-  }, [runningTime, distance, calories, speed])
-
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
-      {loc && <RunningMap loc={loc} />}
+      {currentLoc && <RunningMap loc={currentLoc} />}
 
       <button
         onClick={() => setShowOverlay(true)}
