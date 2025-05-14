@@ -9,22 +9,27 @@ export const GET = async (request: Request) => {
     // 인증 코드가 없으면 로그인 페이지로 리다이렉트
     if (!code) {
       console.error("인증 코드가 존재하지 않습니다.")
-      return NextResponse.redirect(new URL("/login", request.url))
+      // return NextResponse.redirect(new URL("/login", request.url))
+      return NextResponse.json({
+        redirectTo: "/login",
+      })
     }
 
     // 백엔드 서버에 로그인 API 호출
     const response = await postLogin(code)
     // 응답이 실패한 경우 로그인 페이지로 리다이렉트
     if (response.isError) {
-      return NextResponse.redirect(new URL("/login", request.url))
+      return NextResponse.json({
+        redirectTo: "/login",
+      })
     }
 
     // 1. 기존 유저인 경우
     if (!response.data.socialId) {
       // 대시보드 페이지로 리다이렉트 응답 생성
-      const nextResponse = NextResponse.redirect(
-        new URL("/dashboard/my", request.url),
-      )
+      const nextResponse = NextResponse.json({
+        redirectTo: "/dashboard/my",
+      })
 
       // 쿠키 방식으로 액세스 토큰 생성
       nextResponse.cookies.set("accessToken", response.data.accessToken, {
@@ -40,9 +45,9 @@ export const GET = async (request: Request) => {
     // 2. 신규 유저인 경우
     else {
       // 회원가입 페이지로 리다이렉트 응답 생성
-      const nextResponse = NextResponse.redirect(
-        new URL(`/signup?socialId=${response.data.socialId}`, request.url),
-      )
+      const nextResponse = NextResponse.json({
+        redirectTo: `/signup?socialId=${response.data.socialId}`,
+      })
 
       return nextResponse
     }
@@ -50,6 +55,8 @@ export const GET = async (request: Request) => {
     console.error(error)
 
     // 에러 발생 시, 로그인 페이지로 리다이렉트 응답 생성
-    return NextResponse.redirect(new URL("/login", request.url))
+    return NextResponse.json({
+      redirectTo: "/login",
+    })
   }
 }

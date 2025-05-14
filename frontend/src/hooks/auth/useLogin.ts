@@ -13,9 +13,13 @@ const useLogin = () => {
         method: "GET",
         credentials: "include",
       })
-      // if (response.redirected) {
-      router.replace(response.url)
-      // }
+
+      const data = await response.json()
+
+      console.log(data.redirectTo)
+      if (data.redirectTo) {
+        router.replace(data.redirectTo)
+      }
     }
 
     login()
