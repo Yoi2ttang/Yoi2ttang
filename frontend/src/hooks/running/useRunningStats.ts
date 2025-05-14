@@ -31,10 +31,10 @@ export const useRunningStats = ({
   isPaused,
   weightKg = 50,
 }: useRunningStatsProps) => {
-  const locRef = useRef<Coordinates>({ lat: 37.5665, lng: 126.978 })
+  const locRef = useRef<Coordinates>({ lat: 0, lng: 0 })
   const prevLoc = useRef<Coordinates | null>(null)
 
-  const [currentLoc, setCurrentLoc] = useState<Coordinates>(locRef.current)
+  const [currentLoc, setCurrentLoc] = useState<Coordinates>()
   const [distance, setDistance] = useState(0)
   const [calories, setCalories] = useState(0)
   const [runningTime, setRunningTime] = useState(0)
@@ -42,6 +42,24 @@ export const useRunningStats = ({
 
   const distanceRef = useRef(0)
   const timeRef = useRef(0)
+
+  // 최초 현재 위치 설정
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const initLoc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }
+        locRef.current = initLoc
+        prevLoc.current = initLoc
+        setCurrentLoc(initLoc)
+      },
+      (error) => {
+        console.error("현재 위치를 불러오는 데 실패했습니다:", error)
+      },
+    )
+  }, [])
 
   useEffect(() => {
     const id = setInterval(() => {
