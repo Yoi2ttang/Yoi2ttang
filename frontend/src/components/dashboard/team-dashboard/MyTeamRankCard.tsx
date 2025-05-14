@@ -15,7 +15,7 @@ interface MyTeamRankCardProps {
 const MyTeamRankCard = ({ teamInfo }: MyTeamRankCardProps) => {
   const { teamName, rank, tileCount, zodiacId } = teamInfo
   const zodiacName = animalNumberMap[zodiacId]
-  const AnimalIcon = animalMetaData[zodiacName].icon
+  const AnimalIcon = animalMetaData[zodiacName]?.icon
   return (
     <DashboardCard className="bg-yoi-400 flex flex-col gap-4 rounded-xl">
       <div className="flex items-center justify-between">

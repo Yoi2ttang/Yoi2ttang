@@ -29,40 +29,8 @@ interface AnimalMetaDataType {
 }
 
 export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
-  MONKEY: {
-    id: "0",
-    en: "MONKEY",
-    icon: Monkey,
-    teamName: "원숭이",
-    bgColor: "bg-monkey",
-    textColor: "text-monkey",
-  },
-  CHICKEN: {
-    id: "1",
-    en: "CHICKEN",
-    icon: Chicken,
-    teamName: "닭",
-    bgColor: "bg-chicken",
-    textColor: "text-chicken",
-  },
-  DOG: {
-    id: "2",
-    en: "DOG",
-    icon: Dog,
-    teamName: "개",
-    bgColor: "bg-dog",
-    textColor: "text-dog",
-  },
-  PIG: {
-    id: "3",
-    en: "PIG",
-    icon: Pig,
-    teamName: "돼지",
-    bgColor: "bg-pig",
-    textColor: "text-pig",
-  },
   MOUSE: {
-    id: "4",
+    id: "1",
     en: "MOUSE",
     icon: Mouse,
     teamName: "쥐",
@@ -70,7 +38,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-mouse",
   },
   COW: {
-    id: "5",
+    id: "2",
     en: "COW",
     icon: Cow,
     teamName: "소",
@@ -78,7 +46,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-cow",
   },
   TIGER: {
-    id: "6",
+    id: "3",
     en: "TIGER",
     icon: Tiger,
     teamName: "호랑이",
@@ -86,7 +54,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-tiger",
   },
   RABBIT: {
-    id: "7",
+    id: "4",
     en: "RABBIT",
     icon: Rabbit,
     teamName: "토끼",
@@ -94,7 +62,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-rabbit",
   },
   DRAGON: {
-    id: "8",
+    id: "5",
     en: "DRAGON",
     icon: Dragon,
     teamName: "용",
@@ -102,7 +70,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-dragon",
   },
   SNAKE: {
-    id: "9",
+    id: "6",
     en: "SNAKE",
     icon: Snake,
     teamName: "뱀",
@@ -110,7 +78,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-snake",
   },
   HORSE: {
-    id: "10",
+    id: "7",
     en: "HORSE",
     icon: Horse,
     teamName: "말",
@@ -118,12 +86,44 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     textColor: "text-horse",
   },
   SHEEP: {
-    id: "11",
+    id: "8",
     en: "SHEEP",
     icon: Sheep,
     teamName: "양",
     bgColor: "bg-sheep",
     textColor: "text-sheep",
+  },
+  MONKEY: {
+    id: "9",
+    en: "MONKEY",
+    icon: Monkey,
+    teamName: "원숭이",
+    bgColor: "bg-monkey",
+    textColor: "text-monkey",
+  },
+  CHICKEN: {
+    id: "10",
+    en: "CHICKEN",
+    icon: Chicken,
+    teamName: "닭",
+    bgColor: "bg-chicken",
+    textColor: "text-chicken",
+  },
+  DOG: {
+    id: "11",
+    en: "DOG",
+    icon: Dog,
+    teamName: "개",
+    bgColor: "bg-dog",
+    textColor: "text-dog",
+  },
+  PIG: {
+    id: "12",
+    en: "PIG",
+    icon: Pig,
+    teamName: "돼지",
+    bgColor: "bg-pig",
+    textColor: "text-pig",
   },
 }
 
@@ -188,18 +188,18 @@ export const textClassMap: Record<AnimalType, string> = {
 } as const
 
 export const animalNumberMap: Record<string, AnimalType> = {
-  "0": animalMetaData.MONKEY.en,
-  "1": animalMetaData.CHICKEN.en,
-  "2": animalMetaData.DOG.en,
-  "3": animalMetaData.PIG.en,
-  "4": animalMetaData.MOUSE.en,
-  "5": animalMetaData.COW.en,
-  "6": animalMetaData.TIGER.en,
-  "7": animalMetaData.RABBIT.en,
-  "8": animalMetaData.DRAGON.en,
-  "9": animalMetaData.SNAKE.en,
-  "10": animalMetaData.HORSE.en,
-  "11": animalMetaData.SHEEP.en,
+  [animalMetaData.MONKEY.id]: animalMetaData.MONKEY.en,
+  [animalMetaData.CHICKEN.id]: animalMetaData.CHICKEN.en,
+  [animalMetaData.DOG.id]: animalMetaData.DOG.en,
+  [animalMetaData.PIG.id]: animalMetaData.PIG.en,
+  [animalMetaData.MOUSE.id]: animalMetaData.MOUSE.en,
+  [animalMetaData.COW.id]: animalMetaData.COW.en,
+  [animalMetaData.TIGER.id]: animalMetaData.TIGER.en,
+  [animalMetaData.RABBIT.id]: animalMetaData.RABBIT.en,
+  [animalMetaData.DRAGON.id]: animalMetaData.DRAGON.en,
+  [animalMetaData.SNAKE.id]: animalMetaData.SNAKE.en,
+  [animalMetaData.HORSE.id]: animalMetaData.HORSE.en,
+  [animalMetaData.SHEEP.id]: animalMetaData.SHEEP.en,
 } as const
 
 export const sizeClassMap: Record<

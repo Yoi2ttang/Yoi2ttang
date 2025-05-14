@@ -1,4 +1,5 @@
 import ContributeCard from "@/components/ranking/ContributeCard"
+import { getZodiacContributionRanking } from "@/services/ranking/api"
 import { ContributionUserInfo } from "@/types/ranking"
 import { use } from "react"
 
@@ -11,7 +12,14 @@ interface TeamsContributionPageProps {
 const TeamsContributionPage = ({ params }: TeamsContributionPageProps) => {
   const { teamId } = use(params)
   // TODO: teamId 기준 팀 기여도 데이터 가져오기
-  const userContributionList = mockData.pageInfoArgs.data
+  const { data, isSuccess } = use(getZodiacContributionRanking(+teamId))
+
+  const userContributionList = isSuccess
+    ? data.pageInfoArgs.data.length > 0
+      ? data.pageInfoArgs.data
+      : mockData.pageInfoArgs.data
+    : mockData.pageInfoArgs.data
+
   return (
     <div className="flex flex-col gap-4">
       {userContributionList.map((userInfo) => (

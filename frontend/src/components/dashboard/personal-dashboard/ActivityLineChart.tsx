@@ -13,7 +13,6 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js"
-import { TeamActivityChangeResponse } from "@/types/dashboard/dashboard.type"
 
 ChartJS.register(
   CategoryScale, // 범주 차트
@@ -25,7 +24,10 @@ ChartJS.register(
 )
 
 interface ActivityLineChartProps {
-  activityData: TeamActivityChangeResponse["tookTileHistoryGroupByPeriodList"]
+  activityData: {
+    count: number
+    date: string
+  }[]
 }
 
 const ActivityLineChart: FC<ActivityLineChartProps> = ({ activityData }) => {

@@ -1,6 +1,5 @@
 import Section from "@/components/common/Section"
 import { getTeamRankingPreview } from "@/services/ranking/api"
-import { AnimalType } from "@/types/animal"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { use } from "react"
@@ -10,33 +9,13 @@ interface TeamRankingSummarySectionProps {
   zodiacId: number
 }
 
-const mockRankInfo = [
-  {
-    rank: 1,
-    teamName: "팀 이름",
-    zodiac: "tiger" as AnimalType,
-    tileCount: 100,
-  },
-  {
-    rank: 2,
-    teamName: "호랑이",
-    zodiac: "tiger" as AnimalType,
-    tileCount: 100,
-  },
-  {
-    rank: 3,
-    teamName: "호랑이",
-    zodiac: "tiger" as AnimalType,
-    tileCount: 100,
-  },
-]
-
 const TeamRankingSummarySection = ({
   zodiacId,
 }: TeamRankingSummarySectionProps) => {
-  const { data } = use(getTeamRankingPreview())
+  const { data } = use(getTeamRankingPreview({ zodiacId, limit: 3 }))
 
   const rankingData = data?.tileTeamSituationResponseList
+
   return (
     <Section
       title="🏆 상위 팀 랭킹"
@@ -52,7 +31,7 @@ const TeamRankingSummarySection = ({
       <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
         {rankingData?.length ? (
           rankingData.map((rankInfo) => (
-            <TeamRankingItem key={rankInfo.rank} rankInfo={rankInfo} />
+            <TeamRankingItem key={rankInfo.zodiacId} rankInfo={rankInfo} />
           ))
         ) : (
           <div className="flex w-full flex-col gap-4 text-center">

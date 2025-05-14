@@ -8,6 +8,7 @@ interface InitMapOptions {
   zoom?: number
   onCenterChange?: (center: Coordinates) => void
   mapDiv?: string | HTMLElement
+  customOptions?: naver.maps.MapOptions
 }
 
 export const useMapInitialize = () => {
@@ -21,6 +22,7 @@ export const useMapInitialize = () => {
     loc,
     zoom = 15,
     onCenterChange,
+    customOptions,
   }: InitMapOptions) => {
     if (typeof window === "undefined" || !window.naver || mapRef.current) {
       return null
@@ -37,7 +39,8 @@ export const useMapInitialize = () => {
       logoControlOptions: {
         position: naver.maps.Position.BOTTOM_LEFT,
       },
-    }
+      ...customOptions,
+    } as naver.maps.MapOptions
 
     const map = new naver.maps.Map(mapDiv ?? "naver-map", mapOptions)
     mapRef.current = map

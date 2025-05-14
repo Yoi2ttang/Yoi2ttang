@@ -2,7 +2,7 @@ import { ComponentProps, FC } from "react"
 
 export interface TeamRanking {
   rank: number
-  zodiacId: string
+  zodiacId: number
   tileCount: number
 }
 

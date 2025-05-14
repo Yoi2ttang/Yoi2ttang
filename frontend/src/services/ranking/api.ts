@@ -13,14 +13,19 @@ export const getTeamRanking = async () => {
 }
 
 // 팀 별 랭킹 top 3
-export const getTeamRankingPreview = async () => {
+export const getTeamRankingPreview = async (params: {
+  zodiacId: number
+  limit: number
+}) => {
   const nextApiClient = await getApiServer()
 
-  return nextApiClient.get<TeamRankingResponse>("/tiles/rankings/preview")
+  return nextApiClient.get<TeamRankingResponse>("/tiles/rankings/previews", {
+    params,
+  })
 }
 
 // 간지별 기여도 랭킹 확인
-export const getZodiacContributionRanking = async (zodiacId: string) => {
+export const getZodiacContributionRanking = async (zodiacId: number) => {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<ZodiacContributionRankingResponse>(

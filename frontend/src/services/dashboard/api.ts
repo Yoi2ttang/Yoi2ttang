@@ -12,7 +12,7 @@ import type {
 // 개인 대시보드 데이터 가져오기
 export const getDashboardData = async () => {
   const nextApiClient = await getApiServer()
-  return nextApiClient.get<PersonalDashboardResponse>("/dashboard/members")
+  return nextApiClient.get<PersonalDashboardResponse>("/dashboards/members")
 }
 
 // 개인 일별 달린 시간 조회
@@ -20,7 +20,7 @@ export const getDailyTime = async (params: { year: number; month: number }) => {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<PersonalDailyRunningTimeResponse[]>(
-    "/dashboard/members/daily-running-times",
+    "/dashboards/members/daily-running-times",
     { params },
   )
 }
@@ -30,7 +30,7 @@ export const getDailyTile = async (params: { year: number; month: number }) => {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<PersonalDailyTileResponse[]>(
-    "/dashboard/members/daily-tiles-counts",
+    "/dashboards/members/daily-tiles-counts",
     { params },
   )
 }
@@ -43,7 +43,7 @@ export const getDailyCourse = async (params: {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<PersonalDailyCourseResponse[]>(
-    "/dashboard/members/daily-courses",
+    "/dashboards/members/daily-courses",
     { params },
   )
 }
@@ -55,7 +55,7 @@ export const getTileChangeRate = async (params: {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<PersonalTileChangeRateResponse>(
-    "/dashboard/members/tile-changes",
+    "/dashboards/members/tile-changes",
     { params },
   )
 }
@@ -67,11 +67,14 @@ export const getTileChangeRate = async (params: {
 
 // 5. 우리팀 활동량 변화
 export const getTeamActivityChange = async (
-  params?: TeamActivityChangeRequest,
+  params: TeamActivityChangeRequest,
 ) => {
   const nextApiClient = await getApiServer()
 
-  return nextApiClient.get<TeamActivityChangeResponse>("/took-tile-histories", {
-    params: params ? { ...params } : undefined,
-  })
+  return nextApiClient.get<TeamActivityChangeResponse>(
+    "/dashboards/teams/courses",
+    {
+      params: params ? { ...params } : undefined,
+    },
+  )
 }

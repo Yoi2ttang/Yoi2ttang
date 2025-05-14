@@ -19,13 +19,17 @@ const ContributeCard = ({ userInfo }: ContributeCardProps) => {
       <div className="flex w-full items-center gap-2 text-black">
         <div className="text-title-sm basis-8 text-center">{rankIcon}</div>
         <div className="flex w-full flex-1 items-center gap-2">
-          <Image
-            src={profileImageUrl}
-            alt={nickname}
-            width={30}
-            height={30}
-            className="size-10 rounded-full"
-          />
+          {profileImageUrl ? (
+            <Image
+              src={profileImageUrl}
+              alt={nickname}
+              width={30}
+              height={30}
+              className="size-9 rounded-full"
+            />
+          ) : (
+            <div className="size-9 rounded-full bg-neutral-300" />
+          )}
           <span className="text-title-sm">{nickname}</span>
         </div>
       </div>

@@ -1,15 +1,19 @@
 import Badge from "@/components/common/Badge"
-import { TeamRankingInfo } from "@/types/ranking"
+import { animalMetaData, animalNumberMap } from "@/constants/animals"
+import { TeamRanking } from "@/types/ranking"
 
 interface MyTeamCardProps {
-  rankInfo: TeamRankingInfo
+  rankInfo: TeamRanking
 }
 
 const MyTeamCard = ({ rankInfo }: MyTeamCardProps) => {
-  const { TeamIconComponent, rank, teamName, totalTiles } = rankInfo
-
+  const { rank, zodiacId, tileCount } = rankInfo
   const rankIcon =
     rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `${rank}등`
+
+  const animalData = animalMetaData[animalNumberMap[zodiacId]]
+  const { icon: TeamIconComponent, teamName } = animalData
+
   return (
     <section className="bg-neutral-50 py-4">
       <div className="from-yoi-100/30 to-yoi-400/30 overflow-hidden rounded-2xl bg-gradient-to-br shadow-lg">
@@ -26,7 +30,7 @@ const MyTeamCard = ({ rankInfo }: MyTeamCardProps) => {
               <span className="text-title-sm">{teamName} 팀</span>
             </div>
             <Badge className="bg-yoi-300 border-yoi-400 border text-black">
-              {totalTiles}타일
+              {tileCount}타일
             </Badge>
           </div>
         </div>
