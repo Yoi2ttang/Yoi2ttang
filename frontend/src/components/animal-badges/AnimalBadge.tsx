@@ -21,14 +21,11 @@ const AnimalBadge = ({
 }: AnimalBadgeProps) => {
   const Icon = animalIconMap[animal]
   const teamName = animalTeamNameMap[animal]
-  const { container, icon, text, px } = sizeClassMap[size]
+  const { iconSize, text, padding } = sizeClassMap[size]
   const bgClass = backgroundClassMap[animal]
-
-  if (!Icon) return null
-
   return (
-    <Badge className={`${container} ${px} ${bgClass} ${className} ${text}`}>
-      <Icon className={icon} />
+    <Badge className={`${padding} ${bgClass} ${className} ${text}`}>
+      {Icon && <Icon className={iconSize} />}
       <div
         className={cn(
           "flex-1 text-center",

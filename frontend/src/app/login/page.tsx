@@ -30,7 +30,7 @@ const LoginPage = () => {
           <Link
             href={`https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}&response_type=code`}
             className="bg-kakao-yellow flex items-center justify-center gap-4 rounded-xl px-5 py-3">
-            <KakaoIcon />
+            <KakaoIcon className="w-8" />
             <p className="text-kakao-brown text-lg">카카오로 달려들기</p>
           </Link>
         </div>

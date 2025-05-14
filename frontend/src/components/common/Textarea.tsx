@@ -1,17 +1,12 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  TextareaHTMLAttributes,
-} from "react"
+import { ChangeEvent, TextareaHTMLAttributes } from "react"
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
   content: string
-  onContentChange: Dispatch<SetStateAction<string>>
+  onContentChange: (content: string) => void
 }
 
 const Textarea = (data: TextareaProps) => {
@@ -34,21 +29,22 @@ const Textarea = (data: TextareaProps) => {
   }
 
   return (
-    <div className="px-2 py-3 bg-white border rounded-lg border-neutral-200">
+    <div className="rounded-lg border-2 border-neutral-200 bg-white px-2 py-3 focus-within:border-black">
       <textarea
         className={cn(
-          "w-full resize-none placeholder-neutral-300 p-2 outline-black",
+          "w-full resize-none p-2 placeholder-neutral-300 outline-none",
           className,
         )}
         placeholder={placeholder}
         disabled={disabled}
         value={content}
         onChange={handleChange}
+        maxLength={maxLength}
       />
 
       <p
         className={cn(
-          "text-xs bottom-4 right-4 text-end",
+          "right-4 bottom-4 text-end text-xs",
           content.length === maxLength ? "text-rose-500" : "text-neutral-300",
         )}>
         {content.length} / {maxLength}

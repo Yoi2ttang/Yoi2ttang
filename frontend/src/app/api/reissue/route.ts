@@ -17,7 +17,7 @@ export const POST = async (request: Request) => {
 
     return nextResponse
   } catch (error) {
-    console.error(error)
+    console.error("리이슈 실패: ", error)
     return NextResponse.json(null, { status: 500 })
   }
 }
