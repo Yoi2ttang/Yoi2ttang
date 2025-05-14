@@ -35,7 +35,7 @@ const UserSearchBar = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsFocused(false)
-    router.push(`/profile/search?keyword=${keyword}`)
+    router.replace(`/profile/search?keyword=${keyword}`)
   }
 
   const handleClick = (memberId: number) => {
@@ -43,7 +43,7 @@ const UserSearchBar = ({
   }
 
   const isEmpty = !data?.pages.some(
-    (page: MemberAutocompleteResponse) => page.data.length > 0,
+    (page: MemberAutocompleteResponse) => page?.data.length > 0,
   )
 
   return (
@@ -57,11 +57,10 @@ const UserSearchBar = ({
         onChange={handleChange}
       />
 
-      {isFocused && (
+      {isFocused && (isLoading || !isEmpty) && (
         <div
           className={cn(
-            "absolute top-full z-9999 mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white px-4 shadow-md",
-            isEmpty && "py-4",
+            "absolute top-full z-9999 mt-2 flex h-fit max-h-44 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white p-4 shadow-md",
           )}>
           {isLoading ? (
             Array.from({ length: 5 }).map((_, index) => (
@@ -70,7 +69,7 @@ const UserSearchBar = ({
           ) : (
             <>
               {data?.pages.map((page: MemberAutocompleteResponse) =>
-                page.data.map((item: MemberAutocomplete) => (
+                page?.data.map((item: MemberAutocomplete) => (
                   <div
                     key={item.memberId}
                     className="cursor-pointer"
@@ -81,9 +80,9 @@ const UserSearchBar = ({
               )}
 
               {isFetchingNextPage ? (
-                <div className="h-4 animate-pulse bg-neutral-300" />
+                <Skeleton className="h-4" />
               ) : (
-                <div ref={targetRef} />
+                <div ref={targetRef} className="-mt-3" />
               )}
             </>
           )}

@@ -10,7 +10,7 @@ import { ProfileForEditRequest } from "@/types/member"
 import { useEffect, useMemo, useState } from "react"
 
 const ProfileSettingPage = () => {
-  const { data, isPending } = useProfileForEdit()
+  const { data, isLoading } = useProfileForEdit()
   const [profileData, setProfileData] = useState<ProfileForEditRequest>({
     memberUpdateRequest: {
       nickname: "",
@@ -81,7 +81,7 @@ const ProfileSettingPage = () => {
         }
       />
 
-      {isPending || !data ? (
+      {isLoading || !data ? (
         <div>Loading...</div>
       ) : (
         <EditForm

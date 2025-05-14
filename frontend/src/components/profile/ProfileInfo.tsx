@@ -24,6 +24,7 @@ const ProfileInfo = ({ data }: ProfileInfoProps) => {
     followerCount,
     followingCount,
     isFollow,
+    time,
   } = data
   // 낙관적 업데이트를 위한 상태
   const [followState, setFollowState] = useState(isFollow)
@@ -91,11 +92,12 @@ const ProfileInfo = ({ data }: ProfileInfoProps) => {
         </Link>
       </div>
 
-      {!isMe && (
+      {/* 비공개 계정일 경우, time, course 등의 값이 null이므로 이를 조건식에 사용 */}
+      {!isMe && time && (
         <FollowButton
           targetId={memberId}
           followState={followState}
-          onChange={setFollowState}
+          onClick={setFollowState}
           className="w-full"
         />
       )}

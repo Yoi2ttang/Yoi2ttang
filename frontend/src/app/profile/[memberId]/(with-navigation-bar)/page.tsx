@@ -1,6 +1,6 @@
 import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQuestSection"
 import ProfileHeader from "@/components/profile/ProfileHeader"
-import ProfileInfoWrapper from "@/components/profile/ProfileInfoWrapper"
+import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
 import { getProfile } from "@/services/member/api"
 
@@ -23,8 +23,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           <p className="text-center">존재하지 않는 유저입니다.</p>
         ) : (
           <>
-            {/* <ProfileInfo data={data} /> */}
-            <ProfileInfoWrapper data={data} />
+            <ProfileInfo data={data} />
             <ProfileRunningRecordSection data={data} />
             <ProfileCompletedQuestSection data={data} />
           </>
