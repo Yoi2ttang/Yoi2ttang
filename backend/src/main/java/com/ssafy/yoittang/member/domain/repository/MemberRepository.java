@@ -6,8 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.ssafy.yoittang.member.domain.Member;
-import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
-import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 
@@ -52,12 +51,12 @@ public class MemberRepository {
         return memberQueryRepository.findMembersByIds(ids);
     }
 
-    public List<FollowingResponse> findFollowingByIds(List<Long> ids) {
-        return memberQueryRepository.findFollowingByIds(ids);
+    public List<FollowResponse> findFollowingByIds(List<Long> ids, Long memberId) {
+        return memberQueryRepository.findFollowingByIds(ids, memberId);
     }
 
-    public List<FollowerResponse> findFollowerByIds(List<Long> ids) {
-        return memberQueryRepository.findFollowerByIds(ids);
+    public List<FollowResponse> findFollowerByIds(List<Long> ids, Long memberId) {
+        return memberQueryRepository.findFollowerByIds(ids, memberId);
     }
 
     public boolean existByNickname(String nickname) {

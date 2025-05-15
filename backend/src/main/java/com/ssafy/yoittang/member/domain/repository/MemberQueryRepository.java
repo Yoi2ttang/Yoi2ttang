@@ -2,9 +2,7 @@ package com.ssafy.yoittang.member.domain.repository;
 
 import java.util.List;
 
-import com.ssafy.yoittang.member.domain.Member;
-import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
-import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 
@@ -15,7 +13,7 @@ public interface MemberQueryRepository {
 
     List<MemberAutocompleteResponse> findMembersByIds(List<Long> ids);
 
-    List<FollowingResponse> findFollowingByIds(List<Long> ids);
+    List<FollowResponse> findFollowingByIds(List<Long> ids, Long memberId);
 
-    List<FollowerResponse> findFollowerByIds(List<Long> ids);
+    List<FollowResponse> findFollowerByIds(List<Long> ids, Long memberId);
 }

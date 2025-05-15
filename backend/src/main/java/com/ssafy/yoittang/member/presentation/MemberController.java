@@ -21,8 +21,7 @@ import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
-import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
-import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
@@ -36,7 +35,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-
 
 @RestController
 @RequestMapping("/members")
@@ -80,21 +78,21 @@ public class MemberController {
     }
 
     @GetMapping("/{targetId}/followings")
-    public ResponseEntity<PageInfo<FollowingResponse>> getFollowingList(
+    public ResponseEntity<PageInfo<FollowResponse>> getFollowingList(
             @PathVariable("targetId") Long targetId,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getFollowingList(pageToken, member));
+        return ResponseEntity.ok(memberService.getFollowingList(targetId, pageToken, member));
     }
 
     @GetMapping("/{targetId}/followers")
-    public ResponseEntity<PageInfo<FollowerResponse>> getFollowerList(
+    public ResponseEntity<PageInfo<FollowResponse>> getFollowerList(
             @PathVariable("targetId") Long targetId,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getFollowerList(pageToken, member));
+        return ResponseEntity.ok(memberService.getFollowerList(targetId, pageToken, member));
     }
 
     @GetMapping("/{targetId}/profiles")

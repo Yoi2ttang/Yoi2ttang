@@ -2,10 +2,11 @@ package com.ssafy.yoittang.member.domain.dto.response;
 
 import com.ssafy.yoittang.zodiac.domain.ZodiacName;
 
-public record FollowerResponse(
+public record FollowResponse(
         Long memberId,
         String nickname,
         String profileImageUrl,
-        ZodiacName zodiacName
+        ZodiacName zodiacName,
+        Boolean isFollow
 ) {
 }
