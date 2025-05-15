@@ -22,8 +22,8 @@ import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.dto.response.RunCourseResponse;
 import com.ssafy.yoittang.member.domain.Member;
-import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +33,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+
+    @GetMapping("/runs/preview")
+    public ResponseEntity<List<RunCourseResponse>> getRunCoursePreview(
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getRunCoursePreview(member));
+    }
 
     @GetMapping("/bookmarks")
     public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(

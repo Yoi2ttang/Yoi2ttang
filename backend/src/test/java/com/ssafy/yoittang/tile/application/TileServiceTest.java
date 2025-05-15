@@ -60,7 +60,7 @@ public class TileServiceTest {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
-        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5);
         String geoHashString = geoHashPrefix + "%";
 
         List<TileGetResponse> responseList = new ArrayList<>();
@@ -96,7 +96,7 @@ public class TileServiceTest {
         //40.71870, -74.00878 뉴욕
         double lat = 40.71870;
         double lng = -74.00878;
-        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5);
         String geoHashString = geoHashPrefix + "%";
 
         List<TileGetResponse> responseList = new ArrayList<>();
@@ -117,7 +117,7 @@ public class TileServiceTest {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
-        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5);
         String geoHashString = geoHashPrefix + "%";
 
         Long zodiacId = 3L;
@@ -156,7 +156,7 @@ public class TileServiceTest {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
-        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5);
         String geoHashString = geoHashPrefix + "%";
 
         Long zodiacId = 18L;

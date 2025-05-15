@@ -18,6 +18,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
@@ -30,6 +31,22 @@ import lombok.RequiredArgsConstructor;
 public class CourseQueryRepositoryImpl implements CourseQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, int limit) {
+        return jpaQueryFactory
+                .selectFrom(course)
+                .join(running).on(course.courseId.eq(running.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        course.courseId.isNotNull()
+                )
+                .distinct()
+                .orderBy(course.courseId.desc())
+                .limit(limit)
+                .fetch();
+    }
 
     @Override
     public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit) {

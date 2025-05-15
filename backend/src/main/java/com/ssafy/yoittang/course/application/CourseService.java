@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.dto.response.RunCourseResponse;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.Member;
@@ -29,6 +31,7 @@ import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +45,37 @@ public class CourseService {
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
     private final TileRepository tileRepository;
+    private final TileHistoryRepository tileHistoryRepository;
     private final S3ImageUploader s3ImageUploader;
 
     private static final double DISTANCE_THRESHOLD_KM = 10.0;
+
+    public List<RunCourseResponse> getRunCoursePreview(Member member) {
+        List<Course> courses = courseRepository.findCompletedCoursesByMemberId(member.getMemberId(), 3);
+        List<Long> courseIds = courses.stream().map(Course::getCourseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
+                member.getMemberId(),
+                courseIds
+        );
+
+        return courses.stream()
+                .map(course -> {
+                    Long total = totalTiles.getOrDefault(course.getCourseId(), 0L);
+                    Long visited = visitedTiles.getOrDefault(course.getCourseId(), 0L);
+                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
+
+                    return new RunCourseResponse(
+                            course.getCourseId(),
+                            course.getCourseName(),
+                            course.getDistance(),
+                            course.getCourseImageUrl(),
+                            completionRate
+                    );
+                })
+                .toList();
+    }
 
     public List<CourseSummaryResponse> getBookmarkCourse(BookmarkViewType type, Member member) {
         if (type.equals(BookmarkViewType.ALL)) {
