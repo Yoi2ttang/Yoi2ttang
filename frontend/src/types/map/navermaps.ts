@@ -9,3 +9,5 @@ export interface Coordinates {
 
 export type MapOptions = naver.maps.MapOptions
 export type Map = naver.maps.Map
+
+export type ReverseGeocodeResponse = naver.maps.Service.ReverseGeocodeResponse
