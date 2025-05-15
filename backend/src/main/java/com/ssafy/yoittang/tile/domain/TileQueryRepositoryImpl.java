@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.tile.domain;
 
+import static com.ssafy.yoittang.course.domain.QCourseTile.courseTile;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
 
 import java.util.List;
@@ -81,6 +82,60 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                         eqZodiacId(zodiacId)
                 )
                 .groupBy(tile.zodiacId)
+                .fetch();
+    }
+
+    @Override
+    public List<TileGetResponse> getTileByCourseId(Long courseId, String geohash) {
+        return queryFactory.select(
+                        Projections.constructor(
+                                TileGetResponse.class,
+                                tile.geoHash,
+                                Expressions.template(Long.class, "null"),
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latSouth,
+                                        tile.lngWest
+                                ),
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latNorth,
+                                        tile.lngEast
+                                )
+                        )
+                )
+                .distinct()
+                .from(courseTile)
+                .leftJoin(tile).on(courseTile.courseId.eq(courseId), courseTile.geoHash.eq(tile.geoHash))
+                .where(
+                        courseTile.geoHash.like(geohash)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<TileGetResponse> getTilesInGeoHashes(List<String> geoHashList) {
+        return queryFactory.select(
+                        Projections.constructor(
+                                TileGetResponse.class,
+                                tile.geoHash,
+                                Expressions.template(Long.class, "null"),
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latSouth,
+                                        tile.lngWest
+                                ),
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latNorth,
+                                        tile.lngEast
+                                )
+                        )
+                )
+                .from(tile)
+                .where(
+                        tile.geoHash.in(geoHashList)
+                )
                 .fetch();
     }
 }

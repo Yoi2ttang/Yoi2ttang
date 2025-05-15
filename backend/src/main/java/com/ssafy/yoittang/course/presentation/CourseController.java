@@ -23,6 +23,8 @@ import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -87,5 +89,15 @@ public class CourseController {
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getCourseByKeyword(keyword, pageToken));
+    }
+
+    @GetMapping("/{courseId}/nearBy/tiles")
+    public ResponseEntity<TileGetResponseWrapper> getTilesNearBy(
+            @PathVariable("courseId") Long courseId,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getTilesNearBy(courseId, lat, lng));
     }
 }
