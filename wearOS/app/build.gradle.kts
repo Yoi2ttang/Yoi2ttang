@@ -53,4 +53,6 @@ dependencies {
     implementation("androidx.compose.runtime:runtime:1.5.4")
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+    implementation ("androidx.core:core-splashscreen:1.1.0-rc01")
 }

@@ -22,6 +22,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
+import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.ssafy.yoittangWatch.presentation.common.PhoneNode
 import com.ssafy.yoittangWatch.presentation.common.YoittangCircleButton
@@ -45,6 +46,16 @@ class MainActivity : ComponentActivity() {
     private lateinit var fgLauncher: ActivityResultLauncher<Array<String>>
     private val bgLaunchers: MutableMap<String, ActivityResultLauncher<String>> = mutableMapOf()
 
+    // 안드로이드 앱으로부터 러닝 시작 신호를 받으면 CountdownActivity로 이동
+    private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
+        when (messageEvent.path) {
+            "/running/start" -> {
+                Log.d("MainActivity", "Received start message")
+                startCountdown()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,6 +75,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getMessageClient(this).addListener(messageListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getMessageClient(this).removeListener(messageListener)
     }
 
     private fun closeAppWithPairingAlert() {
