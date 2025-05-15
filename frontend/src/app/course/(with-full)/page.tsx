@@ -25,12 +25,12 @@ const CoursePage = () => {
               </p>
               <p className="shrink-0">님이</p>
             </div>
-            <p>진행했던 코스</p>
+            <p>달렸던 코스</p>
           </div>
         }
         supplement={
           <Link
-            href={`/course/bookmark`}
+            href={`/course/history`}
             className="flex cursor-pointer items-center gap-0.5">
             <p className="text-caption text-neutral-400">전체 보기</p>
             <ChevronRight className="size-5 text-neutral-300" />
@@ -112,7 +112,7 @@ const CoursePage = () => {
         }
         supplement={
           <Link
-            href={`/course/all`}
+            href={`/course/search`}
             className="flex cursor-pointer items-center gap-0.5">
             <p className="text-caption text-neutral-400">전체 보기</p>
             <ChevronRight className="size-5 text-neutral-300" />
