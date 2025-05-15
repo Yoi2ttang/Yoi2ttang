@@ -135,7 +135,7 @@ public class MemberController {
             @PathVariable("targetId") Long targetId,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getCompleteCourse(targetId));
+        return ResponseEntity.ok(memberService.getCompleteCourse(targetId, member));
     }
 
     //이 코드는 refactoring 되면 사라질 예정입니다.

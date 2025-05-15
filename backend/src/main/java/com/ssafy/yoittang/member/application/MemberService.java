@@ -235,7 +235,12 @@ public class MemberService {
         return memberRepository.existByNickname(nickname);
     }
 
-    public List<CompleteCourseResponse> getCompleteCourse(Long targetId) {
+    public List<CompleteCourseResponse> getCompleteCourse(Long targetId, Member member) {
+        Member targetMember = memberRepository.findById(targetId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_MEMBER));
+        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME) && !member.getMemberId().equals(targetId)) {
+            throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
+        }
         List<CourseSummaryResponse> courseSummaryResponses = courseRepository.findCompleteCoursesByMemberId(targetId);
         List<Long> courseIds = courseSummaryResponses.stream().map(CourseSummaryResponse::courseId).toList();
 
