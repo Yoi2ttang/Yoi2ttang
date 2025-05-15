@@ -41,6 +41,14 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getRunCoursePreview(member));
     }
 
+    @GetMapping("/runs/all")
+    public ResponseEntity<PageInfo<RunCourseResponse>> getRunCourseAll(
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getRunCourseAll(pageToken, member));
+    }
+
     @GetMapping("/bookmarks")
     public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(
             @RequestParam BookmarkViewType type,

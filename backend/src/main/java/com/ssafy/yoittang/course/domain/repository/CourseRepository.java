@@ -27,8 +27,14 @@ public class CourseRepository {
         return courseJpaRepositoy.countByCourseIdIn(courseIds);
     }
 
-    public List<Course> findCompletedCoursesByMemberId(Long memberId, int limit) {
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, Integer limit) {
         return courseQueryRepository.findCompletedCoursesByMemberId(memberId, limit);
+    }
+
+    public PageInfo<Course> findCompletedCoursesByMemberId(Long memberId, String pageToken) {
+        var data = courseQueryRepository.findCompletedCoursesByMemberId(memberId, pageToken, DEFAULT_PAGE_SIZE);
+
+        return PageInfo.of(data, DEFAULT_PAGE_SIZE, Course::getCourseId);
     }
 
     public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit) {

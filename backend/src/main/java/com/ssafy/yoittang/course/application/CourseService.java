@@ -49,6 +49,7 @@ public class CourseService {
     private final S3ImageUploader s3ImageUploader;
 
     private static final double DISTANCE_THRESHOLD_KM = 10.0;
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     public List<RunCourseResponse> getRunCoursePreview(Member member) {
         List<Course> courses = courseRepository.findCompletedCoursesByMemberId(member.getMemberId(), 3);
@@ -75,6 +76,36 @@ public class CourseService {
                     );
                 })
                 .toList();
+    }
+
+    public PageInfo<RunCourseResponse> getRunCourseAll(String pageToken, Member member) {
+        PageInfo<Course> courses = courseRepository.findCompletedCoursesByMemberId(member.getMemberId(), pageToken);
+        List<Course> courseList = courses.data();
+        List<Long> courseIds = courseList.stream().map(Course::getCourseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
+                member.getMemberId(),
+                courseIds
+        );
+
+        List<RunCourseResponse> runCourseResponses = courseList.stream()
+                .map(course -> {
+                    Long total = totalTiles.getOrDefault(course.getCourseId(), 0L);
+                    Long visited = visitedTiles.getOrDefault(course.getCourseId(), 0L);
+                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
+
+                    return new RunCourseResponse(
+                            course.getCourseId(),
+                            course.getCourseName(),
+                            course.getDistance(),
+                            course.getCourseImageUrl(),
+                            completionRate
+                    );
+                })
+                .toList();
+
+        return PageInfo.of(runCourseResponses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
     }
 
     public List<CourseSummaryResponse> getBookmarkCourse(BookmarkViewType type, Member member) {

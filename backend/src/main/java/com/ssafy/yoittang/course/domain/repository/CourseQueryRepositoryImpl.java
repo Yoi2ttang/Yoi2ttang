@@ -33,8 +33,8 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Course> findCompletedCoursesByMemberId(Long memberId, int limit) {
-        return jpaQueryFactory
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, Integer limit) {
+        JPAQuery<Course> query = jpaQueryFactory
                 .selectFrom(course)
                 .join(running).on(course.courseId.eq(running.courseId))
                 .where(
@@ -43,8 +43,29 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         course.courseId.isNotNull()
                 )
                 .distinct()
+                .orderBy(course.courseId.desc());
+
+        if (limit != null) {
+            query.limit(limit);
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, String pageToken, int pageSize) {
+        return jpaQueryFactory
+                .selectFrom(course)
+                .join(running).on(course.courseId.eq(running.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        course.courseId.isNotNull(),
+                        isInRange(pageToken)
+                )
+                .distinct()
                 .orderBy(course.courseId.desc())
-                .limit(limit)
+                .limit(pageSize + 1)
                 .fetch();
     }
 
