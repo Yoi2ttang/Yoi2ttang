@@ -56,5 +56,16 @@ export const useMapInitialize = () => {
     })
   }
 
-  return { mapRef, initializeMap }
+  // ✅ 중심 좌표 이동 함수 추가
+  const setCenter = (center: Coordinates) => {
+    if (mapRef.current) {
+      mapRef.current.setCenter(new naver.maps.LatLng(center.lat, center.lng))
+    }
+  }
+
+  return {
+    mapRef,
+    initializeMap,
+    setCenter, // ✅ 추가된 부분
+  }
 }
