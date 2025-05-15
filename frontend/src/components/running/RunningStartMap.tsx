@@ -1,18 +1,18 @@
 "use client"
 
-import { useState } from "react"
-import { Coordinates } from "@/types/map/navermaps"
-import { Tile } from "@/types/map/tile"
-import { getTeamTileMap } from "@/services/tile/api"
 import { useMap } from "@/hooks/map/useMap"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
 import { useMapTiles } from "@/hooks/map/useMapTiles"
+import { getTeamTileMap } from "@/services/tile/api"
+import { Coordinates } from "@/types/map/navermaps"
+import { Tile } from "@/types/map/tile"
+import { useState } from "react"
 
-interface RunningMapProps {
+interface RunningStartMapProps {
   loc: Coordinates
 }
 
-const RunningMap = ({ loc }: RunningMapProps) => {
+const RunningStartMap = ({ loc }: RunningStartMapProps) => {
   const [tiles, setTiles] = useState<Tile[]>([])
 
   const handleCenterChange = async (center: Coordinates) => {
@@ -24,7 +24,7 @@ const RunningMap = ({ loc }: RunningMapProps) => {
     loc,
     zoom: 15,
     onCenterChange: handleCenterChange,
-    mapDiv: "running-stats-map",
+    mapDiv: "running-start-map",
   })
   useMapMarker({ mapRef, loc: loc })
   useMapTiles({ mapRef, tiles })
@@ -32,12 +32,11 @@ const RunningMap = ({ loc }: RunningMapProps) => {
   if (!loc) {
     return null
   }
-
   return (
     <div className="flex h-full w-full">
-      <div id="running-stats-map" className="h-full w-full" />
+      <div id="running-start-map" className="h-full w-full" />
     </div>
   )
 }
 
-export default RunningMap
+export default RunningStartMap
