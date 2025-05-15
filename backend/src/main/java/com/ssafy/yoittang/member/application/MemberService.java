@@ -22,8 +22,7 @@ import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
-import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
-import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberProfileResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
@@ -124,40 +123,46 @@ public class MemberService {
         follow.updateActive(false);
     }
 
-    public PageInfo<FollowingResponse> getFollowingList(String pageToken, Member member) {
+    public PageInfo<FollowResponse> getFollowingList(Long targetId, String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
         List<Long> followingMemberIds = followJpaRepository.findFollowingMemberIds(
-                member.getMemberId(),
+                targetId,
                 lastToId,
                 DEFAULT_AUTO_PROFILE_SIZE
         );
 
         if (followingMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowingResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowResponse::memberId);
         }
 
-        List<FollowingResponse> followingMembers = memberRepository.findFollowingByIds(followingMemberIds);
+        List<FollowResponse> followingMembers = memberRepository.findFollowingByIds(
+                followingMemberIds,
+                member.getMemberId()
+        );
 
-        return PageInfo.of(followingMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowingResponse::memberId);
+        return PageInfo.of(followingMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowResponse::memberId);
 
     }
 
-    public PageInfo<FollowerResponse> getFollowerList(String pageToken, Member member) {
+    public PageInfo<FollowResponse> getFollowerList(Long targetId, String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
 
         List<Long> followerMemberIds = followJpaRepository.findFollowerMemberIds(
-                member.getMemberId(),
+                targetId,
                 lastToId,
                 DEFAULT_AUTO_PROFILE_SIZE
         );
 
         if (followerMemberIds.isEmpty()) {
-            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowerResponse::memberId);
+            return PageInfo.of(List.of(), DEFAULT_AUTO_PROFILE_SIZE, FollowResponse::memberId);
         }
 
-        List<FollowerResponse> followerMembers = memberRepository.findFollowerByIds(followerMemberIds);
+        List<FollowResponse> followerMembers = memberRepository.findFollowerByIds(
+                followerMemberIds,
+                member.getMemberId()
+        );
 
-        return PageInfo.of(followerMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowerResponse::memberId);
+        return PageInfo.of(followerMembers, DEFAULT_AUTO_PROFILE_SIZE, FollowResponse::memberId);
     }
 
     public MemberProfileResponse getMemberProfile(Long targetId, Member member) {

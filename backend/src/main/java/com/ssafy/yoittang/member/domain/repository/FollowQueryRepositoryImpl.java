@@ -25,6 +25,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .from(follow)
                 .where(
                         follow.fromMember.eq(memberId),
+                        follow.isActive.isTrue(),
                         isInRange(lastToId)
                 )
                 .orderBy(follow.toMember.asc())
@@ -39,6 +40,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .from(follow)
                 .where(
                         follow.toMember.eq(memberId),
+                        follow.isActive.isTrue(),
                         isInRange(lastToId)
                 )
                 .orderBy(follow.fromMember.asc())

@@ -4,21 +4,21 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.QFollow;
 import com.ssafy.yoittang.member.domain.QMember;
-import com.ssafy.yoittang.member.domain.dto.response.FollowerResponse;
-import com.ssafy.yoittang.member.domain.dto.response.FollowingResponse;
+import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberSearchResponse;
 import com.ssafy.yoittang.zodiac.domain.QZodiac;
 
 import lombok.RequiredArgsConstructor;
-
 
 @Repository
 @RequiredArgsConstructor
@@ -107,17 +107,34 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public List<FollowingResponse> findFollowingByIds(List<Long> ids) {
+    public List<FollowResponse> findFollowingByIds(List<Long> ids, Long memberId) {
         QMember qMember = QMember.member;
         QZodiac qzodiac = QZodiac.zodiac;
+        QFollow qFollow = QFollow.follow;
+
+        Expression<Boolean> isFollowExpr = new CaseBuilder()
+                .when(qMember.memberId.eq(memberId))
+                .then(Expressions.nullExpression(Boolean.class))  // 자기 자신일 때는 null 반환
+                .otherwise(
+                        JPAExpressions
+                                .selectOne()
+                                .from(qFollow)
+                                .where(
+                                        qFollow.fromMember.eq(memberId),
+                                        qFollow.toMember.eq(qMember.memberId),
+                                        qFollow.isActive.isTrue()
+                                )
+                                .exists()
+                );
+
         return queryFactory
                 .select(Projections.constructor(
-                        FollowingResponse.class,
+                        FollowResponse.class,
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
                         qzodiac.zodiacName,
-                        Expressions.constant(true)
+                        isFollowExpr
                 ))
                 .from(qMember)
                 .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
@@ -127,16 +144,34 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public List<FollowerResponse> findFollowerByIds(List<Long> ids) {
+    public List<FollowResponse> findFollowerByIds(List<Long> ids, Long memberId) {
         QMember qMember = QMember.member;
         QZodiac qzodiac = QZodiac.zodiac;
+        QFollow qFollow = QFollow.follow;
+
+        Expression<Boolean> isFollowExpr = new CaseBuilder()
+                .when(qMember.memberId.eq(memberId))
+                .then(Expressions.nullExpression(Boolean.class))  // 자기 자신일 때는 null 반환
+                .otherwise(
+                        JPAExpressions
+                                .selectOne()
+                                .from(qFollow)
+                                .where(
+                                        qFollow.fromMember.eq(memberId),
+                                        qFollow.toMember.eq(qMember.memberId),
+                                        qFollow.isActive.isTrue()
+                                )
+                                .exists()
+                );
+
         return queryFactory
                 .select(Projections.constructor(
-                        FollowerResponse.class,
+                        FollowResponse.class,
                         qMember.memberId,
                         qMember.nickname,
                         qMember.profileImageUrl,
-                        qzodiac.zodiacName
+                        qzodiac.zodiacName,
+                        isFollowExpr
                 ))
                 .from(qMember)
                 .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
