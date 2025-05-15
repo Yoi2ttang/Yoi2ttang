@@ -43,18 +43,27 @@ public class CourseController {
 
     @GetMapping("/runs/all")
     public ResponseEntity<PageInfo<RunCourseResponse>> getRunCourseAll(
+            @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getRunCourseAll(pageToken, member));
+        return ResponseEntity.ok(courseService.getRunCourseAll(keyword, pageToken, member));
     }
 
-    @GetMapping("/bookmarks")
-    public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(
-            @RequestParam BookmarkViewType type,
+    @GetMapping("/bookmarks/preview")
+    public ResponseEntity<List<RunCourseResponse>> getBookmarkCoursePreview(
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getBookmarkCourse(type, member));
+        return ResponseEntity.ok(courseService.getBookmarkCoursePreview(member));
+    }
+
+    @GetMapping("/bookmarks/all")
+    public ResponseEntity<PageInfo<RunCourseResponse>> getBookmarkCourseAll(
+            @RequestParam(required = false, name = "keyword") String keyword,
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getBookmarkCourseAll(pageToken, keyword, member));
     }
 
     @PostMapping(

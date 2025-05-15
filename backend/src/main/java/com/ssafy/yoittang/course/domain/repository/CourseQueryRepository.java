@@ -12,9 +12,16 @@ public interface CourseQueryRepository {
 
     List<Course> findCompletedCoursesByMemberId(Long memberId, Integer limit);
 
-    List<Course> findPagedCompletedCoursesByMemberId(Long memberId, String pageToken, int pageSize);
+    List<Course> findPagedCompletedCoursesByMemberId(Long memberId, String keyword, String pageToken, int pageSize);
 
     List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit);
+
+    List<CourseSummaryResponse> findPageBookmarkedCoursesByMemberId(
+            Long memberId,
+            String keyword,
+            String pageToken,
+            int pageSize
+    );
 
     List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId);
 
