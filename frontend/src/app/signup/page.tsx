@@ -49,7 +49,9 @@ const SignupContent = () => {
           />
         )
       case SignupStep.COMPLETED:
-        return <TeamSelectionForm onNext={() => router.replace("/")} />
+        return (
+          <TeamSelectionForm onNext={() => router.replace("/dashboard/my")} />
+        )
       default:
         return (
           <SignupForm

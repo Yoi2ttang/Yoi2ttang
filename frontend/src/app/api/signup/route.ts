@@ -15,9 +15,7 @@ export const POST = async (request: Request) => {
       })
     }
     // 대시보드 페이지로 리다이렉트 응답 생성
-    const nextResponse = NextResponse.json({
-      redirectTo: "/dashboard/my",
-    })
+    const nextResponse = NextResponse.json(null, { status: 200 })
 
     // 쿠키 방식으로 액세스 토큰 생성
     nextResponse.cookies.set("accessToken", response.data.accessToken, {
