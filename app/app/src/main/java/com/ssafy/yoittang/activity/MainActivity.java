@@ -1,7 +1,6 @@
-package com.ssafy.yoittang;
+package com.ssafy.yoittang.activity;
 
 import android.annotation.SuppressLint;
-import android.app.NativeActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +8,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -26,8 +25,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
@@ -97,21 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Log.d("WebView", "로딩 요청 URL: " + request.getUrl().getPath());
-
-                // 예: 특정 URL일 때 네이티브 화면 전환
-                if( Objects.requireNonNull(request.getUrl().getPath()).contains("/running") ){
-                    Intent intent = new Intent(view.getContext(), RunningActivity.class);
-                    view.getContext().startActivity(intent);
-                    return true; // WebView에서 이 URL은 로딩하지 않음
-                }
-
-                return false;
-
-            }
-
         });
 
 // 2. WebChromeClient 설정 (위치 권한, 알림창 등 담당)
@@ -123,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        //
+        webView.addJavascriptInterface(new Object() {
+            @JavascriptInterface
+            public void onUrlChanged(String url) {
+                Log.d("WebView", "JS에서 전달된 URL: " + url);
+                if (url.contains("/running")) {
+                    Intent intent = new Intent(MainActivity.this, RunningActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }, "AndroidBridge");
 
         webView.loadUrl("https://yoi2ttang.site");
 
@@ -178,9 +172,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 
     private void goToAppSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
