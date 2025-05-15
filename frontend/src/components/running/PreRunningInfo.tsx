@@ -2,9 +2,11 @@ import { useEffect } from "react"
 import useGetTeamSituation from "@/hooks/running/useGetTeamSituation"
 import PreRunningRankingInfo from "./PreRunningRankingInfo"
 import PreRunningTileInfo from "./PreRunningTileInfo"
+import { getPayload } from "@/lib/auth/util"
 
 const PreRunningInfo = () => {
-  const { data, isLoading, isError } = useGetTeamSituation(2)
+  const zodiacId = Number(getPayload()?.zodiacId)
+  const { data, isLoading, isError } = useGetTeamSituation(zodiacId)
 
   return (
     <div className="flex w-full flex-col gap-6">

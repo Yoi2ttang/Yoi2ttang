@@ -26,7 +26,7 @@ const PreRunningRankingInfo = ({ data }: PreRunningRankingInfoProps) => {
       <div className="text-md">
         <span>우리 팀이 </span>
         <span className="font-bold">{data?.myTeam?.rank}등</span>
-        <span>을 달리고 있어요!</span>
+        <span>으로 달리고 있어요!</span>
       </div>
       <div>
         {data?.myTeam?.rank && data.myTeam.rank > 1 ? (
