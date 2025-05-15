@@ -1,6 +1,6 @@
 "use client"
 
-import useSearchNickname from "@/hooks/auth/useSearchNickname"
+import useSearchNickname from "@/hooks/profile/useSearchNickname"
 import { cn } from "@/lib/utils"
 import { MemberAutocomplete, MemberAutocompleteResponse } from "@/types/member"
 import { debounce } from "lodash-es"
