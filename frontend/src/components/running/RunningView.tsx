@@ -4,14 +4,17 @@ import { useState, useEffect } from "react"
 import RunningMap from "./RunningMap"
 import RunningTimer from "./RunningTimer"
 import RunningInfoSlide from "./RunningInfoSlide"
-import { ArrowLeft } from "lucide-react"
 import { useRunningStats } from "@/hooks/running/useRunningStats"
 import { Coordinates } from "@/types/map/navermaps"
+import RunningSettingsButton from "./RunningSettingsButton"
+import RunningSettingsModal from "./RunningSettingsModal"
+import RunningStatsButton from "./RunningStatsButton"
 
 const RunningView = () => {
   const [loc, setLoc] = useState<Coordinates>()
   const [isPaused, setIsPaused] = useState(false)
-  const [showOverlay, setShowOverlay] = useState(false)
+  const [showStats, setShowStats] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -28,20 +31,12 @@ const RunningView = () => {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
       {currentLoc && <RunningMap loc={currentLoc} />}
-
-      <button
-        onClick={() => setShowOverlay(true)}
-        className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white p-2 shadow-md transition active:scale-95">
-        <span className="text-2xl font-bold">
-          <ArrowLeft />
-        </span>
-      </button>
-
+      <RunningStatsButton onClick={() => setShowStats(true)} />
       <RunningTimer runningTime={runningTime} />
 
-      {showOverlay && (
+      {showStats && (
         <RunningInfoSlide
-          onClose={() => setShowOverlay(false)}
+          onClose={() => setShowStats(false)}
           runningTime={runningTime}
           distance={distance}
           calories={calories}
@@ -49,6 +44,11 @@ const RunningView = () => {
           setIsPaused={setIsPaused}
           isPaused={isPaused}
         />
+      )}
+
+      <RunningSettingsButton onClick={() => setShowSettings(true)} />
+      {showSettings && (
+        <RunningSettingsModal onClose={() => setShowSettings(false)} />
       )}
     </div>
   )
