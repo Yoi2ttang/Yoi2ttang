@@ -2,18 +2,14 @@
 
 import useFollowingList from "@/hooks/profile/useFollowingList"
 import { AnimalType } from "@/types/animal"
-import {
-  MemberAutocompleteResponse,
-  MemberPreview,
-  MembersResponse,
-} from "@/types/member"
+import { MemberPreview, MembersResponse } from "@/types/member"
 import Skeleton from "../common/skeleton"
 import RunnerItem from "./RunnerItem"
 
 const FollowingList = () => {
   const { targetRef, data, isLoading, isFetchingNextPage } = useFollowingList()
   const isEmpty = !data?.pages.some(
-    (page: MemberAutocompleteResponse) => page?.data.length > 0,
+    (page: MembersResponse) => page?.data.length > 0,
   )
 
   return (
