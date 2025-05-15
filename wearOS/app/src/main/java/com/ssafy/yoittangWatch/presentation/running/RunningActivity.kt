@@ -46,6 +46,7 @@ import androidx.health.services.client.data.ExerciseType
 import androidx.health.services.client.data.ExerciseUpdate
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
@@ -62,6 +63,15 @@ class RunningActivity : ComponentActivity() {
 
     private val TAG = "RunningActivity"
     private lateinit var exerciseClient: ExerciseClient
+
+    private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
+        when (messageEvent.path) {
+            "/running/stop" -> {
+                Log.d(TAG, "Received stop message")
+                navigateToMain(this)
+            }
+        }
+    }
 
     object HeartRateHolder {
         private val _bpm = mutableStateOf<Int?>(null)
@@ -91,6 +101,16 @@ class RunningActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent { YoittangWatchTheme { RunningScreen() } }
         initializeExerciseSession()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Wearable.getMessageClient(this).addListener(messageListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Wearable.getMessageClient(this).removeListener(messageListener)
     }
 
     private fun initializeExerciseSession() {
@@ -268,7 +288,7 @@ class RunningActivity : ComponentActivity() {
         val messageClient = Wearable.getMessageClient(context)
         messageClient.sendMessage(
             nodeId,
-            "/running/complete",   // 스마트폰 앱에서 이 path를 수신 리스너에 등록해야 함
+            "/running/stop",   // 스마트폰 앱에서 이 path를 수신 리스너에 등록해야 함
             ByteArray(0)
         ).addOnSuccessListener {
             Log.d("YoittangWatch", "러닝 종료 메시지 전송 완료")
