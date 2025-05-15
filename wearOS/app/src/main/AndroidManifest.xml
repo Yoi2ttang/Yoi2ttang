@@ -11,6 +11,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -41,6 +46,11 @@
         <activity android:name="com.ssafy.yoittangWatch.presentation.countdown.CountdownActivity" />
 
         <activity android:name="com.ssafy.yoittangWatch.presentation.running.RunningActivity" />
+
+        <service
+            android:name=".application.running.RunningForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="location|health" />
 
     </application>
 
