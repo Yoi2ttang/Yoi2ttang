@@ -3,6 +3,7 @@ package com.ssafy.yoittang.member.presentation;
 import java.net.URI;
 import java.util.List;
 
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
-import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.dto.response.CompleteCourseResponse;
 import com.ssafy.yoittang.member.application.MemberService;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.request.MemberUpdateRequest;
@@ -129,12 +130,12 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getProfileEdit(member));
     }
 
-    @GetMapping("/me/completed-courses")
-    public ResponseEntity<List<CourseSummaryResponse>> getCompleteCourse(
-            @RequestParam(value = "keyword", required = false) String keyword,
+    @GetMapping("/{targetId}/completed-courses")
+    public ResponseEntity<List<CompleteCourseResponse>> getCompleteCourse(
+            @PathVariable("targetId") Long targetId,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getCompleteCourse(keyword, member));
+        return ResponseEntity.ok(memberService.getCompleteCourse(targetId));
     }
 
     //이 코드는 refactoring 되면 사라질 예정입니다.
@@ -152,5 +153,4 @@ public class MemberController {
     ) {
         return ResponseEntity.ok(memberService.getTempMember(member));
     }
-
 }

@@ -53,7 +53,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     }
 
     @Override
-    public List<Course> findCompletedCoursesByMemberId(Long memberId, String pageToken, int pageSize) {
+    public List<Course> findPagedCompletedCoursesByMemberId(Long memberId, String pageToken, int pageSize) {
         return jpaQueryFactory
                 .selectFrom(course)
                 .join(running).on(course.courseId.eq(running.courseId))

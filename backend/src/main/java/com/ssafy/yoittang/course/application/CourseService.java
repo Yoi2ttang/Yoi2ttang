@@ -79,7 +79,10 @@ public class CourseService {
     }
 
     public PageInfo<RunCourseResponse> getRunCourseAll(String pageToken, Member member) {
-        PageInfo<Course> courses = courseRepository.findCompletedCoursesByMemberId(member.getMemberId(), pageToken);
+        PageInfo<Course> courses = courseRepository.findPagedCompletedCoursesByMemberId(
+                member.getMemberId(),
+                pageToken
+        );
         List<Course> courseList = courses.data();
         List<Long> courseIds = courseList.stream().map(Course::getCourseId).toList();
 

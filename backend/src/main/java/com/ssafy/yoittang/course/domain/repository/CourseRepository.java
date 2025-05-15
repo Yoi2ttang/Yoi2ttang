@@ -31,8 +31,8 @@ public class CourseRepository {
         return courseQueryRepository.findCompletedCoursesByMemberId(memberId, limit);
     }
 
-    public PageInfo<Course> findCompletedCoursesByMemberId(Long memberId, String pageToken) {
-        var data = courseQueryRepository.findCompletedCoursesByMemberId(memberId, pageToken, DEFAULT_PAGE_SIZE);
+    public PageInfo<Course> findPagedCompletedCoursesByMemberId(Long memberId, String pageToken) {
+        var data = courseQueryRepository.findPagedCompletedCoursesByMemberId(memberId, pageToken, DEFAULT_PAGE_SIZE);
 
         return PageInfo.of(data, DEFAULT_PAGE_SIZE, Course::getCourseId);
     }
