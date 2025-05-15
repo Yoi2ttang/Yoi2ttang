@@ -1,6 +1,6 @@
 "use client"
 
-import HeartRate from "@/assets/icons/running/heartRate.svg"
+import HeartRate from "@/assets/icons/running/heart-rate.svg"
 import { formatSecondsToTime } from "@/lib/running/time"
 
 interface RunningStatsProps {

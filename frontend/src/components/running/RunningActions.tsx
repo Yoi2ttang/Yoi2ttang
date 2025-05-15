@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react"
-import StartRunning from "@/assets/icons/running/startRunning.svg"
-import PauseRunning from "@/assets/icons/running/pauseRunning.svg"
-import FinishRunning from "@/assets/icons/running/finishRunning.svg"
-import ShareRunning from "@/assets/icons/running/shareRunning.svg"
+import StartRunning from "@/assets/icons/running/start-running.svg"
+import PauseRunning from "@/assets/icons/running/pause-running.svg"
+import FinishRunning from "@/assets/icons/running/finish-running.svg"
+import ShareRunning from "@/assets/icons/running/share-running.svg"
 
 interface RunningActionsProps {
   isPaused: boolean
