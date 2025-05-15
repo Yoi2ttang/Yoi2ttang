@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Coordinates } from "@/types/map/navermaps"
-import RunningMap from "./RunningMap"
+import RunningStartMap from "./RunningStartMap"
 
 const RunningStartMapSection = () => {
   const [loc, setLoc] = useState<Coordinates>()
@@ -16,7 +16,9 @@ const RunningStartMapSection = () => {
     })
   }, [])
 
-  return <div className="flex flex-1">{loc && <RunningMap loc={loc} />}</div>
+  return (
+    <div className="flex flex-1">{loc && <RunningStartMap loc={loc} />}</div>
+  )
 }
 
 export default RunningStartMapSection

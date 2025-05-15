@@ -3,10 +3,11 @@
 import { useMap } from "@/hooks/map/useMap"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
 import { useMapTiles } from "@/hooks/map/useMapTiles"
-import { getTeamTileMap } from "@/services/tile/api"
+import { getOneTeamTileMap } from "@/services/tile/api"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { useState } from "react"
+import { getPayload } from "@/lib/auth/util"
 
 interface RunningStartMapProps {
   loc: Coordinates
@@ -15,8 +16,11 @@ interface RunningStartMapProps {
 const RunningStartMap = ({ loc }: RunningStartMapProps) => {
   const [tiles, setTiles] = useState<Tile[]>([])
 
+  const zodiacId = Number(getPayload()?.zodiacId)
+
   const handleCenterChange = async (center: Coordinates) => {
-    const res = await getTeamTileMap(center)
+    const res = await getOneTeamTileMap(zodiacId, center)
+    console.log("eee")
     setTiles(res.tileGetResponseList)
   }
 
