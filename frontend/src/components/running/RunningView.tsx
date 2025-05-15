@@ -9,6 +9,7 @@ import { Coordinates } from "@/types/map/navermaps"
 import RunningSettingsButton from "./RunningSettingsButton"
 import RunningSettingsModal from "./RunningSettingsModal"
 import RunningStatsButton from "./RunningStatsButton"
+import { RunningStatsProvider } from "../providers/RunningStatsProvider"
 
 const RunningView = () => {
   const [loc, setLoc] = useState<Coordinates>()
@@ -25,32 +26,29 @@ const RunningView = () => {
     })
   }, [])
 
-  const { runningTime, distance, calories, speed, currentLoc } =
-    useRunningStats({ isPaused })
+  const { currentLoc } = useRunningStats({ isPaused })
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-white">
-      {currentLoc && <RunningMap loc={currentLoc} />}
-      <RunningStatsButton onClick={() => setShowStats(true)} />
-      <RunningTimer runningTime={runningTime} />
+    <RunningStatsProvider isPaused={isPaused}>
+      <div className="relative h-screen w-full overflow-hidden bg-white">
+        {currentLoc && loc && <RunningMap />}
+        <RunningStatsButton onClick={() => setShowStats(true)} />
+        <RunningTimer />
 
-      {showStats && (
-        <RunningInfoSlide
-          onClose={() => setShowStats(false)}
-          runningTime={runningTime}
-          distance={distance}
-          calories={calories}
-          speed={speed}
-          setIsPaused={setIsPaused}
-          isPaused={isPaused}
-        />
-      )}
+        {showStats && (
+          <RunningInfoSlide
+            onClose={() => setShowStats(false)}
+            setIsPaused={setIsPaused}
+            isPaused={isPaused}
+          />
+        )}
 
-      <RunningSettingsButton onClick={() => setShowSettings(true)} />
-      {showSettings && (
-        <RunningSettingsModal onClose={() => setShowSettings(false)} />
-      )}
-    </div>
+        <RunningSettingsButton onClick={() => setShowSettings(true)} />
+        {showSettings && (
+          <RunningSettingsModal onClose={() => setShowSettings(false)} />
+        )}
+      </div>
+    </RunningStatsProvider>
   )
 }
 

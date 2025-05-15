@@ -8,7 +8,7 @@ interface Coordinates {
 
 const getDistance = (loc1: Coordinates, loc2: Coordinates) => {
   const toRad = (value: number) => (value * Math.PI) / 180
-  const R = 6371e3
+  const R = 6371e3 // 지구 반지름 (단위: m)
   const dLat = toRad(loc2.lat - loc1.lat)
   const dLng = toRad(loc2.lng - loc1.lng)
 
@@ -27,6 +27,14 @@ interface useRunningStatsProps {
   weightKg?: number
 }
 
+interface PaceRecord {
+  fromTime: number
+  toTime: number
+  fromDistance: number
+  toDistance: number
+  pace: number // 초/km
+}
+
 export const useRunningStats = ({
   isPaused,
   weightKg = 50,
@@ -39,11 +47,19 @@ export const useRunningStats = ({
   const [calories, setCalories] = useState(0)
   const [runningTime, setRunningTime] = useState(0)
   const [speed, setSpeed] = useState(0)
+  const [averagePace, setAveragePace] = useState(0)
+  const [paceHistory, setPaceHistory] = useState<PaceRecord[]>([])
 
   const distanceRef = useRef(0)
   const timeRef = useRef(0)
 
-  // 최초 현재 위치 설정
+  const moveSteps = [
+    0.000027, 0.000027, 0.000027, 0.000027, 0.000027, 0.000018, 0.000018,
+    0.000009, 0.000009, 0.000009, 0.000009, 0.000009,
+  ]
+  const stepIndexRef = useRef(0)
+
+  // 최초 위치 설정
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -61,27 +77,40 @@ export const useRunningStats = ({
     )
   }, [])
 
+  // 1초마다 위치 갱신 및 거리/시간 누적
   useEffect(() => {
     const id = setInterval(() => {
       if (isPaused) return
 
       setRunningTime((prev) => prev + 1)
 
+      const step = moveSteps[stepIndexRef.current]
       const nextLoc = {
-        lat: locRef.current.lat + 0.000027, // 약 3m
+        lat: locRef.current.lat + step,
         lng: locRef.current.lng,
       }
+
+      stepIndexRef.current = (stepIndexRef.current + 1) % moveSteps.length
 
       if (prevLoc.current) {
         const d = getDistance(prevLoc.current, nextLoc)
         distanceRef.current += d
         setDistance(distanceRef.current)
 
-        const distanceInKm = distanceRef.current / 1000
-        const timeInHours = timeRef.current / 3600
+        if (timeRef.current > 0) {
+          const distanceInKm = distanceRef.current / 1000
+          const timeInHours = timeRef.current / 3600
+          setSpeed(distanceInKm / timeInHours)
+          setAveragePace(timeRef.current / distanceInKm)
+        }
 
-        setSpeed(distanceInKm / timeInHours)
-        setCalories(calculateCalories(distanceInKm, timeRef.current, weightKg))
+        setCalories(
+          calculateCalories(
+            distanceRef.current / 1000,
+            timeRef.current,
+            weightKg,
+          ),
+        )
       }
 
       prevLoc.current = nextLoc
@@ -93,5 +122,43 @@ export const useRunningStats = ({
     return () => clearInterval(id)
   }, [isPaused, weightKg])
 
-  return { runningTime, distance, calories, speed, currentLoc }
+  // 사용자가 호출할 수 있는 구간 페이스 저장 함수
+  const saveCurrentPace = () => {
+    if (distanceRef.current === 0 || timeRef.current === 0) return
+
+    const lastRecord = paceHistory.at(-1)
+    const fromTime = lastRecord?.toTime ?? 0
+    const fromDistance = lastRecord?.toDistance ?? 0
+    const toTime = timeRef.current
+    const toDistance = distanceRef.current
+
+    const duration = toTime - fromTime
+    const distanceDelta = (toDistance - fromDistance) / 1000 // km
+
+    if (distanceDelta === 0) return
+
+    const pace = duration / distanceDelta // 초/km
+
+    setPaceHistory((prev) => [
+      ...prev,
+      {
+        fromTime,
+        toTime,
+        fromDistance,
+        toDistance,
+        pace,
+      },
+    ])
+  }
+
+  return {
+    runningTime,
+    distance,
+    calories,
+    speed,
+    averagePace,
+    currentLoc,
+    paceHistory,
+    saveCurrentPace,
+  }
 }

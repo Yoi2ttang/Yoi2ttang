@@ -7,12 +7,15 @@ import { getTeamTileMap } from "@/services/tile/api"
 import { useMap } from "@/hooks/map/useMap"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
 import { useMapTiles } from "@/hooks/map/useMapTiles"
+import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
 
-interface RunningMapProps {
-  loc: Coordinates
-}
+const RunningMap = () => {
+  const { currentLoc } = useRunningStatsContext()
 
-const RunningMap = ({ loc }: RunningMapProps) => {
+  if (!currentLoc) {
+    return null
+  }
+
   const [tiles, setTiles] = useState<Tile[]>([])
 
   const handleCenterChange = async (center: Coordinates) => {
@@ -21,15 +24,15 @@ const RunningMap = ({ loc }: RunningMapProps) => {
   }
 
   const { mapRef } = useMap({
-    loc,
+    loc: currentLoc,
     zoom: 15,
     onCenterChange: handleCenterChange,
     mapDiv: "running-stats-map",
   })
-  useMapMarker({ mapRef, loc: loc })
+  useMapMarker({ mapRef, loc: currentLoc })
   useMapTiles({ mapRef, tiles })
 
-  if (!loc) {
+  if (!currentLoc) {
     return null
   }
 

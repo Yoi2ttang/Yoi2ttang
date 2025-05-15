@@ -27,7 +27,7 @@ const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
           </>
         )}
       </div>
-      <div className="bg-yoi-400 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full text-white">
+      <div className="bg-yoi-500 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full text-white">
         <FinishRunning className="size-7" />
         점령 완료
       </div>

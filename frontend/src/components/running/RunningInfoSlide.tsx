@@ -1,47 +1,40 @@
+"use client"
+
 import { useEffect, useState, Dispatch, SetStateAction } from "react"
 import clsx from "clsx"
 import RunningStats from "./RunningStats"
 import RunningActions from "./RunningActions"
-import { Coordinates } from "@/types/map/navermaps"
-import { ArrowRight } from "lucide-react"
+import RunningPaceLogger from "./RunningPaceLogger"
+import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
 
 interface RunningInfoSlideProps {
   onClose: () => void
-  runningTime: number
-  distance: number
-  calories: number
-  speed: number
   isPaused: boolean
   setIsPaused: Dispatch<SetStateAction<boolean>>
 }
 
 const RunningInfoSlide = ({
   onClose,
-  runningTime,
-  distance,
-  calories,
-  speed,
   isPaused,
   setIsPaused,
 }: RunningInfoSlideProps) => {
-  const [loc, setLoc] = useState<Coordinates>()
+  const {
+    runningTime,
+    distance,
+    calories,
+    speed,
+    averagePace,
+    paceHistory,
+    saveCurrentPace,
+  } = useRunningStatsContext()
+
   const [visible, setVisible] = useState(false)
-  const [showMap, setShowMap] = useState(false)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [touchEndX, setTouchEndX] = useState<number | null>(null)
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLoc({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      })
-    })
-
     const timer1 = setTimeout(() => setVisible(true), 10)
-    const timer2 = setTimeout(() => setShowMap(true), 300)
-    return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
-    }
+    return () => clearTimeout(timer1)
   }, [])
 
   const handleClose = () => {
@@ -49,11 +42,49 @@ const RunningInfoSlide = ({
     setTimeout(() => onClose(), 300)
   }
 
+  // 스와이프 감지
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.changedTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.changedTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (
+      touchStartX !== null &&
+      touchEndX !== null &&
+      touchEndX - touchStartX > 100 // → 방향 스와이프
+    ) {
+      handleClose()
+    }
+    setTouchStartX(null)
+    setTouchEndX(null)
+  }
+
+  const stopTouchPropagation = (e: React.TouchEvent) => {
+    e.stopPropagation()
+  }
+
   return (
-    <div className="absolute inset-0 z-[9999] overflow-hidden">
+    <div
+      className="absolute inset-0 z-[9999] overflow-hidden"
+      onTouchStart={(e) => {
+        stopTouchPropagation(e)
+        handleTouchStart(e)
+      }}
+      onTouchMove={(e) => {
+        stopTouchPropagation(e)
+        handleTouchMove(e)
+      }}
+      onTouchEnd={(e) => {
+        stopTouchPropagation(e)
+        handleTouchEnd()
+      }}>
       <div
         className={clsx(
-          "bg-opacity-60 absolute top-0 right-0 flex h-full w-full flex-col gap-5 bg-white px-4 py-8 text-3xl transition-transform duration-300 ease-in-out",
+          "absolute top-0 right-0 flex h-full w-full flex-col gap-6 bg-white px-4 py-8 text-3xl transition-transform duration-300 ease-in-out",
           visible ? "translate-x-0" : "translate-x-full",
         )}>
         <div className="text-2xl font-semibold">러닝 기록</div>
@@ -62,18 +93,14 @@ const RunningInfoSlide = ({
           distance={distance}
           calories={calories}
           speed={speed}
+          averagePace={averagePace}
         />
-        <div className="text-title-sm text-neutral-500">평균 페이스</div>
-        <div className="flex flex-1 rounded-xl bg-neutral-200"></div>
+        <RunningPaceLogger
+          paceHistory={paceHistory}
+          saveCurrentPace={saveCurrentPace}
+        />
         <RunningActions isPaused={isPaused} setIsPaused={setIsPaused} />
       </div>
-      <button
-        onClick={handleClose}
-        className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white p-2 shadow-md transition active:scale-95">
-        <span className="text-2xl font-bold">
-          <ArrowRight />
-        </span>
-      </button>
     </div>
   )
 }
