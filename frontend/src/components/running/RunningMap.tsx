@@ -21,7 +21,7 @@ const RunningMap = () => {
 
   const { mapRef } = useMap({
     loc: currentLoc!,
-    zoom: 15,
+    zoom: 17,
     onCenterChange: (newCenter) => setCenter(newCenter),
     mapDiv: "running-map",
   })

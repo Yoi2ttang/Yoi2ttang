@@ -1,11 +1,9 @@
-import { Dispatch, SetStateAction } from "react"
-import { useRouter } from "next/navigation"
+import { Dispatch, SetStateAction, useState } from "react"
 import StartRunning from "@/assets/icons/running/start-running.svg"
 import PauseRunning from "@/assets/icons/running/pause-running.svg"
 import FinishRunning from "@/assets/icons/running/finish-running.svg"
 import ShareRunning from "@/assets/icons/running/share-running.svg"
-import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
-import { useUpdateEndRunning } from "@/hooks/running/useUpdateEndRunning"
+import RunningEndModal from "./RunningEndModal"
 
 interface RunningActionsProps {
   isPaused: boolean
@@ -13,32 +11,7 @@ interface RunningActionsProps {
 }
 
 const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
-  const router = useRouter()
-  const { runningId } = useRunningStatsContext()
-  const { mutate: endRunning } = useUpdateEndRunning()
-
-  const handleStopRunning = () => {
-    if (!runningId) {
-      console.error("러닝 ID 없음 - 종료 요청 불가")
-      return
-    }
-
-    endRunning(
-      {
-        runningId,
-        endTime: new Date().toISOString(),
-      },
-      {
-        onSuccess: () => {
-          console.log("러닝 종료 성공")
-          router.replace("/ranking/teams")
-        },
-        onError: (error) => {
-          console.error("러닝 종료 실패", error)
-        },
-      },
-    )
-  }
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false)
 
   return (
     <div className="flex items-center justify-between text-center text-sm">
@@ -59,7 +32,7 @@ const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
       </div>
       <div
         className="bg-yoi-500 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full text-white"
-        onClick={handleStopRunning}>
+        onClick={() => setIsEndModalOpen(true)}>
         <FinishRunning className="size-7" />
         점령 완료
       </div>
@@ -67,6 +40,9 @@ const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
         <ShareRunning className="size-7" />
         공유
       </div>
+      {isEndModalOpen && (
+        <RunningEndModal setIsEndModalOpen={setIsEndModalOpen} />
+      )}
     </div>
   )
 }
