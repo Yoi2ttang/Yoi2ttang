@@ -49,4 +49,11 @@ public class MidnightScheduler {
         tileRepository.updateTileWithTileHistory();
         tookTileHistoryRepository.insertTookTileHistory(today);
     }
+
+    public void runAtMidnightWithCsv() {
+        log.info("매일 자정에 실행되는 작업입니다 with CSV. 현재 시간: {}", java.time.LocalDateTime.now());
+        LocalDate today = LocalDate.now();
+        tileRepository.updateTileWithTileHistory();
+        tookTileHistoryRepository.insertTookTileHistory(today);
+    }
 }

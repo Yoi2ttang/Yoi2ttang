@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class RunningPoint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long runningPointId;
 
     @Column(nullable = false)

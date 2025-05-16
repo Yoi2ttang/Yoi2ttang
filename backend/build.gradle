@@ -96,6 +96,9 @@ dependencies {
     //S3 설정
     implementation 'software.amazon.awssdk:s3:2.30.6'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //csv
+    implementation 'com.opencsv:opencsv:5.11'
 }
 
 tasks.named('test') {
