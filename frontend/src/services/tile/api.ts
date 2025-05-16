@@ -18,6 +18,22 @@ export const getTeamTileMap = async (params: { lat: number; lng: number }) => {
   const response = await apiClient.get<TileMapResponse>("tiles/teams", {
     params,
   })
+  console.log(response.data)
+  return response.data
+}
+
+// 전체 점령 지도 클러스터 확인
+export const getTeamTileMapCluster = async (params: {
+  lat: number
+  lng: number
+  zoomLevel: number
+}) => {
+  const response = await apiClient.get<TileMapClusterResponse>(
+    "tiles/teams/cluster",
+    { params },
+  )
+
+  console.log(response.data)
   return response.data
 }
 
@@ -45,6 +61,5 @@ export const getOneTeamTileMapCluster = async (
     { params },
   )
 
-  console.log(response.data)
   return response.data
 }
