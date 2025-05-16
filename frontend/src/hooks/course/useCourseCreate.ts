@@ -1,5 +1,6 @@
 "use client"
 
+import { createCourse } from "@/services/course/api"
 import {
   CourseCreateStep,
   CourseData,
@@ -89,7 +90,27 @@ const useCourseCreate = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(courseData)
+    const formData = new FormData()
+    formData.append(
+      "courseCreateRequest",
+      JSON.stringify({
+        courseName: courseData.courseName,
+        geoPoints: courseData.path,
+        distance: courseData.distance,
+      }),
+    )
+    if (courseData.imageFile) {
+      formData.append("courseImage", courseData.imageFile, "map.png")
+    }
+
+    try {
+      await createCourse(formData)
+      setNavigationDirection("forward")
+      setStep(CourseCreateStep.END)
+      window.history.pushState(null, "", `?step=${CourseCreateStep.END}`)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSearchStep = () => {
