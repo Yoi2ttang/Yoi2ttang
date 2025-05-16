@@ -42,7 +42,9 @@ const RunningEndModal = ({ setIsEndModalOpen }: RunningEndModalProps) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
       onClick={() => setIsEndModalOpen(false)}>
-      <div className="flex w-80 flex-col items-center gap-8 rounded-lg bg-white p-6 text-center">
+      <div
+        className="flex w-80 flex-col items-center gap-8 rounded-lg bg-white p-6 text-center"
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col items-center gap-1">
           <CircleCheck className="stroke-yoi-500 size-10 stroke-1" />
           <p className="text-yoi-500 text-xl font-semibold">
