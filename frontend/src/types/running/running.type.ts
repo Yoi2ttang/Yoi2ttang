@@ -10,3 +10,14 @@ export interface TeamSituationResponse {
   myTeam: TeamInfo
   rankGap: number
 }
+
+export interface StartRunningRequest {
+  lat: number
+  lng: number
+  currentTime: string
+}
+
+export interface StartRunningResponse {
+  runningId: number
+  message: string
+}
