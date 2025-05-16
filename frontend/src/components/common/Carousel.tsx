@@ -1,8 +1,8 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
+import useEmblaCarousel from "embla-carousel-react"
 import { ReactNode, useCallback, useEffect, useState } from "react"
 
 interface CarouselProps {
@@ -10,6 +10,8 @@ interface CarouselProps {
   autoplay?: boolean
   autoplayDelay?: number
   scrollCount?: number // 즉시 이동 버튼이 필요하다면 children의 length 만큼 설정
+  dragFree?: boolean
+  skipSnaps?: boolean
   className?: string
   children: ReactNode
 }
@@ -19,11 +21,13 @@ const Carousel = ({
   autoplay = false,
   autoplayDelay = 5000,
   scrollCount = 0,
+  dragFree = false,
+  skipSnaps = false,
   className,
   children,
 }: CarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true },
+    { loop, align: "start", dragFree, skipSnaps },
     autoplay
       ? [Autoplay({ delay: autoplayDelay, stopOnInteraction: true })]
       : [],

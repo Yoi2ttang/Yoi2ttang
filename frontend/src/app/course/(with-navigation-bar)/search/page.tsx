@@ -14,9 +14,12 @@ const CourseSearchPage = () => {
           {Array.from({ length: 10 }).map((item, index) => (
             <CourseCard
               key={index}
+              courseId={index}
               title="한강 러닝 코스"
               distance={4.3}
               completedDate={new Date()}
+              progress={100 - 10 * index}
+              className="h-64 w-full"
             />
           ))}
 

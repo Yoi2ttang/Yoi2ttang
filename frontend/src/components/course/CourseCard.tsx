@@ -2,8 +2,10 @@ import TempMapImage from "@/assets/images/course/temp_map.png"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import Link from "next/link"
 
 interface CourseCardProps {
+  courseId: number
   image?: string
   title: string
   distance: number
@@ -13,6 +15,7 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({
+  courseId,
   image,
   title,
   distance,
@@ -21,7 +24,8 @@ const CourseCard = ({
   className,
 }: CourseCardProps) => {
   return (
-    <div
+    <Link
+      href={`/course/${courseId}`}
       className={cn(
         "flex shrink-0 cursor-pointer flex-col rounded-xl border border-neutral-200 bg-white",
         className,
@@ -37,7 +41,7 @@ const CourseCard = ({
 
       <div className="p-3">
         <div className="flex-1 flex-col gap-1">
-          <p className="line-clamp-1 break-all">{title}</p>
+          <p className="line-clamp-1 font-medium break-all">{title}</p>
           <p className="text-caption line-clamp-1 break-all text-neutral-500">
             {distance}km
           </p>
@@ -56,7 +60,7 @@ const CourseCard = ({
           </div>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 

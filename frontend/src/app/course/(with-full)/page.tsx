@@ -36,6 +36,7 @@ const CoursePage = () => {
           {Array.from({ length: 3 }).map((_, index) => (
             <CourseCarouselItem
               key={index}
+              courseId={index + 1}
               title="한강 러닝 코스"
               distance={4.3}
               progress={100 - 33 * index}
@@ -62,15 +63,28 @@ const CoursePage = () => {
         }
         className="rounded-xl bg-white p-4">
         <div className="grid grid-cols-2 gap-4">
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
           <CourseCard
+            courseId={1}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+          />
+          <CourseCard
+            courseId={2}
             title="한강 러닝 코스"
             distance={4.3}
             className="h-44"
             completedDate={new Date()}
           />
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
           <CourseCard
+            courseId={3}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+            completedDate={new Date()}
+          />
+          <CourseCard
+            courseId={4}
             title="한강 러닝 코스"
             distance={4.3}
             className="h-44"
@@ -96,10 +110,30 @@ const CoursePage = () => {
         }
         className="rounded-xl bg-white p-4">
         <div className="grid grid-cols-2 gap-4">
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
-          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard
+            courseId={1}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+          />
+          <CourseCard
+            courseId={2}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+          />
+          <CourseCard
+            courseId={3}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+          />
+          <CourseCard
+            courseId={4}
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+          />
         </div>
       </Section>
     </div>

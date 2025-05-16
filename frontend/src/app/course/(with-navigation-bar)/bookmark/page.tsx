@@ -13,10 +13,13 @@ const CourseBookmarkPage = () => {
         <div className="flex flex-1 flex-col gap-4">
           {Array.from({ length: 10 }).map((item, index) => (
             <CourseCard
+              courseId={index}
               key={index}
               title="한강 러닝 코스"
               distance={4.3}
               completedDate={new Date()}
+              progress={100 - 10 * index}
+              className="h-64 w-full"
             />
           ))}
 

@@ -2,9 +2,11 @@ import TempMapImage from "@/assets/images/course/temp_map.png"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import Link from "next/link"
 import { ReactNode } from "react"
 
 interface CourseCarouselItemProps {
+  courseId: number
   image?: ReactNode | string
   title: string
   distance: number
@@ -14,6 +16,7 @@ interface CourseCarouselItemProps {
 }
 
 const CourseCarouselItem = ({
+  courseId,
   image,
   title,
   distance,
@@ -22,7 +25,8 @@ const CourseCarouselItem = ({
   className,
 }: CourseCarouselItemProps) => {
   return (
-    <div
+    <Link
+      href={`/course/${courseId}`}
       className={cn(
         "flex shrink-0 cursor-pointer items-center gap-3 rounded-xl bg-white p-3",
         className,
@@ -57,7 +61,7 @@ const CourseCarouselItem = ({
           </div>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 
