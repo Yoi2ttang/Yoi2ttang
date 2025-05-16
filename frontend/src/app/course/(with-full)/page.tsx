@@ -16,23 +16,17 @@ const CoursePage = () => {
 
       <Section
         title={
-          <div className="text-title-sm w-11/12">
-            <div className="flex">
-              <p className="line-clamp-1 break-all">
-                <span className="text-yoi-500">
-                  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-                </span>
-              </p>
-              <p className="shrink-0">님이</p>
-            </div>
-            <p>달렸던 코스</p>
+          <div className="text-title-sm flex">
+            <p className="line-clamp-1 break-all">
+              <span className="text-yoi-500">WWWWWWWWWWWWWWWW</span>
+            </p>
+            <p className="shrink-0">님이 달렸던 코스</p>
           </div>
         }
         supplement={
           <Link
             href={`/course/history`}
-            className="flex cursor-pointer items-center gap-0.5">
-            <p className="text-caption text-neutral-400">전체 보기</p>
+            className="ml-2 flex cursor-pointer items-center gap-0.5">
             <ChevronRight className="size-5 text-neutral-300" />
           </Link>
         }>
