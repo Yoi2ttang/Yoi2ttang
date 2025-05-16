@@ -90,17 +90,28 @@ const useCourseCreate = () => {
   }
 
   const handleSubmit = async () => {
+    console.log(
+      JSON.stringify({
+        courseName: courseData.courseName,
+        geoPoints: courseData.path,
+        distance: 0.1,
+      }),
+    )
     const formData = new FormData()
     formData.append(
       "courseCreateRequest",
       JSON.stringify({
         courseName: courseData.courseName,
         geoPoints: courseData.path,
-        distance: courseData.distance,
+        distance: 12,
       }),
     )
     if (courseData.imageFile) {
-      formData.append("courseImage", courseData.imageFile, "map.png")
+      formData.append(
+        "courseImage",
+        courseData.imageFile,
+        `${courseData.courseName}-${Date.now()}.png`,
+      )
     }
 
     try {

@@ -16,7 +16,7 @@ export const getRegionSearch = async (params: {
 
 // 코스 생성
 export const createCourse = async (body: FormData) => {
-  const response = await apiClient.post("/course", body, {
+  const response = await apiClient.post("/courses", body, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
