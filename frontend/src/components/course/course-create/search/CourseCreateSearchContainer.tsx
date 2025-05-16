@@ -1,7 +1,7 @@
 import Input from "@/components/common/Input"
 import Section from "@/components/common/Section"
 import StackHeader from "@/components/layouts/Header/StackHeader"
-import { getRegionSearch } from "@/services/course/api"
+import useGetRegionSearch from "@/hooks/course/useGetRegionSearch"
 import { CourseData, SearchResult } from "@/types/course.type"
 import { debounce } from "lodash-es"
 import { ChangeEvent, useState } from "react"
@@ -19,6 +19,7 @@ const CourseCreateSearchContainer = ({
   updateCourseData,
 }: CourseCreateSearchContainerProps) => {
   const [searchLocation, setSearchLocation] = useState<SearchResult[]>([])
+  const { mutateAsync: getRegionSearch } = useGetRegionSearch()
 
   const handleSearchLocation = debounce(
     async (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,11 +28,11 @@ const CourseCreateSearchContainer = ({
         query: location,
       })
       const searchList = items.map((item: any) => ({
-        title: item.title,
-        roadAddress: item.roadAddress.replace(/<[^>]+>/g, ""),
-        lat: item.mapx,
-        lng: item.mapy,
-      }))
+        addressPOI: item.title.replace(/<[^>]+>/g, ""),
+        roadAddress: item.roadAddress,
+        lat: item.mapy,
+        lng: item.mapx,
+      })) as SearchResult[]
 
       setSearchLocation(searchList)
     },
@@ -39,16 +40,18 @@ const CourseCreateSearchContainer = ({
   )
 
   const handleSelectLocation = ({
-    title,
+    addressPOI,
     roadAddress,
     lat,
     lng,
   }: SearchResult) => {
     updateCourseData({
+      addressPOI,
       startLocation: {
         lat,
         lng,
       },
+      path: [{ lat, lng }],
       localAddress: roadAddress,
     })
   }

@@ -43,6 +43,8 @@ const stepConfigurations: Record<CourseCreateStep, StepConfig> = {
 
 const CourseCreatePage = ({}: CourseCreatePageProps) => {
   const {
+    drawMapRef,
+    isSearch,
     step,
     setStep,
     navigationDirection,
@@ -62,7 +64,7 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.DRAW:
         return courseData.path.length < 2
       case CourseCreateStep.SEARCH:
-        return courseData.startLocation.lat === 0
+        return courseData.startLocation?.lat === 0
       case CourseCreateStep.NAME:
         return courseData.courseName.length === 0
       case CourseCreateStep.CONFIRM:
@@ -77,7 +79,8 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.START:
         return (
           <CourseCreateStartContainer
-            localAddress={courseData.localAddress}
+            isSearch={isSearch}
+            courseData={courseData}
             title={stepConfigurations[step].title}
             onBack={handlePrevStep}
             handleSearchStep={handleSearchStep}
@@ -87,9 +90,10 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.DRAW:
         return (
           <CourseCreateDrawContainer
+            drawMapRef={drawMapRef}
             step={step}
             path={courseData.path}
-            startLocation={courseData.startLocation}
+            courseData={courseData}
             title={stepConfigurations[step].title}
             onPrevStep={handlePrevStep}
             updateCourseData={updateCourseData}
@@ -107,6 +111,7 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.NAME:
         return (
           <CourseCreateAddNameContainer
+            courseData={courseData}
             title={stepConfigurations[step].title}
             onPrevStep={handlePrevStep}
             updateCourseData={updateCourseData}
@@ -115,10 +120,9 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.CONFIRM:
         return (
           <CourseCreateConfirmContainer
-            image={courseData.image}
+            imageUrl={courseData.imageUrl}
             courseName={courseData.courseName}
             onPrevStep={handlePrevStep}
-            onNextStep={handleNextStep}
           />
         )
       case CourseCreateStep.END:

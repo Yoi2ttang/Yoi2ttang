@@ -16,13 +16,15 @@ export interface POI {
 }
 
 export interface CourseData {
-  startLocation: Coordinates
-  endLocation: Coordinates
+  startLocation: Coordinates | null
+  endLocation: Coordinates | null
   courseName: string
   path: Coordinates[]
+  addressPOI: string | undefined
   localAddress: string
   distance: number
-  image: FormData | null
+  imageFile: Blob | null
+  imageUrl: string
 }
 
 export interface StepConfig {
@@ -33,7 +35,7 @@ export interface StepConfig {
 export type NavigationDirection = "forward" | "backward"
 
 export interface SearchResult {
-  title: string
+  addressPOI: string
   roadAddress: string
   lat: number
   lng: number

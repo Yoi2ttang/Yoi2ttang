@@ -1,26 +1,33 @@
+"use client"
+
 import {
   CourseCreateStep,
   CourseData,
   NavigationDirection,
 } from "@/types/course.type"
-import { Coordinates } from "@/types/map/navermaps"
-import html2canvas from "html2canvas"
+import { Coordinates, NaverMap } from "@/types/map/navermaps"
+import domtoimage from "dom-to-image-more"
 import { redirect, RedirectType } from "next/navigation"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 const useCourseCreate = () => {
   const [step, setStep] = useState<CourseCreateStep>(CourseCreateStep.START)
   const [navigationDirection, setNavigationDirection] =
     useState<NavigationDirection>("forward")
+  const isSearch = useRef<boolean>(false)
+
+  const drawMapRef = useRef<NaverMap | null>(null)
 
   const [courseData, setCourseData] = useState<CourseData>({
-    startLocation: { lat: 0, lng: 0 },
-    endLocation: { lat: 0, lng: 0 },
+    startLocation: null,
+    endLocation: null,
     courseName: "",
     path: [],
     localAddress: "",
     distance: 0,
-    image: null,
+    imageFile: null,
+    imageUrl: "",
+    addressPOI: undefined,
   })
 
   const updateCourseData = (data: Partial<CourseData>) => {
@@ -32,15 +39,21 @@ const useCourseCreate = () => {
   }
 
   const handleCapture = async () => {
-    const captureRef = document.getElementById("draw-map")
-    if (!captureRef) {
-      console.error("draw-map element not found")
-      return
-    }
-    const canvas = await html2canvas(captureRef)
-    const capture = canvas.toDataURL("image/png")
-    console.log(capture)
-    // setCourseData((prev) => ({ ...prev, image: capture }))
+    const mapElement = drawMapRef.current?.getElement()
+
+    const dataUrl = await domtoimage.toPng(mapElement, {
+      width: 600,
+      height: 600,
+    })
+
+    const blob = await fetch(dataUrl).then((res) => res.blob())
+
+    const imageUrl = URL.createObjectURL(blob)
+    // const formData = new FormData()
+    // formData.append("file", blob, `${courseData.courseName}-${Date.now()}.png`)
+
+    console.log(imageUrl)
+    updateCourseData({ imageFile: blob, imageUrl })
   }
 
   const handleNextStep = async () => {
@@ -53,7 +66,7 @@ const useCourseCreate = () => {
         window.history.pushState(null, "", `?step=${CourseCreateStep.START}`)
         break
       case CourseCreateStep.DRAW:
-        await handleCapture()
+        handleDrawNameStep()
         break
       case CourseCreateStep.CONFIRM:
         await handleSubmit()
@@ -80,13 +93,23 @@ const useCourseCreate = () => {
   }
 
   const handleSearchStep = () => {
+    isSearch.current = true
     setNavigationDirection("forward")
     setStep(CourseCreateStep.SEARCH)
     window.history.pushState(null, "", `?step=${CourseCreateStep.SEARCH}`)
   }
 
+  const handleDrawNameStep = async () => {
+    await handleCapture()
+    setNavigationDirection("forward")
+    setStep(step + 1)
+    window.history.pushState(null, "", `?step=${step + 1}`)
+  }
+
   return {
+    isSearch,
     step,
+    drawMapRef,
     setStep,
     navigationDirection,
     courseData,

@@ -6,7 +6,7 @@ import StartPin from "./StartPin"
 interface CourseCreateMapProps {
   ref: RefObject<NaverMap | null>
   handleDragEnd: (coordinates: Coordinates) => void
-  startLocation?: Coordinates
+  startLocation?: Coordinates | null
 }
 
 const CourseCreateMap = ({

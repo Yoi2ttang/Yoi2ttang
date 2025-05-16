@@ -9,12 +9,14 @@ interface CourseCreateAddNameContainerProps {
   title: string
   onPrevStep: () => void
   updateCourseData: (data: Partial<CourseData>) => void
+  courseData: CourseData
 }
 
 const CourseCreateAddNameContainer = ({
   title,
   onPrevStep,
   updateCourseData,
+  courseData,
 }: CourseCreateAddNameContainerProps) => {
   const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
     const courseName = e.target.value
@@ -27,6 +29,7 @@ const CourseCreateAddNameContainer = ({
       <div className="px-4 py-10">
         <Section title={`✨ ${title} ✨`}>
           <Input
+            defaultValue={courseData.courseName}
             onChange={handleChange}
             placeholder="코스 이름을 입력해주세요."
           />

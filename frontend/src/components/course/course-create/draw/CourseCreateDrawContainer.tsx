@@ -7,15 +7,16 @@ import {
   CourseData,
   MapClickEvent,
 } from "@/types/course.type"
-import { Coordinates } from "@/types/map/navermaps"
-import { useEffect, useRef } from "react"
+import { Coordinates, NaverMap } from "@/types/map/navermaps"
+import { RefObject, useEffect, useRef } from "react"
 import CourseHeader from "../../CourseHeader"
 import EndPin from "./EndPin"
 
 interface CourseCreateDrawContainerProps {
+  drawMapRef: RefObject<NaverMap | null>
   path: Coordinates[]
   step: CourseCreateStep
-  startLocation: Coordinates
+  courseData: CourseData
   title: string
   onPrevStep: () => void
   updatePath: (path: Coordinates) => void
@@ -23,9 +24,10 @@ interface CourseCreateDrawContainerProps {
 }
 
 const CourseCreateDrawContainer = ({
+  drawMapRef,
   path,
   step,
-  startLocation,
+  courseData,
   title,
   onPrevStep,
   updatePath,
@@ -33,14 +35,18 @@ const CourseCreateDrawContainer = ({
 }: CourseCreateDrawContainerProps) => {
   const { mapRef, initializeMap } = useMapInitialize()
 
+  if (!drawMapRef.current) {
+    console.log("주입입")
+    drawMapRef.current = mapRef?.current
+  }
+
   const polylineRef = useRef<naver.maps.Polyline | null>(null)
-  const captureRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (startLocation) {
+    if (courseData.startLocation) {
       initializeMap({
         mapDiv: "draw-map",
-        loc: startLocation,
+        loc: courseData.startLocation,
         zoom: 17,
       })
 
@@ -48,7 +54,7 @@ const CourseCreateDrawContainer = ({
 
       // 출발지 마커
       new naver.maps.Marker({
-        position: startLocation,
+        position: courseData.startLocation,
         map,
         icon: {
           content: ReactDOMServer.renderToString(<StartPin step={step} />),
@@ -87,6 +93,7 @@ const CourseCreateDrawContainer = ({
         path,
         strokeColor: "#ff7c64",
         strokeWeight: 6,
+        zIndex: 102,
       })
     } else {
       polylineRef.current.setPath(path)
@@ -109,7 +116,7 @@ const CourseCreateDrawContainer = ({
   return (
     <div>
       <CourseHeader title={title} showBackButton={true} onBack={onPrevStep} />
-      <div ref={captureRef} id="draw-map" className="h-dvh w-full"></div>
+      <div id="draw-map" className="h-dvh w-full"></div>
     </div>
   )
 }

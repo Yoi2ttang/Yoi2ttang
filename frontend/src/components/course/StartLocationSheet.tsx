@@ -4,40 +4,16 @@ interface StartLocationSheetProps {
   onSelectCurrentLocation: () => void
   onSelectMapLocation: () => void
   localAddress: string
+  addressPOI: string | undefined
 }
 
 const StartLocationSheet = ({
   onSelectCurrentLocation,
   onSelectMapLocation,
   localAddress,
+  addressPOI,
 }: StartLocationSheetProps) => {
-  const address = localAddress.split(" ")
-  const last = address[address.length - 1]
-  const secondLast = address[address.length - 2]
-
   // 숫자 또는 숫자-숫자 패턴 체크 함수
-  const isNumberOrNumberDashNumber = (str: string) =>
-    /^\d+$/.test(str) || /^\d+-\d+$/.test(str)
-
-  let buildingName = "알 수 없는 위치"
-  let convertedAddress = localAddress
-
-  if (
-    last &&
-    secondLast &&
-    !isNumberOrNumberDashNumber(last) &&
-    !isNumberOrNumberDashNumber(secondLast)
-  ) {
-    buildingName = `${secondLast} ${last}`
-    convertedAddress = localAddress
-      .replace(new RegExp(`${buildingName}$`), "")
-      .trim()
-  } else if (last && !isNumberOrNumberDashNumber(last)) {
-    buildingName = last
-    convertedAddress = localAddress
-      .replace(new RegExp(`${buildingName}$`), "")
-      .trim()
-  }
 
   return (
     <>
@@ -58,9 +34,9 @@ const StartLocationSheet = ({
       </div>
       {/* info */}
       <div className="flex flex-col gap-2">
-        <h3 className="text-title-sm">{buildingName}</h3>
+        <h3 className="text-title-sm">{addressPOI || "알 수 없는 위치"}</h3>
         <p className="text-sm">
-          <span>{convertedAddress}&nbsp;</span>
+          <span>{localAddress}&nbsp;</span>
         </p>
       </div>
     </>
