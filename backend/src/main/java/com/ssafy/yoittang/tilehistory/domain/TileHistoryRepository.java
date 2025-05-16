@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -194,5 +195,9 @@ public class TileHistoryRepository {
             LocalDateTime endDate
     ) {
         return tileHistoryQueryRepository.findDailyTileCountsByMemberId(memberId, startDate, endDate);
+    }
+
+    public Map<Long, Long> countVisitedCourseTilesByMember(Long memberId, List<Long> courseIds) {
+        return tileHistoryQueryRepository.countVisitedCourseTilesByMember(memberId, courseIds);
     }
 }

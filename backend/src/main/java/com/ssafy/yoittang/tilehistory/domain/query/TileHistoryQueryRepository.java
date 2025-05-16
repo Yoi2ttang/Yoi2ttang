@@ -2,6 +2,7 @@ package com.ssafy.yoittang.tilehistory.domain.query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
@@ -24,4 +25,6 @@ public interface TileHistoryQueryRepository {
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
+    Map<Long, Long> countVisitedCourseTilesByMember(Long memberId, List<Long> courseIds);
 }

@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,8 +19,10 @@ import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.common.model.PageInfo;
+import com.ssafy.yoittang.course.domain.dto.response.CompleteCourseResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
+import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Follow;
 import com.ssafy.yoittang.member.domain.Member;
@@ -31,6 +36,7 @@ import com.ssafy.yoittang.member.domain.dto.response.MyProfileEditResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MyProfileResponse;
 import com.ssafy.yoittang.member.domain.repository.FollowJpaRepository;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
+import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.running.domain.dto.response.RunningTimeResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
@@ -57,6 +63,7 @@ public class MemberService {
     private final RunningPointRepository runningPointRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final CourseRepository courseRepository;
+    private final CourseTileJpaRepository courseTileJpaRepository;
     //이 코드는 refactoring 되면 사라질 예정입니다.
     private final TileRepository tileRepository;
     private final S3ImageUploader s3ImageUploader;
@@ -233,8 +240,45 @@ public class MemberService {
         return memberRepository.existByNickname(nickname);
     }
 
-    public List<CourseSummaryResponse> getCompleteCourse(String keyword, Member member) {
-        return courseRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, member.getMemberId());
+    public List<CompleteCourseResponse> getCompleteCourse(Long targetId, Member member) {
+        Member targetMember = memberRepository.findById(targetId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_MEMBER));
+        if (targetMember.getDisclosure().equals(DisclosureStatus.ONLY_ME) && !member.getMemberId().equals(targetId)) {
+            throw new BadRequestException(ErrorCode.MEMBER_PRIVATE_PROFILE);
+        }
+        List<CourseSummaryResponse> courseSummaryResponses = courseRepository.findCompleteCoursesByMemberId(targetId);
+        List<Long> courseIds = courseSummaryResponses.stream().map(CourseSummaryResponse::courseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
+                targetId,
+                courseIds
+        );
+
+        List<Running> completedRunnings = runningRepository.findCompleteRunning(targetId);
+
+        Map<Long, LocalDateTime> latestEndTimeByCourse = completedRunnings.stream()
+                .filter(r -> r.getCourseId() != null)
+                .collect(Collectors.toMap(
+                        Running::getCourseId,
+                        Running::getEndTime,
+                        (existing, replacement) -> existing // 이미 최신순이므로 첫 번째 유지
+                ));
+
+        return courseSummaryResponses.stream()
+                .filter(course -> {
+                    Long total = totalTiles.getOrDefault(course.courseId(), 0L);
+                    Long visited = visitedTiles.getOrDefault(course.courseId(), 0L);
+                    return total > 0 && total.equals(visited);
+                })
+                .map(course -> new CompleteCourseResponse(
+                        course.courseId(),
+                        course.courseName(),
+                        course.distance(),
+                        course.courseImageUrl(),
+                        latestEndTimeByCourse.getOrDefault(course.courseId(), null)
+                ))
+                .toList();
     }
 
     private RunningTimeResponse convertToRunningTimeResponse(Double totalSeconds) {
@@ -268,8 +312,7 @@ public class MemberService {
 
     @Transactional
     public void updateProfile(MemberUpdateRequest memberUpdateRequest, MultipartFile file, Member member) {
-        if (!member.getNickname().equals(memberUpdateRequest.nickname())
-                && memberRepository.existByNickname(memberUpdateRequest.nickname())
+        if (memberRepository.existByNickname(memberUpdateRequest.nickname())
         ) {
             throw new BadRequestException(ErrorCode.DUPLICATE_NICKNAME);
         }

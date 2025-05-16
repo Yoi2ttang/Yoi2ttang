@@ -27,8 +27,37 @@ public class CourseRepository {
         return courseJpaRepositoy.countByCourseIdIn(courseIds);
     }
 
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, Integer limit) {
+        return courseQueryRepository.findCompletedCoursesByMemberId(memberId, limit);
+    }
+
+    public PageInfo<Course> findPagedCompletedCoursesByMemberId(Long memberId, String keyword, String pageToken) {
+        var data = courseQueryRepository.findPagedCompletedCoursesByMemberId(
+                memberId,
+                keyword,
+                pageToken,
+                DEFAULT_PAGE_SIZE
+        );
+
+        return PageInfo.of(data, DEFAULT_PAGE_SIZE, Course::getCourseId);
+    }
+
     public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit) {
         return courseQueryRepository.findBookmarkedCoursesByMemberId(memberId, limit);
+    }
+
+    public PageInfo<CourseSummaryResponse> findPageBookmarkedCoursesByMemberId(
+            Long memberId,
+            String keyword,
+            String pageToken
+    ) {
+        var data = courseQueryRepository.findPageBookmarkedCoursesByMemberId(
+                memberId,
+                keyword,
+                pageToken,
+                DEFAULT_PAGE_SIZE
+        );
+        return PageInfo.of(data, DEFAULT_PAGE_SIZE, CourseSummaryResponse::courseId);
     }
 
     public List<CourseSummaryResponse> findCompleteCoursesByMemberId(Long memberId) {

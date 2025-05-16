@@ -22,8 +22,8 @@ import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.dto.response.RunCourseResponse;
 import com.ssafy.yoittang.member.domain.Member;
-import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 
 import lombok.RequiredArgsConstructor;
@@ -34,12 +34,36 @@ import lombok.RequiredArgsConstructor;
 public class CourseController {
     private final CourseService courseService;
 
-    @GetMapping("/bookmarks")
-    public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCourse(
-            @RequestParam BookmarkViewType type,
+    @GetMapping("/runs/preview")
+    public ResponseEntity<List<RunCourseResponse>> getRunCoursePreview(
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getBookmarkCourse(type, member));
+        return ResponseEntity.ok(courseService.getRunCoursePreview(member));
+    }
+
+    @GetMapping("/runs/all")
+    public ResponseEntity<PageInfo<RunCourseResponse>> getRunCourseAll(
+            @RequestParam(required = false, name = "keyword") String keyword,
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getRunCourseAll(keyword, pageToken, member));
+    }
+
+    @GetMapping("/bookmarks/preview")
+    public ResponseEntity<List<RunCourseResponse>> getBookmarkCoursePreview(
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getBookmarkCoursePreview(member));
+    }
+
+    @GetMapping("/bookmarks/all")
+    public ResponseEntity<PageInfo<RunCourseResponse>> getBookmarkCourseAll(
+            @RequestParam(required = false, name = "keyword") String keyword,
+            @RequestParam(required = false, name = "pageToken") String pageToken,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getBookmarkCourseAll(pageToken, keyword, member));
     }
 
     @PostMapping(

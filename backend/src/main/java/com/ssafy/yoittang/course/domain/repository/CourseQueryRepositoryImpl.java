@@ -9,7 +9,6 @@ import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +17,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
@@ -32,8 +32,51 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
+    public List<Course> findCompletedCoursesByMemberId(Long memberId, Integer limit) {
+        JPAQuery<Course> query = jpaQueryFactory
+                .selectFrom(course)
+                .join(running).on(course.courseId.eq(running.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        course.courseId.isNotNull()
+                )
+                .distinct()
+                .orderBy(course.courseId.desc());
+
+        if (limit != null) {
+            query.limit(limit);
+        }
+
+        return query.fetch();
+    }
+
+    @Override
+    public List<Course> findPagedCompletedCoursesByMemberId(
+            Long memberId,
+            String keyword,
+            String pageToken,
+            int pageSize
+    ) {
+        return jpaQueryFactory
+                .selectFrom(course)
+                .join(running).on(course.courseId.eq(running.courseId))
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        course.courseId.isNotNull(),
+                        course.courseName.like(keyword),
+                        isInRange(pageToken)
+                )
+                .distinct()
+                .orderBy(course.courseId.desc())
+                .limit(pageSize + 1)
+                .fetch();
+    }
+
+    @Override
     public List<CourseSummaryResponse> findBookmarkedCoursesByMemberId(Long memberId, Integer limit) {
-        JPAQuery<CourseSummaryResponse> query = jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.constructor(
                         CourseSummaryResponse.class,
                         course.courseId,
@@ -43,10 +86,38 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 ))
                 .from(courseBookmark)
                 .join(course).on(course.courseId.eq(courseBookmark.courseId))
-                .where(courseBookmark.memberId.eq(memberId));
+                .where(courseBookmark.memberId.eq(memberId))
+                .orderBy(course.courseId.desc())
+                .limit(limit)
+                .fetch();
+    }
 
-        Optional.ofNullable(limit).ifPresent(query::limit);
-        return query.fetch();
+    @Override
+    public List<CourseSummaryResponse> findPageBookmarkedCoursesByMemberId(
+            Long memberId,
+            String keyword,
+            String pageToken,
+            int pageSize
+    ) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        CourseSummaryResponse.class,
+                        course.courseId,
+                        course.courseName,
+                        course.distance,
+                        course.courseImageUrl
+                ))
+                .from(courseBookmark)
+                .join(course).on(course.courseId.eq(courseBookmark.courseId))
+                .where(
+                        courseBookmark.memberId.eq(memberId),
+                        course.courseName.like(keyword),
+                        isInRange(pageToken)
+                )
+                .distinct()
+                .orderBy(course.courseId.desc())
+                .limit(pageSize + 1)
+                .fetch();
     }
 
     @Override

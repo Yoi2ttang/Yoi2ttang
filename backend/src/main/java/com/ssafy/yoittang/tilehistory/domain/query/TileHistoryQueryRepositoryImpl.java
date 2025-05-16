@@ -1,5 +1,7 @@
 package com.ssafy.yoittang.tilehistory.domain.query;
 
+import static com.ssafy.yoittang.course.domain.QCourseTile.courseTile;
+import static com.ssafy.yoittang.running.domain.QRunning.running;
 import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
 import static com.ssafy.yoittang.tilehistory.domain.jpa.QTileHistoryJpa.tileHistoryJpa;
@@ -7,15 +9,20 @@ import static com.ssafy.yoittang.tilehistory.domain.jpa.QTileHistoryJpa.tileHist
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.dashboard.domain.dto.response.MemberDailyTileResponse;
+import com.ssafy.yoittang.running.domain.State;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponse;
@@ -99,6 +106,34 @@ public class TileHistoryQueryRepositoryImpl implements TileHistoryQueryRepositor
                 )
                 .groupBy(arrivalDate)
                 .fetch();
+    }
+
+    @Override
+    public Map<Long, Long> countVisitedCourseTilesByMember(Long memberId, List<Long> courseIds) {
+
+        List<Tuple> results = queryFactory
+                .select(running.courseId, tileHistoryJpa.geoHash.countDistinct())
+                .from(running)
+                .join(runningPoint).on(running.runningId.eq(runningPoint.runningId))
+                .join(tileHistoryJpa).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningPointId))
+                .join(courseTile).on(
+                        courseTile.courseId.eq(running.courseId)
+                                .and(courseTile.geoHash.eq(tileHistoryJpa.geoHash))
+                )
+                .where(
+                        running.memberId.eq(memberId),
+                        running.state.eq(State.COMPLETE),
+                        running.courseId.in(courseIds)
+                )
+                .groupBy(running.courseId)
+                .fetch();
+
+        return results.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(running.courseId),
+                        tuple -> Optional.ofNullable(tuple.get(tileHistoryJpa.geoHash.countDistinct())).orElse(0L)
+                ));
+
     }
 
     private BooleanExpression likeGeoHashString(String geoHashString) {

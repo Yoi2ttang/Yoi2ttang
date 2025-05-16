@@ -8,8 +8,10 @@ import org.springframework.data.repository.query.Param;
 
 import com.ssafy.yoittang.course.domain.CourseTile;
 
-public interface CourseTileJpaRepository extends JpaRepository<CourseTile, Long>, CourseTileJdbcRepository {
-
+public interface CourseTileJpaRepository extends
+        JpaRepository<CourseTile, Long>,
+        CourseTileJdbcRepository,
+        CourseTileQueryRepository {
     @Query("SELECT c.geoHash FROM CourseTile c WHERE c.courseId = :courseId AND c.geoHash LIKE :geoHashString")
     List<String> findGeoHashesByCourseIdAndGeoHashPrefix(
             @Param("courseId") Long courseId,
