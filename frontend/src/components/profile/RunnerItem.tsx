@@ -1,6 +1,7 @@
 import KakaoProfileImage from "@/assets/images/profile/kakao_profile.jpg"
 import { AnimalType } from "@/types/animal"
 import Image from "next/image"
+import Link from "next/link"
 import AnimalBadge from "../animal-badges/AnimalBadge"
 
 interface RunnerItemProps {
@@ -23,7 +24,11 @@ const RunnerItem = ({ nickname, animalType, targetId }: RunnerItemProps) => {
         />
 
         <div className="flex flex-1 flex-col gap-0.5">
-          <p className="line-clamp-1 break-all">{nickname}</p>
+          <Link
+            href={`/profile/${targetId}`}
+            className="line-clamp-1 w-fit cursor-pointer break-all">
+            {nickname}
+          </Link>
           <AnimalBadge animal={animalType} />
         </div>
 

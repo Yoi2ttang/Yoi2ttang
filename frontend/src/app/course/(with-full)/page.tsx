@@ -10,7 +10,7 @@ import Link from "next/link"
 const CoursePage = () => {
   return (
     <div className="flex flex-col gap-6 p-4">
-      <h1 className="text-title-md">길을 따라 달려 볼까요!</h1>
+      <h1 className="text-title-md">길을 따라 달려 보아요!</h1>
 
       <Section
         title={
@@ -61,7 +61,7 @@ const CoursePage = () => {
             <ChevronRight className="size-5 text-neutral-300" />
           </Link>
         }
-        className="rounded-xl bg-white p-4">
+        className="rounded-xl bg-white p-6">
         <div className="grid grid-cols-2 gap-4">
           <CourseCard
             courseId={1}
@@ -108,7 +108,7 @@ const CoursePage = () => {
             <ChevronRight className="size-5 text-neutral-300" />
           </Link>
         }
-        className="rounded-xl bg-white p-4">
+        className="rounded-xl bg-white p-6">
         <div className="grid grid-cols-2 gap-4">
           <CourseCard
             courseId={1}
