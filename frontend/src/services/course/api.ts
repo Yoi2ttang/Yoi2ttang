@@ -7,12 +7,8 @@ export const getRegionSearch = async (params: {
   start?: number
   sort?: "random" | "comment"
 }) => {
-  const baseUrl = "/api/naver-local"
-
   const paramsToUrl = objectToSearchParams(params)
-  const url = `${baseUrl}?${paramsToUrl}`
-
-  const response = await fetch(url)
+  const response = await fetch(`/api/naver-local?${paramsToUrl}`)
 
   return await response.json()
 }

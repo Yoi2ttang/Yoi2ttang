@@ -34,6 +34,7 @@ const CourseCreateDrawContainer = ({
   const { mapRef, initializeMap } = useMapInitialize()
 
   const polylineRef = useRef<naver.maps.Polyline | null>(null)
+  const captureRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (startLocation) {
@@ -108,7 +109,7 @@ const CourseCreateDrawContainer = ({
   return (
     <div>
       <CourseHeader title={title} showBackButton={true} onBack={onPrevStep} />
-      <div id="draw-map" className="h-dvh w-full"></div>
+      <div ref={captureRef} id="draw-map" className="h-dvh w-full"></div>
     </div>
   )
 }

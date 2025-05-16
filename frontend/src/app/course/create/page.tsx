@@ -115,6 +115,7 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
       case CourseCreateStep.CONFIRM:
         return (
           <CourseCreateConfirmContainer
+            image={courseData.image}
             courseName={courseData.courseName}
             onPrevStep={handlePrevStep}
             onNextStep={handleNextStep}

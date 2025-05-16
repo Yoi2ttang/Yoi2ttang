@@ -28,7 +28,7 @@ const CourseCreateSearchContainer = ({
       })
       const searchList = items.map((item: any) => ({
         title: item.title,
-        roadAddress: item.roadAddress,
+        roadAddress: item.roadAddress.replace(/<[^>]+>/g, ""),
         lat: item.mapx,
         lng: item.mapy,
       }))

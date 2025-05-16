@@ -4,6 +4,7 @@ import {
   NavigationDirection,
 } from "@/types/course.type"
 import { Coordinates } from "@/types/map/navermaps"
+import html2canvas from "html2canvas"
 import { redirect, RedirectType } from "next/navigation"
 import { useState } from "react"
 
@@ -30,6 +31,18 @@ const useCourseCreate = () => {
     setCourseData((prev) => ({ ...prev, path: [...prev.path, path] }))
   }
 
+  const handleCapture = async () => {
+    const captureRef = document.getElementById("draw-map")
+    if (!captureRef) {
+      console.error("draw-map element not found")
+      return
+    }
+    const canvas = await html2canvas(captureRef)
+    const capture = canvas.toDataURL("image/png")
+    console.log(capture)
+    // setCourseData((prev) => ({ ...prev, image: capture }))
+  }
+
   const handleNextStep = async () => {
     switch (step) {
       case CourseCreateStep.END:
@@ -38,6 +51,9 @@ const useCourseCreate = () => {
         setNavigationDirection("backward")
         setStep(CourseCreateStep.START)
         window.history.pushState(null, "", `?step=${CourseCreateStep.START}`)
+        break
+      case CourseCreateStep.DRAW:
+        await handleCapture()
         break
       case CourseCreateStep.CONFIRM:
         await handleSubmit()
