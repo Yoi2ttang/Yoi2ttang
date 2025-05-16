@@ -24,7 +24,7 @@ const getDistance = (loc1: Coordinates, loc2: Coordinates) => {
 
 interface useRunningStatsProps {
   isPaused?: boolean
-  weightKg?: number
+  weight?: number
 }
 
 interface PaceRecord {
@@ -35,10 +35,7 @@ interface PaceRecord {
   pace: number // 초/km
 }
 
-export const useRunningStats = ({
-  isPaused,
-  weightKg = 50,
-}: useRunningStatsProps) => {
+export const useRunningStats = ({ isPaused, weight }: useRunningStatsProps) => {
   const locRef = useRef<Coordinates>({ lat: 0, lng: 0 })
   const prevLoc = useRef<Coordinates | null>(null)
 
@@ -108,7 +105,7 @@ export const useRunningStats = ({
           calculateCalories(
             distanceRef.current / 1000,
             timeRef.current,
-            weightKg,
+            weight ?? 50,
           ),
         )
       }
@@ -120,7 +117,7 @@ export const useRunningStats = ({
     }, 1000)
 
     return () => clearInterval(id)
-  }, [isPaused, weightKg])
+  }, [isPaused, weight])
 
   // 사용자가 호출할 수 있는 구간 페이스 저장 함수
   const saveCurrentPace = () => {

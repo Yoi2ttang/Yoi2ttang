@@ -27,7 +27,7 @@ const RunningMap = () => {
     loc: currentLoc,
     zoom: 15,
     onCenterChange: handleCenterChange,
-    mapDiv: "running-stats-map",
+    mapDiv: "running-map",
   })
   useMapMarker({ mapRef, loc: currentLoc })
   useMapTiles({ mapRef, tiles })
@@ -38,7 +38,7 @@ const RunningMap = () => {
 
   return (
     <div className="flex h-full w-full">
-      <div id="running-stats-map" className="h-full w-full" />
+      <div id="running-map" className="h-full w-full" />
     </div>
   )
 }
