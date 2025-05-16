@@ -49,7 +49,6 @@ public class RunningService extends Service {
     private File csvFile;
 
     private boolean isRunning = true;
-    private final IBinder binder = new LocalBinder();
 
     public class LocalBinder extends Binder {
         public RunningService getService() { return RunningService.this; }
@@ -179,6 +178,7 @@ public class RunningService extends Service {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("SDK:", "버전이 오래오 이상입니다!");
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "Running Tracker",

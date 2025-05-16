@@ -194,7 +194,8 @@ public class RunningActivity extends AppCompatActivity implements OnMapReadyCall
                         int seconds = intent.getIntExtra("seconds", 0);
                         runningSeconds = seconds;
                         int hours = seconds / 3600;
-                        int minutes = seconds / 60;
+                        int hourLeft = seconds % hours;
+                        int minutes = hourLeft / 60;
                         int secs = seconds % 60;
 //                        Log.d("Time Count:", String.valueOf(seconds));
                         timerText.setText(String.format("%02d:%02d:%02d", hours, minutes, secs));
