@@ -1,6 +1,7 @@
 import { getApiServer } from "@/lib/api-server"
 import apiClient from "@/lib/http-common"
 import { TileMapResponse } from "@/types/dashboard/dashboard.type"
+import { TileMapClusterResponse } from "@/types/map/tile"
 
 // 개인 타일 지도 조회
 export const getPersonalTileMap = async (memberId: string) => {
@@ -31,5 +32,19 @@ export const getOneTeamTileMap = async (
       params,
     },
   )
+  return response.data
+}
+
+// 특정 점령 지도 클러스터 확인
+export const getOneTeamTileMapCluster = async (
+  zodiacId: number,
+  params: { lat: number; lng: number; zoomLevel: number },
+) => {
+  const response = await apiClient.get<TileMapClusterResponse>(
+    `tiles/teams/cluster/${zodiacId}`,
+    { params },
+  )
+
+  console.log(response.data)
   return response.data
 }

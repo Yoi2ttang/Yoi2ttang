@@ -1,44 +1,83 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useMap } from "@/hooks/map/useMap"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
 import { useMapTiles } from "@/hooks/map/useMapTiles"
-import { getOneTeamTileMap } from "@/services/tile/api"
+import { useMapTileClusters } from "@/hooks/map/useMapTileClusters"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { getPayload } from "@/lib/auth/util"
 import { useCurrentLocationButton } from "@/hooks/map/useCurrentLocationButton"
 import CurrentLocationBtn from "@/assets/icons/maps/current-location-btn.svg"
+import useGetOneTeamTileMapCluster from "@/hooks/running/useGetOneTeamTileMapCluster"
+import useGetOneTeamTileMap from "@/hooks/running/useGetOneTeamTileMap"
 
 interface RunningStartMapProps {
   loc: Coordinates
 }
 
 const RunningStartMap = ({ loc }: RunningStartMapProps) => {
+  const [center, setCenter] = useState<Coordinates>(loc)
+  const [zoomLevel, setZoomLevel] = useState<number>(17)
   const [tiles, setTiles] = useState<Tile[]>([])
 
   const zodiacId = Number(getPayload()?.zodiacId)
 
-  const handleCenterChange = async (center: Coordinates) => {
-    const res = await getOneTeamTileMap(zodiacId, center)
-    setTiles(res.tileGetResponseList)
-  }
-
   const { mapRef } = useMap({
     loc,
-    zoom: 15,
-    onCenterChange: handleCenterChange,
+    zoom: 17,
+    onCenterChange: (newCenter) => setCenter(newCenter),
     mapDiv: "running-start-map",
   })
-  useMapMarker({ mapRef, loc: loc })
+
+  // 줌 레벨 추적
+  useEffect(() => {
+    if (!mapRef.current) return
+    const map = mapRef.current
+    setZoomLevel(map.getZoom())
+
+    const listener = naver.maps.Event.addListener(map, "zoom_changed", () => {
+      setZoomLevel(map.getZoom())
+    })
+
+    return () => {
+      naver.maps.Event.removeListener(listener)
+    }
+  }, [mapRef])
+
+  // 클러스터 요청
+  const { data: clusterData } = useGetOneTeamTileMapCluster({
+    zodiacId,
+    center,
+    zoomLevel,
+  })
+
+  // 줌이 16 이상일 때만 타일 요청
+  const { data: tileData } = useGetOneTeamTileMap({
+    zodiacId,
+    center,
+  })
+
+  // tile 또는 cluster 반영
+  useEffect(() => {
+    if (zoomLevel >= 16) {
+      if (tileData) setTiles(tileData.tileGetResponseList)
+    } else {
+      setTiles([]) // 타일 제거
+    }
+  }, [zoomLevel, tileData])
+
+  const tileClusters =
+    zoomLevel < 16 ? (clusterData?.tileClusterGetResponseList ?? []) : []
+
+  useMapTileClusters({ mapRef, tileClusters })
   useMapTiles({ mapRef, tiles })
+  useMapMarker({ mapRef, loc })
 
   const { moveToCurrentLocation } = useCurrentLocationButton({ mapRef })
 
-  if (!loc) {
-    return null
-  }
+  if (!loc) return null
 
   return (
     <div className="relative flex h-full w-full">

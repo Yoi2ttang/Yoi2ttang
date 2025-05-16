@@ -16,7 +16,7 @@ const PreRunningInfo = () => {
     }
   }, [])
 
-  const { data, isLoading, isError } = useGetTeamSituation(zodiacId ?? 0)
+  const { data } = useGetTeamSituation(zodiacId ?? 0)
 
   return (
     <div className="flex w-full flex-col gap-6">
