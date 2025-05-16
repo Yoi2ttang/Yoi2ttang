@@ -60,7 +60,7 @@ public class TileServiceTest {
         // given
         double lat = 37.501161;
         double lng = 127.039668;
-        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6);
+        String geoHashPrefix = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5);
         String geoHashString = geoHashPrefix + "%";
 
         List<TileGetResponse> responseList = new ArrayList<>();
