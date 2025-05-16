@@ -122,7 +122,7 @@ public class TileService {
 
     public TileGetResponseWrapper getTile(Double lat, Double lng) {
         String geoHashString =
-                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5) + "%";
 
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(null, geoHashString))
@@ -134,7 +134,7 @@ public class TileService {
 //        checkZodiacId(zodiacId);
 
         String geoHashString =
-                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 5) + "%";
 
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(zodiacId, geoHashString))
