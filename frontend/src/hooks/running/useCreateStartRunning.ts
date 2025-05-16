@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
-import { postStartRunning } from "@/services/running/api"
+import { createStartRunning } from "@/services/running/api"
 import {
   StartRunningRequest,
   StartRunningResponse,
 } from "@/types/running/running.type"
 
-export const usePostStartRunning = () => {
+export const useCreateStartRunning = () => {
   return useMutation<StartRunningResponse, Error, StartRunningRequest>({
-    mutationFn: postStartRunning,
+    mutationFn: createStartRunning,
   })
 }

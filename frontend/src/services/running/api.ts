@@ -15,11 +15,20 @@ export const getTeamSituation = async (zodiacId: number) => {
 }
 
 // 러닝 시작하기
-export const postStartRunning = async (payload: StartRunningRequest) => {
+export const createStartRunning = async (payload: StartRunningRequest) => {
   const response = await apiClient.post<StartRunningResponse>(
     "/runnings/free",
     payload,
   )
 
+  return response.data
+}
+
+export const updateEndRunning = async (runningId: number, endTime: string) => {
+  const response = await apiClient.patch(`/runnings/${runningId}/end`, {
+    endTime,
+  })
+
+  console.log("러닝 종료", response.data)
   return response.data
 }

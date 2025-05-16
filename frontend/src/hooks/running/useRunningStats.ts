@@ -39,6 +39,8 @@ export const useRunningStats = ({ isPaused, weight }: useRunningStatsProps) => {
   const locRef = useRef<Coordinates>({ lat: 0, lng: 0 })
   const prevLoc = useRef<Coordinates | null>(null)
 
+  const [runningId, setRunningId] = useState<number | null>(null)
+
   const [currentLoc, setCurrentLoc] = useState<Coordinates>()
   const [distance, setDistance] = useState(0)
   const [calories, setCalories] = useState(0)
@@ -149,6 +151,8 @@ export const useRunningStats = ({ isPaused, weight }: useRunningStatsProps) => {
   }
 
   return {
+    runningId,
+    setRunningId,
     runningTime,
     distance,
     calories,
