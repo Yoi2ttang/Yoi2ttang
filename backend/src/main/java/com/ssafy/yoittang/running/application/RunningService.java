@@ -11,16 +11,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.opencsv.CSVReader;
-import com.ssafy.yoittang.runningpoint.domain.dto.request.LocationRecord;
-import lombok.extern.java.Log;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.opencsv.CSVReader;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
@@ -36,6 +35,7 @@ import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.LocationRecord;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
@@ -44,7 +44,7 @@ import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+
 
 
 @Service
@@ -237,11 +237,11 @@ public class RunningService {
 
         LocalDateTime endTime = locationRecordList.isEmpty()
                 ? LocalDateTime.now()
-                : locationRecordList.get(locationRecordList.size() -1 ).time();
+                : locationRecordList.get(locationRecordList.size() - 1 ).time();
 
         running.setEndTime(endTime);
 
-        if (locationRecordList.isEmpty()){
+        if (locationRecordList.isEmpty()) {
             return;
         }
 
