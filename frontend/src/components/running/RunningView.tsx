@@ -9,7 +9,7 @@ import { Coordinates } from "@/types/map/navermaps"
 import RunningSettingsButton from "./RunningSettingsButton"
 import RunningSettingsModal from "./RunningSettingsModal"
 import RunningStatsButton from "./RunningStatsButton"
-import { useCreateStartRunning } from "@/hooks/running/useCreateStartRunning"
+import { usePostStartRunning } from "@/hooks/running/usePostStartRunning"
 import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
 
 interface RunningViewProps {
@@ -23,7 +23,7 @@ const RunningView = ({ isPaused, setIsPaused }: RunningViewProps) => {
   const [showSettings, setShowSettings] = useState(false)
 
   const { currentLoc } = useRunningStats({ isPaused })
-  const { mutate: startRunning } = useCreateStartRunning()
+  const { mutate: startRunning } = usePostStartRunning()
   const { setRunningId } = useRunningStatsContext()
 
   useEffect(() => {
