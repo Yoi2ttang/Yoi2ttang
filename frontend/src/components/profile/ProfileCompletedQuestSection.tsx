@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import Carousel from "../common/Carousel"
 import Section from "../common/Section"
-import QuestCard from "../quest/QuestCard"
+import CourseCard from "../course/CourseCard"
 
 interface ProfileCompletedQuestSectionProps {
   data: ProfileResponse
@@ -36,7 +36,7 @@ const ProfileCompletedQuestSection = ({
           {courses.length > 0 ? (
             <Carousel>
               {courses.map((item) => (
-                <QuestCard
+                <CourseCard
                   key={item.courseId}
                   title={item.courseName}
                   distance={item.distance}
@@ -49,7 +49,7 @@ const ProfileCompletedQuestSection = ({
                       className="rounded-t-xl object-cover"
                     />
                   </div>
-                </QuestCard>
+                </CourseCard>
               ))}
             </Carousel>
           ) : (

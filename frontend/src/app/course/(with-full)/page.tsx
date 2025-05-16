@@ -1,11 +1,9 @@
-"use client"
-
 import PinIcon from "@/assets/icons/course/pin-icon.svg"
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import Carousel from "@/components/common/Carousel"
 import Section from "@/components/common/Section"
-import QuestCard from "@/components/quest/QuestCard"
-import { Progress } from "@/components/ui/progress"
+import CourseCard from "@/components/course/CourseCard"
+import CourseCarouselItem from "@/components/course/CourseCarouselItem"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 
@@ -36,31 +34,13 @@ const CoursePage = () => {
           autoplayDelay={5000}
           scrollCount={3}>
           {Array.from({ length: 3 }).map((_, index) => (
-            <div
+            <CourseCarouselItem
               key={index}
-              className="flex w-full shrink-0 cursor-pointer gap-4 rounded-xl bg-white p-4">
-              <div className="size-28 rounded-lg bg-neutral-200" />
-              <div className="flex flex-1 flex-col justify-between py-1">
-                <div>
-                  <h1 className="line-clamp-1 text-lg break-all">
-                    한강 러닝 코스
-                  </h1>
-
-                  <p className="text-neutral-500">4.3km</p>
-                </div>
-
-                <div className="relative">
-                  <Progress
-                    value={60}
-                    className="bg-neutral-200"
-                    indicatorClassName="bg-yoi-500 rounded-full"
-                  />
-                  <p className="text-caption text-yoi-500 font-medium">
-                    60% 달렸어요!
-                  </p>
-                </div>
-              </div>
-            </div>
+              title="한강 러닝 코스"
+              distance={4.3}
+              progress={100 - 33 * index}
+              className="w-full"
+            />
           ))}
         </Carousel>
       </Section>
@@ -82,18 +62,20 @@ const CoursePage = () => {
         }
         className="rounded-xl bg-white p-4">
         <div className="grid grid-cols-2 gap-4">
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+            completedDate={new Date()}
+          />
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard
+            title="한강 러닝 코스"
+            distance={4.3}
+            className="h-44"
+            completedDate={new Date()}
+          />
         </div>
       </Section>
 
@@ -101,7 +83,7 @@ const CoursePage = () => {
         title={
           <div className="flex gap-2">
             <RouteIcon className="text-yoi-500 size-6" />
-            <p className="text-title-sm">이 코스는 어떠세요?</p>
+            <p className="text-title-sm">코스 둘러보기</p>
           </div>
         }
         supplement={
@@ -114,18 +96,10 @@ const CoursePage = () => {
         }
         className="rounded-xl bg-white p-4">
         <div className="grid grid-cols-2 gap-4">
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
-          <QuestCard title="한강 러닝 코스" distance={4.3} showLables={false}>
-            <div className="h-16 w-full rounded-t-xl bg-neutral-200" />
-          </QuestCard>
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
+          <CourseCard title="한강 러닝 코스" distance={4.3} className="h-44" />
         </div>
       </Section>
     </div>

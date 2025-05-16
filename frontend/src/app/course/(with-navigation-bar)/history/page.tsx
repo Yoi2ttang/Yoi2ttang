@@ -1,6 +1,6 @@
 import SearchBar from "@/components/common/SearchBar"
+import CourseCard from "@/components/course/CourseCard"
 import StackHeader from "@/components/layouts/Header/StackHeader"
-import QuestCard from "@/components/quest/QuestCard"
 
 const CourseHistoryPage = () => {
   return (
@@ -12,13 +12,12 @@ const CourseHistoryPage = () => {
 
         <div className="flex flex-1 flex-col gap-4">
           {Array.from({ length: 10 }).map((item, index) => (
-            <QuestCard
+            <CourseCard
               key={index}
               title="한강 러닝 코스"
               distance={4.3}
-              completedDate={new Date()}>
-              <div className="h-36 w-full rounded-t-xl bg-neutral-200" />
-            </QuestCard>
+              completedDate={new Date()}
+            />
           ))}
 
           {/* <p className="text-neutral-300">일치하는 결과가 없습니다.</p> */}
