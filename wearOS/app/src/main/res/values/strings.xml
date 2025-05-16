@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Yoittang</string>
+    <string name="notification_channel_id_running">yoittang_running_channel</string>
+    <string name="notification_channel_name_running">요이땅 러닝 기록 채널</string>
+    <string name="notification_channel_description_running">운동 기록을 수집합니다</string>
+    <string name="alert_dialog_title_permission">필수 권한 필요</string>
+    <string name="alert_dialog_message_permission">앱을 정상적으로 사용하려면 모든 권한을 허용해야 합니다.\n설정화면으로 이동하시겠습니까?</string>
+    <string name="alert_dialog_button_positive_permission">설정으로 이동</string>
+    <string name="alert_dialog_button_negative_permission">취소</string>
+    <string name="alert_dialog_title_additional_permission">추가 권한 필요</string>
+    <string name="alert_dialog_message_additional_permission">러닝 중에도 위치를 기록하려면 백그라운드 위치 권한이 필요합니다.</string>
+    <string name="pairing_alert_title">페어링된 기기 없음</string>
+    <string name="pairing_alert_message">페어링된 기기가 없습니다. 와이파이 혹은 블루투스 연결을 확인하여 주십시오.</string>
 </resources>

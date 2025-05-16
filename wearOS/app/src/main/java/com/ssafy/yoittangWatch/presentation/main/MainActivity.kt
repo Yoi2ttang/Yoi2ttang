@@ -1,15 +1,12 @@
 package com.ssafy.yoittangWatch.presentation.main
 
-import android.Manifest
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -17,57 +14,37 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
-import android.app.AlertDialog
-import android.content.Context
-import android.content.pm.PackageManager
-import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
+import com.ssafy.yoittangWatch.R
 import com.ssafy.yoittangWatch.presentation.common.PhoneNode
+import com.ssafy.yoittangWatch.presentation.common.util.PermissionHelper
 import com.ssafy.yoittangWatch.presentation.common.YoittangCircleButton
 import com.ssafy.yoittangWatch.presentation.countdown.CountdownActivity
 import com.ssafy.yoittangWatch.presentation.theme.YoittangWatchTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val fgPermissions = arrayOf(
-        Manifest.permission.BODY_SENSORS,
-        Manifest.permission.ACTIVITY_RECOGNITION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    )
-
-    private val bgPermissions = listOf(
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.BODY_SENSORS_BACKGROUND
-    )
-
-    private lateinit var fgLauncher: ActivityResultLauncher<Array<String>>
-    private val bgLaunchers: MutableMap<String, ActivityResultLauncher<String>> = mutableMapOf()
-
-    // 안드로이드 앱으로부터 러닝 시작 신호를 받으면 CountdownActivity로 이동
     private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
-        when (messageEvent.path) {
-            "/running/start" -> {
-                Log.d("MainActivity", "Received start message")
-                startCountdown()
-            }
+        if (messageEvent.path == "/running/start") {
+            Log.d("MainActivity", "Received start message")
+            startCountdown()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initForegroundLauncher()
-        initBackgroundLaunchers()
+        // 권한 런처 등록 (onAllGranted 콜백은 비워둠)
+        PermissionHelper.registerLaunchers(this)
 
+        // 페어링된 워치 노드 가져오기 후 처리
         fetchAndCachePhoneNode(this) {
-            if(false) {
-                closeAppWithPairingAlert()
+            if (PhoneNode.phoneNodeId == null) {
+                showPairingAlert()
             } else {
-                fgLauncher.launch(fgPermissions)
-
+                // 권한 체크 및 요청 (버튼 클릭 시 처리)
+                // UI 설정
                 setContent {
                     YoittangWatchTheme {
                         MainScreen(onStartClick = { handleStartClick() })
@@ -75,10 +52,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // 알림 채널 생성
+        createNotificationChannel()
     }
 
     override fun onResume() {
         super.onResume()
+        PermissionHelper.ensurePermissions()
         Wearable.getMessageClient(this).addListener(messageListener)
     }
 
@@ -87,151 +68,73 @@ class MainActivity : ComponentActivity() {
         Wearable.getMessageClient(this).removeListener(messageListener)
     }
 
-    private fun closeAppWithPairingAlert() {
-        AlertDialog.Builder(this)
-            .setTitle("페어링된 기기 없음")
-            .setMessage("페어링된 기기가 없습니다. 블루투스 또는 와이파이 연결을 확인하여 주십시오.")
-            .setCancelable(false)
-            .setPositiveButton("확인") { _, _ ->
-                finishAffinity()
-            }
-            .show()
-    }
-
-    private fun initForegroundLauncher() {
-        fgLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { results ->
-            val allGranted = fgPermissions.all { perm -> results[perm] == true }
-            if (!allGranted) {
-                AlertDialog.Builder(this)
-                    .setTitle("필수 권한 필요")
-                    .setMessage("앱을 정상적으로 사용하려면 모든 권한을 허용하셔야 합니다.\n설정 화면으로 이동하시겠습니까?")
-                    .setPositiveButton("설정으로 이동") { _, _ ->
-                        startActivity(
-                            Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", packageName, null)
-                            )
-                        )
-                    }
-                    .setNegativeButton("취소", null)
-                    .show()
-                return@registerForActivityResult
-            }
-
-            val missingBg = bgPermissions.filter {
-                ContextCompat.checkSelfPermission(this, it) != android.content.pm.PackageManager.PERMISSION_GRANTED
-            }
-            if (missingBg.isNotEmpty()) {
-                AlertDialog.Builder(this)
-                    .setTitle("추가 권한 필요")
-                    .setMessage("러닝 중에도 위치를 기록하려면 백그라운드 위치 권한이 필요합니다.")
-                    .setPositiveButton("설정으로 이동") { _, _ ->
-                        startActivity(
-                            Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", packageName, null)
-                            )
-                        )
-                    }
-                    .setNegativeButton("취소", null)
-                    .show()
-            }
-        }
-    }
-
-    private fun initBackgroundLaunchers() {
-        bgPermissions.forEach { perm ->
-            bgLaunchers[perm] = registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { granted ->
-                if (granted) {
-                    checkAndStartCountdown()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "백그라운드 권한이 필요합니다: $perm",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
     private fun handleStartClick() {
-        // 1) 페어링 기기 체크
-        // todo. 안드로이드 앱 연동 시 주석 제거
-//        if (PhoneNode.phoneNodeId == null) {
-//            closeAppWithPairingAlert()
-//            return
-//        }
-
-        // 2) 권한 체크 및 요청
-        val missingFg = fgPermissions.filter {
-            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
-        }
-        val missingBg = bgPermissions.filter {
-            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        // 페어링 기기 확인
+        if (PhoneNode.phoneNodeId == null) {
+            showPairingAlert()
+            return
         }
 
-        when {
-            missingFg.isNotEmpty() -> {
-                fgLauncher.launch(missingFg.toTypedArray())
-                return
-            }
-            missingBg.isNotEmpty() -> {
-                val first = missingBg.first()
-                bgLaunchers[first]?.launch(first)
-                return
-            }
-            else -> {
-                // 3) 모든 권한 OK, 카운트다운 시작
-                startCountdown()
-            }
+        // 권한 체크 및 요청
+        if (!PermissionHelper.allPermissionsGranted()) {
+            PermissionHelper.ensurePermissions()
+            return
         }
 
-        // 4) 워치로 시작 신호 전송
-        // todo. 안드로이드 앱 연동 시 주석 해제
-        //sendStartSignalToPhone(this, PhoneNode.phoneNodeId!!)
-    }
-
-    private fun checkAndStartCountdown() {
-        val allFg = fgPermissions.all {
-            ContextCompat.checkSelfPermission(this, it) == android.content.pm.PackageManager.PERMISSION_GRANTED
-        }
-        val allBg = bgPermissions.all {
-            ContextCompat.checkSelfPermission(this, it) == android.content.pm.PackageManager.PERMISSION_GRANTED
-        }
-        if (allFg && allBg) {
-            startCountdown()
-        }
+        // 카운트다운 시작 및 워치에 신호 전송
+        startCountdown()
+        sendStartSignalToPhone(PhoneNode.phoneNodeId!!)
     }
 
     private fun startCountdown() {
         startActivity(Intent(this, CountdownActivity::class.java))
     }
 
-    fun fetchAndCachePhoneNode(context: Context, onResult: () -> Unit) {
+    private fun showPairingAlert() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(getString(R.string.pairing_alert_title))
+            .setMessage(getString(R.string.pairing_alert_message))
+            .setCancelable(false)
+            .setPositiveButton(android.R.string.ok) { _, _ -> finishAffinity() }
+            .show()
+    }
+
+    private fun createNotificationChannel() {
+        val channelId = getString(R.string.notification_channel_id_running)
+        val channelName = getString(R.string.notification_channel_name_running)
+        val channelDesc = getString(R.string.notification_channel_description_running)
+
+        val channel = android.app.NotificationChannel(
+            channelId,
+            channelName,
+            android.app.NotificationManager.IMPORTANCE_LOW
+        ).apply { description = channelDesc }
+
+        val manager = getSystemService(android.app.NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
+    }
+
+    private fun fetchAndCachePhoneNode(context: Context, onResult: () -> Unit) {
         Wearable.getNodeClient(context).connectedNodes
             .addOnSuccessListener { nodes ->
-                val phoneNode = nodes.firstOrNull()
-                PhoneNode.phoneNodeId = phoneNode?.id
+                PhoneNode.phoneNodeId = nodes.firstOrNull()?.id
                 onResult()
             }
     }
 
-    private fun sendStartSignalToPhone(context: Context, nodeId: String) {
-        val messageClient = Wearable.getMessageClient(context)
-        messageClient.sendMessage(
-            nodeId,
-            "/running/start",
-            ByteArray(0)
-        ).addOnSuccessListener {
-            Log.d("YoittangWatch", "러닝 시작 메시지 전송 완료")
-        }.addOnFailureListener { e ->
-            Toast.makeText(context, "러닝 시작 메시지 전송 실패: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+    private fun sendStartSignalToPhone(nodeId: String) {
+        Wearable.getMessageClient(this)
+            .sendMessage(nodeId, "/running/start", ByteArray(0))
+            .addOnSuccessListener {
+                Log.d("MainActivity", "러닝 시작 메시지 전송 완료")
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    this,
+                    "러닝 시작 메시지 전송 실패: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
 }
 
