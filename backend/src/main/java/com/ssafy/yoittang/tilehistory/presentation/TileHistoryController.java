@@ -19,8 +19,8 @@ public class TileHistoryController {
     @PostMapping
     public ResponseEntity<Void> createTileHistory() {
 
-        midnightScheduler.runAtMidnight();
-
+//        midnightScheduler.runAtMidnight();
+        midnightScheduler.runAtMidnightWithCsv();
         return ResponseEntity.ok().build();
     }
 

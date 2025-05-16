@@ -1,6 +1,15 @@
 package com.ssafy.yoittang.running.application;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -8,7 +17,9 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.opencsv.CSVReader;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
 import com.ssafy.yoittang.common.exception.NotFoundException;
@@ -24,6 +35,7 @@ import com.ssafy.yoittang.running.domain.dto.response.RunningCreateResponse;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
 import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.LocationRecord;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tilehistory.domain.TileHistoryRepository;
@@ -32,6 +44,7 @@ import com.ssafy.yoittang.tilehistory.domain.redis.TileHistoryRedis;
 
 import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
+
 
 
 @Service
@@ -163,6 +176,98 @@ public class RunningService {
         running.setState(State.COMPLETE);
         running.setEndTime(runningEndPatchRequest.endTime());
     }
+
+    @Transactional
+    public void endRunningWithCsv(
+        Long runningId,
+        MultipartFile file,
+        Member member
+    ) {
+
+        Running running =
+                runningRepository.findByRunningIdAndMemberId(runningId, member.getMemberId())
+                        .orElseThrow(() -> new NotFoundException(ErrorCode.RUNNING_NOT_FOUND));
+
+        List<LocationRecord> locationRecordList = new ArrayList<>();
+        Set<String> geoHashStringSet = new HashSet<>();
+        HashMap<String, Integer> sequenceMap = new HashMap<>();
+
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+             CSVReader csvReader = new CSVReader(reader)) {
+
+            String[] line;
+            csvReader.readNext(); // skip header if exists
+
+            int sequence = 0;
+
+            while ((line = csvReader.readNext()) != null) {
+
+                ++sequence;
+
+                double lat = Double.parseDouble(line[1]);
+                double lng = Double.parseDouble(line[2]);
+
+                String geoHashString = GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 7);
+
+                LocationRecord record = LocationRecord.builder()
+                        .time(LocalDateTime.parse(line[0]))
+                        .geoPoint(GeoPoint.builder()
+                                .lat(lat)
+                                .lng(lng)
+                                .build())
+                        .build();
+
+                locationRecordList.add(record);
+
+                if (!geoHashStringSet.contains(geoHashString)) {
+                    geoHashStringSet.add(geoHashString);
+                    sequenceMap.put(geoHashString, sequence);
+                }
+
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // 혹은 로깅
+        }
+
+        //running 종료 업데이트
+        running.setState(State.COMPLETE);
+
+        LocalDateTime endTime = locationRecordList.isEmpty()
+                ? LocalDateTime.now()
+                : locationRecordList.get(locationRecordList.size() - 1 ).time();
+
+        running.setEndTime(endTime);
+
+        if (locationRecordList.isEmpty()) {
+            return;
+        }
+
+        runningPointRepository.bulkInsert(locationRecordList, runningId, running.getCourseId());
+
+        List<TileHistoryRedis> tileHistoryList = new ArrayList<>();
+        List<RunningPoint> runningPointList = runningPointRepository.findByRunningIdOrderBySequence(runningId);
+
+        tileHistoryList = geoHashStringSet.stream().map(
+                s -> TileHistoryRedis.builder()
+                                .zodiacId(member.getZodiacId())
+                                .memberId(member.getMemberId())
+                                .birthDate(member.getBirthDate())
+                                .geoHash(s)
+                                .runningPointId(runningPointList.get(
+                                            sequenceMap.get(s)
+                                    ).getRunningPointId()
+                                )
+                        .build()
+        )
+                .sorted(Comparator.comparingLong(TileHistoryRedis::getRunningPointId))
+                .toList();
+
+        tileHistoryRepository.bulkInsertToPostGreSQL(tileHistoryList);
+    }
+
 
     void checkCourse(Long courseId) {
         if (courseJpaRepositoy.existsById(courseId)) {

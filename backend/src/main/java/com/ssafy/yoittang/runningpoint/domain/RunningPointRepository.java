@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface RunningPointRepository extends JpaRepository<RunningPoint, Long> {
+public interface RunningPointRepository extends JpaRepository<RunningPoint, Long>, RunningPointJdbcRepository {
     @Query(value = """
         SELECT SUM(ST_Length(rp.route::geography))
         FROM runnings r
@@ -60,4 +60,6 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
                 GROUP BY running_id
             """, nativeQuery = true)
     List<RunningPoint> findLastPointsByRunningIds(@Param("runningIds") List<Long> runningIds);
+
+    List<RunningPoint> findByRunningIdOrderBySequence(Long runningId);
 }

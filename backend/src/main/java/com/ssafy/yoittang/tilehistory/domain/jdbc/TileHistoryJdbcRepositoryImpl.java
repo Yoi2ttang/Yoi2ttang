@@ -56,6 +56,7 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
         });
     }
 
+
     @Override
     public TileMemberRankingResponse getTileMemberRankingResponse(
             Long zodiacId,
