@@ -16,9 +16,8 @@ const CourseDetailPage = async ({ params }: CourseDetailPageProps) => {
 
       <div>
         <div className="flex flex-col gap-4 p-4">
-          <CourseInfoSection distance={10} calorie={300} time={73} />
-
-          <CourseMemberSection />
+          <CourseInfoSection courseId={Number(courseId)} />
+          <CourseMemberSection courseId={Number(courseId)} />
           <Button className="w-full">참여하기</Button>
         </div>
       </div>
