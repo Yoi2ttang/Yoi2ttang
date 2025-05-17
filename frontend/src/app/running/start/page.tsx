@@ -9,17 +9,30 @@ declare const AndroidBridge: {
   onUrlChanged: (url: string) => void
 }
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void
+    }
+  }
+}
+
 const RunningStartPage = () => {
   const router = useRouter()
 
   const handleParticipate = () => {
-    if (
-      typeof window !== "undefined" &&
-      (window as any).AndroidBridge?.onUrlChanged
-    ) {
-      ;(window as any).AndroidBridge.onUrlChanged(window.location.pathname)
+    if (typeof window !== "undefined") {
+      // ✅ WebView → React Native 로 메시지 보내기
+      window.ReactNativeWebView?.postMessage("navigateToRunning")
+
+      // ✅ AndroidBridge 예외 처리 (선택)
+      if ((window as any).AndroidBridge?.onUrlChanged) {
+        ;(window as any).AndroidBridge.onUrlChanged(window.location.pathname)
+      }
+
+      // ✅ 실제 페이지 이동
+      router.push("/running")
     }
-    router.push("/running")
   }
 
   return (
