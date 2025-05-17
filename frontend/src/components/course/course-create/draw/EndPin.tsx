@@ -14,10 +14,10 @@ const EndPin = ({ id, loc, onClick }: EndPinProps) => {
 
   return (
     <div
-      id={id.toString()}
+      id={`marker-${id}`}
       onClick={handleClick}
-      className="flex -translate-4 items-center justify-center">
-      <div className="bg-yoi-400 size-8 rounded-full border-4 border-white shadow-lg" />
+      className="flex -translate-3 items-center justify-center">
+      <div className="border-yoi-400 size-6 rounded-full border-2 bg-white shadow-lg" />
     </div>
   )
 }
