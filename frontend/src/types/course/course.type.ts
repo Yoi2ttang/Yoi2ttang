@@ -18,6 +18,11 @@ export interface CourseDetail extends Course {
   times: number
 }
 
+export interface CoursePaginationRequest {
+  keyword: string
+  pageToken: string
+}
+
 export interface CoursePaginationResponse {
   data: Course[]
   hasNext: boolean
@@ -28,6 +33,11 @@ export interface CourseClearedMember {
   memberId: number
   nickname: string
   profileImageUrl: string
+}
+
+export interface CourseClearedMemberPaginationRequest {
+  courseId: number
+  pageToken: string
 }
 
 export interface CourseClearedMemberPaginationResponse {
