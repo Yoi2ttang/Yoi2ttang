@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { useMap } from "@/hooks/map/useMap"
@@ -11,13 +11,15 @@ import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
 import useGetTeamTileMap from "@/hooks/running/useGetTeamTileMap"
 import useGetTeamTileMapCluster from "@/hooks/running/useGetTeamTileMapCluster"
 import { useCurrentLocationButton } from "@/hooks/map/useCurrentLocationButton"
+import { usePostLocation } from "@/hooks/running/usePostLocation"
 import CurrentLocationBtn from "@/assets/icons/maps/current-location-btn.svg"
 
 const RunningMap = () => {
-  const { currentLoc } = useRunningStatsContext()
+  const { currentLoc, runningId } = useRunningStatsContext()
   const [center, setCenter] = useState<Coordinates | null>(null)
   const [zoomLevel, setZoomLevel] = useState<number>(15)
   const [tiles, setTiles] = useState<Tile[]>([])
+  const beforeLocRef = useRef<Coordinates | null>(null)
 
   const { mapRef } = useMap({
     loc: currentLoc!,
@@ -26,7 +28,6 @@ const RunningMap = () => {
     mapDiv: "running-map",
   })
 
-  // 줌 레벨 추적
   useEffect(() => {
     if (!mapRef.current) return
     const map = mapRef.current
@@ -41,23 +42,20 @@ const RunningMap = () => {
     }
   }, [mapRef])
 
-  // 클러스터 요청
   const { data: clusterData } = useGetTeamTileMapCluster({
     center: center || currentLoc!,
     zoomLevel,
   })
 
-  // 줌이 16 이상일 때만 타일 요청
   const { data: tileData } = useGetTeamTileMap({
     center: center || currentLoc!,
   })
 
-  // tile 또는 cluster 반영
   useEffect(() => {
     if (zoomLevel >= 16) {
       if (tileData) setTiles(tileData.tileGetResponseList)
     } else {
-      setTiles([]) // 타일 제거
+      setTiles([])
     }
   }, [zoomLevel, tileData])
 
@@ -69,6 +67,47 @@ const RunningMap = () => {
   useMapMarker({ mapRef, loc: currentLoc })
 
   const { moveToCurrentLocation } = useCurrentLocationButton({ mapRef })
+
+  const { mutate: postLocation } = usePostLocation()
+
+  // ✅ 위치 전송 useEffect
+  useEffect(() => {
+    if (!currentLoc || !runningId) {
+      console.log("⛔ currentLoc 또는 runningId 없음", {
+        currentLoc,
+        runningId,
+      })
+      return
+    }
+
+    console.log("✅ 위치 전송 시작됨")
+
+    const interval = setInterval(() => {
+      if (!beforeLocRef.current) {
+        console.log("🔹 최초 beforeLoc 설정됨", currentLoc)
+        beforeLocRef.current = currentLoc
+        return
+      }
+
+      const payload = {
+        runningId,
+        beforePoint: beforeLocRef.current,
+        nowPoint: currentLoc,
+        currentTime: new Date().toISOString(),
+      }
+
+      console.log("📤 위치 전송 중...", payload)
+
+      postLocation(payload)
+
+      beforeLocRef.current = currentLoc
+    }, 5000)
+
+    return () => {
+      console.log("🧹 위치 전송 인터벌 해제")
+      clearInterval(interval)
+    }
+  }, [runningId, postLocation])
 
   if (!currentLoc) return null
 

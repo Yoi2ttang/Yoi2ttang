@@ -1,3 +1,5 @@
+import { Coordinates } from "../map/navermaps"
+
 export interface TeamInfo {
   rank: number
   zodiacId: number
@@ -20,4 +22,18 @@ export interface StartRunningRequest {
 export interface StartRunningResponse {
   runningId: number
   message: string
+}
+
+export interface PostLocationRequest {
+  courseId?: number
+  runningId: number
+  beforePoint: Coordinates
+  nowPoint: Coordinates
+  currentTime: string
+}
+
+export interface PostLocationResponse {
+  geoHash: string
+  sw: Coordinates
+  ne: Coordinates
 }

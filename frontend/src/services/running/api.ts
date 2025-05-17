@@ -1,5 +1,6 @@
 import apiClient from "@/lib/http-common"
 import type {
+  PostLocationRequest,
   StartRunningRequest,
   StartRunningResponse,
   TeamSituationResponse,
@@ -29,6 +30,13 @@ export const updateEndRunning = async (runningId: number, endTime: string) => {
   const response = await apiClient.patch(`/runnings/${runningId}/end`, {
     endTime,
   })
+
+  return response.data
+}
+
+// 러닝 중 위치 보내기
+export const postLocation = async (payload: PostLocationRequest) => {
+  const response = await apiClient.post("/runnings/locations", payload)
 
   return response.data
 }

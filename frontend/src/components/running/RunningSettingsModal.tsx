@@ -10,6 +10,7 @@ interface RunningSettingsModalProps {
 
 const RunningSettingsModal = ({ onClose }: RunningSettingsModalProps) => {
   const [showTile, setShowTile] = useState(false)
+  const [showMyTeamTile, setShowMyTeamTile] = useState(false)
   const [showOurTeamTile, setShowOurTeamTile] = useState(false)
   const [showEmptyTile, setShowEmptyTile] = useState(false)
 
@@ -25,6 +26,18 @@ const RunningSettingsModal = ({ onClose }: RunningSettingsModalProps) => {
                 checked={showTile}
                 onCheckedChange={setShowTile}
                 className="data-[state=checked]:bg-yoi-500 scale-90 data-[state=unchecked]:bg-neutral-300"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>내 타일 보기</div>
+              <Checkbox
+                checked={showMyTeamTile}
+                onCheckedChange={(checked) =>
+                  setShowMyTeamTile(checked === true)
+                }
+                checkedBgClassName="bg-white"
+                checkClassName="text-green-500 stroke-[3]"
               />
             </div>
 
