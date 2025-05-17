@@ -1,29 +1,18 @@
 import TempMapImage from "@/assets/images/course/temp_map.png"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
+import { Course } from "@/types/course/course.type"
 import Image from "next/image"
 import Link from "next/link"
-import { ReactNode } from "react"
 
 interface CourseCarouselItemProps {
-  courseId: number
-  image?: ReactNode | string
-  title: string
-  distance: number
-  completedDate?: Date
-  progress?: number
+  data: Course
   className?: string
 }
 
-const CourseCarouselItem = ({
-  courseId,
-  image,
-  title,
-  distance,
-  completedDate,
-  progress,
-  className,
-}: CourseCarouselItemProps) => {
+const CourseCarouselItem = ({ data, className }: CourseCarouselItemProps) => {
+  const { courseId, courseName, distance, courseImageUrl, completeRate } = data
+
   return (
     <Link
       href={`/course/${courseId}`}
@@ -33,7 +22,7 @@ const CourseCarouselItem = ({
       )}>
       <div className="relative size-28">
         <Image
-          src={TempMapImage}
+          src={courseImageUrl || TempMapImage}
           alt=""
           fill
           className="rounded-xl object-cover"
@@ -42,19 +31,19 @@ const CourseCarouselItem = ({
 
       <div className="flex h-full flex-1 flex-col justify-between py-2">
         <div className="flex-1 flex-col gap-1">
-          <p className="text-title-sm line-clamp-1 break-all">{title}</p>
+          <p className="text-title-sm line-clamp-1 break-all">{courseName}</p>
           <p className="text-caption line-clamp-1 break-all text-neutral-500">
             {distance}km
           </p>
         </div>
 
-        {progress !== undefined && (
+        {completeRate !== undefined && (
           <div>
             <p className="text-caption text-yoi-500 text-end font-medium">
-              {progress}% 달렸어요!
+              {completeRate}% 달렸어요!
             </p>
             <Progress
-              value={progress}
+              value={completeRate}
               className="bg-neutral-200"
               indicatorClassName="bg-yoi-500 rounded-full"
             />

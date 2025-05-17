@@ -42,13 +42,7 @@ const CourseBookmarkSection = async () => {
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {data.map((item) => (
-            <CourseCard
-              key={item.courseId}
-              courseId={item.courseId}
-              title={item.courseName}
-              distance={item.distance}
-              className="h-44"
-            />
+            <CourseCard key={item.courseId} data={item} className="h-44" />
           ))}
         </div>
       )}

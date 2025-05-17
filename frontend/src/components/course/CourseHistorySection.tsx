@@ -48,10 +48,7 @@ const CourseHistorySection = async () => {
           {data.map((item) => (
             <CourseCarouselItem
               key={item.courseId}
-              courseId={item.courseId}
-              title={item.courseName}
-              distance={item.distance}
-              progress={item.completeRate}
+              data={item}
               className="mr-4 w-full"
             />
           ))}
