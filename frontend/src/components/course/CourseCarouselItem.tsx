@@ -36,7 +36,7 @@ const CourseCarouselItem = ({
           src={TempMapImage}
           alt=""
           fill
-          className="rounded-t-xl object-cover"
+          className="rounded-xl object-cover"
         />
       </div>
 
