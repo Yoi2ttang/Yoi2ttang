@@ -10,7 +10,7 @@ const useSearchCourses = () => {
       keyword: keyword as string,
       pageToken: pageParam,
     })
-    return response.data
+    return response
   }
 
   return useInfiniteScroll({

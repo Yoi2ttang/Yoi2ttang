@@ -10,8 +10,7 @@ const useSearchCourseHistories = () => {
       keyword: keyword as string,
       pageToken: pageParam,
     })
-    console.log(response.data)
-    return response.data
+    return response
   }
 
   return useInfiniteScroll({
