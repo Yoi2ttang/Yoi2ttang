@@ -1,17 +1,25 @@
 import React from 'react';
-import {View} from 'react-native';
-import { NaverMapView } from '@mj-studio/react-native-naver-map';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import WebViewScreen from './src/screens/WebViewScreen';
+import RunningMapScreen from './src/screens/RunningMapScreen';
 
-function App(): React.JSX.Element {
+export type RootStackParamList = {
+  WebView: undefined;
+  NaverMap: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <NaverMapView
-        style={{ flex: 1 }}
-        locale="ko"
-        logoAlign="TopRight"
-      />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="WebView">
+        <Stack.Screen name="WebView" component={WebViewScreen} />
+        <Stack.Screen name="NaverMap" component={RunningMapScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 export default App;
