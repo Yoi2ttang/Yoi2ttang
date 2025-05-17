@@ -29,7 +29,7 @@ const Carousel = ({
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop, align: "start", dragFree, skipSnaps },
     autoplay
-      ? [Autoplay({ delay: autoplayDelay, stopOnInteraction: true })]
+      ? [Autoplay({ delay: autoplayDelay, stopOnInteraction: false })]
       : [],
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -72,7 +72,7 @@ const Carousel = ({
   return (
     <div className="flex flex-col gap-4">
       <div ref={emblaRef} className={cn("w-full overflow-hidden", className)}>
-        <div className="flex gap-4">{children}</div>
+        <div className="flex">{children}</div>
       </div>
 
       {scrollCount > 0 && (
