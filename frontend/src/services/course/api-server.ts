@@ -1,20 +1,16 @@
 "use server"
 
 import { getApiServer } from "@/lib/api-server"
-import {
-  CourseClearedMember,
-  CourseDetail,
-  CourseWithProgress,
-} from "@/types/course/course.type"
+import { Course, CourseClearedMember } from "@/types/course/course.type"
 
 export const getCourse = async (courseId: number) => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseDetail>(`/courses/${courseId}`)
+  return await apiServer.get<Course>(`/courses/${courseId}`)
 }
 
 export const getCourseHistoryPreview = async () => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseWithProgress[]>(
+  return await apiServer.get<Course[]>(
     "/courses/histories/preview",
     {},
     {
@@ -25,7 +21,7 @@ export const getCourseHistoryPreview = async () => {
 
 export const getCourseBookmarkPreview = async () => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseWithProgress[]>(
+  return await apiServer.get<Course[]>(
     "/courses/bookmarks/preview",
     {},
     {
@@ -36,7 +32,7 @@ export const getCourseBookmarkPreview = async () => {
 
 export const getCourseRecommendPreview = async () => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseWithProgress[]>(
+  return await apiServer.get<Course[]>(
     "/courses/preview",
     {},
     {

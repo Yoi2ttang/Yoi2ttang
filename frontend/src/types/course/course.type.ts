@@ -3,30 +3,21 @@ export interface Course {
   courseName: string
   distance: number
   courseImageUrl: string
-}
-
-export interface CompletedCourse extends Course {
-  endTime: string
-}
-
-export interface CourseWithProgress extends Course {
-  completeRate: number
-}
-
-export interface CourseDetail extends Course {
-  calories: number
-  times: number
+  endTime?: string
+  completeRate?: number
+  calories?: number
+  times?: number
 }
 
 export interface CoursePaginationRequest {
   keyword: string
-  pageToken: string
+  pageToken: number
 }
 
 export interface CoursePaginationResponse {
   data: Course[]
   hasNext: boolean
-  pageToken: string
+  pageToken: number
 }
 
 export interface CourseClearedMember {
@@ -37,11 +28,11 @@ export interface CourseClearedMember {
 
 export interface CourseClearedMemberPaginationRequest {
   courseId: number
-  pageToken: string
+  pageToken: number
 }
 
 export interface CourseClearedMemberPaginationResponse {
   data: CourseClearedMember[]
   hasNext: boolean
-  pageToken: string
+  pageToken: number
 }
