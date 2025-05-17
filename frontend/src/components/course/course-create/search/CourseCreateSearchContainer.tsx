@@ -1,11 +1,9 @@
 import Input from "@/components/common/Input"
 import Section from "@/components/common/Section"
 import StackHeader from "@/components/layouts/Header/StackHeader"
-import useGetRegionSearch from "@/hooks/course/useGetRegionSearch"
 import { CourseData, SearchResult } from "@/types/course.type"
-import { debounce } from "lodash-es"
 import { ChangeEvent, useState } from "react"
-import SearchResultList from "./SearchResultList"
+import SearchResultListWrapper from "./SearchResultListWrapper"
 
 interface CourseCreateSearchContainerProps {
   title: string
@@ -18,26 +16,12 @@ const CourseCreateSearchContainer = ({
   onPrevStep,
   updateCourseData,
 }: CourseCreateSearchContainerProps) => {
-  const [searchLocation, setSearchLocation] = useState<SearchResult[]>([])
-  const { mutateAsync: getRegionSearch } = useGetRegionSearch()
+  const [query, setQuery] = useState<string>("")
 
-  const handleSearchLocation = debounce(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      const location = e.target.value
-      const { items } = await getRegionSearch({
-        query: location,
-      })
-      const searchList = items.map((item: any) => ({
-        addressPOI: item.title.replace(/<[^>]+>/g, ""),
-        roadAddress: item.roadAddress,
-        lat: item.mapy,
-        lng: item.mapx,
-      })) as SearchResult[]
-
-      setSearchLocation(searchList)
-    },
-    500,
-  )
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    setQuery(query)
+  }
 
   const handleSelectLocation = ({
     addressPOI,
@@ -62,13 +46,20 @@ const CourseCreateSearchContainer = ({
       <div className="flex flex-col gap-8 px-4 py-10">
         <Section title={`✨ ${title} ✨`}>
           <Input
+            ref={(el) => {
+              if (el) {
+                if (el.value === "") {
+                  el.focus()
+                }
+              }
+            }}
             placeholder="지역을 입력해주세요."
-            onChange={handleSearchLocation}
+            onChange={handleInputChange}
           />
         </Section>
-        <SearchResultList
+        <SearchResultListWrapper
+          query={query}
           handleSelectLocation={handleSelectLocation}
-          searchLocation={searchLocation}
         />
       </div>
     </div>
