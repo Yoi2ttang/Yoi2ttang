@@ -1,6 +1,6 @@
 "use client"
 
-import HeartRate from "@/assets/icons/running/heartRate.svg"
+import HeartRate from "@/assets/icons/running/heart-rate.svg"
 import { formatSecondsToTime } from "@/lib/running/time"
 
 interface RunningStatsProps {
@@ -8,6 +8,7 @@ interface RunningStatsProps {
   distance: number
   calories: number
   speed: number
+  averagePace: number
 }
 
 const RunningStats = ({
@@ -15,6 +16,7 @@ const RunningStats = ({
   distance,
   calories,
   speed,
+  averagePace,
 }: RunningStatsProps) => {
   const formattedTime = formatSecondsToTime(runningTime)
   const distanceInKm = (distance / 1000).toFixed(2)
@@ -28,6 +30,14 @@ const RunningStats = ({
           <div className="text-lg text-neutral-500">이동 시간</div>
           <div className="text-xl font-semibold">{formattedTime}</div>
         </div>
+
+        <div className="flex flex-1 flex-col">
+          <div className="text-lg text-neutral-500">소모 칼로리</div>
+          <div className="text-xl font-semibold">{calories}kcal</div>
+        </div>
+      </div>
+
+      <div className="flex">
         <div className="flex flex-1 flex-col">
           <div className="text-lg text-neutral-500">평균 속력</div>
           <div className="text-xl font-semibold">
@@ -35,13 +45,16 @@ const RunningStats = ({
             km/h
           </div>
         </div>
-      </div>
-
-      <div className="flex">
         <div className="flex flex-1 flex-col">
-          <div className="text-lg text-neutral-500">소모 칼로리</div>
-          <div className="text-xl font-semibold">{calories}kcal</div>
+          <div className="text-lg text-neutral-500">평균 페이스</div>
+          <div className="text-xl font-semibold">
+            {isFinite(averagePace)
+              ? `${Math.floor(averagePace / 60)}분 ${Math.round(averagePace % 60)}초`
+              : "0분 0초"}
+          </div>
         </div>
+      </div>
+      <div className="flex">
         <div className="flex flex-1 flex-col">
           <div className="text-lg text-neutral-500">평균 심박수</div>
           <div className="flex items-center gap-1">
@@ -49,13 +62,12 @@ const RunningStats = ({
             <div className="text-xl font-semibold">131</div>
           </div>
         </div>
-      </div>
-
-      <div className="flexflex-col">
-        <div className="text-lg text-neutral-500">획득 타일</div>
-        <div className="flex items-center gap-2">
-          <div className="bg-yoi-500 size-4 rotate-12"></div>
-          <div className="text-xl font-semibold">102</div>
+        <div className="flex flex-1 flex-col">
+          <div className="text-lg text-neutral-500">획득 타일</div>
+          <div className="flex items-center gap-2">
+            <div className="bg-yoi-500 size-4 rotate-12"></div>
+            <div className="text-xl font-semibold">102</div>
+          </div>
         </div>
       </div>
     </>

@@ -6,3 +6,16 @@ export interface Tile {
   ne: Coordinates
   zordiacId: number
 }
+
+export interface TileCluster {
+  zodiacId: number
+  count: number
+  geoPoint: {
+    lat: number
+    lng: number
+  }
+}
+
+export interface TileMapClusterResponse {
+  tileClusterGetResponseList: TileCluster[]
+}
