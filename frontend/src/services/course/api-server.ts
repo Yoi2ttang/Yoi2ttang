@@ -14,22 +14,33 @@ export const getCourse = async (courseId: number) => {
 
 export const getCourseHistoryPreview = async () => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseWithProgress>(
-    "/courses/history/preview",
+  return await apiServer.get<CourseWithProgress[]>(
+    "/courses/histories/preview",
     {},
     {
-      next: { tags: ["course-history-preview"] },
+      next: { tags: ["course-histories-preview"] },
     },
   )
 }
 
 export const getCourseBookmarkPreview = async () => {
   const apiServer = await getApiServer()
-  return await apiServer.get<CourseWithProgress>(
+  return await apiServer.get<CourseWithProgress[]>(
     "/courses/bookmarks/preview",
     {},
     {
-      next: { tags: ["course-bookmark-preview"] },
+      next: { tags: ["course-bookmarks-preview"] },
+    },
+  )
+}
+
+export const getCourseRecommendPreview = async () => {
+  const apiServer = await getApiServer()
+  return await apiServer.get<CourseWithProgress[]>(
+    "/courses/preview",
+    {},
+    {
+      cache: "no-store",
     },
   )
 }

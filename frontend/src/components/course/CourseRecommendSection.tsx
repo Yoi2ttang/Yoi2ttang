@@ -3,8 +3,12 @@ import Section from "@/components/common/Section"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import CourseCard from "@/components/course/CourseCard"
+import { getCourseRecommendPreview } from "@/services/course/api-server"
 
-const CourseRecommendSection = () => {
+const CourseRecommendSection = async () => {
+  const { data, isError } = await getCourseRecommendPreview()
+  const isEmpty = isError || data.length === 0
+
   return (
     <Section
       title={
@@ -14,25 +18,40 @@ const CourseRecommendSection = () => {
         </div>
       }
       supplement={
-        <Link
-          href={`/course/search`}
-          className="flex cursor-pointer items-center gap-0.5">
-          <p className="text-caption text-neutral-400">전체 보기</p>
-          <ChevronRight className="size-5 text-neutral-300" />
-        </Link>
+        !isEmpty && (
+          <Link
+            href={`/course/search`}
+            className="flex cursor-pointer items-center gap-0.5">
+            <p className="text-caption text-neutral-400">전체 보기</p>
+            <ChevronRight className="size-5 text-neutral-300" />
+          </Link>
+        )
       }
       className="rounded-xl bg-white p-6">
-      <div className="grid grid-cols-2 gap-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <CourseCard
-            key={index}
-            courseId={index + 1}
-            title={`한강 러닝 코스 ${index + 1}`}
-            distance={4.3}
-            className="h-44"
-          />
-        ))}
-      </div>
+      {isEmpty ? (
+        <div className="rounded-xl bg-white py-4 text-center text-neutral-300">
+          {isError ? (
+            <p>잠시 후 다시 시도해 주세요</p>
+          ) : (
+            <>
+              <p>등록된 코스가 없어요</p>
+              <p>코스를 등록해 보세요!</p>
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4">
+          {data.map((item) => (
+            <CourseCard
+              key={item.courseId}
+              courseId={item.courseId}
+              title={item.courseName}
+              distance={item.distance}
+              className="h-44"
+            />
+          ))}
+        </div>
+      )}
     </Section>
   )
 }

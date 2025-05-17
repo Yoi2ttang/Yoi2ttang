@@ -3,8 +3,12 @@ import Carousel from "@/components/common/Carousel"
 import CourseCarouselItem from "@/components/course/CourseCarouselItem"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { getCourseHistoryPreview } from "@/services/course/api-server"
 
-const CourseHistorySection = () => {
+const CourseHistorySection = async () => {
+  const { data, isError } = await getCourseHistoryPreview()
+  const isEmpty = isError || data.length === 0
+
   return (
     <Section
       title={
@@ -16,28 +20,43 @@ const CourseHistorySection = () => {
         </div>
       }
       supplement={
-        <Link
-          href={`/course/history`}
-          className="ml-2 flex cursor-pointer items-center gap-0.5">
-          <ChevronRight className="size-5 text-neutral-300" />
-        </Link>
+        !isEmpty && (
+          <Link
+            href={`/course/history`}
+            className="ml-2 flex cursor-pointer items-center gap-0.5">
+            <ChevronRight className="size-5 text-neutral-300" />
+          </Link>
+        )
       }>
-      <Carousel
-        loop={true}
-        autoplay={true}
-        autoplayDelay={5000}
-        scrollCount={3}>
-        {Array.from({ length: 3 }).map((_, index) => (
-          <CourseCarouselItem
-            key={index}
-            courseId={index + 1}
-            title={`한강 러닝 코스 ${index + 1}`}
-            distance={4.3}
-            progress={100 - 33 * index}
-            className="mr-4 w-full"
-          />
-        ))}
-      </Carousel>
+      {isEmpty ? (
+        <div className="flex items-center justify-center rounded-xl bg-white py-6 text-neutral-300">
+          {isError ? (
+            <p>잠시 후 다시 시도해 주세요</p>
+          ) : (
+            <>
+              <p>진행했던 코스가 없어요</p>
+              <p>코스를 시작해 보세요!</p>
+            </>
+          )}
+        </div>
+      ) : (
+        <Carousel
+          loop={true}
+          autoplay={true}
+          autoplayDelay={5000}
+          scrollCount={data.length}>
+          {data.map((item) => (
+            <CourseCarouselItem
+              key={item.courseId}
+              courseId={item.courseId}
+              title={item.courseName}
+              distance={item.distance}
+              progress={item.completeRate}
+              className="mr-4 w-full"
+            />
+          ))}
+        </Carousel>
+      )}
     </Section>
   )
 }
