@@ -1,3 +1,5 @@
+import { Course } from "./course/course.type"
+
 export type Profile = {
   memberId: number
   nickname: string
@@ -14,14 +16,7 @@ export type Profile = {
   }
   totalDistance: number
   totalTileCount: number
-  courses: [
-    {
-      courseId: number
-      courseName: string
-      distance: number
-      courseImageUrl: string
-    },
-  ]
+  courses: Course[]
 }
 
 export type ProfileForEdit = {
