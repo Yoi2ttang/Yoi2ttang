@@ -27,8 +27,13 @@ const CourseCreateAddNameContainer = ({
     <div className="h-full w-full bg-neutral-50">
       <StackHeader onClick={onPrevStep} title={""} />
       <div className="px-4 py-10">
-        <Section title={`✨ ${title} ✨`}>
+        <Section title={`✨ ${title}`}>
           <Input
+            ref={(el) => {
+              if (el && el.value === "") {
+                el.focus()
+              }
+            }}
             defaultValue={courseData.courseName}
             onChange={handleChange}
             placeholder="코스 이름을 입력해주세요."

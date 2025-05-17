@@ -33,7 +33,7 @@ const stepConfigurations: Record<CourseCreateStep, StepConfig> = {
   },
   [CourseCreateStep.CONFIRM]: {
     title: "코스 확인하기",
-    buttonText: "완료",
+    buttonText: "저장하기",
   },
   [CourseCreateStep.END]: {
     title: "코스 생성 완료",
@@ -126,12 +126,7 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
           />
         )
       case CourseCreateStep.END:
-        return (
-          <CourseCreateEndContainer
-            onPrevStep={handlePrevStep}
-            onNextStep={handleNextStep}
-          />
-        )
+        return <CourseCreateEndContainer />
     }
   }
 
@@ -142,11 +137,13 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
         direction={navigationDirection}>
         <div className="relative h-dvh w-full">
           {renderStep()}
-          <CourseCreateButton
-            disabled={buttonDisableHandler()}
-            buttonText={stepConfigurations[step].buttonText ?? ""}
-            onClick={handleNextStep}
-          />
+          {step !== CourseCreateStep.END && (
+            <CourseCreateButton
+              disabled={buttonDisableHandler()}
+              buttonText={stepConfigurations[step].buttonText ?? ""}
+              onClick={handleNextStep}
+            />
+          )}
         </div>
       </StackAnimated>
     </Suspense>

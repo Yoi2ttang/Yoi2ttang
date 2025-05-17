@@ -1,4 +1,4 @@
-import { MapIcon, MapPinnedIcon } from "lucide-react"
+import { MapPinnedIcon, SearchIcon } from "lucide-react"
 
 interface StartLocationSheetProps {
   onSelectCurrentLocation: () => void
@@ -28,8 +28,8 @@ const StartLocationSheet = ({
         <button
           onClick={onSelectMapLocation}
           className="flex items-center justify-center gap-2">
-          <MapIcon />
-          <p className="text-caption">지도에서 선택하기</p>
+          <SearchIcon />
+          <p className="text-caption">검색해서 찾아보기</p>
         </button>
       </div>
       {/* info */}
