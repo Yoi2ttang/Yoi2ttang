@@ -8,14 +8,20 @@ import {
 } from "@/types/course.type"
 import { Coordinates, NaverMap } from "@/types/map/navermaps"
 import domtoimage from "dom-to-image-more"
-import { redirect, RedirectType } from "next/navigation"
-import { useRef, useState } from "react"
+import {
+  redirect,
+  RedirectType,
+  useRouter,
+  useSearchParams,
+} from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
 const useCourseCreate = () => {
   const [step, setStep] = useState<CourseCreateStep>(CourseCreateStep.START)
   const [navigationDirection, setNavigationDirection] =
     useState<NavigationDirection>("forward")
   const isSearch = useRef<boolean>(false)
+  const router = useRouter()
 
   const drawMapRef = useRef<NaverMap | null>(null)
 
@@ -50,10 +56,7 @@ const useCourseCreate = () => {
     const blob = await fetch(dataUrl).then((res) => res.blob())
 
     const imageUrl = URL.createObjectURL(blob)
-    // const formData = new FormData()
-    // formData.append("file", blob, `${courseData.courseName}-${Date.now()}.png`)
 
-    console.log(imageUrl)
     updateCourseData({ imageFile: blob, imageUrl })
   }
 
@@ -63,40 +66,31 @@ const useCourseCreate = () => {
         redirect("/course", "replace" as RedirectType)
       case CourseCreateStep.SEARCH:
         setNavigationDirection("backward")
-        setStep(CourseCreateStep.START)
-        window.history.pushState(null, "", `?step=${CourseCreateStep.START}`)
+        router.push(`?step=${CourseCreateStep.START}`)
         break
       case CourseCreateStep.DRAW:
-        handleDrawNameStep()
+        handleDrawT0NameStep()
         break
       case CourseCreateStep.CONFIRM:
         await handleSubmit()
         break
       default:
-        setNavigationDirection("forward")
-        setStep(step + 1)
-        window.history.pushState(null, "", `?step=${step + 1}`)
+        router.push(`?step=${step + 1}`)
     }
   }
 
   const handlePrevStep = () => {
     if (step === CourseCreateStep.START) {
       redirect("/course", "replace" as RedirectType)
+    } else if (step === CourseCreateStep.SEARCH) {
+      setNavigationDirection("backward")
+      router.push(`?step=${CourseCreateStep.START}`)
+    } else {
+      router.push(`?step=${step - 1}`)
     }
-
-    setNavigationDirection("backward")
-    setStep(step - 1)
-    window.history.pushState(null, "", `?step=${step - 1}`)
   }
 
   const handleSubmit = async () => {
-    console.log(
-      JSON.stringify({
-        courseName: courseData.courseName,
-        geoPoints: courseData.path,
-        distance: 0.1,
-      }),
-    )
     const formData = new FormData()
     formData.append(
       "courseCreateRequest",
@@ -117,8 +111,7 @@ const useCourseCreate = () => {
     try {
       await createCourse(formData)
       setNavigationDirection("forward")
-      setStep(CourseCreateStep.END)
-      window.history.pushState(null, "", `?step=${CourseCreateStep.END}`)
+      router.push(`?step=${CourseCreateStep.END}`)
     } catch (error) {
       console.error(error)
     }
@@ -126,17 +119,37 @@ const useCourseCreate = () => {
 
   const handleSearchStep = () => {
     isSearch.current = true
-    setNavigationDirection("forward")
-    setStep(CourseCreateStep.SEARCH)
-    window.history.pushState(null, "", `?step=${CourseCreateStep.SEARCH}`)
+    router.push(`?step=${CourseCreateStep.SEARCH}`)
   }
 
-  const handleDrawNameStep = async () => {
+  const handleDrawT0NameStep = async () => {
     await handleCapture()
-    setNavigationDirection("forward")
-    setStep(step + 1)
-    window.history.pushState(null, "", `?step=${step + 1}`)
+    router.push(`?step=${CourseCreateStep.NAME}`)
   }
+
+  const searchParams = useSearchParams()
+  useEffect(() => {
+    const stepParam = searchParams.get("step")
+
+    if (
+      stepParam &&
+      +stepParam > CourseCreateStep.START &&
+      +stepParam !== CourseCreateStep.SEARCH &&
+      !courseData.startLocation
+    ) {
+      redirect(`?step=${CourseCreateStep.START}`, "replace" as RedirectType)
+    }
+
+    if (stepParam) {
+      if (step < +stepParam && step !== CourseCreateStep.SEARCH) {
+        setNavigationDirection("forward")
+      } else {
+        setNavigationDirection("backward")
+      }
+
+      setStep(+stepParam as CourseCreateStep)
+    }
+  }, [searchParams])
 
   return {
     isSearch,
