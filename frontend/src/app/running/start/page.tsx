@@ -31,7 +31,7 @@ const RunningStartPage = () => {
       }
 
       // ✅ 실제 페이지 이동
-      router.push("/running")
+      // router.push("/running")
     }
   }
 
