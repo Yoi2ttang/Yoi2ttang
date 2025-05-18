@@ -32,14 +32,14 @@ const SearchContent = () => {
         />
 
         <div className="flex flex-1 flex-col gap-4">
-          {isLoading ? (
-            Array.from({ length: 10 }).map((_, index) => (
-              <Skeleton key={index} className="h-16" />
-            ))
-          ) : isEmpty ? (
+          {isEmpty ? (
             <p className="text-center text-neutral-300">
               일치하는 결과가 없어요
             </p>
+          ) : isLoading ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} className="h-16" />
+            ))
           ) : (
             <>
               {data?.pages.map((page: MemberPaginationResponse) =>
