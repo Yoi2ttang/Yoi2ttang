@@ -41,7 +41,6 @@ export const getReverseGeocode = ({ lat, lng }: Coordinates) => {
 export const getDeviceType = () => {
   const userAgent = navigator.userAgent
 
-  console.log(navigator)
   if (
     userAgent.includes("iPhone") ||
     userAgent.includes("iPad") ||

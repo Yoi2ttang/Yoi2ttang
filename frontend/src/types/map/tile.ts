@@ -50,3 +50,10 @@ export type ZodiacTeamClusterResponse = TeamClusterResponse
 export interface TileMapClusterResponse {
   tileClusterGetResponseList: TileCluster[]
 }
+
+export enum TileViewOption {
+  MY,
+  TEAM,
+  ALL,
+  UNCLAIMED,
+}

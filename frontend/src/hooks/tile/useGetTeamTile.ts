@@ -1,13 +1,20 @@
 "use client"
 
-import { getTeamTileMap } from "@/services/tile/api"
-import { Coordinates } from "@/types/map/navermaps"
+import { getOneTeamTileMap } from "@/services/tile/api"
 import { useMutation } from "@tanstack/react-query"
 
 const useGetTeamTile = () => {
   return useMutation({
     mutationKey: ["teamTileMap"],
-    mutationFn: ({ lat, lng }: Coordinates) => getTeamTileMap({ lat, lng }),
+    mutationFn: ({
+      zodiacId,
+      lat,
+      lng,
+    }: {
+      zodiacId: number
+      lat: number
+      lng: number
+    }) => getOneTeamTileMap(zodiacId, { lat, lng }),
   })
 }
 

@@ -25,7 +25,11 @@ const TileMapSection = ({ type }: TileMapSectionProps) => {
   const { mutateAsync: getTeamTileMap } = useGetTeamTile()
 
   const handleCenterChange = async (center: Coordinates) => {
-    const res = await getTeamTileMap(center)
+    const res = await getTeamTileMap({
+      zodiacId: 1,
+      lat: center.lat,
+      lng: center.lng,
+    })
     setTiles([...res.tileGetResponseList])
   }
 
