@@ -47,7 +47,7 @@ const RunningPaceLogger = ({
       </StyledView>
 
       <StyledScrollView
-        className="h-56 py-3"
+        className="h-64 py-3"
         contentContainerStyle={{gap: 10}}
         showsVerticalScrollIndicator={true}>
         {paceHistory.length === 0 ? (
