@@ -8,6 +8,7 @@ import RunningStatsButton from './RunningStatsButton';
 import RunningTimer from './RunningTimer';
 import RunningInfoSlide from './RunningInfoSlide';
 import RunningSettingsButton from './RunningSettingsButton';
+import RunningSettingsModal from './RunningSettingsModal';
 
 const StyledView = styled(View);
 
@@ -47,9 +48,9 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
       )}
 
       <RunningSettingsButton onClick={() => setShowSettings(true)} />
-      {/* {showSettings && (
+      {showSettings && (
         <RunningSettingsModal onClose={() => setShowSettings(false)} />
-      )} */}
+      )}
     </StyledView>
   );
 };
