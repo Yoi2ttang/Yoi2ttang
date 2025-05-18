@@ -33,7 +33,7 @@ export const useMapMarker = ({ mapRef, loc }: useMapMarkerProps) => {
     }
 
     // 마커가 이동해도 지도의 중심을 맞춰줌
-    map.setCenter(position)
+    // map.setCenter(position)
   }
 
   useEffect(() => {

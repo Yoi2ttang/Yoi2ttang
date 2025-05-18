@@ -46,3 +46,7 @@ export interface TeamClusterResponse {
 
 //(/tiles/teams/cluster/{zodiacId})
 export type ZodiacTeamClusterResponse = TeamClusterResponse
+
+export interface TileMapClusterResponse {
+  tileClusterGetResponseList: TileCluster[]
+}

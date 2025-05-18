@@ -45,6 +45,11 @@ export const useMapInitialize = () => {
     const map = new naver.maps.Map(mapDiv ?? "naver-map", mapOptions)
     mapRef.current = map
 
+    centerChangeCallbackRef.current?.({
+      lat: loc.lat,
+      lng: loc.lng,
+    })
+
     // 중심 좌표 변화 시 좌표 출력
     naver.maps.Event.addListener(map, "idle", () => {
       const center = map.getCenter() as naver.maps.LatLng
@@ -56,7 +61,7 @@ export const useMapInitialize = () => {
     })
   }
 
-  // ✅ 중심 좌표 이동 함수 추가
+  // 중심 좌표 이동
   const setCenter = (center: Coordinates) => {
     if (mapRef.current) {
       mapRef.current.setCenter(new naver.maps.LatLng(center.lat, center.lng))
@@ -66,6 +71,6 @@ export const useMapInitialize = () => {
   return {
     mapRef,
     initializeMap,
-    setCenter, // ✅ 추가된 부분
+    setCenter,
   }
 }

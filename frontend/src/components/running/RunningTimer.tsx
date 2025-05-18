@@ -1,12 +1,10 @@
 "use cient"
 
 import { formatSecondsToTime } from "@/lib/running/time"
+import { useRunningStatsContext } from "@/hooks/running/useRunningStatsContext"
 
-interface RunningTimerProps {
-  runningTime: number
-}
-
-const RunningTimer = ({ runningTime }: RunningTimerProps) => {
+const RunningTimer = () => {
+  const { runningTime } = useRunningStatsContext()
   const formattedTime = formatSecondsToTime(runningTime)
 
   return (
