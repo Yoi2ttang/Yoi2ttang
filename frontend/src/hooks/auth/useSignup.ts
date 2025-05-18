@@ -1,4 +1,4 @@
-import { SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth/auth.type"
 import { useRouter } from "next/navigation"
 
 const useSignup = (signupData: SignUpData) => {

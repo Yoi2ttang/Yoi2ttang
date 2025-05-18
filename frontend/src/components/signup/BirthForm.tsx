@@ -1,4 +1,4 @@
-import { SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth/auth.type"
 import { clamp } from "lodash-es"
 import { ChangeEvent, Dispatch, FocusEvent, SetStateAction } from "react"
 import Button from "@/components/common/Button"

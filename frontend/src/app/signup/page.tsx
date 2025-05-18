@@ -3,7 +3,7 @@
 import SignupForm from "@/components/signup/SignupForm"
 import TeamSelectionForm from "@/components/signup/TeamSelectionForm"
 import TermForm from "@/components/signup/TermForm"
-import { SignUpData, SignupStep } from "@/types/auth"
+import { SignUpData, SignupStep } from "@/types/auth/auth.type"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useEffect, useState } from "react"
 

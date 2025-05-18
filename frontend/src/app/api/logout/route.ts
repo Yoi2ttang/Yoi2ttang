@@ -1,4 +1,4 @@
-import { postLogout, postReissue } from "@/services/auth/api"
+import { postLogout, postReissue } from "@/services/auth/api-server"
 import { NextResponse } from "next/server"
 
 export const POST = async (request: Request) => {

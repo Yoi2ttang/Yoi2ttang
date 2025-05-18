@@ -1,4 +1,4 @@
-import { MAX_WEIGHT, MIN_WEIGHT, SignUpData } from "@/types/auth"
+import { MAX_WEIGHT, MIN_WEIGHT, SignUpData } from "@/types/auth/auth.type"
 import { ChangeEvent, Dispatch, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"

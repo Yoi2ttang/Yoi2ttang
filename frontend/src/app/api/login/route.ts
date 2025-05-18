@@ -1,4 +1,4 @@
-import { postLogin } from "@/services/auth/api"
+import { postLogin } from "@/services/auth/api-server"
 import { NextResponse } from "next/server"
 
 export const GET = async (request: Request) => {

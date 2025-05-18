@@ -1,6 +1,6 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import useSignup from "@/hooks/auth/useSignup"
-import { SignUpData, SignupStep } from "@/types/auth"
+import { SignUpData, SignupStep } from "@/types/auth/auth.type"
 import { Dispatch, SetStateAction } from "react"
 import ProgressBar from "../common/ProgressBar"
 import BirthForm from "./BirthForm"
