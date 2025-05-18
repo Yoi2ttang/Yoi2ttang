@@ -17,9 +17,10 @@ interface RunnerItemProps {
 }
 
 const RunnerItem = ({
+  targetId,
   nickname,
   animalType,
-  targetId,
+  profileImageUrl,
   isFollow,
 }: RunnerItemProps) => {
   const [followState, setFollowState] = useState(isFollow)
@@ -28,11 +29,11 @@ const RunnerItem = ({
     <div className="flex items-center rounded-xl bg-white p-4">
       <div className="flex w-full items-center gap-3">
         <Image
-          src={KakaoProfileImage}
+          src={profileImageUrl}
           alt=""
           width={52}
           height={52}
-          className="rounded-full"
+          className="size-14 rounded-full object-cover"
         />
 
         <div className="flex flex-1 flex-col gap-0.5">

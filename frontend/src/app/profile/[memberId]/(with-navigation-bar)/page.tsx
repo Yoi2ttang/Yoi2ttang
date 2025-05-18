@@ -2,7 +2,7 @@ import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQ
 import ProfileHeader from "@/components/profile/ProfileHeader"
 import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
-import { getProfile } from "@/services/member/api"
+import { getProfile } from "@/services/member/api-server"
 
 interface ProfilePageProps {
   params: Promise<{

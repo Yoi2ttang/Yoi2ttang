@@ -2,14 +2,17 @@
 
 import useFollowerList from "@/hooks/profile/useFollowerList"
 import { AnimalType } from "@/types/animal"
-import { MemberPreview, MembersResponse } from "@/types/member"
+import {
+  MemberPreview,
+  MemberPaginationResponse,
+} from "@/types/member/member.type"
 import Skeleton from "../common/skeleton"
 import RunnerItem from "./RunnerItem"
 
 const FollowerList = () => {
   const { targetRef, data, isLoading, isFetchingNextPage } = useFollowerList()
   const isEmpty = !data?.pages.some(
-    (page: MembersResponse) => page?.data.length > 0,
+    (page: MemberPaginationResponse) => page?.data.length > 0,
   )
 
   return (
@@ -26,7 +29,7 @@ const FollowerList = () => {
             </p>
           ) : (
             <>
-              {data?.pages.map((page: MembersResponse) =>
+              {data?.pages.map((page: MemberPaginationResponse) =>
                 page?.data.map((item: MemberPreview) => (
                   <RunnerItem
                     key={item.memberId}

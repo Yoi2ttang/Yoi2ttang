@@ -2,7 +2,10 @@
 
 import useSearchNickname from "@/hooks/profile/useSearchNickname"
 import { cn } from "@/lib/utils"
-import { MemberAutocomplete, MemberAutocompleteResponse } from "@/types/member"
+import {
+  MemberAutocomplete,
+  MemberAutoCompletePaginationResponse,
+} from "@/types/member/member.type"
 import { debounce } from "lodash-es"
 import { SearchIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -43,7 +46,7 @@ const UserSearchBar = ({
   }
 
   const isEmpty = !data?.pages.some(
-    (page: MemberAutocompleteResponse) => page?.data.length > 0,
+    (page: MemberAutoCompletePaginationResponse) => page?.data.length > 0,
   )
 
   return (
@@ -68,7 +71,7 @@ const UserSearchBar = ({
             ))
           ) : (
             <>
-              {data?.pages.map((page: MemberAutocompleteResponse) =>
+              {data?.pages.map((page: MemberAutoCompletePaginationResponse) =>
                 page?.data.map((item: MemberAutocomplete) => (
                   <div
                     key={item.memberId}

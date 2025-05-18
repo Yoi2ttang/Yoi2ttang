@@ -1,4 +1,4 @@
-export type Profile = {
+export interface Profile {
   memberId: number
   nickname: string
   profileImageUrl: string
@@ -24,7 +24,7 @@ export type Profile = {
   ]
 }
 
-export type ProfileForEdit = {
+export interface ProfileForEdit {
   memberId: number
   nickname: string
   profileImageUrl: string
@@ -36,7 +36,7 @@ export type ProfileForEdit = {
   email: string
 }
 
-export type MemberPreview = {
+export interface MemberPreview {
   memberId: number
   nickname: string
   profileImageUrl: string
@@ -44,29 +44,31 @@ export type MemberPreview = {
   isFollow: boolean
 }
 
-export type MemberAutocomplete = {
+export interface MemberAutocomplete {
   memberId: number
   nickname: string
 }
 
-// request type
-export type MemberAutocompleteRequest = {
+export type ProfileResponse = Profile
+
+export interface MemberSearchPaginationRequest {
   keyword: string
   pageToken: number
 }
 
-export type MemberSearchRequest = {
-  keyword: string
-  pageToken: number
-}
-
-export type FollowListRequest = {
+export interface FollowListPaginationRequest {
   targetId: number
   keyword: string
   pageToken: number
 }
 
-export type ProfileForEditRequest = {
+export interface MemberPaginationResponse {
+  data: MemberPreview[]
+  hasNext: boolean
+  pageToken: string
+}
+
+export interface ProfileForEditRequest {
   memberUpdateRequest: {
     nickname: string
     weight: number
@@ -76,18 +78,14 @@ export type ProfileForEditRequest = {
   image: File | null
 }
 
-// response type
-export type ProfileResponse = Profile
-
-export type MembersResponse = {
-  data: MemberPreview[]
-  hasNext: boolean
-  pageToken: string
-}
-
 export type ProfileForEditResponse = ProfileForEdit
 
-export type MemberAutocompleteResponse = {
+export interface MemberAutoCompletePaginationRequest {
+  keyword: string
+  pageToken: number
+}
+
+export interface MemberAutoCompletePaginationResponse {
   data: MemberAutocomplete[]
   hasNext: boolean
   pageToken: string

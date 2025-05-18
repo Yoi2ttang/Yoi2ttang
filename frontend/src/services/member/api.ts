@@ -1,22 +1,18 @@
-import { getApiServer } from "@/lib/api-server"
+"use client"
+
 import apiClient from "@/lib/http-common"
 import {
-  FollowListRequest,
-  MemberAutocompleteRequest,
-  MemberSearchRequest,
+  FollowListPaginationRequest,
+  MemberAutoCompletePaginationRequest,
+  MemberSearchPaginationRequest,
   ProfileForEditRequest,
   ProfileForEditResponse,
-  ProfileResponse,
-} from "@/types/member"
-
-// 프로필 조회
-export const getProfile = async (memberId: number) => {
-  const apiServer = await getApiServer()
-  return await apiServer.get<ProfileResponse>(`/members/${memberId}/profiles`)
-}
+} from "@/types/member/member.type"
 
 // 팔로워 조회
-export const getFollowers = async (followListRequest: FollowListRequest) => {
+export const getFollowers = async (
+  followListRequest: FollowListPaginationRequest,
+) => {
   const response = await apiClient.get(
     `/members/${followListRequest.targetId}/followers`,
     {
@@ -29,7 +25,9 @@ export const getFollowers = async (followListRequest: FollowListRequest) => {
 }
 
 // 팔로잉 조회
-export const getFollowings = async (followListRequest: FollowListRequest) => {
+export const getFollowings = async (
+  followListRequest: FollowListPaginationRequest,
+) => {
   const response = await apiClient.get(
     `/members/${followListRequest.targetId}/followings`,
     {
@@ -56,14 +54,17 @@ export const patchFollow = async (targetId: number) => {
 export const getUserNicknames = async ({
   keyword,
   pageToken,
-}: MemberAutocompleteRequest) => {
+}: MemberAutoCompletePaginationRequest) => {
   return await apiClient.get(
     `/members/autocomplete?keyword=${keyword}&pageToken=${pageToken}`,
   )
 }
 
 // 키워드에 맞는 유저 조회
-export const getUsers = async ({ keyword, pageToken }: MemberSearchRequest) => {
+export const getUsers = async ({
+  keyword,
+  pageToken,
+}: MemberSearchPaginationRequest) => {
   return await apiClient.get(
     `/members/search?keyword=${keyword}&pageToken=${pageToken}`,
   )

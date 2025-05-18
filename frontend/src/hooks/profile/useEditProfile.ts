@@ -1,5 +1,5 @@
 import { updateProfile } from "@/services/member/api"
-import { ProfileForEditRequest } from "@/types/member"
+import { ProfileForEditRequest } from "@/types/member/member.type"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 

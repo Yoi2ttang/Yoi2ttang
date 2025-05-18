@@ -3,7 +3,7 @@
 import AnimalBadge from "@/components/animal-badges//AnimalBadge"
 import { checkSelf } from "@/lib/auth/util"
 import { AnimalType } from "@/types/animal"
-import { ProfileResponse } from "@/types/member"
+import { ProfileResponse } from "@/types/member/member.type"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"

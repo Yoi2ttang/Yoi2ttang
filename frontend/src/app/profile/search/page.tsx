@@ -7,17 +7,17 @@ import UserSearchBar from "@/components/profile/UserSearchBar"
 import useSearchUser from "@/hooks/profile/useSearchUser"
 import { AnimalType } from "@/types/animal"
 import {
-  MemberAutocompleteResponse,
+  MemberAutoCompletePaginationResponse,
   MemberPreview,
-  MembersResponse,
-} from "@/types/member"
+  MemberPaginationResponse,
+} from "@/types/member/member.type"
 import { Suspense, useState } from "react"
 
 const SearchContent = () => {
   const [keyword, setKeyword] = useState("")
   const { targetRef, data, isLoading, isFetchingNextPage } = useSearchUser()
   const isEmpty = !data?.pages.some(
-    (page: MemberAutocompleteResponse) => page?.data.length > 0,
+    (page: MemberAutoCompletePaginationResponse) => page?.data.length > 0,
   )
 
   return (
@@ -42,7 +42,7 @@ const SearchContent = () => {
             </p>
           ) : (
             <>
-              {data?.pages.map((page: MembersResponse) =>
+              {data?.pages.map((page: MemberPaginationResponse) =>
                 page?.data.map((member: MemberPreview) => (
                   <RunnerItem
                     key={member.memberId}
