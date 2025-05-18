@@ -3,13 +3,18 @@ import {Modal, Text, Pressable, Image, View} from 'react-native';
 import {styled} from 'nativewind';
 import Button from '../common/Button';
 import {useRunningStatsContext} from '../../hooks/useRunningStatsContext';
-// import {useUpdateEndRunning} from '@/hooks/running/useUpdateEndRunning';
+import {useUpdateEndRunning} from '../../hooks/running/useUpdateEndRunning';
 import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../../App'; // App.tsx에서 export 했는지 확인
 
 interface RunningEndModalProps {
   visible?: boolean;
   setIsEndModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+// typed navigation
+type Navigation = NativeStackNavigationProp<RootStackParamList>;
 
 // styled components
 const StyledModalBackground = styled(Pressable);
@@ -21,32 +26,42 @@ const RunningEndModal = ({
   visible,
   setIsEndModalOpen,
 }: RunningEndModalProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<Navigation>();
   const {runningId} = useRunningStatsContext();
-  //   const {mutate: endRunning} = useUpdateEndRunning();
+  const {mutate: endRunning} = useUpdateEndRunning();
 
-  //   const handleStopRunning = () => {
-  //     if (!runningId) {
-  //       console.error('러닝 ID 없음 - 종료 요청 불가');
-  //       return;
-  //     }
+  const handleStopRunning = () => {
+    if (!runningId) {
+      console.error('러닝 ID 없음 - 종료 요청 불가');
+      return;
+    }
 
-  //     endRunning(
-  //       {
-  //         runningId,
-  //         endTime: new Date().toISOString(),
-  //       },
-  //       {
-  //         onSuccess: () => {
-  //           console.log('러닝 종료 성공');
-  //           navigation.reset({index: 0, routes: [{name: 'TeamRanking'}]});
-  //         },
-  //         onError: error => {
-  //           console.error('러닝 종료 실패', error);
-  //         },
-  //       },
-  //     );
-  //   };
+    endRunning(
+      {
+        runningId,
+        endTime: new Date().toISOString(),
+      },
+      {
+        onSuccess: () => {
+          console.log('러닝 종료 성공');
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'WebView',
+                params: {
+                  targetUrl: 'https://yoi2ttang.site/dashboard/my', // 원하는 경로
+                },
+              },
+            ],
+          });
+        },
+        onError: error => {
+          console.error('러닝 종료 실패', error);
+        },
+      },
+    );
+  };
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -75,7 +90,11 @@ const RunningEndModal = ({
               title="취소"
               onPress={() => setIsEndModalOpen(false)}
             />
-            <Button className="flex-1 bg-yoi-500" title="종료하기" />
+            <Button
+              className="flex-1 bg-yoi-500"
+              title="종료하기"
+              onPress={handleStopRunning}
+            />
           </StyledView>
         </StyledModalContent>
       </StyledModalBackground>

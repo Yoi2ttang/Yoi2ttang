@@ -61,7 +61,10 @@ const RunningActions = ({isPaused, setIsPaused}: RunningActionsProps) => {
       </StyledTouchable>
 
       {isEndModalOpen && (
-        <RunningEndModal setIsEndModalOpen={setIsEndModalOpen} />
+        <RunningEndModal
+          visible={isEndModalOpen}
+          setIsEndModalOpen={setIsEndModalOpen}
+        />
       )}
     </StyledView>
   );
