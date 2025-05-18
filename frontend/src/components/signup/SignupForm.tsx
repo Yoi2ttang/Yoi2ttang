@@ -1,6 +1,6 @@
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import useSignup from "@/hooks/auth/useSignup"
-import { SignUpData, SignupStep } from "@/types/auth"
+import { SignUpData, SignupStep } from "@/types/auth/auth.type"
 import { Dispatch, SetStateAction } from "react"
 import ProgressBar from "../common/ProgressBar"
 import BirthForm from "./BirthForm"
@@ -60,8 +60,9 @@ const SignupForm = ({
           <WeightForm
             signupData={signupData}
             onChange={onChange}
-            onNext={() => {
-              signup()
+            onNext={async () => {
+              // 쿠키가 모두 SET된 뒤에 다음 스텝으로 이동
+              await signup()
               onNext()
             }}
           />
