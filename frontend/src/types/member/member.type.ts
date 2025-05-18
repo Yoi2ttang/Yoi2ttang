@@ -41,7 +41,7 @@ export interface MemberPreview {
   nickname: string
   profileImageUrl: string
   zodiacName: string
-  isFollow: boolean
+  isFollow: boolean | null
 }
 
 export interface MemberAutocomplete {

@@ -13,7 +13,7 @@ interface RunnerItemProps {
   nickname: string
   animalType: AnimalType
   profileImageUrl: string
-  isFollow: boolean
+  isFollow: boolean | null
 }
 
 const RunnerItem = ({
@@ -23,7 +23,7 @@ const RunnerItem = ({
   profileImageUrl,
   isFollow,
 }: RunnerItemProps) => {
-  const [followState, setFollowState] = useState(isFollow)
+  const [followState, setFollowState] = useState(isFollow ?? false)
 
   return (
     <div className="flex items-center rounded-xl bg-white p-4">
@@ -39,13 +39,15 @@ const RunnerItem = ({
         <div className="flex flex-1 flex-col gap-0.5">
           <Link
             href={`/profile/${targetId}`}
-            className="line-clamp-1 break-all">
+            className="line-clamp-1 w-fit break-all">
             {nickname}
           </Link>
           <AnimalBadge animal={animalType} />
         </div>
 
-        {targetId && (
+        {isFollow === null ? (
+          <div className="rounded-xl bg-neutral-200 px-1 text-white">나</div>
+        ) : (
           <FollowButton
             targetId={targetId}
             followState={followState}
