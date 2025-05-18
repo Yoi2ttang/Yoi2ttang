@@ -1,7 +1,6 @@
 "use client"
 
 import StackAnimated from "@/components/animated/StackAnimated"
-import Loading from "@/components/common/Loading"
 import CourseCreateConfirmContainer from "@/components/course/course-create/confirm/CourseCreateConfirmContainer"
 import CourseCreateButton from "@/components/course/course-create/CourseCreateButton"
 import CourseCreateEndContainer from "@/components/course/course-create/CourseCreateEndContainer"
@@ -11,7 +10,6 @@ import CourseCreateSearchContainer from "@/components/course/course-create/searc
 import CourseCreateStartContainer from "@/components/course/course-create/start/CourseCreateStartContainer"
 import useCourseCreate from "@/hooks/course/useCourseCreate"
 import { CourseCreateStep, StepConfig } from "@/types/course.type"
-import { Suspense } from "react"
 interface CourseCreatePageProps {}
 
 const stepConfigurations: Record<CourseCreateStep, StepConfig> = {
@@ -131,22 +129,20 @@ const CourseCreatePage = ({}: CourseCreatePageProps) => {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
-      <StackAnimated<CourseCreateStep>
-        step={step}
-        direction={navigationDirection}>
-        <div className="relative h-dvh w-full">
-          {renderStep()}
-          {step !== CourseCreateStep.END && (
-            <CourseCreateButton
-              disabled={buttonDisableHandler()}
-              buttonText={stepConfigurations[step].buttonText ?? ""}
-              onClick={handleNextStep}
-            />
-          )}
-        </div>
-      </StackAnimated>
-    </Suspense>
+    <StackAnimated<CourseCreateStep>
+      step={step}
+      direction={navigationDirection}>
+      <div className="relative h-dvh w-full">
+        {renderStep()}
+        {step !== CourseCreateStep.END && (
+          <CourseCreateButton
+            disabled={buttonDisableHandler()}
+            buttonText={stepConfigurations[step].buttonText ?? ""}
+            onClick={handleNextStep}
+          />
+        )}
+      </div>
+    </StackAnimated>
   )
 }
 export default CourseCreatePage

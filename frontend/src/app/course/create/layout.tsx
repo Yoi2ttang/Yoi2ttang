@@ -1,10 +1,11 @@
-import { ReactNode } from "react"
+import Loading from "@/components/common/Loading"
+import { ReactNode, Suspense } from "react"
 
 interface QuestCreateLayoutProps {
   children: ReactNode
 }
 
 const QuestCreateLayout = ({ children }: QuestCreateLayoutProps) => {
-  return <div className="">{children}</div>
+  return <Suspense fallback={<Loading />}>{children}</Suspense>
 }
 export default QuestCreateLayout
