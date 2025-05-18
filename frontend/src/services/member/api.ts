@@ -3,7 +3,7 @@
 import apiClient from "@/lib/http-common"
 import {
   FollowListPaginationRequest,
-  MemberAutoCompletePaginationRequest,
+  MemberAutocompletePaginationRequest,
   MemberSearchPaginationRequest,
   ProfileForEditRequest,
   ProfileForEditResponse,
@@ -54,7 +54,7 @@ export const patchFollow = async (targetId: number) => {
 export const getUserNicknames = async ({
   keyword,
   pageToken,
-}: MemberAutoCompletePaginationRequest) => {
+}: MemberAutocompletePaginationRequest) => {
   return await apiClient.get(
     `/members/autocomplete?keyword=${keyword}&pageToken=${pageToken}`,
   )

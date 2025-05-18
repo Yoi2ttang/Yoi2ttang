@@ -7,7 +7,7 @@ import UserSearchBar from "@/components/profile/UserSearchBar"
 import useSearchUser from "@/hooks/profile/useSearchUser"
 import { AnimalType } from "@/types/animal"
 import {
-  MemberAutoCompletePaginationResponse,
+  MemberAutocompletePaginationResponse,
   MemberPreview,
   MemberPaginationResponse,
 } from "@/types/member/member.type"
@@ -17,7 +17,7 @@ const SearchContent = () => {
   const [keyword, setKeyword] = useState("")
   const { targetRef, data, isLoading, isFetchingNextPage } = useSearchUser()
   const isEmpty = !data?.pages.some(
-    (page: MemberAutoCompletePaginationResponse) => page?.data.length > 0,
+    (page: MemberAutocompletePaginationResponse) => page?.data.length > 0,
   )
 
   return (

@@ -4,12 +4,12 @@ import useSearchNickname from "@/hooks/profile/useSearchNickname"
 import { cn } from "@/lib/utils"
 import {
   MemberAutocomplete,
-  MemberAutoCompletePaginationResponse,
+  MemberAutocompletePaginationResponse,
 } from "@/types/member/member.type"
 import { debounce } from "lodash-es"
 import { SearchIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useMemo, useState } from "react"
 import Input from "../common/Input"
 import Skeleton from "../common/skeleton"
 
@@ -31,9 +31,13 @@ const UserSearchBar = ({
     useSearchNickname(keyword)
   const router = useRouter()
 
-  const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
-  }, 300)
+  const handleChange = useMemo(
+    () =>
+      debounce((e: ChangeEvent<HTMLInputElement>) => {
+        onChange(e.target.value)
+      }, 300),
+    [onChange],
+  )
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -46,7 +50,7 @@ const UserSearchBar = ({
   }
 
   const isEmpty = !data?.pages.some(
-    (page: MemberAutoCompletePaginationResponse) => page?.data.length > 0,
+    (page: MemberAutocompletePaginationResponse) => page?.data.length > 0,
   )
 
   return (
@@ -71,13 +75,14 @@ const UserSearchBar = ({
             ))
           ) : (
             <>
-              {data?.pages.map((page: MemberAutoCompletePaginationResponse) =>
+              {data?.pages.map((page: MemberAutocompletePaginationResponse) =>
                 page?.data.map((item: MemberAutocomplete) => (
                   <div
                     key={item.memberId}
                     className="cursor-pointer"
                     onMouseDown={() => handleClick(item.memberId)}>
-                    {item.nickname}
+                    <span className="text-yoi-500">{keyword}</span>
+                    <span>{item.nickname.slice(keyword.length)}</span>
                   </div>
                 )),
               )}

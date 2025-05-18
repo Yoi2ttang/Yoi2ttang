@@ -80,12 +80,12 @@ export interface ProfileForEditRequest {
 
 export type ProfileForEditResponse = ProfileForEdit
 
-export interface MemberAutoCompletePaginationRequest {
+export interface MemberAutocompletePaginationRequest {
   keyword: string
   pageToken: number
 }
 
-export interface MemberAutoCompletePaginationResponse {
+export interface MemberAutocompletePaginationResponse {
   data: MemberAutocomplete[]
   hasNext: boolean
   pageToken: string
