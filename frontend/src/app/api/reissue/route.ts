@@ -4,7 +4,10 @@ import { NextResponse } from "next/server"
 export const POST = async (request: Request) => {
   try {
     const response = await postReissue()
-    const nextResponse = NextResponse.json(null, { status: 200 })
+    const nextResponse = NextResponse.json(
+      { accessToken: response.data.accessToken },
+      { status: 200 },
+    )
 
     // 쿠키 방식으로 액세스 토큰 생성
     nextResponse.cookies.set("accessToken", response.data.accessToken, {
