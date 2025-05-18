@@ -30,9 +30,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <html lang="ko">
       <body className={`${pretendard.className} bg-neutral-100`}>
         <RootProvider>
-          <div className="max-w-yoi-width mx-auto flex min-h-dvh flex-col bg-neutral-50">
-            <div className="flex-1">{children}</div>
-          </div>
+          <div className="flex-1">{children}</div>
         </RootProvider>
       </body>
     </html>

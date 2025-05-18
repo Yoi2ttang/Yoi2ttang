@@ -1,11 +1,9 @@
-import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
+"use client"
+
+import IntroduceContent from "@/components/Introduce/IntroduceContent"
 
 const Home = () => {
-  return (
-    <div>
-      <NavigationBar />
-    </div>
-  )
+  return <IntroduceContent />
 }
 
 export default Home

@@ -36,3 +36,23 @@ export const getReverseGeocode = ({ lat, lng }: Coordinates) => {
     )
   })
 }
+
+// 현재 디바이스 타입 반환
+export const getDeviceType = () => {
+  const userAgent = navigator.userAgent
+
+  console.log(navigator)
+  if (
+    userAgent.includes("iPhone") ||
+    userAgent.includes("iPad") ||
+    userAgent.includes("iPod")
+  ) {
+    return "mobile"
+  }
+
+  if (userAgent.includes("Android")) {
+    return "android"
+  }
+
+  return "desktop"
+}
