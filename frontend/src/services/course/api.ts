@@ -40,3 +40,8 @@ export const getClearedMembers = async (
   )
   return response.data
 }
+
+export const updateBookmark = async (courseId: number) => {
+  const response = await apiClient.post(`/courses/${courseId}/bookmarks`)
+  return response.data
+}

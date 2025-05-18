@@ -5,6 +5,7 @@ import TempMapImage from "@/assets/images/course/temp_map.png"
 import Image from "next/image"
 import Section from "../common/Section"
 import { getCourse } from "@/services/course/api-server"
+import CourseBookmarkButton from "./CourseBookmarkButton"
 
 interface CourseInfoSectionProps {
   courseId: number
@@ -14,7 +15,12 @@ const CourseInfoSection = async ({ courseId }: CourseInfoSectionProps) => {
   const { data, isError } = await getCourse(courseId)
 
   return (
-    <Section title="한강 러닝 코스" className="rounded-xl bg-white p-6">
+    <Section
+      title={data.courseName}
+      supplement={
+        <CourseBookmarkButton courseId={courseId} isBookmarked={false} />
+      }
+      className="rounded-xl bg-white p-6">
       {isError ? (
         <p className="text-center text-neutral-300">
           잠시 후 다시 시도해 주세요
