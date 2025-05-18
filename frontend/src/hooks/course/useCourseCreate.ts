@@ -48,6 +48,8 @@ const useCourseCreate = () => {
   const handleCapture = async () => {
     const mapElement = drawMapRef.current?.getElement()
 
+    if (!mapElement) return
+
     const dataUrl = await domtoimage.toPng(mapElement, {
       width: 600,
       height: 600,
