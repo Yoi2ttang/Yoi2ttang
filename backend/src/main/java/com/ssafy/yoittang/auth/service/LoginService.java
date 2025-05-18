@@ -3,7 +3,6 @@ package com.ssafy.yoittang.auth.service;
 import java.time.Duration;
 import java.util.Optional;
 
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ import com.ssafy.yoittang.auth.infrastructure.KakaoOAuthProvider;
 import com.ssafy.yoittang.auth.repository.RefreshTokenRepository;
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.InvalidJwtException;
 import com.ssafy.yoittang.common.exception.NotFoundException;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.Member;
@@ -132,7 +132,7 @@ public class LoginService {
             return jwtUtil.reissueAccessToken(jwtRequest);
         }
 
-        throw new BadRequestException(ErrorCode.FAILED_TO_VALIDATE_TOKEN);
+        throw new InvalidJwtException(ErrorCode.FAILED_TO_VALIDATE_TOKEN);
     }
 
     @Transactional

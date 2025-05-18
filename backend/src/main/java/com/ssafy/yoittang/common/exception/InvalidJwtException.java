@@ -12,4 +12,9 @@ public class InvalidJwtException extends RuntimeException {
         this.code = code;
         this.message = message;
     }
+
+    public InvalidJwtException(ErrorCode errorCode) {
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
+    }
 }
