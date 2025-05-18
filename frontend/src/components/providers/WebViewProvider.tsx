@@ -24,7 +24,16 @@ const WebViewProvider = ({ children }: WebViewProviderProps) => {
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       try {
+        if (typeof event.data !== "string") {
+          return
+        }
+
         const data = JSON.parse(event.data)
+
+        if (typeof data !== "object" || data === null || !("type" in data)) {
+          return
+        }
+
         if (data.type === "REISSUE_TOKEN_REQUEST") {
           const response = await fetch("/api/reissue")
           if (response.ok) {
