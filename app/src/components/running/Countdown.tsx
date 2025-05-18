@@ -1,5 +1,9 @@
-// components/running/Countdown.tsx
-import {View, Text} from 'react-native';
+import React from 'react';
+import {Text, View} from 'react-native';
+import {styled} from 'nativewind';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
 
 interface CountdownProps {
   count: number;
@@ -7,17 +11,9 @@ interface CountdownProps {
 
 const Countdown = ({count}: CountdownProps) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text style={{fontSize: 96, color: 'white', fontWeight: 'bold'}}>
-        {count}
-      </Text>
-    </View>
+    <StyledView className="flex-1 items-center justify-center bg-black">
+      <StyledText className="text-white text-9xl font-bold">{count}</StyledText>
+    </StyledView>
   );
 };
 

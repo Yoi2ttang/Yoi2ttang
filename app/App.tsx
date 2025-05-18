@@ -15,8 +15,16 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="WebView">
-        <Stack.Screen name="WebView" component={WebViewScreen} />
-        <Stack.Screen name="NaverMap" component={RunningMapScreen} />
+        <Stack.Screen
+          name="WebView"
+          component={WebViewScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NaverMap"
+          component={RunningMapScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
