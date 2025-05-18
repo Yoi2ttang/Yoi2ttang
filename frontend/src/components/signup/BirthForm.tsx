@@ -1,8 +1,8 @@
 import { SignUpData } from "@/types/auth"
 import { clamp } from "lodash-es"
 import { ChangeEvent, Dispatch, FocusEvent, SetStateAction } from "react"
-import Button from "../common/Button"
-import Input from "../common/Input"
+import Button from "@/components/common/Button"
+import Input from "@/components/common/Input"
 
 interface BirthFormProps {
   signupData: SignUpData
@@ -14,13 +14,13 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     switch (name) {
-      // 년도의 길이가 4이상이 될 경우 입력 방지
+      // 년도의 길이가 4초과가 될 경우 입력 방지
       case "year":
         if (value.length > 4) {
           return
         }
         break
-      // 월과 일의 길이가 2이상이 될 경우 입력 방지
+      // 월과 일의 길이가 각각 2초과가 될 경우 입력 방지
       case "month":
       case "day":
         if (value.length > 2) {
@@ -44,45 +44,47 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
       return
     }
 
-    const number = parseInt(value, 10)
-    let validatedBirth = { ...signupData.birth }
+    const today = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+    }
+    const input = parseInt(value, 10)
+    const validatedBirth = signupData.birth
 
     switch (name) {
-      // 년도의 범위를 벗어날 경우 최대, 최소값으로 보정
       case "year": {
-        validatedBirth.year = clamp(
-          number,
-          1900,
-          new Date().getFullYear(),
-        ).toString()
+        // 년도 값 보정
+        validatedBirth.year = clamp(input, 1900, today.year).toString()
 
-        const year = new Date().getFullYear()
-        const month = new Date().getMonth() + 1
-        const day = new Date().getDate()
-
+        // 년도 값 변경에 따른 월 값 보정
         if (validatedBirth.month) {
-          // 현재 년도보다 크거나 같고, 선택한 월이 현재 월보다 크다면 현재 월로 설정
-          if (Number(validatedBirth.year) >= year && number > month) {
-            validatedBirth.month = month.toString()
+          if (
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) > today.month
+          ) {
+            validatedBirth.month = today.month.toString()
           } else {
-            // 그 외의 경우 기존 로직대로 처리
-            validatedBirth.month = clamp(number, 1, 12).toString()
+            validatedBirth.month = clamp(
+              Number(validatedBirth.month),
+              1,
+              12,
+            ).toString()
           }
         }
 
-        // 월이 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
+        // 년도, 월 값 변경에 따른 일 값 보정
         if (validatedBirth.day) {
-          // 현재 년월과 같고, 일자가 현재 일자보다 크다면 현재 일자로 설정
           if (
-            Number(validatedBirth.year) >= year &&
-            Number(validatedBirth.month) >= month &&
-            Number(validatedBirth.day) > day
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) >= today.month &&
+            Number(validatedBirth.day) > today.day
           ) {
-            validatedBirth.day = day.toString()
+            validatedBirth.day = today.day.toString()
           } else {
-            // 그 외의 경우 해당 월의 최대 일자로 제한
-            validatedBirth.day = Math.min(
+            validatedBirth.day = clamp(
               Number(validatedBirth.day),
+              1,
               new Date(
                 Number(validatedBirth.year),
                 Number(validatedBirth.month),
@@ -94,34 +96,32 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
         break
       }
       case "month": {
-        const year = new Date().getFullYear()
-        const month = new Date().getMonth() + 1
-
-        // 현재 년도보다 크거나 같고, 선택한 월이 현재 월보다 크다면 현재 월로 설정
-        if (Number(validatedBirth.year) >= year && number > month) {
-          validatedBirth.month = month.toString()
+        // 월 값 보정
+        if (
+          Number(validatedBirth.year) >= today.year &&
+          Number(validatedBirth.month) > today.month
+        ) {
+          validatedBirth.month = today.month.toString()
         } else {
-          // 그 외의 경우 기존 로직대로 처리
-          validatedBirth.month = clamp(number, 1, 12).toString()
+          validatedBirth.month = clamp(
+            Number(validatedBirth.month),
+            1,
+            12,
+          ).toString()
         }
 
-        // 월이 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
+        // 월 값 변경에 따른 일 값 보정
         if (validatedBirth.day) {
-          const year = new Date().getFullYear()
-          const month = new Date().getMonth() + 1
-          const day = new Date().getDate()
-
-          // 현재 년월보다 크거나 같고, 선택한 일이 현재 일보다 크다면 현재 일로 설정
           if (
-            Number(validatedBirth.year) >= year &&
-            Number(validatedBirth.month) >= month &&
-            Number(validatedBirth.day) > day
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) >= today.month &&
+            Number(validatedBirth.day) > today.day
           ) {
-            validatedBirth.day = day.toString()
+            validatedBirth.day = today.day.toString()
           } else {
-            // 그 외의 경우 해당 월의 최대 일자로 제한
-            validatedBirth.day = Math.min(
+            validatedBirth.day = clamp(
               Number(validatedBirth.day),
+              1,
               new Date(
                 Number(validatedBirth.year),
                 Number(validatedBirth.month),
@@ -133,21 +133,16 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
         break
       }
       case "day": {
-        const year = new Date().getFullYear()
-        const month = new Date().getMonth() + 1
-        const day = new Date().getDate()
-
-        // 현재 년월과 같고, 선택한 일자가 현재 일자보다 크다면 현재 일자로 설정
+        // 일 값 보정
         if (
-          Number(validatedBirth.year) >= year &&
-          Number(validatedBirth.month) >= month &&
-          number > day
+          Number(validatedBirth.year) >= today.year &&
+          Number(validatedBirth.month) >= today.month &&
+          Number(validatedBirth.day) > today.day
         ) {
-          validatedBirth.day = day.toString()
+          validatedBirth.day = today.day.toString()
         } else {
-          // 그 외의 경우 기존 로직대로 처리
           validatedBirth.day = clamp(
-            number,
+            Number(validatedBirth.day),
             1,
             new Date(
               Number(validatedBirth.year),
