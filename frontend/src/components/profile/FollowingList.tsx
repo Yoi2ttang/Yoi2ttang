@@ -2,11 +2,7 @@
 
 import useFollowingList from "@/hooks/profile/useFollowingList"
 import { AnimalType } from "@/types/animal"
-import {
-  MemberAutocompleteResponse,
-  MemberPreview,
-  MembersResponse,
-} from "@/types/member"
+import { MemberPreview, MembersResponse } from "@/types/member"
 import Skeleton from "../common/skeleton"
 import RunnerItem from "./RunnerItem"
 

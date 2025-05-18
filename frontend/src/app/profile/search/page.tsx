@@ -4,7 +4,7 @@ import Skeleton from "@/components/common/skeleton"
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import RunnerItem from "@/components/profile/RunnerItem"
 import UserSearchBar from "@/components/profile/UserSearchBar"
-import useSearchUser from "@/hooks/auth/useSearchUser"
+import useSearchUser from "@/hooks/profile/useSearchUser"
 import { AnimalType } from "@/types/animal"
 import {
   MemberAutocompleteResponse,
