@@ -36,7 +36,7 @@ const UserSearchBar = ({
       debounce((e: ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value)
       }, 300),
-    [onChange],
+    [],
   )
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

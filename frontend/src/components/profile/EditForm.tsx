@@ -49,7 +49,7 @@ const EditForm = ({
           },
         })
       }, 300),
-    [profileData],
+    [],
   )
 
   const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
