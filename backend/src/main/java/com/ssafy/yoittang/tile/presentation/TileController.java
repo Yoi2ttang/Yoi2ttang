@@ -2,8 +2,6 @@ package com.ssafy.yoittang.tile.presentation;
 
 import java.time.LocalDate;
 
-import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
-import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -17,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.application.TileService;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
+import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
