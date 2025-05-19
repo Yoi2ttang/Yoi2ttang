@@ -13,9 +13,9 @@ const TeamTitleSection = ({ teamInfo }: TeamTitleSectionProps) => {
 
   return (
     <section className="flex flex-col gap-1">
-      <h3 className="text-title-md">
-        <span className="text-black">{username}</span>님은&nbsp;
-        <span className="text-yoi-500">{teamName}</span> 팀입니다.
+      <h3 className="text-title-md flex items-start">
+        <span className="max-w-40 truncate text-black">우리 팀은&nbsp;</span>
+        <span className="text-yoi-500">{teamName}</span>&nbsp;팀입니다.
       </h3>
       <p className="text-title-sm">
         <span>

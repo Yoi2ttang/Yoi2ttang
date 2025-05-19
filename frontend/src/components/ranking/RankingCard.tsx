@@ -23,7 +23,7 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
     <Link
       href={`/ranking/teams/${zodiacId}/contribution`}
       className={cn(
-        "flex items-center justify-between rounded-xl px-3 py-4",
+        "flex w-full items-center justify-between rounded-xl px-3 py-4",
         "transition-all duration-300 active:scale-95",
         rank === 1 && "bg-yoi-400 active:bg-yoi-400/80",
         rank === 2 && "bg-yoi-300 active:bg-yoi-300/80",
@@ -39,7 +39,7 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
           <span className="text-title-sm">{teamName} 팀</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex w-full items-center gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
           {tileCount} 타일
         </Badge>

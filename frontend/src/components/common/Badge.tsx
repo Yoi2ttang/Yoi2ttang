@@ -10,7 +10,7 @@ const Badge = ({ className, children }: BadgeProps) => {
   return (
     <div
       className={cn(
-        "flex w-fit items-center justify-center rounded-full text-white",
+        "flex w-fit items-center justify-center rounded-full px-2 py-1 text-white",
         className,
       )}>
       {children}
