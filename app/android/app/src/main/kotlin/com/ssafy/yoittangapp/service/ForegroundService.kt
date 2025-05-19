@@ -11,6 +11,8 @@ import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.facebook.react.ReactApplication
+import com.facebook.react.bridge.ReactApplicationContext
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.ssafy.yoittangapp.R
@@ -21,6 +23,8 @@ class ForegroundService : Service() {
         const val CHANNEL_ID = "yoittang_location_channel"
         const val NOTIFICATION_ID = 1001
     }
+
+    private lateinit var sensorTrackingManager: SensorTrackingManager
 
     // MessageClient(워치로부터 신호를 받는 리스너)에는 하나의 리스너만 등록 가능
     private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
@@ -74,6 +78,19 @@ class ForegroundService : Service() {
             // 앱 내부 통신 전용
             RECEIVER_NOT_EXPORTED
         )                                                                       // JS 시작 신호 Listener
+
+        // 워치로부터 데이터를 받는 manager start
+        val reactApp = application as? ReactApplication
+        val reactContext = reactApp?.reactNativeHost
+            ?.reactInstanceManager
+            ?.currentReactContext as? ReactApplicationContext
+
+        if (reactContext != null) {
+            sensorTrackingManager = SensorTrackingManager(this, reactContext)
+            sensorTrackingManager.start()
+        } else {
+            Log.w("LocationService", "⚠️ ReactApplicationContext is null.")
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -102,6 +119,7 @@ class ForegroundService : Service() {
         Wearable.getMessageClient(this).removeListener(messageListener)
         unregisterReceiver(startReceiver)
         unregisterReceiver(stopReceiver)
+        sensorTrackingManager.stop()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
