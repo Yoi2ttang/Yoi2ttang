@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
 import com.ssafy.yoittang.member.domain.dto.response.MemberAutocompleteResponse;
@@ -65,5 +66,9 @@ public class MemberRepository {
 
     public List<Member> findAll() {
         return memberJpaRepository.findAll();
+    }
+
+    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds) {
+        return memberQueryRepository.findCourseClearMembersByIds(memberIds);
     }
 }

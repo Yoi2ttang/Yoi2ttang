@@ -27,4 +27,6 @@ public interface TileHistoryQueryRepository {
     );
 
     Map<Long, Long> countVisitedCourseTilesByMember(Long memberId, List<Long> courseIds);
+
+    Map<Long, Long> countVisitedTilesByCourseAndMember(Long courseId, List<Long> memberIds);
 }

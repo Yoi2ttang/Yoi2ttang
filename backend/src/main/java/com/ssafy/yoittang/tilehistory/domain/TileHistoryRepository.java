@@ -200,4 +200,8 @@ public class TileHistoryRepository {
     public Map<Long, Long> countVisitedCourseTilesByMember(Long memberId, List<Long> courseIds) {
         return tileHistoryQueryRepository.countVisitedCourseTilesByMember(memberId, courseIds);
     }
+
+    public Map<Long, Long> countVisitedTilesByCourseAndMember(Long courseId, List<Long> memberIds) {
+        return tileHistoryQueryRepository.countVisitedTilesByCourseAndMember(courseId, memberIds);
+    }
 }

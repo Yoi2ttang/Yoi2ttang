@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.member.domain.QFollow;
 import com.ssafy.yoittang.member.domain.QMember;
 import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
@@ -177,6 +178,26 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
                 .where(qMember.memberId.in(ids))
                 .orderBy(qMember.memberId.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds) {
+        if (memberIds == null || memberIds.isEmpty()) {
+            return List.of();
+        }
+
+        QMember member = QMember.member;
+
+        return queryFactory
+                .select(Projections.constructor(
+                        CourseClearMemberResponse.class,
+                        member.memberId,
+                        member.nickname,
+                        member.profileImageUrl
+                ))
+                .from(member)
+                .where(member.memberId.in(memberIds))
                 .fetch();
     }
 

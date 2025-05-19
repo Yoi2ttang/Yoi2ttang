@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,17 +14,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.yoittang.common.aws.S3ImageUploader;
 import com.ssafy.yoittang.common.model.PageInfo;
-import com.ssafy.yoittang.course.domain.BookmarkViewType;
 import com.ssafy.yoittang.course.domain.Course;
+import com.ssafy.yoittang.course.domain.CourseBookmark;
 import com.ssafy.yoittang.course.domain.CourseTile;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.course.domain.dto.response.RunCourseResponse;
+import com.ssafy.yoittang.course.domain.repository.CourseBookmarkJpaRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.member.domain.repository.MemberRepository;
 import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
 import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
@@ -40,7 +43,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CourseService {
 
+    private final MemberRepository memberRepository;
     private final CourseRepository courseRepository;
+    private final CourseBookmarkJpaRepository courseBookmarkJpaRepository;
     private final CourseTileJpaRepository courseTileJpaRepository;
     private final RunningRepository runningRepository;
     private final RunningPointRepository runningPointRepository;
@@ -53,29 +58,7 @@ public class CourseService {
 
     public List<RunCourseResponse> getRunCoursePreview(Member member) {
         List<Course> courses = courseRepository.findCompletedCoursesByMemberId(member.getMemberId(), 3);
-        List<Long> courseIds = courses.stream().map(Course::getCourseId).toList();
-
-        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
-        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
-                member.getMemberId(),
-                courseIds
-        );
-
-        return courses.stream()
-                .map(course -> {
-                    Long total = totalTiles.getOrDefault(course.getCourseId(), 0L);
-                    Long visited = visitedTiles.getOrDefault(course.getCourseId(), 0L);
-                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
-
-                    return new RunCourseResponse(
-                            course.getCourseId(),
-                            course.getCourseName(),
-                            course.getDistance(),
-                            course.getCourseImageUrl(),
-                            completionRate
-                    );
-                })
-                .toList();
+        return toRunCourseResponsesFromCourses(courses, member.getMemberId());
     }
 
     public PageInfo<RunCourseResponse> getRunCourseAll(String keyword, String pageToken, Member member) {
@@ -85,58 +68,13 @@ public class CourseService {
                 pageToken
         );
         List<Course> courseList = courses.data();
-        List<Long> courseIds = courseList.stream().map(Course::getCourseId).toList();
-
-        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
-        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
-                member.getMemberId(),
-                courseIds
-        );
-
-        List<RunCourseResponse> runCourseResponses = courseList.stream()
-                .map(course -> {
-                    Long total = totalTiles.getOrDefault(course.getCourseId(), 0L);
-                    Long visited = visitedTiles.getOrDefault(course.getCourseId(), 0L);
-                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
-
-                    return new RunCourseResponse(
-                            course.getCourseId(),
-                            course.getCourseName(),
-                            course.getDistance(),
-                            course.getCourseImageUrl(),
-                            completionRate
-                    );
-                })
-                .toList();
-
-        return PageInfo.of(runCourseResponses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
+        List<RunCourseResponse> responses = toRunCourseResponsesFromCourses(courseList, member.getMemberId());
+        return PageInfo.of(responses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
     }
 
     public List<RunCourseResponse> getBookmarkCoursePreview(Member member) {
         List<CourseSummaryResponse> courses = courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId(), 4);
-        List<Long> courseIds = courses.stream().map(CourseSummaryResponse::courseId).toList();
-
-        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
-        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
-                member.getMemberId(),
-                courseIds
-        );
-
-        return courses.stream()
-                .map(course -> {
-                    Long total = totalTiles.getOrDefault(course.courseId(), 0L);
-                    Long visited = visitedTiles.getOrDefault(course.courseId(), 0L);
-                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
-
-                    return new RunCourseResponse(
-                            course.courseId(),
-                            course.courseName(),
-                            course.distance(),
-                            course.courseImageUrl(),
-                            completionRate
-                    );
-                })
-                .toList();
+        return toRunCourseResponsesFromCourseSummary(courses, member.getMemberId());
     }
 
     public PageInfo<RunCourseResponse> getBookmarkCourseAll(String pageToken, String keyword, Member member) {
@@ -146,31 +84,12 @@ public class CourseService {
                 pageToken
         );
         List<CourseSummaryResponse> courseList = courses.data();
-        List<Long> courseIds = courseList.stream().map(CourseSummaryResponse::courseId).toList();
+        List<RunCourseResponse> responses = toRunCourseResponsesFromCourseSummary(courseList, member.getMemberId());
+        return PageInfo.of(responses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
+    }
 
-        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
-        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(
-                member.getMemberId(),
-                courseIds
-        );
-
-        List<RunCourseResponse> runCourseResponses = courseList.stream()
-                .map(course -> {
-                    Long total = totalTiles.getOrDefault(course.courseId(), 0L);
-                    Long visited = visitedTiles.getOrDefault(course.courseId(), 0L);
-                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
-
-                    return new RunCourseResponse(
-                            course.courseId(),
-                            course.courseName(),
-                            course.distance(),
-                            course.courseImageUrl(),
-                            completionRate
-                    );
-                })
-                .toList();
-
-        return PageInfo.of(runCourseResponses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
+    public List<CourseSummaryResponse> getRandomCourses() {
+        return courseRepository.findRandomCourses(10);
     }
 
 
@@ -204,6 +123,25 @@ public class CourseService {
         courseTileJpaRepository.bulkInsert(new ArrayList<>(courseTiles));
     }
 
+    public boolean toggleCourseBookmark(Long courseId, Member member) {
+        Optional<CourseBookmark> courseBookmarkOptional = courseBookmarkJpaRepository.findBookmarkByMemberIdAndCourseId(
+                member.getMemberId(),
+                courseId
+        );
+        if (courseBookmarkOptional.isPresent()) {
+            CourseBookmark courseBookmark = courseBookmarkOptional.get();
+            courseBookmark.changeState();
+            return courseBookmark.getIsActive();
+        }
+        courseBookmarkJpaRepository.save(
+                CourseBookmark.builder()
+                        .memberId(member.getMemberId())
+                        .courseId(courseId)
+                        .build()
+        );
+        return true;
+    }
+
     public CourseDetailResponse getCourseDetail(Long courseId, Member member) {
         CourseSummaryResponse summaryResponse = courseRepository.findCourseByCourseId(courseId);
         int runningTimes = member.getRunningTimes();;
@@ -221,14 +159,54 @@ public class CourseService {
                 summaryResponse.courseId(),
                 summaryResponse.courseName(),
                 summaryResponse.distance(),
+                courseBookmarkJpaRepository.existsByMemberIdAndCourseIdAndIsActiveTrue(
+                        member.getMemberId(),
+                        courseId
+                ),
                 summaryResponse.courseImageUrl(),
                 calories,
                 times
         );
     }
 
+    public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId) {
+        List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
+        return getClearedMembers(courseId, memberIds);
+    }
+
     public PageInfo<CourseClearMemberResponse> getClearedMembersByCourseId(Long courseId, String pageToken) {
-        return courseRepository.findClearedMembersByCourseId(courseId, pageToken);
+        List<Long> pagedMemberIds = runningRepository.findPagedClearedMemberIdsByCourseId(
+                courseId,
+                pageToken,
+                DEFAULT_PAGE_SIZE
+        );
+        List<CourseClearMemberResponse> responses = getClearedMembers(courseId, pagedMemberIds);
+        return PageInfo.of(responses, DEFAULT_PAGE_SIZE, CourseClearMemberResponse::memberId);
+    }
+
+    public PageInfo<RunCourseResponse> getCourseByKeyword(String keyword, String pageToken, Member member) {
+        PageInfo<CourseSummaryResponse> courseSummaryResponsePageInfo = courseRepository.findCourseByKeyword(
+                keyword,
+                pageToken
+        );
+        List<CourseSummaryResponse> courseList = courseSummaryResponsePageInfo.data();
+        List<RunCourseResponse> responses = toRunCourseResponsesFromCourseSummary(courseList, member.getMemberId());
+        return PageInfo.of(responses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
+    }
+
+    public TileGetResponseWrapper getTilesNearBy(Long courseId, Double lat, Double lng) {
+        String geoHashString =
+                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
+
+//        return TileGetResponseWrapper.builder()
+//                .tileGetResponseList(tileRepository.getTileByCourseId(courseId, geoHashString))
+//                .build(); //경과 시간: 0.588초
+
+        List<String> geoHashList = getGeoHashes(courseId, geoHashString);
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTilesInGeoHashes(geoHashList))
+                .build(); //0.289c초
     }
 
     public List<CourseSummaryResponse> getRecommendCourse(Member member) {
@@ -268,26 +246,6 @@ public class CourseService {
         Collections.shuffle(nearbyCourses);
         return nearbyCourses.stream().limit(10).toList();
     }
-
-    public PageInfo<CourseSummaryResponse> getCourseByKeyword(String keyword, String pageToken) {
-        return courseRepository.findCourseByKeyword(keyword, pageToken);
-    }
-
-    public TileGetResponseWrapper getTilesNearBy(Long courseId, Double lat, Double lng) {
-        String geoHashString =
-                GeoHash.geoHashStringWithCharacterPrecision(lat, lng, 6) + "%";
-
-//        return TileGetResponseWrapper.builder()
-//                .tileGetResponseList(tileRepository.getTileByCourseId(courseId, geoHashString))
-//                .build(); //경과 시간: 0.588초
-
-        List<String> geoHashList = getGeoHashes(courseId, geoHashString);
-
-        return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTilesInGeoHashes(geoHashList))
-                .build(); //0.289c초
-    }
-
 
     private List<String> getGeoHashes(Long courseId, String geoHashString) {
         return courseTileJpaRepository.findGeoHashesByCourseIdAndGeoHashPrefix(courseId, geoHashString);
@@ -356,4 +314,70 @@ public class CourseService {
 
         return new double[] {weightedLat / sumWeight, weightedLng / sumWeight};
     }
+
+    private List<RunCourseResponse> toRunCourseResponsesFromCourses(List<Course> courses, Long memberId) {
+        List<Long> courseIds = courses.stream().map(Course::getCourseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(memberId, courseIds);
+
+        return courses.stream()
+                .map(course -> {
+                    Long total = totalTiles.getOrDefault(course.getCourseId(), 0L);
+                    Long visited = visitedTiles.getOrDefault(course.getCourseId(), 0L);
+                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
+
+                    return new RunCourseResponse(
+                            course.getCourseId(),
+                            course.getCourseName(),
+                            course.getDistance(),
+                            course.getCourseImageUrl(),
+                            completionRate
+                    );
+                })
+                .toList();
+    }
+
+    private List<RunCourseResponse> toRunCourseResponsesFromCourseSummary(
+            List<CourseSummaryResponse> courses,
+            Long memberId
+    ) {
+        List<Long> courseIds = courses.stream().map(CourseSummaryResponse::courseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(memberId, courseIds);
+
+        return courses.stream()
+                .map(course -> {
+                    Long total = totalTiles.getOrDefault(course.courseId(), 0L);
+                    Long visited = visitedTiles.getOrDefault(course.courseId(), 0L);
+                    int completionRate = (total > 0) ? (int)((visited * 100.0) / total) : 0;
+
+                    return new RunCourseResponse(
+                            course.courseId(),
+                            course.courseName(),
+                            course.distance(),
+                            course.courseImageUrl(),
+                            completionRate
+                    );
+                })
+                .toList();
+    }
+
+    private List<CourseClearMemberResponse> getClearedMembers(Long courseId, List<Long> candidateMemberIds) {
+        Long totalTiles = courseTileJpaRepository.countCourseTileByCourseId(courseId);
+
+        Map<Long, Long> visitedTileByMember = tileHistoryRepository.countVisitedTilesByCourseAndMember(
+                courseId,
+                candidateMemberIds
+        );
+
+        List<Long> clearedMemberIds = visitedTileByMember.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), totalTiles))
+                .map(Map.Entry::getKey)
+                .toList();
+
+        return memberRepository.findCourseClearMembersByIds(clearedMemberIds);
+    }
+
 }

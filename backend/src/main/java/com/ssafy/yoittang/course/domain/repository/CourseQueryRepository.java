@@ -33,12 +33,6 @@ public interface CourseQueryRepository {
             LocalDateTime endDate
     );
 
-    List<CourseClearMemberResponse> findClearedMembersByCourseId(
-            Long courseId,
-            String pageToken,
-            int pageSize
-    );
-
     List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId);
 
     float sumDistancesByCourseIds(List<Long> courseIds);
@@ -56,4 +50,6 @@ public interface CourseQueryRepository {
             String pageToken,
             int pageSize
     );
+
+    List<CourseSummaryResponse> findRandomCourses(int limit);
 }

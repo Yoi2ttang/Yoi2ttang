@@ -86,7 +86,10 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 ))
                 .from(courseBookmark)
                 .join(course).on(course.courseId.eq(courseBookmark.courseId))
-                .where(courseBookmark.memberId.eq(memberId))
+                .where(
+                        courseBookmark.memberId.eq(memberId),
+                        courseBookmark.isActive.eq(true)
+                )
                 .orderBy(course.courseId.desc())
                 .limit(limit)
                 .fetch();
@@ -112,6 +115,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .where(
                         courseBookmark.memberId.eq(memberId),
                         course.courseName.like(keyword),
+                        courseBookmark.isActive.eq(true),
                         isInRange(pageToken)
                 )
                 .distinct()
@@ -180,32 +184,6 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.endTime.lt(endDate)
                 )
                 .groupBy(runningDate)
-                .fetch();
-    }
-
-    @Override
-    public List<CourseClearMemberResponse> findClearedMembersByCourseId(
-            Long courseId,
-            String pageToken,
-            int pageSize
-    ) {
-        return jpaQueryFactory
-                .select(
-                        Projections.constructor(
-                                CourseClearMemberResponse.class,
-                                member.memberId,
-                                member.nickname,
-                                member.profileImageUrl
-                        )
-                )
-                .from(member)
-                .join(running).on(member.memberId.eq(running.memberId))
-                .where(isInRange(pageToken),
-                        running.courseId.eq(courseId),
-                        running.state.eq(State.COMPLETE)
-                )
-                .orderBy(member.memberId.asc())
-                .limit(pageSize + 1)
                 .fetch();
     }
 
@@ -293,6 +271,24 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 )
                 .orderBy(course.courseId.asc())
                 .limit(pageSize + 1)
+                .fetch();
+    }
+
+    @Override
+    public List<CourseSummaryResponse> findRandomCourses(int limit) {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                CourseSummaryResponse.class,
+                                course.courseId,
+                                course.courseName,
+                                course.distance,
+                                course.courseImageUrl
+                        )
+                )
+                .from(course)
+                .orderBy(Expressions.numberTemplate(Double.class, "random()").asc())
+                .limit(limit)
                 .fetch();
     }
 
