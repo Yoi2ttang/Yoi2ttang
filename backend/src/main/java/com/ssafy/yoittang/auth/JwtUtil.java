@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.ssafy.yoittang.auth.domain.MemberTokens;
 import com.ssafy.yoittang.auth.domain.request.JwtRequest;
-import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.common.exception.InvalidJwtException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -89,7 +89,7 @@ public class JwtUtil {
         try {
             parseToken(refreshToken);
         } catch (JwtException e) {
-            throw new BadRequestException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new InvalidJwtException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 
