@@ -9,5 +9,7 @@ import com.ssafy.yoittang.course.domain.CourseBookmark;
 
 
 public interface CourseBookmarkJpaRepository extends JpaRepository<CourseBookmark, Long> {
+    boolean existsByMemberIdAndCourseIdAndIsActiveTrue(Long memberId, Long courseId);
+
     Optional<CourseBookmark> findBookmarkByMemberIdAndCourseId(Long memberId, Long courseId);
 }

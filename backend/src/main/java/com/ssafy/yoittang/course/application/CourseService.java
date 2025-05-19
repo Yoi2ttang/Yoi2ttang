@@ -123,7 +123,7 @@ public class CourseService {
         courseTileJpaRepository.bulkInsert(new ArrayList<>(courseTiles));
     }
 
-    public void toggleCourseBookmark(Long courseId, Member member) {
+    public boolean toggleCourseBookmark(Long courseId, Member member) {
         Optional<CourseBookmark> courseBookmarkOptional = courseBookmarkJpaRepository.findBookmarkByMemberIdAndCourseId(
                 member.getMemberId(),
                 courseId
@@ -131,7 +131,7 @@ public class CourseService {
         if (courseBookmarkOptional.isPresent()) {
             CourseBookmark courseBookmark = courseBookmarkOptional.get();
             courseBookmark.changeState();
-            return;
+            return courseBookmark.getIsActive();
         }
         courseBookmarkJpaRepository.save(
                 CourseBookmark.builder()
@@ -139,6 +139,7 @@ public class CourseService {
                         .courseId(courseId)
                         .build()
         );
+        return true;
     }
 
     public CourseDetailResponse getCourseDetail(Long courseId, Member member) {
@@ -158,6 +159,10 @@ public class CourseService {
                 summaryResponse.courseId(),
                 summaryResponse.courseName(),
                 summaryResponse.distance(),
+                courseBookmarkJpaRepository.existsByMemberIdAndCourseIdAndIsActiveTrue(
+                        member.getMemberId(),
+                        courseId
+                ),
                 summaryResponse.courseImageUrl(),
                 calories,
                 times

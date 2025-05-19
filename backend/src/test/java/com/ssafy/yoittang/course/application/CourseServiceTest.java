@@ -32,6 +32,7 @@ import com.ssafy.yoittang.course.domain.Course;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
+import com.ssafy.yoittang.course.domain.repository.CourseBookmarkJpaRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.DisclosureStatus;
@@ -50,6 +51,9 @@ public class CourseServiceTest {
 
     @Mock
     private CourseTileJpaRepository courseTileJpaRepository;
+
+    @Mock
+    private CourseBookmarkJpaRepository courseBookmarkJpaRepository;
 
     @Mock
     private S3ImageUploader s3ImageUploader;
