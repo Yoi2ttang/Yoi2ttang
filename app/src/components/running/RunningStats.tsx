@@ -12,6 +12,7 @@ interface RunningStatsProps {
   calories: number;
   speed: number;
   averagePace: number;
+  tileCnt: number;
 }
 
 const RunningStats = ({
@@ -20,6 +21,7 @@ const RunningStats = ({
   calories,
   speed,
   averagePace,
+  tileCnt,
 }: RunningStatsProps) => {
   const formattedTime = formatSecondsToTime(runningTime);
   const distanceInKm = (distance / 1000).toFixed(2);
@@ -91,7 +93,7 @@ const RunningStats = ({
           </StyledText>
           <StyledView className="flex-row items-center gap-2">
             <StyledView className="bg-yoi-500 w-4 h-4 rotate-12" />
-            <StyledText className="text-xl font-semibold">102</StyledText>
+            <StyledText className="text-xl font-semibold">{tileCnt}</StyledText>
           </StyledView>
         </StyledView>
       </StyledView>

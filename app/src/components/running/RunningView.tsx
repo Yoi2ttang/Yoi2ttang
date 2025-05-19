@@ -294,6 +294,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           onClose={() => setShowStats(false)}
           setIsPaused={setIsPaused}
           isPaused={isPaused}
+          tileCnt={visitedTiles.length}
         />
       )}
 

@@ -17,6 +17,7 @@ interface RunningInfoSlideProps {
   onClose: () => void;
   isPaused: boolean;
   setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+  tileCnt: number;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -29,6 +30,7 @@ const RunningInfoSlide = ({
   onClose,
   isPaused,
   setIsPaused,
+  tileCnt,
 }: RunningInfoSlideProps) => {
   const {
     runningTime,
@@ -87,6 +89,7 @@ const RunningInfoSlide = ({
           calories={calories}
           speed={speed}
           averagePace={averagePace}
+          tileCnt={tileCnt}
         />
 
         <RunningPaceLogger

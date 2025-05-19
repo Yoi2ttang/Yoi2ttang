@@ -60,11 +60,11 @@ const WebViewScreen = () => {
         onMessage={handleMessage}
         geolocationEnabled={true}
       />
-      {receivedToken && (
+      {/* {receivedToken && (
         <Text style={styles.tokenText}>
           ✔️ 토큰 저장됨: {receivedToken.slice(0, 10)}...
         </Text>
-      )}
+      )} */}
     </View>
   );
 };
