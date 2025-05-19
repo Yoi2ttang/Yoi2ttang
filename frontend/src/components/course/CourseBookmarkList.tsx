@@ -1,8 +1,8 @@
 "use client"
 
-import useSearchCourseBookmarks from "@/hooks/course/useSearchCourseBookmarks"
-import CourseCard from "@/components/course/CourseCard"
 import Skeleton from "@/components/common/skeleton"
+import CourseCard from "@/components/course/CourseCard"
+import useSearchCourseBookmarks from "@/hooks/course/useSearchCourseBookmarks"
 import { CoursePaginationResponse } from "@/types/course/course.type"
 
 const CourseBookmarkList = () => {

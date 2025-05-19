@@ -1,9 +1,9 @@
 "use client"
 
-import useSearchCourses from "@/hooks/course/useSearchCourses"
-import CourseCard from "@/components/course/CourseCard"
 import Skeleton from "@/components/common/skeleton"
+import useSearchCourses from "@/hooks/course/useSearchCourses"
 import { CoursePaginationResponse } from "@/types/course/course.type"
+import CourseCard from "./CourseCard"
 
 const CourseSearchList = () => {
   const { targetRef, data, isLoading, isFetchingNextPage } = useSearchCourses()

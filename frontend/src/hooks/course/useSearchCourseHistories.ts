@@ -1,9 +1,10 @@
 import { getCourseHistories } from "@/services/course/api"
-import { useParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 
 const useSearchCourseHistories = () => {
-  const { keyword } = useParams()
+  const searchParams = useSearchParams()
+  const keyword = searchParams.get("keyword")
 
   const fetchFn = async (pageParam: number) => {
     const response = await getCourseHistories({
@@ -19,7 +20,6 @@ const useSearchCourseHistories = () => {
     initialPageParam: 0,
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.pageToken : undefined,
-    enabled: !!keyword,
   })
 }
 
