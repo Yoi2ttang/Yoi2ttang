@@ -6,6 +6,7 @@ import static com.ssafy.yoittang.tile.domain.QTile.tile;
 import java.util.List;
 import java.util.Objects;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -51,11 +52,53 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 .fetch();
     }
 
+    public List<TileGetResponse> getTile(Long zodiacId, List<String> geohashLikeList) {
+        if (geohashLikeList.isEmpty()) {
+            return null;
+        }
+
+        BooleanBuilder builder = getGeoHashLikeBuilder(geohashLikeList);
+
+        return queryFactory.select(
+                        Projections.constructor(
+                                TileGetResponse.class,
+                                tile.geoHash,
+                                tile.zodiacId,
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latSouth,
+                                        tile.lngWest
+                                ),
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        tile.latNorth,
+                                        tile.lngEast
+                                )
+                        )
+                )
+                .from(tile)
+                .where(
+                        eqZodiacId(zodiacId),
+                        builder
+                )
+                .fetch();
+    }
+
     private BooleanExpression eqZodiacId(Long zodiacId) {
         if (Objects.isNull(zodiacId)) {
             return null;
         }
         return tile.zodiacId.eq(zodiacId);
+    }
+
+    private BooleanBuilder getGeoHashLikeBuilder(List<String> geohashLikeList) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        for (String prefix : geohashLikeList) {
+            builder.or(tile.geoHash.startsWith(prefix));
+        }
+
+        return builder;
     }
 
     @Override

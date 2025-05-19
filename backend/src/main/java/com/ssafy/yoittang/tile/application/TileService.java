@@ -1,6 +1,7 @@
 package com.ssafy.yoittang.tile.application;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
-import com.ssafy.yoittang.common.exception.NotFoundException;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
+import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
@@ -24,6 +26,7 @@ import ch.hsr.geohash.GeoHash;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,7 +38,24 @@ public class TileService {
 
     char[] level3 = {'b', 'c', 'f', 'g',
         '8', '9', 'd', 'e', 's', 't', '2', '3', '6', '7', 'k', '0', '1', '4', '5', 'h'};
-
+    char[][][] level = {
+            {
+                {'b', 'c', 'f', 'g', 'u', 'v', 'f', 'z'},
+                {'8', '9', 'd', 'e', 's', 't', 'w', 'x'},
+                {'2', '3', '6', '7', 'k', 'm', 'q', 'r'},
+                {'0', '1', '4', '5', 'h', 'j', 'n', 'p'}
+            },
+            {
+                {'p', 'r', 'x', 'z'},
+                {'n', 'q', 'w', 'y'},
+                {'j', 'm', 't', 'v'},
+                {'h', 'k', 's', 'u'},
+                {'5', '7', 'e', 'g'},
+                {'4', '6', 'd', 'f'},
+                {'1', '3', '9', 'c'},
+                {'0', '2', '8', 'b'}
+            }
+    };
 
     char[] geohashBase32 = {
         '0', '1', '2', '3', '4', '5', '6', '7',
@@ -72,7 +92,7 @@ public class TileService {
             chars[2] = c;
 
             getGeoHashString(geoHashStringList, chars, 3, level);
-            log.info("insert : wy{} size : {}", Character.toString(c), geoHashStringList.size());
+            TileService.log.info("insert : wy{} size : {}", Character.toString(c), geoHashStringList.size());
             insertBulk(geoHashStringList);
             geoHashStringList = new ArrayList<>();
         }
@@ -127,6 +147,133 @@ public class TileService {
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(null, geoHashString))
                 .build();
+    }
+
+    public TileGetResponseWrapper getTile(Long zodiacId, TwoGeoPoint twoGeoPoint) {
+
+        GeoPoint sw = twoGeoPoint.sw();
+        GeoPoint ne = twoGeoPoint.ne();
+
+        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
+        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
+
+        log.info("swString : " + geoHashSWString);
+        log.info("neString : " + geoHashNEString);
+
+        //row 시작 끝, col 시작 끝을 가져옴
+        int[][] levelDiff = new int[2][2];
+        int changeLevel = 7;
+
+        for (int i = 0; i < geoHashSWString.length() - 1; ++i) {
+            if (geoHashSWString.charAt(i) != geoHashNEString.charAt(i)) {
+                char swChar = geoHashSWString.charAt(i);
+                char neChar = geoHashNEString.charAt(i);
+
+                levelDiff = getStartEndInt(swChar, neChar, level[i  % 2], i);
+                changeLevel = i;
+
+//                char nextSWChar = geoHashSWString.charAt(i + 1);
+//                char nextNEChar = geoHashNEString.charAt(i + 1);
+//                levelDiff[i % 2] = getStartEndInt(nextSWChar, nextNEChar, level[(i + 1)  % 2], i + 1);
+
+                break;
+            }
+        }
+
+        for (int[] level : levelDiff) {
+            log.info(Arrays.toString(level));
+        }
+        log.info(String.valueOf(changeLevel));
+
+        List<String> likeList = new ArrayList<>();
+
+        List<Integer> rowList = getIndexRange(
+                levelDiff[0],
+                level[changeLevel % 2].length,
+                levelDiff[1][0] == levelDiff[1][1]
+        );
+        List<Integer> colList = getIndexRange(
+                levelDiff[1],
+                level[changeLevel % 2][0].length,
+                levelDiff[0][0] == levelDiff[0][1]
+        );
+
+        log.info("rowList : " + rowList);
+        log.info("colList : " + colList);
+
+        String prefix = geoHashSWString.substring(0, changeLevel);
+
+        log.info("init sb : "  + prefix);
+
+        for (int row : rowList) {
+            for (int col : colList) {
+                StringBuilder sb = new StringBuilder(prefix);
+                sb.append(level[changeLevel % 2][row][col]);
+//                sb.append(level[(changeLevel + 1) % 2][col]);
+//                if (changeLevel <= 5) {
+//                    sb.append("%");
+//                }
+                likeList.add(sb.toString());
+            }
+        }
+
+        log.info(Arrays.toString(new List[]{likeList}));
+
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
+                .build();
+    }
+
+    private int[][] getStartEndInt(char swChar, char neChar, char[][] level, int idx) {
+        int[][] result = new int[2][2];
+
+        for (int i = 0; i < level.length; ++i) {
+            for ( int j = 0; j < level[i].length; ++j) {
+                if (level[i][j] == swChar) {
+                    result[0][idx % 2] = idx % 2 == 0 ? j : i;
+                    result[1][(idx + 1) % 2] = (idx + 1) % 2 == 0 ? j : i;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < level.length; ++i) {
+            for ( int j = 0; j < level[i].length; ++j) {
+                if (level[i][j] == neChar) {
+                    result[0][(idx + 1) % 2] = idx % 2 == 0 ? j : i;
+                    result[1][idx % 2] = (idx + 1) % 2 == 0 ? j : i;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<Integer> getIndexRange(int[] levelDiff, int length, boolean isRowFixed) {
+        List<Integer> result = new ArrayList<>();
+
+        if (levelDiff[0] > levelDiff[1]) {
+            //경계를 포함할 때
+            for (int i = levelDiff[1]; i < length; ++i) {
+                result.add(i);
+            }
+            for (int i = 0; i <= levelDiff[0]; ++i) {
+                result.add(i);
+            }
+        } else if (levelDiff[0] == levelDiff[1] && isRowFixed) {
+            //경겨를 포함하면서 인덱스가 같을 때
+            for (int i = 0; i < length; ++i) {
+                result.add(i);
+            }
+        } else {
+            for (int i = levelDiff[0]; i <= levelDiff[1]; ++i) {
+                result.add(i);
+            }
+        }
+
+        return result;
     }
 
     public TileGetResponseWrapper getTile(Long zodiacId, Double lat, Double lng) {
