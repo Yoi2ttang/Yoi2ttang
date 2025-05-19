@@ -1,5 +1,5 @@
 import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
-import Image from "next/image"
+import LoginAnimation from "@/components/login/LoginAnimation"
 import Link from "next/link"
 
 const LoginPage = () => {
@@ -12,15 +12,7 @@ const LoginPage = () => {
           너의 <span className="text-yoi-500">간지</span>를 보여줘!
         </p>
 
-        <div className="flex justify-center">
-          <Image
-            src="/images/logo.svg"
-            alt="logo"
-            width={46}
-            height={34}
-            className="w-56"
-          />
-        </div>
+        <LoginAnimation />
 
         <div className="flex flex-col gap-2">
           <p className="text-center text-sm text-neutral-400">
