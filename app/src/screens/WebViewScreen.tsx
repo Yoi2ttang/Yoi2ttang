@@ -58,6 +58,7 @@ const WebViewScreen = () => {
         ref={webViewRef}
         source={{uri: targetUrl}}
         onMessage={handleMessage}
+        geolocationEnabled={true}
       />
       {receivedToken && (
         <Text style={styles.tokenText}>

@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import Geolocation from '@react-native-community/geolocation';
+import {PermissionsAndroid, Platform} from 'react-native';
 import {calculateCalories} from '../lib/calory';
 
 interface Coordinates {
@@ -36,6 +37,26 @@ interface PaceRecord {
   pace: number; // sec/km
 }
 
+const requestLocationPermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '위치 권한 요청',
+          message: '러닝 기록을 위해 위치 권한이 필요합니다.',
+          buttonPositive: '확인',
+        },
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  }
+  return true; // iOS는 권한 자동 처리됨 (권한 설정은 Info.plist에서 관리)
+};
+
 export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
   const [currentLoc, setCurrentLoc] = useState<Coordinates>();
   const [distance, setDistance] = useState(0);
@@ -51,47 +72,78 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
   const timeRef = useRef(0);
   const watchIdRef = useRef<number | null>(null);
 
-  // 위치 추적 시작
+  // 초기 위치 설정 + 위치 추적 시작
   useEffect(() => {
-    const watchId = Geolocation.watchPosition(
-      position => {
-        const nextLoc = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        setCurrentLoc(nextLoc);
+    const initLocationTracking = async () => {
+      const hasPermission = await requestLocationPermission();
+      if (!hasPermission) {
+        console.warn('위치 권한이 거부되었습니다.');
+        return;
+      }
 
-        if (prevLoc.current) {
-          const d = getDistance(prevLoc.current, nextLoc);
-          distanceRef.current += d;
-          setDistance(distanceRef.current);
+      // 초기 위치 1회 수집
+      Geolocation.getCurrentPosition(
+        position => {
+          const initialLoc = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCurrentLoc(initialLoc);
+          prevLoc.current = initialLoc;
+        },
+        error => {
+          console.error('초기 위치 가져오기 실패:', error);
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 10000,
+        },
+      );
 
-          const timeInHours = timeRef.current / 3600;
-          const distanceInKm = distanceRef.current / 1000;
-          if (timeRef.current > 0 && distanceInKm > 0) {
-            setSpeed(distanceInKm / timeInHours);
-            setAveragePace(timeRef.current / distanceInKm);
+      // 위치 추적 시작
+      const watchId = Geolocation.watchPosition(
+        position => {
+          const nextLoc = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCurrentLoc(nextLoc);
+
+          if (prevLoc.current) {
+            const d = getDistance(prevLoc.current, nextLoc);
+            distanceRef.current += d;
+            setDistance(distanceRef.current);
+
+            const timeInHours = timeRef.current / 3600;
+            const distanceInKm = distanceRef.current / 1000;
+            if (timeRef.current > 0 && distanceInKm > 0) {
+              setSpeed(distanceInKm / timeInHours);
+              setAveragePace(timeRef.current / distanceInKm);
+            }
+
+            setCalories(
+              calculateCalories(distanceInKm, timeRef.current, weight ?? 50),
+            );
           }
 
-          setCalories(
-            calculateCalories(distanceInKm, timeRef.current, weight ?? 50),
-          );
-        }
+          prevLoc.current = nextLoc;
+        },
+        error => {
+          console.error('위치 가져오기 실패:', error);
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 0,
+          interval: 1000,
+          fastestInterval: 1000,
+        },
+      );
 
-        prevLoc.current = nextLoc;
-      },
-      error => {
-        console.error('위치 가져오기 실패:', error);
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 1, // 최소 거리 1m 이동 시 업데이트
-        interval: 1000,
-        fastestInterval: 1000,
-      },
-    );
+      watchIdRef.current = watchId;
+    };
 
-    watchIdRef.current = watchId;
+    initLocationTracking();
 
     return () => {
       if (watchIdRef.current !== null) {
