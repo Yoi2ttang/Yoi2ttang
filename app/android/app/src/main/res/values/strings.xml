@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">yoittangApp</string>
+    <string name="notification_channel_id_running">yoittang_running_channel</string>
 </resources>
