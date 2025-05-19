@@ -375,8 +375,8 @@ public class TileService {
 
     // 프론트랑 얘기해서 zoomlevel 에 따른 정밀도를 같이 결정해야 함
     public int getBasePrecisionByZoomLevel(Integer zoomLevel) {
-        int baseZoom = 15;
-        int basePrecision = 4;
+        int baseZoom = 16;
+        int basePrecision = 6;
 
         int precision;
         if (zoomLevel >= baseZoom) {
