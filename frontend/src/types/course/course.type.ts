@@ -7,6 +7,7 @@ export interface Course {
   completeRate?: number
   calories?: number
   times?: number
+  isMark?: boolean
 }
 
 export interface CoursePaginationRequest {

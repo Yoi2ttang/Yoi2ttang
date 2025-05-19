@@ -1,4 +1,9 @@
 import apiClient from "@/lib/http-common"
+import {
+  CourseClearedMemberPaginationRequest,
+  CoursePaginationRequest,
+} from "@/types/course/course.type"
+
 import { objectToSearchParams } from "@/lib/utils-server"
 
 // 네이버 지역 검색 API
@@ -24,13 +29,6 @@ export const createCourse = async (body: FormData) => {
 
   return response.data
 }
-
-;("use client")
-
-import {
-  CourseClearedMemberPaginationRequest,
-  CoursePaginationRequest,
-} from "@/types/course/course.type"
 
 export const getCourses = async (request: CoursePaginationRequest) => {
   const response = await apiClient.get("/courses", {

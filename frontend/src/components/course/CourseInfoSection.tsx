@@ -2,9 +2,9 @@ import FireIcon from "@/assets/icons/course/fire-icon.svg"
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
 import TempMapImage from "@/assets/images/course/temp_map.png"
+import { getCourse } from "@/services/course/api-server"
 import Image from "next/image"
 import Section from "../common/Section"
-import { getCourse } from "@/services/course/api-server"
 import CourseBookmarkButton from "./CourseBookmarkButton"
 
 interface CourseInfoSectionProps {
@@ -18,7 +18,7 @@ const CourseInfoSection = async ({ courseId }: CourseInfoSectionProps) => {
     <Section
       title={data.courseName}
       supplement={
-        <CourseBookmarkButton courseId={courseId} isBookmarked={false} />
+        <CourseBookmarkButton courseId={courseId} isBookmarked={data.isMark!} />
       }
       className="rounded-xl bg-white p-6">
       {isError ? (
