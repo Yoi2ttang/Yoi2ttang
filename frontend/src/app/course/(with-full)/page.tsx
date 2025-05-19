@@ -1,5 +1,6 @@
-import CourseHistorySection from "@/components/course/CourseHistorySection"
 import CourseBookmarkSection from "@/components/course/CourseBookmarkSection"
+import CourseCreateButton from "@/components/course/CourseCreateButton"
+import CourseHistorySection from "@/components/course/CourseHistorySection"
 import CourseRecommendSection from "@/components/course/CourseRecommendSection"
 
 const CoursePage = () => {
@@ -9,6 +10,10 @@ const CoursePage = () => {
       <CourseHistorySection />
       <CourseBookmarkSection />
       <CourseRecommendSection />
+
+      <div className="max-w-yoi-width fixed bottom-0 mx-auto w-full">
+        <CourseCreateButton />
+      </div>
     </div>
   )
 }
