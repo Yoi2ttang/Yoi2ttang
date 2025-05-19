@@ -2,7 +2,6 @@ package com.ssafy.yoittang.course.domain.repository;
 
 import static com.ssafy.yoittang.course.domain.QCourse.course;
 import static com.ssafy.yoittang.course.domain.QCourseBookmark.courseBookmark;
-import static com.ssafy.yoittang.member.domain.QMember.member;
 import static com.ssafy.yoittang.running.domain.QRunning.running;
 import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 
@@ -303,6 +302,6 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
         if (pageToken == null) {
             return null;
         }
-        return member.memberId.gt(Long.valueOf(pageToken));
+        return course.courseId.gt(Long.valueOf(pageToken));
     }
 }
