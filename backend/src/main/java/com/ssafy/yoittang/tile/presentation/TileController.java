@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.member.domain.Member;
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.application.TileService;
 import com.ssafy.yoittang.tile.domain.request.PersonalTileGetRequest;
+import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
@@ -51,6 +53,21 @@ public class TileController implements TileControllerSwaggerDoc {
         return ResponseEntity.ok(tileService.getTile(lat, lng));
     }
 
+    @GetMapping("/teams/new")
+    public ResponseEntity<TileGetResponseWrapper> getTile(
+            @RequestParam("swLat") Double swLat,
+            @RequestParam("swLng") Double swLng,
+            @RequestParam("neLat") Double neLat,
+            @RequestParam("neLng") Double neLng
+    ) {
+        return ResponseEntity.ok(tileService.getTile(null, new TwoGeoPoint(
+                    new GeoPoint(swLat, swLng),
+                    new GeoPoint(neLat, neLng)
+                )
+            )
+        );
+    }
+
     @GetMapping("/teams/{zodiacId}")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @PathVariable(name = "zodiacId") Long zodiacId,
@@ -58,6 +75,22 @@ public class TileController implements TileControllerSwaggerDoc {
             @RequestParam Double lng
     ) {
         return ResponseEntity.ok(tileService.getTile(zodiacId, lat, lng));
+    }
+
+    @GetMapping("/teams/{zodiacId}/new")
+    public ResponseEntity<TileGetResponseWrapper> getTile(
+            @PathVariable(name = "zodiacId") Long zodiacId,
+            @RequestParam("swLat") Double swLat,
+            @RequestParam("swLng") Double swLng,
+            @RequestParam("neLat") Double neLat,
+            @RequestParam("neLng") Double neLng
+    ) {
+        return ResponseEntity.ok(tileService.getTile(zodiacId, new TwoGeoPoint(
+                    new GeoPoint(swLat, swLng),
+                    new GeoPoint(neLat, neLng)
+                )
+            )
+        );
     }
 
     @GetMapping("/teams/cluster")
