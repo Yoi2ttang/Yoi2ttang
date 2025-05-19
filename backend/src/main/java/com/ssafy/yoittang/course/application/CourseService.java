@@ -123,6 +123,7 @@ public class CourseService {
         courseTileJpaRepository.bulkInsert(new ArrayList<>(courseTiles));
     }
 
+    @Transactional
     public boolean toggleCourseBookmark(Long courseId, Member member) {
         Optional<CourseBookmark> courseBookmarkOptional = courseBookmarkJpaRepository.findBookmarkByMemberIdAndCourseId(
                 member.getMemberId(),
