@@ -38,6 +38,8 @@ interface RunningViewProps {
 }
 
 const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
+  const [hasStartedRunning, setHasStartedRunning] = useState(false);
+
   const [loc, setLoc] = useState<Coordinates>();
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -62,7 +64,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
   >(null);
 
   useEffect(() => {
-    if (!currentLoc) return;
+    if (!currentLoc || hasStartedRunning) return;
 
     setLoc(currentLoc);
 
@@ -77,33 +79,25 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           console.log('러닝 시작 성공', data);
           setRunningId(data.runningId);
 
-          // ✅ 응답에서 타일 정보 추출
           const {geoHash, sw, ne} = data;
 
           if (!geoHash || !sw?.lat || !ne?.lat) return;
 
-          // ✅ visitedTiles에 중복 없이 추가
           setVisitedTiles(prev => {
             const alreadyExists = prev.some(t => t.geoHash === geoHash);
             if (alreadyExists) return prev;
-
             console.log(`🆕 시작 타일 저장됨: ${geoHash}`);
-            return [
-              ...prev,
-              {
-                geoHash,
-                sw,
-                ne,
-              },
-            ];
+            return [...prev, {geoHash, sw, ne}];
           });
+
+          setHasStartedRunning(true); // 더 이상 실행되지 않도록 설정
         },
         onError: err => {
           console.error('러닝 시작 실패', err);
         },
       },
     );
-  }, [startRunning, currentLoc]);
+  }, [currentLoc, hasStartedRunning]);
 
   const {data: tileData} = useGetTeamTileMap({
     center: center || currentLoc!,
