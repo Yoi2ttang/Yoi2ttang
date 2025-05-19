@@ -12,4 +12,5 @@ public interface RunningQueryRepository {
             LocalDateTime endDate
     );
 
+    List<Long> findPagedClearedMemberIdsByCourseId(Long courseId, String pageToken, int pageSize);
 }

@@ -136,6 +136,30 @@ public class TileHistoryQueryRepositoryImpl implements TileHistoryQueryRepositor
 
     }
 
+    @Override
+    public Map<Long, Long> countVisitedTilesByCourseAndMember(Long courseId, List<Long> memberIds) {
+        List<Tuple> results = queryFactory
+                .select(tileHistoryJpa.memberId, tileHistoryJpa.geoHash.countDistinct())
+                .from(running)
+                .join(runningPoint).on(running.runningId.eq(runningPoint.runningId))
+                .join(tileHistoryJpa).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningPointId))
+                .join(courseTile).on(courseTile.geoHash.eq(tileHistoryJpa.geoHash)
+                        .and(courseTile.courseId.eq(courseId)))
+                .where(
+                        running.courseId.eq(courseId),
+                        running.state.eq(State.COMPLETE),
+                        running.memberId.in(memberIds)
+                )
+                .groupBy(tileHistoryJpa.memberId)
+                .fetch();
+
+        return results.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(tileHistoryJpa.memberId),
+                        tuple -> Optional.ofNullable(tuple.get(tileHistoryJpa.geoHash.countDistinct())).orElse(0L)
+                ));
+    }
+
     private BooleanExpression likeGeoHashString(String geoHashString) {
         if (Objects.isNull(geoHashString)) {
             return null;

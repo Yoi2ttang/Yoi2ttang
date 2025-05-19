@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.yoittang.auth.annotation.AuthMember;
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.application.CourseService;
-import com.ssafy.yoittang.course.domain.BookmarkViewType;
 import com.ssafy.yoittang.course.domain.dto.request.CourseCreateRequest;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseDetailResponse;
@@ -34,20 +33,29 @@ import lombok.RequiredArgsConstructor;
 public class CourseController {
     private final CourseService courseService;
 
-    @GetMapping("/runs/preview")
+    @GetMapping("/histories/preview")
     public ResponseEntity<List<RunCourseResponse>> getRunCoursePreview(
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getRunCoursePreview(member));
     }
 
-    @GetMapping("/runs/all")
+    @GetMapping("/histories")
     public ResponseEntity<PageInfo<RunCourseResponse>> getRunCourseAll(
             @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getRunCourseAll(keyword, pageToken, member));
+    }
+
+    @PostMapping("/{courseId}/bookmarks")
+    public ResponseEntity<Boolean> toggleBookmark(
+            @PathVariable Long courseId,
+            @AuthMember Member member
+    ) {
+        courseService.toggleCourseBookmark(courseId, member);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/bookmarks/preview")
@@ -57,7 +65,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getBookmarkCoursePreview(member));
     }
 
-    @GetMapping("/bookmarks/all")
+    @GetMapping("/bookmarks")
     public ResponseEntity<PageInfo<RunCourseResponse>> getBookmarkCourseAll(
             @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
@@ -87,6 +95,16 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseDetail(courseId, member));
     }
 
+    @GetMapping("/{courseId}/cleared-members/preview")
+    public ResponseEntity<List<CourseClearMemberResponse>> getClearedMembersByCourseIdPreview(
+            @PathVariable("courseId") Long courseId,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getClearedMembersByCourseIdPreview(
+                courseId
+        ));
+    }
+
     @GetMapping("/{courseId}/cleared-members")
     public ResponseEntity<PageInfo<CourseClearMemberResponse>> getClearedMembersByCourseId(
             @PathVariable("courseId") Long courseId,
@@ -107,12 +125,19 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<PageInfo<CourseSummaryResponse>> getCourseByKeyword(
+    public ResponseEntity<PageInfo<RunCourseResponse>> getCourseByKeyword(
             @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(courseService.getCourseByKeyword(keyword, pageToken));
+        return ResponseEntity.ok(courseService.getCourseByKeyword(keyword, pageToken, member));
+    }
+
+    @GetMapping("/preview")
+    public ResponseEntity<List<CourseSummaryResponse>> getRandomCourses(
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getRandomCourses());
     }
 
     @GetMapping("/{courseId}/nearBy/tiles")

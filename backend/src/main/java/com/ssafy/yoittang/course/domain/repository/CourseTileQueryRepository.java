@@ -5,4 +5,6 @@ import java.util.Map;
 
 public interface CourseTileQueryRepository {
     Map<Long, Long> countCourseTileByCourseIds(List<Long> courseIds);
+
+    Long countCourseTileByCourseId(Long courseId);
 }

@@ -1,5 +1,6 @@
 package com.ssafy.yoittang.running.domain;
 
+import static com.ssafy.yoittang.member.domain.QMember.member;
 import static com.ssafy.yoittang.running.domain.QRunning.running;
 import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.dashboard.domain.dto.response.DateAndSeconds;
@@ -60,4 +62,30 @@ public class RunningQueryRepositoryImpl implements RunningQueryRepository {
 
 
     }
+
+    @Override
+    public List<Long> findPagedClearedMemberIdsByCourseId(Long courseId, String pageToken, int pageSize) {
+        return jpaQueryFactory
+                .select(running.memberId)
+                .distinct()
+                .from(running)
+                .where(
+                        running.courseId.eq(courseId),
+                        running.state.eq(State.COMPLETE),
+                        running.memberId.isNotNull(),
+                        isInRange(pageToken)
+                )
+                .orderBy(running.endTime.desc())
+                .limit(pageSize + 1)
+                .fetch();
+    }
+
+    private BooleanExpression isInRange(String pageToken) {
+        if (pageToken == null) {
+            return null;
+        }
+        LocalDateTime endTimeToken = LocalDateTime.parse(pageToken); // ISO 형식 가정
+        return running.endTime.lt(endTimeToken);
+    }
+
 }

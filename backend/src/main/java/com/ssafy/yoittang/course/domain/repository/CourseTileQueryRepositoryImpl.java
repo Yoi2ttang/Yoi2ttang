@@ -34,4 +34,14 @@ public class CourseTileQueryRepositoryImpl implements CourseTileQueryRepository 
                         tuple -> Optional.ofNullable(tuple.get(qCourseTile.geoHash.count())).orElse(0L)
                 ));
     }
+
+    @Override
+    public Long countCourseTileByCourseId(Long courseId) {
+        QCourseTile qCourseTile = QCourseTile.courseTile;
+        return queryFactory
+                .select(qCourseTile.geoHash.count())
+                .from(qCourseTile)
+                .where(qCourseTile.courseId.eq(courseId))
+                .fetchOne();
+    }
 }

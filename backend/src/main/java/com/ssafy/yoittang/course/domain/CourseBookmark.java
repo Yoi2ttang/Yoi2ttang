@@ -28,6 +28,9 @@ public class CourseBookmark {
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @Builder
     private CourseBookmark(
             Long memberId,
@@ -35,5 +38,10 @@ public class CourseBookmark {
     ) {
         this.memberId = memberId;
         this.courseId = courseId;
+        this.isActive = true;
+    }
+
+    public void changeState() {
+        this.isActive = !this.isActive;
     }
 }

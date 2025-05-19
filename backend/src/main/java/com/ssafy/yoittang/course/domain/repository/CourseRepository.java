@@ -84,18 +84,6 @@ public class CourseRepository {
         courseJpaRepositoy.save(course);
     }
 
-    public PageInfo<CourseClearMemberResponse> findClearedMembersByCourseId(
-            Long courseId,
-            String pageToken
-    ) {
-        var data = courseQueryRepository.findClearedMembersByCourseId(
-                courseId,
-                pageToken,
-                DEFAULT_PAGE_SIZE
-        );
-        return PageInfo.of(data, DEFAULT_PAGE_SIZE, CourseClearMemberResponse::memberId);
-    }
-
     public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
         return courseQueryRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, memberId);
     }
@@ -127,5 +115,9 @@ public class CourseRepository {
                 DEFAULT_PAGE_SIZE
         );
         return PageInfo.of(data, DEFAULT_PAGE_SIZE, CourseSummaryResponse::courseId);
+    }
+
+    public List<CourseSummaryResponse> findRandomCourses(int limit) {
+        return courseQueryRepository.findRandomCourses(limit);
     }
 }
