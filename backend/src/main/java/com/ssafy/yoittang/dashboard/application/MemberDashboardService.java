@@ -50,12 +50,13 @@ public class MemberDashboardService {
         endDate = now.withDayOfMonth(1).atStartOfDay();
     }
 
-    public MemberDashboardResponse getMemberDashboard(Member member) {
+    public MemberDashboardResponse getMemberDashboard(Member member, Integer year, Integer month) {
         int duration = calculateMembershipDuration(member.getCreatedAt());
-        Double totalDistance = getLastMonthTotalDistance(member.getMemberId(), startDate, endDate);
-        Double totalTime = getLastMonthRunningSeconds(member.getMemberId(), startDate, endDate);
-        List<Long> coursedIds = getLastMonthCourseCount(member.getMemberId(), startDate, endDate);
-        int countTile = tileHistoryRepository.countDistinctGeohashLastMonth(member.getMemberId(), startDate, endDate);
+        LocalDateTime[] times = getValidMonthlyDateRange(year, month);
+        Double totalDistance = getLastMonthTotalDistance(member.getMemberId(), times[0], times[1]);
+        Double totalTime = getLastMonthRunningSeconds(member.getMemberId(), times[0], times[1]);
+        List<Long> coursedIds = getLastMonthCourseCount(member.getMemberId(), times[0], times[1]);
+        int countTile = tileHistoryRepository.countDistinctGeohashLastMonth(member.getMemberId(), times[0], times[1]);
         int completeCourseCount = coursedIds.isEmpty() ? 0 : (int) courseRepository.countByCourseIdIn(coursedIds);
         return new MemberDashboardResponse(
                 member.getMemberId(),

@@ -68,7 +68,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         isInRange(pageToken)
                 )
                 .distinct()
-                .orderBy(course.courseId.desc())
+                .orderBy(course.courseId.asc())
                 .limit(pageSize + 1)
                 .fetch();
     }
@@ -118,7 +118,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         isInRange(pageToken)
                 )
                 .distinct()
-                .orderBy(course.courseId.desc())
+                .orderBy(course.courseId.asc())
                 .limit(pageSize + 1)
                 .fetch();
     }

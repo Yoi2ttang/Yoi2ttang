@@ -28,8 +28,12 @@ public class MemberDashboardController {
     private final MemberDashboardService memberDashboardService;
 
     @GetMapping
-    public ResponseEntity<MemberDashboardResponse> getMemberDashboard(@AuthMember Member member) {
-        return ResponseEntity.ok(memberDashboardService.getMemberDashboard(member));
+    public ResponseEntity<MemberDashboardResponse> getMemberDashboard(
+            @RequestParam(name = "year") Integer year,
+            @RequestParam(name = "month") Integer month,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(memberDashboardService.getMemberDashboard(member, year, month));
     }
 
     @GetMapping("/daily-running-distances")
