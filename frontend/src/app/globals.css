@@ -185,4 +185,8 @@
   body {
     @apply bg-background text-foreground m-0! overflow-y-scroll;
   }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

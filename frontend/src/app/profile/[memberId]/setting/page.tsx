@@ -6,11 +6,11 @@ import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import useEditProfile from "@/hooks/profile/useEditProfile"
 import useProfileForEdit from "@/hooks/profile/useProfileForEdit"
 import { cn } from "@/lib/utils"
-import { ProfileForEditRequest } from "@/types/member"
+import { ProfileForEditRequest } from "@/types/member/member.type"
 import { useEffect, useMemo, useState } from "react"
 
 const ProfileSettingPage = () => {
-  const { data, isPending } = useProfileForEdit()
+  const { data, isLoading } = useProfileForEdit()
   const [profileData, setProfileData] = useState<ProfileForEditRequest>({
     memberUpdateRequest: {
       nickname: "",
@@ -81,7 +81,7 @@ const ProfileSettingPage = () => {
         }
       />
 
-      {isPending || !data ? (
+      {isLoading || !data ? (
         <div>Loading...</div>
       ) : (
         <EditForm

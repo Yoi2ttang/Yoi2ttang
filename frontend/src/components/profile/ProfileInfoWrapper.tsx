@@ -1,6 +1,6 @@
 "use client"
 
-import { ProfileResponse } from "@/types/member"
+import { ProfileResponse } from "@/types/member/member.type"
 import dynamic from "next/dynamic"
 
 const ProfileInfo = dynamic(() => import("./ProfileInfo"), {

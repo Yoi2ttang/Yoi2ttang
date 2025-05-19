@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction } from "react"
-import StartRunning from "@/assets/icons/running/startRunning.svg"
-import PauseRunning from "@/assets/icons/running/pauseRunning.svg"
-import FinishRunning from "@/assets/icons/running/finishRunning.svg"
-import ShareRunning from "@/assets/icons/running/shareRunning.svg"
+import { Dispatch, SetStateAction, useState } from "react"
+import StartRunning from "@/assets/icons/running/start-running.svg"
+import PauseRunning from "@/assets/icons/running/pause-running.svg"
+import FinishRunning from "@/assets/icons/running/finish-running.svg"
+import ShareRunning from "@/assets/icons/running/share-running.svg"
+import RunningEndModal from "./RunningEndModal"
 
 interface RunningActionsProps {
   isPaused: boolean
@@ -10,6 +11,8 @@ interface RunningActionsProps {
 }
 
 const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false)
+
   return (
     <div className="flex items-center justify-between text-center text-sm">
       <div
@@ -27,7 +30,9 @@ const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
           </>
         )}
       </div>
-      <div className="bg-yoi-400 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full text-white">
+      <div
+        className="bg-yoi-500 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full text-white"
+        onClick={() => setIsEndModalOpen(true)}>
         <FinishRunning className="size-7" />
         점령 완료
       </div>
@@ -35,6 +40,9 @@ const RunningActions = ({ isPaused, setIsPaused }: RunningActionsProps) => {
         <ShareRunning className="size-7" />
         공유
       </div>
+      {isEndModalOpen && (
+        <RunningEndModal setIsEndModalOpen={setIsEndModalOpen} />
+      )}
     </div>
   )
 }

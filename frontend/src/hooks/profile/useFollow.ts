@@ -2,10 +2,10 @@ import { patchFollow, postFollow } from "@/services/member/api"
 import { useMutation } from "@tanstack/react-query"
 
 interface UseFollowProps {
-  onChange: (followState: boolean) => void
+  onClick: (followState: boolean) => void
 }
 
-const useFollow = ({ onChange }: UseFollowProps) => {
+const useFollow = ({ onClick }: UseFollowProps) => {
   return useMutation({
     mutationFn: ({
       targetId,
@@ -20,7 +20,7 @@ const useFollow = ({ onChange }: UseFollowProps) => {
       return postFollow(targetId)
     },
     onSuccess: (_, variables) => {
-      onChange(!variables.followState)
+      onClick(!variables.followState)
     },
   })
 }

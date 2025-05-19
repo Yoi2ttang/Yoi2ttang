@@ -1,10 +1,22 @@
-import { useEffect } from "react"
+"use client"
+
+import { useState, useEffect } from "react"
 import useGetTeamSituation from "@/hooks/running/useGetTeamSituation"
 import PreRunningRankingInfo from "./PreRunningRankingInfo"
 import PreRunningTileInfo from "./PreRunningTileInfo"
+import { getPayload } from "@/lib/auth/util"
 
 const PreRunningInfo = () => {
-  const { data, isLoading, isError } = useGetTeamSituation(2)
+  const [zodiacId, setZodiacId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const payload = getPayload()
+    if (payload?.zodiacId) {
+      setZodiacId(Number(payload.zodiacId))
+    }
+  }, [])
+
+  const { data } = useGetTeamSituation(zodiacId ?? 0)
 
   return (
     <div className="flex w-full flex-col gap-6">

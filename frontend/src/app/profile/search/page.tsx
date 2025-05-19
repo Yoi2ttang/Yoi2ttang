@@ -1,16 +1,24 @@
 "use client"
 
+import Skeleton from "@/components/common/skeleton"
 import StackHeader from "@/components/layouts/Header/StackHeader"
 import RunnerItem from "@/components/profile/RunnerItem"
 import UserSearchBar from "@/components/profile/UserSearchBar"
-import useSearchUser from "@/hooks/auth/useSearchUser"
+import useSearchUser from "@/hooks/profile/useSearchUser"
 import { AnimalType } from "@/types/animal"
-import { MemberPreview, MembersResponse } from "@/types/member"
+import {
+  MemberAutocompletePaginationResponse,
+  MemberPreview,
+  MemberPaginationResponse,
+} from "@/types/member/member.type"
 import { Suspense, useState } from "react"
 
 const SearchContent = () => {
   const [keyword, setKeyword] = useState("")
   const { targetRef, data, isLoading, isFetchingNextPage } = useSearchUser()
+  const isEmpty = !data?.pages.some(
+    (page: MemberAutocompletePaginationResponse) => page?.data.length > 0,
+  )
 
   return (
     <div className="flex flex-col bg-neutral-50">
@@ -24,29 +32,35 @@ const SearchContent = () => {
         />
 
         <div className="flex flex-1 flex-col gap-4">
-          {isLoading
-            ? Array.from({ length: 10 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-16 animate-pulse rounded-xl bg-neutral-200"
-                />
-              ))
-            : data?.pages.map((page: MembersResponse) =>
-                page.data.map((member: MemberPreview) => (
+          {isEmpty ? (
+            <p className="text-center text-neutral-300">
+              일치하는 결과가 없어요
+            </p>
+          ) : isLoading ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} className="h-16" />
+            ))
+          ) : (
+            <>
+              {data?.pages.map((page: MemberPaginationResponse) =>
+                page?.data.map((member: MemberPreview) => (
                   <RunnerItem
                     key={member.memberId}
                     nickname={member.nickname}
                     animalType={member.zodiacName as AnimalType}
                     profileImageUrl={member.profileImageUrl}
                     targetId={member.memberId}
+                    isFollow={member.isFollow}
                   />
                 )),
               )}
 
-          {isFetchingNextPage ? (
-            <div className="h-16 animate-pulse rounded-xl bg-neutral-200" />
-          ) : (
-            <div ref={targetRef} />
+              {isFetchingNextPage ? (
+                <div className="h-16 animate-pulse rounded-xl bg-neutral-200" />
+              ) : (
+                <div ref={targetRef} />
+              )}
+            </>
           )}
 
           {/* <p className="text-neutral-300">일치하는 결과가 없습니다.</p> */}

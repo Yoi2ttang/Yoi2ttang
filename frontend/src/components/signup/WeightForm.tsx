@@ -1,11 +1,8 @@
-import { SignUpData } from "@/types/auth"
+import { MAX_WEIGHT, MIN_WEIGHT, SignUpData } from "@/types/auth/auth.type"
 import { ChangeEvent, Dispatch, SetStateAction } from "react"
 import Button from "../common/Button"
 import Input from "../common/Input"
 import { clamp } from "lodash-es"
-
-const MIN_WEIGHT = 1
-const MAX_WEIGHT = 1_000
 
 interface WeightFormProps {
   signupData: SignUpData
@@ -39,12 +36,12 @@ const WeightForm = ({ signupData, onChange, onNext }: WeightFormProps) => {
         <h1 className="text-title-md">
           체중을
           <br />
-          입력해 주세요 (선택)
+          입력해 주세요
         </h1>
 
         <Input
           type="number"
-          placeholder="미입력 시 평균 체중이 적용돼요"
+          placeholder="체중을 입력해 주세요"
           min={MIN_WEIGHT}
           max={MAX_WEIGHT}
           value={!signupData.weight ? "" : signupData.weight}
@@ -52,7 +49,7 @@ const WeightForm = ({ signupData, onChange, onNext }: WeightFormProps) => {
         />
       </div>
 
-      <Button className="w-full" onClick={onNext}>
+      <Button disabled={!signupData.weight} className="w-full" onClick={onNext}>
         가입하기
       </Button>
     </div>

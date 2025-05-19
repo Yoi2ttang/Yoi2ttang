@@ -2,7 +2,7 @@ import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import BlockIcon from "@/assets/icons/profile/block-icon.svg"
 import LockIcon from "@/assets/icons/profile/lock-icon.svg"
 import TimeIcon from "@/assets/icons/profile/time-icon.svg"
-import { ProfileResponse } from "@/types/member"
+import { ProfileResponse } from "@/types/member/member.type"
 import Section from "../common/Section"
 
 interface ProfileRunningRecordSectionProps {
