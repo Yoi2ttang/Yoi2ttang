@@ -1,4 +1,4 @@
-import { Payload } from "@/types/auth"
+import { Payload } from "@/types/auth/auth.type"
 import { jwtDecode } from "jwt-decode"
 import { getCookie } from "../utils"
 

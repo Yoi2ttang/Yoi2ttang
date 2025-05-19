@@ -3,6 +3,7 @@ import type { NextConfig } from "next"
 const isDev = process.env.NODE_ENV === "development"
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   output: "standalone", // 서버에 필요한 최소 파일만 패키징
   compress: true, // gzip 압축 설정
 

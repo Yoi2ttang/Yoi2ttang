@@ -3,7 +3,7 @@
 import SignupForm from "@/components/signup/SignupForm"
 import TeamSelectionForm from "@/components/signup/TeamSelectionForm"
 import TermForm from "@/components/signup/TermForm"
-import { SignUpData, SignupStep } from "@/types/auth"
+import { SignUpData, SignupStep } from "@/types/auth/auth.type"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useEffect, useState } from "react"
 
@@ -50,10 +50,7 @@ const SignupContent = () => {
         )
       case SignupStep.COMPLETED:
         return (
-          <TeamSelectionForm
-            signupData={signupData}
-            onNext={() => router.replace("/")}
-          />
+          <TeamSelectionForm onNext={() => router.replace("/dashboard/my")} />
         )
       default:
         return (

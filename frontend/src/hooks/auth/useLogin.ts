@@ -1,10 +1,12 @@
+import { WebViewContext } from "@/components/providers/WebViewProvider"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 
 const useLogin = () => {
   const searchParams = useSearchParams()
   const code = searchParams.get("code")
   const router = useRouter()
+  const { sendMessage } = useContext(WebViewContext)
 
   useEffect(() => {
     const login = async () => {
@@ -13,8 +15,17 @@ const useLogin = () => {
         method: "GET",
         credentials: "include",
       })
-      if (response.redirected) {
-        router.replace(response.url)
+
+      const data = await response.json()
+
+      if (response.ok) {
+        sendMessage?.("REISSUE_TOKEN_RESPONSE", {
+          accessToken: data.accessToken,
+        })
+      }
+
+      if (data.redirectTo) {
+        router.replace(data.redirectTo)
       }
     }
 

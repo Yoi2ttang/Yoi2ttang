@@ -1,36 +1,51 @@
+"use client"
+
 import {
-  animalIconMap,
+  animalMetaData,
   animalNumberMap,
   animalTeamNameMap,
-  textClassMap,
 } from "@/constants/animals"
-import Button from "../common/Button"
-import { SignUpData } from "@/types/auth"
+import { getPayload } from "@/lib/auth/util"
+import { cn } from "@/lib/utils"
 import { AnimalType } from "@/types/animal"
 import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import Button from "../common/Button"
 
 interface TeamSelectionFormProps {
-  signupData: SignUpData
   onNext: () => void
 }
 
-const TeamSelectionForm = ({ signupData, onNext }: TeamSelectionFormProps) => {
-  const animalKey = animalNumberMap[
-    Number(signupData.birth.year) % 12
-  ] as AnimalType
-  const AnimalIcon = animalIconMap[animalKey]
+const TeamSelectionForm = ({ onNext }: TeamSelectionFormProps) => {
+  const [nickname, setNickname] = useState("")
+  const [animalKey, setAnimalKey] = useState<AnimalType | null>(null)
+
+  useEffect(() => {
+    const payload = getPayload()
+    if (payload) {
+      setNickname(payload.nickname)
+      setAnimalKey(animalNumberMap[payload.zodiacId])
+    }
+  }, [])
+
+  const AnimalIcon = animalKey ? animalMetaData[animalKey].icon : null
 
   return (
     <div className="flex h-full flex-col justify-between p-6">
       <h1 className="text-title-md mt-12">
-        {signupData.nickname}님은
+        {nickname}님은
         <br />
-        <span className="text-yoi-500">{animalTeamNameMap[animalKey]}</span>이
-        데리고 갔어요
+        <span className="text-yoi-500">
+          {animalKey ? animalTeamNameMap[animalKey] : ""}
+        </span>
+        이 데리고 갔어요
       </h1>
 
-      <div className="relative size-fit self-center">
+      <div
+        className={cn(
+          `relative size-fit self-center`,
+          animalKey ? animalMetaData[animalKey].textColor : "",
+        )}>
         <motion.div
           initial={{ scale: 0 }}
           animate={{
@@ -50,7 +65,7 @@ const TeamSelectionForm = ({ signupData, onNext }: TeamSelectionFormProps) => {
             },
           }}
           className="size-72">
-          <AnimalIcon className="size-full object-cover" />
+          {AnimalIcon && <AnimalIcon className="size-full object-cover" />}
         </motion.div>
 
         <motion.p
@@ -65,9 +80,7 @@ const TeamSelectionForm = ({ signupData, onNext }: TeamSelectionFormProps) => {
               delay: 0.5,
             },
           }}
-          className={cn(
-            `absolute top-0 left-0 text-lg font-semibold ${textClassMap[animalKey]}`,
-          )}>
+          className="absolute top-0 left-0 text-lg font-semibold">
           반가워요~
         </motion.p>
 
@@ -83,9 +96,7 @@ const TeamSelectionForm = ({ signupData, onNext }: TeamSelectionFormProps) => {
               delay: 1,
             },
           }}
-          className={cn(
-            `absolute top-0 right-0 text-lg font-semibold ${textClassMap[animalKey]}`,
-          )}>
+          className="absolute top-0 right-0 text-lg font-semibold">
           열심히 달려봐요
         </motion.p>
       </div>

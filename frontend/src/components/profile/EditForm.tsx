@@ -2,11 +2,8 @@
 
 import KakaoIcon from "@/assets/icons/provider/kakao-icon.svg"
 import { cn } from "@/lib/utils"
-import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth"
-import {
-  ProfileForEditRequest,
-  ProfileForEditResponse,
-} from "@/types/member/member.type"
+import { MAX_WEIGHT, MIN_WEIGHT } from "@/types/auth/auth.type"
+import { ProfileForEditRequest, ProfileForEditResponse } from "@/types/member"
 import { clamp, debounce } from "lodash-es"
 import { Calendar } from "lucide-react"
 import {
