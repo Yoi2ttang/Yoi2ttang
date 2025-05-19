@@ -67,10 +67,6 @@ public class RunningPointService {
 
         String redisId = member.getMemberId() + ":" + geoHashString;
 
-        if (tileHistoryRepository.existsInZSet(LocalDate.now().toString(), redisId)) {
-            return RunningPointCreateResponse.builder().build();
-        }
-
         GeoHash geoHash = GeoHash.fromGeohashString(geoHashString);
         BoundingBox boundingBox = geoHash.getBoundingBox();
 
@@ -79,16 +75,18 @@ public class RunningPointService {
         double lngEast = boundingBox.getEastLongitude();
         double lngWest = boundingBox.getWestLongitude();
 
-        tileHistoryRepository.saveRedis(
-                LocalDate.now().toString(),
-                TileHistoryRedis.builder()
-                        .tileHistoryId(TileHistoryRedis.makeTileHistoryId(member.getMemberId(), geoHashString))
-                        .memberId(member.getMemberId())
-                        .birthDate(member.getBirthDate())
-                        .zodiacId(member.getZodiacId())
-                        .geoHash(geoHashString)
-                        .runningPointId(runningPoint.getRunningPointId())
-                        .build());
+        if (tileHistoryRepository.existsInZSet(LocalDate.now().toString(), redisId)) {
+            tileHistoryRepository.saveRedis(
+                    LocalDate.now().toString(),
+                    TileHistoryRedis.builder()
+                            .tileHistoryId(TileHistoryRedis.makeTileHistoryId(member.getMemberId(), geoHashString))
+                            .memberId(member.getMemberId())
+                            .birthDate(member.getBirthDate())
+                            .zodiacId(member.getZodiacId())
+                            .geoHash(geoHashString)
+                            .runningPointId(runningPoint.getRunningPointId())
+                            .build());
+        }
 
         return RunningPointCreateResponse.builder()
                 .geoHash(geoHashString)
