@@ -1,11 +1,16 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  BackHandler,
+  ToastAndroid, // ✅ 추가
+  Platform,
+} from 'react-native';
 import {WebView} from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../App';
-import {useRoute} from '@react-navigation/native';
 import {RouteProp} from '@react-navigation/native';
 
 const WebViewScreen = () => {
@@ -13,6 +18,8 @@ const WebViewScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [receivedToken, setReceivedToken] = useState<string | null>(null);
   const webViewRef = useRef<WebView>(null);
+  const canGoBackRef = useRef(false);
+  const lastBackPress = useRef<number>(0); // ✅ 마지막 뒤로가기 시간
 
   const route = useRoute<RouteProp<RootStackParamList, 'WebView'>>();
   const targetUrl = route.params?.targetUrl ?? 'https://yoi2ttang.site';
@@ -34,8 +41,6 @@ const WebViewScreen = () => {
             const newAccessToken = data.accessToken;
             console.log('✅ accessToken 수신:', newAccessToken);
             setReceivedToken(newAccessToken);
-
-            // ✅ AsyncStorage에 저장
             await AsyncStorage.setItem('accessToken', newAccessToken);
             console.log('💾 토큰 저장 완료!');
           } else {
@@ -52,19 +57,48 @@ const WebViewScreen = () => {
     }
   };
 
+  // ✅ Android 뒤로가기 핸들링
+  useEffect(() => {
+    const handleBackPress = () => {
+      if (canGoBackRef.current && webViewRef.current) {
+        webViewRef.current.goBack();
+        return true;
+      } else {
+        const now = Date.now();
+        if (now - lastBackPress.current < 2000) {
+          return false; // 앱 종료
+        } else {
+          ToastAndroid.show(
+            '종료하려면 한 번 더 눌러주세요',
+            ToastAndroid.SHORT,
+          );
+          lastBackPress.current = now;
+          return true;
+        }
+      }
+    };
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => {
+      subscription.remove(); // ✅ Type-safe 정리
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <WebView
         ref={webViewRef}
         source={{uri: targetUrl}}
         onMessage={handleMessage}
+        onNavigationStateChange={navState => {
+          canGoBackRef.current = navState.canGoBack;
+        }}
         geolocationEnabled={true}
       />
-      {/* {receivedToken && (
-        <Text style={styles.tokenText}>
-          ✔️ 토큰 저장됨: {receivedToken.slice(0, 10)}...
-        </Text>
-      )} */}
     </View>
   );
 };
@@ -72,13 +106,6 @@ const WebViewScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  tokenText: {
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    color: 'green',
-    fontSize: 14,
   },
 });
 
