@@ -200,19 +200,19 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         {'\n'}
         중심: {center?.lat?.toFixed(5)}, {center?.lng?.toFixed(5)}
       </StyledText>
-      <StyledText className="absolute bottom-4 left-4 right-4 bg-white z-50 p-2 rounded text-xs">
+      {/* <StyledText className="absolute bottom-4 left-4 right-4 bg-white z-50 p-2 rounded text-xs">
         마지막 전송:\n{lastSentPayload}
-      </StyledText>
-      <StyledText className="absolute bottom-24 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40">
+      </StyledText> */}
+      {/* <StyledText className="absolute bottom-24 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40">
         타일 수: {visitedTiles.length}
         {'\n'}
         {visitedTiles.map(t => t.geoHash).join(', ')}
-      </StyledText>
-      <StyledText className="absolute bottom-64 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40 overflow-scroll">
+      </StyledText> */}
+      {/* <StyledText className="absolute bottom-64 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40 overflow-scroll">
         🔁 마지막 응답:
         {'\n'}
         {lastResponse ? JSON.stringify(lastResponse, null, 2) : '응답 없음'}
-      </StyledText>
+      </StyledText> */}
 
       {currentLoc && loc && (
         <StyledNaverMapView
@@ -287,7 +287,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
       )}
 
       <RunningStatsButton onClick={() => setShowStats(true)} />
-      <RunningTimer />
+      <RunningTimer tileCnt={visitedTiles.length} />
 
       {showStats && (
         <RunningInfoSlide

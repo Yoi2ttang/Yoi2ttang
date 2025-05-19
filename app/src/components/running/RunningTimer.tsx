@@ -7,7 +7,11 @@ import {formatSecondsToTime} from '../../lib/time';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-const RunningTimer = () => {
+interface RunningTimerProps {
+  tileCnt: number;
+}
+
+const RunningTimer = ({tileCnt}: RunningTimerProps) => {
   const {runningTime} = useRunningStatsContext();
   const formattedTime = formatSecondsToTime(runningTime);
 
@@ -21,7 +25,9 @@ const RunningTimer = () => {
           className="w-3 h-3 bg-[#ff5434]"
           style={{transform: [{rotate: '12deg'}]}}
         />
-        <StyledText className="text-2xl font-bold text-center">102</StyledText>
+        <StyledText className="text-2xl font-bold text-center">
+          {tileCnt}
+        </StyledText>
       </StyledView>
     </StyledView>
   );
