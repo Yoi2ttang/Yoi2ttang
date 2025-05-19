@@ -17,26 +17,29 @@ import androidx.health.services.client.ExerciseUpdateCallback
 import androidx.health.services.client.HealthServices
 import androidx.health.services.client.data.Availability
 import androidx.health.services.client.data.BatchingMode
-import androidx.health.services.client.data.CumulativeDataPoint
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.ExerciseCapabilities
 import androidx.health.services.client.data.ExerciseConfig
-import androidx.health.services.client.data.ExerciseEventType
 import androidx.health.services.client.data.ExerciseLapSummary
 import androidx.health.services.client.data.ExerciseType
 import androidx.health.services.client.data.ExerciseUpdate
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
 import com.ssafy.yoittangWatch.R
 import com.ssafy.yoittangWatch.presentation.common.PhoneNode
+import com.ssafy.yoittangWatch.presentation.common.util.haversine
 import com.ssafy.yoittangWatch.presentation.main.MainActivity
-import com.ssafy.yoittangWatch.presentation.running.RunningActivity.CalorieHolder
 import com.ssafy.yoittangWatch.presentation.running.RunningActivity.DistanceHolder
 import com.ssafy.yoittangWatch.presentation.running.RunningActivity.HeartRateHolder
-import com.ssafy.yoittangWatch.presentation.running.RunningActivity.SpeedHolder
 import org.json.JSONObject
 
 class RunningForegroundService : Service() {
@@ -51,6 +54,11 @@ class RunningForegroundService : Service() {
     private lateinit var exerciseClient: ExerciseClient
     private var updateCallback: ExerciseUpdateCallback? = null
     private lateinit var wakeLock: PowerManager.WakeLock
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private var totalDistance = 0.0
+    private var lastLat: Double? = null
+    private var lastLng: Double? = null
 
     private val messageListener = MessageClient.OnMessageReceivedListener { event ->
         if (event.path == "/running/stop") {
@@ -61,6 +69,33 @@ class RunningForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        
+        // 위치 클라이언트 초기화
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                for (location in p0.locations) {
+                    val lat = location.latitude
+                    val lng = location.longitude
+                    val timestamp = location.time
+
+                    Log.d("Location", "lat=$lat, lng=$lng, time=$timestamp")
+                    if(lastLat != null && lastLng != null) {
+                        val distance = haversine(lastLat!!, lastLng!!, lat, lng)
+                        totalDistance += distance
+                        DistanceHolder.update(totalDistance)
+                        Log.d("Distance", "Distance from last = ${"%.2f".format(distance)} meters")
+                    }
+
+                    lastLat = lat
+                    lastLng = lng
+                }
+            }
+        }
+
+        startLocationUpdates()
+        
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK or PowerManager.ON_AFTER_RELEASE,
@@ -72,6 +107,7 @@ class RunningForegroundService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
         if (wakeLock.isHeld) wakeLock.release()
         Wearable.getMessageClient(this).removeListener(messageListener)
         stopExerciseSession()
@@ -98,6 +134,28 @@ class RunningForegroundService : Service() {
         }
         // 서비스가 시스템에 의해 kill 되어도 재시작
         return START_STICKY
+    }
+
+    private fun startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "위치 권한이 없습니다.")
+            return
+        }
+
+        // 위치 정확도 수준을 가장 높게 설정, 최소 5초 간격으로 위치 정보를 받고 싶다는 의미
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000L)
+            // 5m 이상 이동해야 콜백
+            .setMinUpdateDistanceMeters(5f)
+            .build()
+
+        fusedLocationClient.requestLocationUpdates(
+            request,
+            locationCallback,
+            mainLooper
+        )
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -131,10 +189,6 @@ class RunningForegroundService : Service() {
 
         val desired = setOf(
             DataType.HEART_RATE_BPM,
-            DataType.DISTANCE,
-            DataType.SPEED,
-            DataType.CALORIES_TOTAL,
-            DataType.PACE
         )
         val toRequest = desired.intersect(supported)
         Log.d(TAG, "RUNNING supports: $toRequest")
@@ -238,16 +292,11 @@ class RunningForegroundService : Service() {
             override fun onExerciseUpdateReceived(update: ExerciseUpdate) {
                 val metrics = update.latestMetrics
                 updateHeartRate(metrics)
-                updateDistance(metrics)
-                updateSpeed(metrics)
-                updateCalorie(metrics)
 
                 // ① 전송할 데이터를 Map으로 수집
                 val dataMap = mutableMapOf<String, Any>()
                 HeartRateHolder.bpm.value?.let { dataMap["heartRate"] = it }
                 DistanceHolder.distance.value?.let { dataMap["distance"] = it }
-                SpeedHolder.speed.value?.let { dataMap["speed"] = it }
-                CalorieHolder.calorie.value?.let { dataMap["calorie"] = it }
 
                 // ② 스마트폰으로 전송
                 sendMetricsToPhone(dataMap)
@@ -296,38 +345,6 @@ class RunningForegroundService : Service() {
         // null이 아닐 때만 업데이트
         if (latestBpm != null) {
             HeartRateHolder.update(latestBpm)
-        }
-    }
-
-    private fun updateDistance(metrics: DataPointContainer) {
-        val distance = metrics.getData(DataType.DISTANCE)
-            .lastOrNull()
-            ?.value
-            ?.toInt()
-
-        if (distance != null) {
-            DistanceHolder.update(distance)
-        }
-    }
-
-    private fun updateSpeed(metrics: DataPointContainer) {
-        val speed = metrics.getData(DataType.SPEED)
-            .lastOrNull()
-            ?.value
-            ?.toFloat()
-        if (speed != null) {
-            SpeedHolder.update(speed)
-        }
-    }
-
-    private fun updateCalorie(metrics: DataPointContainer) {
-        val calorie = metrics.getData(DataType.CALORIES_TOTAL)
-            ?.let { it as? CumulativeDataPoint<Double> }
-            ?.total
-            ?.toFloat()
-
-        if (calorie != null) {
-            CalorieHolder.update(calorie)
         }
     }
 }

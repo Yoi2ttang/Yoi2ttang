@@ -55,4 +55,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation ("androidx.core:core-splashscreen:1.1.0-rc01")
+
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 }

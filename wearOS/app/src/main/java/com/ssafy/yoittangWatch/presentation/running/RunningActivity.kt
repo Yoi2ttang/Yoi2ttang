@@ -37,6 +37,7 @@ import com.ssafy.yoittangWatch.application.running.RunningForegroundService
 import com.ssafy.yoittangWatch.presentation.common.PhoneNode
 import com.ssafy.yoittangWatch.presentation.common.YoittangCircleButton
 import com.ssafy.yoittangWatch.presentation.common.util.PermissionHelper
+import com.ssafy.yoittangWatch.presentation.common.util.calculatePace
 import com.ssafy.yoittangWatch.presentation.common.util.formatElapsedTime
 import com.ssafy.yoittangWatch.presentation.common.util.getCurrentTimeString
 import com.ssafy.yoittangWatch.presentation.main.MainActivity
@@ -56,26 +57,10 @@ class RunningActivity : ComponentActivity() {
     }
 
     object DistanceHolder {
-        private val _distance = mutableStateOf<Int?>(null)
-        val distance: State<Int?> = _distance
-        fun update(value: Int?) {
+        private val _distance = mutableStateOf<Double?>(null)
+        val distance: State<Double?> = _distance
+        fun update(value: Double?) {
             _distance.value = value
-        }
-    }
-
-    object SpeedHolder {
-        private val _speed = mutableStateOf<Float?>(null)
-        val speed: State<Float?> = _speed
-        fun update(value: Float?) {
-            _speed.value = value
-        }
-    }
-
-    object CalorieHolder {
-        private val _calorie = mutableStateOf<Float?>(null)
-        val calorie: State<Float?> = _calorie
-        fun update(value: Float?) {
-            _calorie.value = value
         }
     }
 
@@ -140,6 +125,8 @@ fun RunningScreen() {
     val elapsedSeconds = remember { mutableStateOf(0) }
     val context = LocalContext.current
     val activity = context as? Activity
+    val distance = RunningActivity.DistanceHolder.distance.value ?: 0.00
+    val paceText = calculatePace(elapsedSeconds.value, distance)
 
     // 1초마다 시간 갱신
     LaunchedEffect(Unit) {
@@ -164,13 +151,12 @@ fun RunningScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = currentTime.value, style = MaterialTheme.typography.body1)
-            val distance = RunningActivity.DistanceHolder.distance.value ?: 0
             Text(
                 text = "${"%.2f".format(distance / 1000f)} km",
                 style = MaterialTheme.typography.display1
             )
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(text = "0'00", style = MaterialTheme.typography.body1)
+                Text(text = paceText, style = MaterialTheme.typography.body1)
                 Text(
                     text = formatElapsedTime(elapsedSeconds.value),
                     style = MaterialTheme.typography.body1

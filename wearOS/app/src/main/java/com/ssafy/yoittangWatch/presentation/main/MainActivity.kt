@@ -1,5 +1,6 @@
 package com.ssafy.yoittangWatch.presentation.main
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -91,7 +93,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showPairingAlert() {
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
             .setTitle(getString(R.string.pairing_alert_title))
             .setMessage(getString(R.string.pairing_alert_message))
             .setCancelable(false)
