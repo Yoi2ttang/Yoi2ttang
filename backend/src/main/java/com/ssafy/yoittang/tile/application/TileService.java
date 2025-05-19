@@ -381,6 +381,8 @@ public class TileService {
         int precision;
         if (zoomLevel >= baseZoom) {
             precision = basePrecision + ((zoomLevel - baseZoom) / 2);
+        } else if (zoomLevel < basePrecision) {
+            precision = 3;
         } else {
             precision = basePrecision - ((baseZoom - zoomLevel) / 2);
         }
