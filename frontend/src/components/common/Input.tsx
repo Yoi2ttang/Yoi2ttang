@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
-import { InputHTMLAttributes, ReactNode } from "react"
+import { InputHTMLAttributes, ReactNode, RefObject } from "react"
 
 interface InputProps
   extends InputHTMLAttributes<HTMLInputElement>,
@@ -9,6 +9,7 @@ interface InputProps
   placeholder?: string
   hasBorder?: boolean
   Icon?: ReactNode
+  ref?: RefObject<HTMLInputElement> | ((el: HTMLInputElement) => void)
 }
 
 const inputVariants = cva(
@@ -39,6 +40,7 @@ const Input = ({
   hasBorder,
   Icon,
   variant,
+  ref,
   ...props
 }: InputProps) => {
   return (
@@ -50,6 +52,7 @@ const Input = ({
       )}>
       <div className="text-neutral-400">{Icon}</div>
       <input
+        ref={ref}
         disabled={variant === "disabled"}
         className="w-full bg-transparent text-sm outline-none"
         placeholder={placeholder}

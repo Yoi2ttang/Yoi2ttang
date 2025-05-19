@@ -1,3 +1,4 @@
+import { Coordinates, ReverseGeocodeResponse } from "@/types/map/navermaps"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -13,4 +14,25 @@ export const getCookie = (name: string) => {
   }
 
   return null
+}
+
+export const getReverseGeocode = ({ lat, lng }: Coordinates) => {
+  return new Promise<ReverseGeocodeResponse>((resolve, reject) => {
+    naver.maps.Service.reverseGeocode(
+      {
+        coords: new naver.maps.LatLng({ lat, lng }),
+        orders: [
+          naver.maps.Service.OrderType.ROAD_ADDR, // 도로명 주소
+          naver.maps.Service.OrderType.ADDR, // 지번 주소
+        ].join(","),
+      },
+      (status, response) => {
+        if (status === naver.maps.Service.Status.OK) {
+          resolve(response)
+        } else {
+          reject(status)
+        }
+      },
+    )
+  })
 }
