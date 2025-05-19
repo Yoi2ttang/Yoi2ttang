@@ -10,15 +10,13 @@ const useEditProfile = () => {
   return useMutation({
     mutationFn: ({
       data,
-      memberId,
-      isNicknameChanged,
     }: {
       data: ProfileForEditRequest
       memberId: number
       isNicknameChanged: boolean
     }) => updateProfile(data),
     mutationKey: ["edit-profile"],
-    onSuccess: async (data, variables) => {
+    onSuccess: async (_, variables) => {
       // 이후 프로필 편집 페이지 진입 시, 새롭게 리패치하도록 무효화
       queryClient.invalidateQueries({
         queryKey: ["profile-for-edit"],
