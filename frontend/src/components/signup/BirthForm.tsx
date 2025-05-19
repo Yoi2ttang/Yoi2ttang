@@ -1,8 +1,8 @@
-import { SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth/auth.type"
 import { clamp } from "lodash-es"
 import { ChangeEvent, Dispatch, FocusEvent, SetStateAction } from "react"
-import Button from "../common/Button"
-import Input from "../common/Input"
+import Button from "@/components/common/Button"
+import Input from "@/components/common/Input"
 
 interface BirthFormProps {
   signupData: SignUpData
@@ -14,13 +14,13 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     switch (name) {
-      // 년도의 길이가 4이상이 될 경우 입력 방지
+      // 년도의 길이가 4초과가 될 경우 입력 방지
       case "year":
         if (value.length > 4) {
           return
         }
         break
-      // 월과 일의 길이가 2이상이 될 경우 입력 방지
+      // 월과 일의 길이가 각각 2초과가 될 경우 입력 방지
       case "month":
       case "day":
         if (value.length > 2) {
@@ -44,39 +44,106 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
       return
     }
 
-    const number = parseInt(value, 10)
-    let validatedBirth = { ...signupData.birth }
+    const today = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+    }
+    const input = parseInt(value, 10)
+    const validatedBirth = signupData.birth
 
     switch (name) {
-      // 년도의 범위를 벗어날 경우 최대, 최소값으로 보정
       case "year": {
-        validatedBirth.year = clamp(
-          number,
-          1900,
-          new Date().getFullYear(),
-        ).toString()
+        // 년도 값 보정
+        validatedBirth.year = clamp(input, 1900, today.year).toString()
 
-        // 년도가 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
-        if (validatedBirth.day) {
-          validatedBirth.day = Math.min(
-            Number(validatedBirth.day),
-            new Date(
-              Number(validatedBirth.year),
+        // 년도 값 변경에 따른 월 값 보정
+        if (validatedBirth.month) {
+          if (
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) > today.month
+          ) {
+            validatedBirth.month = today.month.toString()
+          } else {
+            validatedBirth.month = clamp(
               Number(validatedBirth.month),
-              0,
-            ).getDate(),
-          ).toString()
+              1,
+              12,
+            ).toString()
+          }
+        }
+
+        // 년도, 월 값 변경에 따른 일 값 보정
+        if (validatedBirth.day) {
+          if (
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) >= today.month &&
+            Number(validatedBirth.day) > today.day
+          ) {
+            validatedBirth.day = today.day.toString()
+          } else {
+            validatedBirth.day = clamp(
+              Number(validatedBirth.day),
+              1,
+              new Date(
+                Number(validatedBirth.year),
+                Number(validatedBirth.month),
+                0,
+              ).getDate(),
+            ).toString()
+          }
         }
         break
       }
       case "month": {
-        // 월의 범위를 벗어날 경우 최대, 최소값으로 보정
-        validatedBirth.month = clamp(number, 1, 12).toString()
+        // 월 값 보정
+        if (
+          Number(validatedBirth.year) >= today.year &&
+          Number(validatedBirth.month) > today.month
+        ) {
+          validatedBirth.month = today.month.toString()
+        } else {
+          validatedBirth.month = clamp(
+            Number(validatedBirth.month),
+            1,
+            12,
+          ).toString()
+        }
 
-        // 월이 바뀌었을 때, 일자가 최대 일자를 벗어날 경우 보정
+        // 월 값 변경에 따른 일 값 보정
         if (validatedBirth.day) {
-          validatedBirth.day = Math.min(
+          if (
+            Number(validatedBirth.year) >= today.year &&
+            Number(validatedBirth.month) >= today.month &&
+            Number(validatedBirth.day) > today.day
+          ) {
+            validatedBirth.day = today.day.toString()
+          } else {
+            validatedBirth.day = clamp(
+              Number(validatedBirth.day),
+              1,
+              new Date(
+                Number(validatedBirth.year),
+                Number(validatedBirth.month),
+                0,
+              ).getDate(),
+            ).toString()
+          }
+        }
+        break
+      }
+      case "day": {
+        // 일 값 보정
+        if (
+          Number(validatedBirth.year) >= today.year &&
+          Number(validatedBirth.month) >= today.month &&
+          Number(validatedBirth.day) > today.day
+        ) {
+          validatedBirth.day = today.day.toString()
+        } else {
+          validatedBirth.day = clamp(
             Number(validatedBirth.day),
+            1,
             new Date(
               Number(validatedBirth.year),
               Number(validatedBirth.month),
@@ -84,20 +151,6 @@ const BirthForm = ({ signupData, onChange, onNext }: BirthFormProps) => {
             ).getDate(),
           ).toString()
         }
-        break
-      }
-      case "day": {
-        // 일의 범위를 벗어날 경우 최대, 최소값으로 보정
-        validatedBirth.day = clamp(
-          number,
-          1,
-          new Date(
-            Number(validatedBirth.year),
-            Number(validatedBirth.month),
-            0,
-          ).getDate(),
-        ).toString()
-
         break
       }
     }

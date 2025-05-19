@@ -1,5 +1,3 @@
-"use client"
-
 import IntroduceContent from "@/components/Introduce/IntroduceContent"
 
 const Home = () => {

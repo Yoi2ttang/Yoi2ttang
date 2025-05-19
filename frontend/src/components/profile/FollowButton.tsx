@@ -1,31 +1,28 @@
 "use client"
 
-import { throttle } from "lodash-es"
-import Button from "../common/Button"
 import useFollow from "@/hooks/profile/useFollow"
-import { useMemo } from "react"
+import Button from "../common/Button"
 
 interface FollowButtonProps {
   targetId: number
   className?: string
   followState: boolean
-  onChange: (followState: boolean) => void
-  onClick?: () => void
+  onClick: (followState: boolean) => void
 }
 
 const FollowButton = ({
   targetId,
   followState,
   className,
-  onChange,
   onClick,
 }: FollowButtonProps) => {
   const { mutate: follow } = useFollow({
-    onChange,
+    onClick,
   })
 
   const handleClick = () => {
     follow({ targetId, followState })
+    onClick(followState)
   }
 
   return (

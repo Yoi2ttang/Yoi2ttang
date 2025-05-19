@@ -1,8 +1,8 @@
 import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQuestSection"
 import ProfileHeader from "@/components/profile/ProfileHeader"
-import ProfileInfoWrapper from "@/components/profile/ProfileInfoWrapper"
+import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
-import { getProfile } from "@/services/member/api"
+import { getProfile } from "@/services/member/api-server"
 
 interface ProfilePageProps {
   params: Promise<{
@@ -20,11 +20,10 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
       <div className="flex flex-col gap-6 p-4">
         {!data || isError ? (
-          <p className="text-center">존재하지 않는 유저입니다.</p>
+          <p className="text-center text-neutral-400">존재하지 않는 유저에요</p>
         ) : (
           <>
-            {/* <ProfileInfo data={data} /> */}
-            <ProfileInfoWrapper data={data} />
+            <ProfileInfo data={data} />
             <ProfileRunningRecordSection data={data} />
             <ProfileCompletedQuestSection data={data} />
           </>

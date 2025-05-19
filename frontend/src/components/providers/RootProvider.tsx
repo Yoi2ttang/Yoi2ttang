@@ -1,8 +1,8 @@
 import { ReactNode } from "react"
+import DeviceProvider from "../DeviceProvider"
 import QueryProvider from "./QueryProvider"
 import { ScriptProvider } from "./ScriptProvider"
-import DeviceProvider from "../DeviceProvider"
-import ResponsiveContainer from "../ResponsiveContainer"
+import WebViewProvider from "./WebViewProvider"
 
 interface RootProviderProps {
   children: ReactNode
@@ -12,14 +12,14 @@ const RootProvider = (data: RootProviderProps) => {
   const { children } = data
 
   return (
-    <QueryProvider>
-      <DeviceProvider>
-        <ResponsiveContainer>
+    <WebViewProvider>
+      <QueryProvider>
+        <DeviceProvider>
           <ScriptProvider />
           {children}
-        </ResponsiveContainer>
-      </DeviceProvider>
-    </QueryProvider>
+        </DeviceProvider>
+      </QueryProvider>
+    </WebViewProvider>
   )
 }
 

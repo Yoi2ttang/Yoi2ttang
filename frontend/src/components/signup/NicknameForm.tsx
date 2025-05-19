@@ -1,6 +1,6 @@
 import useCheckNickname from "@/hooks/auth/useCheckNickname"
 import { cn } from "@/lib/utils"
-import { SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth/auth.type"
 import { debounce } from "lodash-es"
 import { ChangeEvent, Dispatch, SetStateAction, useMemo, useState } from "react"
 import Button from "../common/Button"
@@ -21,7 +21,7 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
       debounce((value: string) => {
         onChange({ ...signupData, nickname: value })
       }, 300),
-    [signupData, onChange],
+    [],
   )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

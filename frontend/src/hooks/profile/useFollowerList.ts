@@ -11,7 +11,7 @@ const useFollowerList = () => {
       keyword: keyword as string,
       pageToken,
     })
-    return response.data
+    return response
   }
 
   return useInfiniteScroll({

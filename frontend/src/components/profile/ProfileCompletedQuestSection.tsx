@@ -1,5 +1,5 @@
 import LockIcon from "@/assets/icons/profile/lock-icon.svg"
-import { ProfileResponse } from "@/types/member"
+import { ProfileResponse } from "@/types/member/member.type"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"

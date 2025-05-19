@@ -1,4 +1,4 @@
-import { SignUpData } from "@/types/auth"
+import { SignUpData } from "@/types/auth/auth.type"
 import Image from "next/image"
 import { Dispatch, SetStateAction } from "react"
 import Button from "../common/Button"
