@@ -1,4 +1,4 @@
-import {Tile} from '../../types/map';
+import {Coordinates, Tile} from '../../types/map';
 import apiClient from '../http-common';
 
 export interface StartRunningRequest {
@@ -9,7 +9,15 @@ export interface StartRunningRequest {
 
 export interface StartRunningResponse {
   runningId: number;
-  message: string;
+  geoHash: string;
+  sw: {
+    lat: number;
+    lng: number;
+  };
+  ne: {
+    lat: number;
+    lng: number;
+  };
 }
 
 // 러닝 시작하기
@@ -69,5 +77,20 @@ export const getTeamTileMapCluster = async (params: {
   );
 
   console.log(response.data);
+  return response.data;
+};
+
+export interface PostLocationRequest {
+  courseId?: number;
+  runningId: number;
+  beforePoint: Coordinates;
+  nowPoint: Coordinates;
+  currentTime: string;
+}
+
+// 러닝 중 위치 보내기
+export const postLocation = async (payload: PostLocationRequest) => {
+  const response = await apiClient.post('/runnings/locations', payload);
+
   return response.data;
 };

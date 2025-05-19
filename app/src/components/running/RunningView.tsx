@@ -1,4 +1,10 @@
-import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
+import React, {
+  useState,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+} from 'react';
 import {View, Text} from 'react-native';
 import {styled} from 'nativewind';
 import {Coordinates} from '../../types/map';
@@ -17,6 +23,11 @@ import {
   NaverMapMarkerOverlay,
   NaverMapPolygonOverlay,
 } from '@mj-studio/react-native-naver-map';
+import {
+  PostLocationResponse,
+  usePostLocation,
+} from '../../hooks/running/usePostLocation';
+import {TileMapResponse} from '../../services/running/api';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -38,6 +49,18 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
   const {mutate: startRunning} = usePostStartRunning();
   const {runningId, setRunningId} = useRunningStatsContext();
 
+  const beforeLocRef = useRef<Coordinates | null>(null);
+  const {mutate: postLocation} = usePostLocation();
+
+  const [lastSentPayload, setLastSentPayload] = useState<string>('전송 없음');
+  const [visitedTiles, setVisitedTiles] = useState<
+    {geoHash: string; sw: Coordinates; ne: Coordinates}[]
+  >([]);
+
+  const [lastResponse, setLastResponse] = useState<
+    PostLocationResponse | PostLocationResponse[] | null
+  >(null);
+
   useEffect(() => {
     if (!currentLoc) return;
 
@@ -52,8 +75,28 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
       {
         onSuccess: data => {
           console.log('러닝 시작 성공', data);
-          console.log('받은 runningId:', data.runningId);
           setRunningId(data.runningId);
+
+          // ✅ 응답에서 타일 정보 추출
+          const {geoHash, sw, ne} = data;
+
+          if (!geoHash || !sw?.lat || !ne?.lat) return;
+
+          // ✅ visitedTiles에 중복 없이 추가
+          setVisitedTiles(prev => {
+            const alreadyExists = prev.some(t => t.geoHash === geoHash);
+            if (alreadyExists) return prev;
+
+            console.log(`🆕 시작 타일 저장됨: ${geoHash}`);
+            return [
+              ...prev,
+              {
+                geoHash,
+                sw,
+                ne,
+              },
+            ];
+          });
         },
         onError: err => {
           console.error('러닝 시작 실패', err);
@@ -70,6 +113,75 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
     center: center || currentLoc!,
     zoomLevel,
   });
+
+  useEffect(() => {
+    if (!currentLoc || !runningId) {
+      console.log('⛔ 위치 전송 불가 - currentLoc 또는 runningId 없음');
+      return;
+    }
+
+    const interval = setInterval(() => {
+      if (!beforeLocRef.current) {
+        beforeLocRef.current = currentLoc;
+        return;
+      }
+
+      const payload = {
+        runningId,
+        beforePoint: beforeLocRef.current,
+        nowPoint: currentLoc,
+        currentTime: new Date().toISOString(),
+      };
+
+      postLocation(payload, {
+        onSuccess: (
+          response: PostLocationResponse | PostLocationResponse[],
+        ) => {
+          console.log('✅ 위치 전송 성공:', response);
+          setLastResponse(response); // ✅ 상태에 저장
+
+          const responses = Array.isArray(response) ? response : [response];
+
+          responses.forEach(tile => {
+            if (!tile.geoHash || !tile.sw?.lat || !tile.ne?.lat) return;
+
+            setVisitedTiles(prev => {
+              const alreadyExists = prev.some(t => t.geoHash === tile.geoHash);
+              if (alreadyExists) return prev;
+
+              return [
+                ...prev,
+                {
+                  geoHash: tile.geoHash,
+                  sw: tile.sw,
+                  ne: tile.ne,
+                },
+              ];
+            });
+          });
+        },
+
+        onError: err => {
+          console.error('🚨 위치 전송 실패:', err);
+        },
+      });
+
+      setLastSentPayload(
+        `📍 내 위치 전송됨:\n` +
+          `FROM: (${payload.beforePoint.lat.toFixed(
+            5,
+          )}, ${payload.beforePoint.lng.toFixed(5)})\n` +
+          `TO:   (${payload.nowPoint.lat.toFixed(
+            5,
+          )}, ${payload.nowPoint.lng.toFixed(5)})\n` +
+          `🕒 ${payload.currentTime}`,
+      );
+
+      beforeLocRef.current = currentLoc;
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentLoc, runningId]);
 
   return (
     <StyledView className="flex-1 relative w-full">
@@ -88,9 +200,19 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         {'\n'}
         중심: {center?.lat?.toFixed(5)}, {center?.lng?.toFixed(5)}
       </StyledText>
-      {/* <StyledText className="absolute bottom-4 left-4 bg-white z-50 p-2 rounded w-[90%] h-[150px] overflow-scroll">
-        {JSON.stringify(tileData, null, 2)}
-      </StyledText> */}
+      <StyledText className="absolute bottom-4 left-4 right-4 bg-white z-50 p-2 rounded text-xs">
+        마지막 전송:\n{lastSentPayload}
+      </StyledText>
+      <StyledText className="absolute bottom-24 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40">
+        타일 수: {visitedTiles.length}
+        {'\n'}
+        {visitedTiles.map(t => t.geoHash).join(', ')}
+      </StyledText>
+      <StyledText className="absolute bottom-64 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40 overflow-scroll">
+        🔁 마지막 응답:
+        {'\n'}
+        {lastResponse ? JSON.stringify(lastResponse, null, 2) : '응답 없음'}
+      </StyledText>
 
       {currentLoc && loc && (
         <StyledNaverMapView
@@ -114,7 +236,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
             }
           }}>
           {/* ✅ 지도 내부로 이동 */}
-          {zoomLevel >= 16 &&
+          {/* {zoomLevel >= 16 &&
             tileData?.tileGetResponseList?.map(tile => {
               const {sw, ne} = tile;
               return (
@@ -132,7 +254,25 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                   zIndex={999}
                 />
               );
-            })}
+            })} */}
+
+          {/* ✅ 방문한 타일 (다른 색상) */}
+          {zoomLevel >= 14 &&
+            visitedTiles.map(({geoHash, sw, ne}) => (
+              <NaverMapPolygonOverlay
+                key={`visited-${geoHash}`}
+                coords={[
+                  {latitude: sw.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: ne.lng},
+                  {latitude: sw.lat, longitude: ne.lng},
+                ]}
+                color="rgba(100, 180, 255, 0.3)"
+                outlineColor="#007aff"
+                outlineWidth={1}
+                zIndex={998}
+              />
+            ))}
 
           {zoomLevel < 16 &&
             clusterData?.tileClusterGetResponseList?.map(cluster => (
