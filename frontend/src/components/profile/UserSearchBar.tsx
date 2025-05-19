@@ -1,12 +1,17 @@
 "use client"
 
-import useSearchNickname from "@/hooks/auth/useSearchNickname"
-import { MemberAutocomplete, MemberAutocompleteResponse } from "@/types/member"
+import useSearchNickname from "@/hooks/profile/useSearchNickname"
+import { cn } from "@/lib/utils"
+import {
+  MemberAutocomplete,
+  MemberAutocompletePaginationResponse,
+} from "@/types/member/member.type"
 import { debounce } from "lodash-es"
 import { SearchIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useMemo, useState } from "react"
 import Input from "../common/Input"
+import Skeleton from "../common/skeleton"
 
 interface UserSearchBarProps {
   placeholder?: string
@@ -26,19 +31,27 @@ const UserSearchBar = ({
     useSearchNickname(keyword)
   const router = useRouter()
 
-  const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
-  }, 300)
+  const handleChange = useMemo(
+    () =>
+      debounce((e: ChangeEvent<HTMLInputElement>) => {
+        onChange(e.target.value)
+      }, 300),
+    [],
+  )
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsFocused(false)
-    router.push(`/profile/search?keyword=${keyword}`)
+    router.replace(`/profile/search?keyword=${keyword}`)
   }
 
   const handleClick = (memberId: number) => {
     router.push(`/profile/${memberId}`)
   }
+
+  const isEmpty = !data?.pages.some(
+    (page: MemberAutocompletePaginationResponse) => page?.data.length > 0,
+  )
 
   return (
     <form onSubmit={handleSubmit} className="relative">
@@ -51,29 +64,33 @@ const UserSearchBar = ({
         onChange={handleChange}
       />
 
-      {isFocused && (
-        <div className="absolute top-full z-9999 mt-2 flex h-fit max-h-52 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white px-4 shadow-md">
+      {isFocused && (isLoading || !isEmpty) && (
+        <div
+          className={cn(
+            "absolute top-full z-9999 mt-2 flex h-fit max-h-44 w-full flex-col gap-3 overflow-y-auto rounded-b-lg bg-white p-4 shadow-md",
+          )}>
           {isLoading ? (
-            Array.from({ length: 10 }).map((_, index) => (
-              <div key={index} className="h-4 animate-pulse bg-neutral-300" />
+            Array.from({ length: 5 }).map((_, index) => (
+              <Skeleton key={index} className="h-4" />
             ))
           ) : (
             <>
-              {data?.pages.map((page: MemberAutocompleteResponse) =>
-                page.data.map((item: MemberAutocomplete) => (
+              {data?.pages.map((page: MemberAutocompletePaginationResponse) =>
+                page?.data.map((item: MemberAutocomplete) => (
                   <div
                     key={item.memberId}
                     className="cursor-pointer"
                     onMouseDown={() => handleClick(item.memberId)}>
-                    {item.nickname}
+                    <span className="text-yoi-500">{keyword}</span>
+                    <span>{item.nickname.slice(keyword.length)}</span>
                   </div>
                 )),
               )}
 
               {isFetchingNextPage ? (
-                <div className="h-4 animate-pulse bg-neutral-300" />
+                <Skeleton className="h-4" />
               ) : (
-                <div ref={targetRef} />
+                <div ref={targetRef} className="-mt-3" />
               )}
             </>
           )}

@@ -21,7 +21,7 @@ const NicknameForm = ({ signupData, onChange, onNext }: NicknameFormProps) => {
       debounce((value: string) => {
         onChange({ ...signupData, nickname: value })
       }, 300),
-    [signupData, onChange],
+    [],
   )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
