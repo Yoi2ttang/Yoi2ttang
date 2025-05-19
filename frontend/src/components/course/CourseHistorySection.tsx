@@ -1,9 +1,9 @@
-import Section from "@/components/common/Section"
 import Carousel from "@/components/common/Carousel"
+import Section from "@/components/common/Section"
 import CourseCarouselItem from "@/components/course/CourseCarouselItem"
+import { getCourseHistoryPreview } from "@/services/course/api-server"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
-import { getCourseHistoryPreview } from "@/services/course/api-server"
 
 const CourseHistorySection = async () => {
   const { data, isError } = await getCourseHistoryPreview()
@@ -34,8 +34,10 @@ const CourseHistorySection = async () => {
             <p>잠시 후 다시 시도해 주세요</p>
           ) : (
             <>
-              <p>진행했던 코스가 없어요</p>
-              <p>코스를 시작해 보세요!</p>
+              <p className="text-center">
+                진행했던 코스가 없어요 <br />
+                코스를 달려보세요!
+              </p>
             </>
           )}
         </div>
