@@ -9,7 +9,14 @@ import {
 } from "@/types/member/member.type"
 import { clamp, debounce } from "lodash-es"
 import { Calendar } from "lucide-react"
-import { ChangeEvent, useEffect, useMemo, useState } from "react"
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import Input from "../common/Input"
 import Textarea from "../common/Textarea"
 import { Switch } from "../ui/switch"
@@ -18,7 +25,7 @@ import ProfileImageUploader from "./ProfileImageUploader"
 interface EditFormProps {
   initProfileData: ProfileForEditResponse
   profileData: ProfileForEditRequest
-  onChange: (profileData: ProfileForEditRequest) => void
+  onChange: Dispatch<SetStateAction<ProfileForEditRequest>>
   message: string
   messageType: "valid" | "invalid"
 }
@@ -41,13 +48,13 @@ const EditForm = ({
   const updateProfileData = useMemo(
     () =>
       debounce((value: string) => {
-        onChange({
-          ...profileData,
+        onChange((prev) => ({
+          ...prev,
           memberUpdateRequest: {
-            ...profileData.memberUpdateRequest,
+            ...prev.memberUpdateRequest,
             nickname: value,
           },
-        })
+        }))
       }, 300),
     [],
   )
