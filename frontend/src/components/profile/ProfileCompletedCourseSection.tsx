@@ -33,7 +33,7 @@ const ProfileCompletedCourseSection = async ({
       }
       className="rounded-2xl bg-white p-6">
       {courses ? (
-        <div className="flex gap-4">
+        <>
           {courses.length > 0 ? (
             <Carousel dragFree={true}>
               {courses.map((item) => (
@@ -49,7 +49,7 @@ const ProfileCompletedCourseSection = async ({
               완주한 코스가 없어요
             </p>
           )}
-        </div>
+        </>
       ) : (
         <div className="flex items-center justify-center gap-2">
           <LockIcon className="size-5 text-neutral-300" />
