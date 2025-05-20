@@ -33,7 +33,7 @@ const ContributeCard = ({ userInfo }: ContributeCardProps) => {
           <span className="text-title-sm">{nickname}</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex basis-20 items-center justify-end gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
           {tileCount}타일
         </Badge>

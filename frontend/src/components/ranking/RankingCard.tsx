@@ -32,14 +32,14 @@ const RankingCard = ({ rankInfo, isMyTeam = false }: RankingCardProps) => {
         isMyTeam && "bg-transparent py-12",
       )}
       key={zodiacId}>
-      <div className="flex w-full items-center gap-2 text-black">
+      <div className="flex basis-3/5 items-center gap-2 text-black">
         <div className="text-title-sm basis-8 text-center">{rankIcon}</div>
         <div className="flex w-full flex-1 items-center gap-2">
           {TeamIconComponent && <TeamIconComponent className="size-10" />}
           <span className="text-title-sm">{teamName} 팀</span>
         </div>
       </div>
-      <div className="flex w-full items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
           {tileCount} 타일
         </Badge>
