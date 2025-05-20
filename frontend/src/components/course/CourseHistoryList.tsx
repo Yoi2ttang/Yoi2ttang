@@ -1,8 +1,8 @@
 "use client"
 
-import useSearchCourseHistories from "@/hooks/course/useSearchCourseHistories"
-import CourseCard from "@/components/course/CourseCard"
 import Skeleton from "@/components/common/skeleton"
+import CourseCard from "@/components/course/CourseCard"
+import useSearchCourseHistories from "@/hooks/course/useSearchCourseHistories"
 import { CoursePaginationResponse } from "@/types/course/course.type"
 
 const CourseHistoryList = () => {
