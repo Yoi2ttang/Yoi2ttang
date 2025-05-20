@@ -231,8 +231,8 @@ public class TileService {
         for (int i = 0; i < level.length; ++i) {
             for ( int j = 0; j < level[i].length; ++j) {
                 if (level[i][j] == swChar) {
-                    result[0][idx % 2] = idx % 2 == 0 ? j : i;
-                    result[1][(idx + 1) % 2] = (idx + 1) % 2 == 0 ? j : i;
+                    result[0][1] = i;
+                    result[1][0] = j;
                     break;
                 }
             }
@@ -241,8 +241,8 @@ public class TileService {
         for (int i = 0; i < level.length; ++i) {
             for ( int j = 0; j < level[i].length; ++j) {
                 if (level[i][j] == neChar) {
-                    result[0][(idx + 1) % 2] = idx % 2 == 0 ? j : i;
-                    result[1][idx % 2] = (idx + 1) % 2 == 0 ? j : i;
+                    result[0][0] = i;
+                    result[1][1] = j;
                     break;
                 }
             }
@@ -384,7 +384,7 @@ public class TileService {
         } else if (zoomLevel < basePrecision) {
             precision = 3;
         } else {
-            precision = basePrecision - ((baseZoom - zoomLevel) / 2);
+            precision = (int) (basePrecision - Math.ceil(((double) (baseZoom - zoomLevel) / 2) ));
         }
 
         return Math.max(1, Math.min(precision, 6)); // precision 범위 제한 1~6
