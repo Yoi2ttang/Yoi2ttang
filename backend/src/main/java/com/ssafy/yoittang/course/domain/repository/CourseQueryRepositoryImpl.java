@@ -161,7 +161,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
             LocalDateTime startDate,
             LocalDateTime endDate
     ) {
-        var runningDate = Expressions.dateTemplate(LocalDate.class, "cast({0} as date)", running.endTime);
+        var runningDate = Expressions.dateTemplate(LocalDate.class, "cast({0} as date)", running.startTime);
 
         return jpaQueryFactory
                 .select(
@@ -177,8 +177,8 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.state.eq(State.COMPLETE),
                         running.courseId.isNotNull(),
                         running.endTime.isNotNull(),
-                        running.endTime.goe(startDate),
-                        running.endTime.lt(endDate)
+                        running.startTime.goe(startDate),
+                        running.startTime.lt(endDate)
                 )
                 .groupBy(runningDate)
                 .fetch();
