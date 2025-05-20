@@ -16,7 +16,7 @@ public record MemberProfileResponse(
         Integer followerCount,
         Boolean isFollow,
         RunningTimeResponse time,
-        Integer totalDistance,
+        Double totalDistance,
         Integer totalTileCount,
         List<CourseSummaryResponse> courses
 ) {

@@ -65,7 +65,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.state.eq(State.COMPLETE),
                         course.courseId.isNotNull(),
                         course.courseName.like(keyword),
-                        isInRange(pageToken)
+                        isInDescRange(pageToken)
                 )
                 .distinct()
                 .orderBy(course.courseId.desc())
@@ -115,7 +115,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         courseBookmark.memberId.eq(memberId),
                         course.courseName.like(keyword),
                         courseBookmark.isActive.eq(true),
-                        isInRange(pageToken)
+                        isInDescRange(pageToken)
                 )
                 .distinct()
                 .orderBy(course.courseId.desc())
@@ -303,5 +303,12 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
             return null;
         }
         return course.courseId.gt(Long.valueOf(pageToken));
+    }
+
+    private BooleanExpression isInDescRange(String pageToken) {
+        if (pageToken == null) {
+            return null;
+        }
+        return course.courseId.lt(Long.valueOf(pageToken));
     }
 }
