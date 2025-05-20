@@ -1,16 +1,12 @@
 package com.ssafy.yoittang.tile.application;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-
-import ch.hsr.geohash.WGS84Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -171,7 +167,7 @@ public class TileService {
         Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
         List<String> likeList = likeSet.stream().toList();
 
-        for( String like : likeList) {
+        for ( String like : likeList) {
             log.info(like);
         }
 
