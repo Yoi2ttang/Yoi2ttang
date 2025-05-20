@@ -39,7 +39,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         course.courseId.isNotNull()
                 )
                 .distinct()
-                .orderBy(course.courseId.desc());
+                .orderBy(course.courseId.asc());
 
         if (limit != null) {
             query.limit(limit);
@@ -62,11 +62,10 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.memberId.eq(memberId),
                         running.state.eq(State.COMPLETE),
                         course.courseId.isNotNull(),
-                        course.courseName.like(keyword),
-                        isInDescRange(pageToken)
+                        isInRange(pageToken),
+                        keywordContains(keyword)
                 )
-                .distinct()
-                .orderBy(course.courseId.desc())
+                .orderBy(course.courseId.asc())
                 .limit(pageSize + 1)
                 .fetch();
     }
@@ -87,7 +86,7 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         courseBookmark.memberId.eq(memberId),
                         courseBookmark.isActive.eq(true)
                 )
-                .orderBy(course.courseId.desc())
+                .orderBy(course.courseId.asc())
                 .limit(limit)
                 .fetch();
     }
@@ -111,12 +110,12 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                 .join(course).on(course.courseId.eq(courseBookmark.courseId))
                 .where(
                         courseBookmark.memberId.eq(memberId),
-                        course.courseName.like(keyword),
                         courseBookmark.isActive.eq(true),
-                        isInDescRange(pageToken)
+                        isInRange(pageToken),
+                        keywordContains(keyword)
+
                 )
-                .distinct()
-                .orderBy(course.courseId.desc())
+                .orderBy(course.courseId.asc())
                 .limit(pageSize + 1)
                 .fetch();
     }

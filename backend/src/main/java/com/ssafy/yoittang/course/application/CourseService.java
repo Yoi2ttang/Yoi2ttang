@@ -58,7 +58,7 @@ public class CourseService {
     public PageInfo<RunCourseResponse> getRunCourseAll(String keyword, String pageToken, Member member) {
         PageInfo<Course> courses = courseRepository.findPagedCompletedCoursesByMemberId(
                 member.getMemberId(),
-                keyword + "%",
+                keyword,
                 pageToken
         );
         List<Course> courseList = courses.data();
@@ -73,7 +73,7 @@ public class CourseService {
     public PageInfo<RunCourseResponse> getBookmarkCourseAll(String pageToken, String keyword, Member member) {
         PageInfo<CourseSummaryResponse> courses = courseRepository.findPageBookmarkedCoursesByMemberId(
                 member.getMemberId(),
-                keyword + "%",
+                keyword,
                 pageToken
         );
         List<CourseSummaryResponse> courseList = courses.data();

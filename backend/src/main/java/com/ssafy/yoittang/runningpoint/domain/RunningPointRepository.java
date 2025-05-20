@@ -33,14 +33,14 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
 
     @Query(value = """
         SELECT
-            CAST(rp.arrival_time AS DATE) AS date,
+            CAST(r.start_time AS DATE) AS date,
             SUM(ST_Length(rp.route::geography)) AS total_distance
         FROM runnings r
         JOIN running_points rp ON rp.running_id = r.running_id
         WHERE r.member_id = :memberId
           AND r.state = 'COMPLETE'
-          AND rp.arrival_time >= :startDate
-          AND rp.arrival_time < :endDate
+          AND r.start_time >= :startDate
+          AND r.end_time < :endDate
         GROUP BY date
         ORDER BY date ASC
         """, nativeQuery = true)
