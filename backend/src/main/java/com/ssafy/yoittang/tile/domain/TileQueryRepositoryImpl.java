@@ -10,12 +10,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
-import com.ssafy.yoittang.tile.domain.response.TileTeamSituationResponse;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -106,25 +107,38 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
             Long zodiacId,
             String geoHashString
     ) {
+        NumberExpression<Double> centerLat =
+                tile.latNorth.add(tile.latSouth).divide(2.0).avg();
+
+        NumberExpression<Double> centerLng =
+                tile.lngEast.add(tile.lngWest).divide(2.0).avg();
+
+        int limitLength = geoHashString.length() + 1;
+        StringTemplate geoHashPrefix = Expressions.stringTemplate(
+                "left({0}, {1})",
+                tile.geoHash,
+                limitLength
+        );
+
         return queryFactory.select(
-                Projections.constructor(
-                        TileClusterGetResponse.class,
-                        tile.zodiacId,
                         Projections.constructor(
-                                GeoPoint.class,
-                                tile.latNorth.add(tile.latSouth).divide(2).avg(),
-                                tile.lngEast.add(tile.lngWest).divide(2).avg()
-                        ),
-                        tile.count()
+                                TileClusterGetResponse.class,
+                                tile.zodiacId,
+                                Projections.constructor(
+                                        GeoPoint.class,
+                                        centerLat,
+                                        centerLng
+                                ),
+                                tile.count()
+                        )
                 )
-        )
                 .from(tile)
                 .where(
-                        tile.geoHash.startsWith(geoHashString)
-                                .and(tile.zodiacId.isNotNull()),
+                        tile.geoHash.startsWith(geoHashString),
+                        tile.zodiacId.isNotNull(),
                         eqZodiacId(zodiacId)
                 )
-                .groupBy(tile.zodiacId)
+                .groupBy(tile.zodiacId, geoHashPrefix)
                 .fetch();
     }
 
