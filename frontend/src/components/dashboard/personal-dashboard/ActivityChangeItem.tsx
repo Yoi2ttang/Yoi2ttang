@@ -1,5 +1,8 @@
+"use client"
+
 import Badge from "@/components/common/Badge"
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 import { ArrowDown, ArrowUp, Minus } from "lucide-react"
 
 interface ActivityChangeItemProps {
@@ -34,17 +37,29 @@ const ActivityChangeItem = ({
       <div className="flex items-center gap-2">
         <span className="text-caption text-black">
           {isIncrease ? "+" : isDecrease ? "-" : ""}
-          {rateOfChange ? rateOfChange : 0}
+          {rateOfChange ? rateOfChange.toFixed(1) : 0}
         </span>
-        <Badge className={cn(color, "w-full")}>
-          {isIncrease ? (
-            <ArrowUp className="size-4" />
-          ) : isDecrease ? (
-            <ArrowDown className="size-4" />
-          ) : (
-            <Minus className="size-4" />
-          )}
-        </Badge>
+        <motion.div
+          initial={{ y: 10 }}
+          animate={{
+            y: isIncrease ? [-2, 2, -2] : isDecrease ? [2, -2, 2] : 0,
+          }}
+          exit={{ y: 10 }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}>
+          <Badge className={cn(color, "w-full")}>
+            {isIncrease ? (
+              <ArrowUp className="size-4" />
+            ) : isDecrease ? (
+              <ArrowDown className="size-4" />
+            ) : (
+              <Minus className="size-4" />
+            )}
+          </Badge>
+        </motion.div>
       </div>
     </div>
   )

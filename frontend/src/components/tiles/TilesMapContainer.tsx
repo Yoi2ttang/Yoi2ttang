@@ -2,38 +2,34 @@
 
 import { useTileDataFetcher } from "@/hooks/map/useTileDataFetcher"
 import { getMapBounds } from "@/lib/map/utils"
-import useTileMapStore from "@/stores/useTileMapStore"
+import useTileMapStore, {
+  CLUSTERING_ZOOM_LEVEL,
+  MIN_ZOOM_LEVEL,
+} from "@/stores/useTileMapStore"
 import { Coordinates, NaverMap } from "@/types/map/navermaps"
-import { TileViewOption } from "@/types/map/tile"
 import { debounce } from "lodash-es"
 import { useCallback } from "react"
 import { useShallow } from "zustand/react/shallow"
 import TilesMap from "./TilesMap"
 
 interface TilesMapContainerProps {
-  selectedOption: TileViewOption | null
-  tileMapType: "my" | "team"
   myZodiacId: number
   memberId: string
 }
-const CLUSTERING_ZOOM_LEVEL = 16
-const MIN_ZOOM_LEVEL = 12
 
 const TilesMapContainer = ({
   myZodiacId,
   memberId,
-  selectedOption,
-  tileMapType,
 }: TilesMapContainerProps) => {
-  const { setCluster, setTiles } = useTileMapStore(
+  const { setCluster, setTiles, selectedOption } = useTileMapStore(
     useShallow((state) => ({
       setCluster: state.setCluster,
       setTiles: state.setTiles,
+      selectedOption: state.selectedOption,
     })),
   )
 
   const { fetchTileData, fetchClusterData } = useTileDataFetcher({
-    tileMapType,
     myZodiacId,
     memberId,
   })
@@ -50,7 +46,7 @@ const TilesMapContainer = ({
         return
       }
 
-      console.log(map?.getZoom(), selectedOption, tileMapType)
+      console.log(map?.getZoom(), selectedOption)
 
       // 클러스터링 처리
       if (map && map?.getZoom() < CLUSTERING_ZOOM_LEVEL) {
@@ -61,7 +57,7 @@ const TilesMapContainer = ({
       // 타일 데이터 가져오기
       await handleTileView(center, map)
     }, 500),
-    [selectedOption, tileMapType, setCluster, setTiles],
+    [selectedOption, setCluster, setTiles],
   )
 
   const handleTileView = useCallback(

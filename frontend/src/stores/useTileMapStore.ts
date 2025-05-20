@@ -1,4 +1,4 @@
-import { Tile, TileCluster } from "@/types/map/tile"
+import { Tile, TileCluster, TileViewOption } from "@/types/map/tile"
 import { create } from "zustand"
 
 export enum TileToggleOption {
@@ -9,25 +9,30 @@ export enum TileToggleOption {
   ALL_COLOR = "ALL_COLOR", // 모든 타일 색상 보기
 }
 
+export const CLUSTERING_ZOOM_LEVEL = 16
+export const MIN_ZOOM_LEVEL = 11
+
 interface TileMapStore {
   tiles: Tile[]
   cluster: TileCluster[]
-  tileToggleOption: TileToggleOption
+  selectedOption: TileViewOption | null
   setTiles: (tiles: Tile[] | ((tiles: Tile[]) => Tile[])) => void
   setCluster: (
     cluster: TileCluster[] | ((cluster: TileCluster[]) => TileCluster[]),
   ) => void
-  setTileToggleOption: (
-    tileToggleOption:
-      | TileToggleOption
-      | ((tileToggleOption: TileToggleOption) => TileToggleOption),
+
+  setSelectedOption: (
+    selectedOption:
+      | TileViewOption
+      | null
+      | ((selectedOption: TileViewOption | null) => TileViewOption | null),
   ) => void
 }
 
 const useTileMapStore = create<TileMapStore>((set, get) => ({
   tiles: [],
   cluster: [],
-  tileToggleOption: TileToggleOption.DEFAULT,
+  selectedOption: TileViewOption.MY,
   setTiles: (tiles: Tile[] | ((tiles: Tile[]) => Tile[])) =>
     set({
       tiles: typeof tiles === "function" ? tiles(get().tiles) : tiles,
@@ -38,16 +43,18 @@ const useTileMapStore = create<TileMapStore>((set, get) => ({
     set({
       cluster: typeof cluster === "function" ? cluster(get().cluster) : cluster,
     }),
-  setTileToggleOption: (
-    tileToggleOption:
-      | TileToggleOption
-      | ((tileToggleOption: TileToggleOption) => TileToggleOption),
+
+  setSelectedOption: (
+    selectedOption:
+      | TileViewOption
+      | null
+      | ((selectedOption: TileViewOption | null) => TileViewOption | null),
   ) =>
     set({
-      tileToggleOption:
-        typeof tileToggleOption === "function"
-          ? tileToggleOption(get().tileToggleOption)
-          : tileToggleOption,
+      selectedOption:
+        typeof selectedOption === "function"
+          ? selectedOption(get()?.selectedOption)
+          : selectedOption,
     }),
 }))
 

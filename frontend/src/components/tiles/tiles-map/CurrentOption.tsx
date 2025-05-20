@@ -15,11 +15,13 @@ const CurrentOption = ({ selectedOption, onClose }: CurrentOptionProps) => {
       case TileViewOption.UNCLAIMED:
         return "미점령 타일"
       case TileViewOption.MY:
-        return "나의 타일"
+        return "내 타일"
       case TileViewOption.TEAM:
-        return "팀 타일"
+        return "우리 팀 타일"
     }
   }, [selectedOption])
+
+  if (!selectedOption) return null
 
   return (
     <div className="h-full w-full">
