@@ -13,9 +13,32 @@ export const POST = async (request: Request) => {
     nextResponse.cookies.set("accessToken", response.data.accessToken, {
       httpOnly: false,
       secure: true,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/",
       maxAge: 60 * 60, // 60분
+    })
+
+    // 쿠키 방식으로 리프레쉬 토큰 생성
+    const refreshToken = response.config.headers
+      .get("set-cookie")
+      ?.split(";")[0]
+      .split("=")[1]
+    if (!refreshToken) {
+      console.error("리프레쉬 토큰 생성 실패!")
+      return NextResponse.json(
+        {
+          redirectTo: "/login",
+        },
+        { status: 400 },
+      )
+    }
+
+    nextResponse.cookies.set("refreshToken", refreshToken as string, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7일
     })
 
     return nextResponse
