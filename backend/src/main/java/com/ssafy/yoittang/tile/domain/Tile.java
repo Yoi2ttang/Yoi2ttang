@@ -1,7 +1,5 @@
 package com.ssafy.yoittang.tile.domain;
 
-import java.awt.Polygon;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,11 +7,13 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.locationtech.jts.geom.Polygon;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 
 @Entity
@@ -44,7 +44,7 @@ public class Tile {
     private Double lngWest;
 
     @JdbcTypeCode(SqlTypes.GEOMETRY)
-    @Column(name = "geom", columnDefinition = "geometry(POLYGON,4326)", insertable = false, updatable = false)
+    @Column(columnDefinition = "geometry")
     private Polygon geom;
 
 }
