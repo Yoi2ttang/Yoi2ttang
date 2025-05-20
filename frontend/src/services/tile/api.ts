@@ -16,7 +16,7 @@ export const getPersonalTileMap = async (
   },
 ) => {
   const response = await apiClient.get<TileMapResponse>(
-    `tiles/members/${memberId}`,
+    `/tiles/members/${memberId}`,
     { params },
   )
   return response.data
@@ -29,7 +29,7 @@ export const getTeamTileMap = async (params: {
   neLat: number
   neLng: number
 }) => {
-  const response = await apiClient.get<TileMapResponse>("tiles/teams/new", {
+  const response = await apiClient.get<TileMapResponse>("/tiles/teams/new", {
     params,
   })
   return response.data
@@ -42,7 +42,7 @@ export const getTeamTileMapCluster = async (params: {
   zoomLevel: number
 }) => {
   const response = await apiClient.get<TileMapClusterResponse>(
-    "tiles/teams/cluster",
+    "/tiles/teams/cluster",
     { params },
   )
 
@@ -55,7 +55,7 @@ export const getOneTeamTileMap = async (
   params: { swLat: number; swLng: number; neLat: number; neLng: number },
 ) => {
   const response = await apiClient.get<TileMapResponse>(
-    `tiles/teams/${zodiacId}/new`,
+    `/tiles/teams/${zodiacId}/new`,
     {
       params,
     },
@@ -69,7 +69,7 @@ export const getOneTeamTileMapCluster = async (
   params: { lat: number; lng: number; zoomLevel: number },
 ) => {
   const response = await apiClient.get<TileMapClusterResponse>(
-    `tiles/teams/cluster/${zodiacId}`,
+    `/tiles/teams/cluster/${zodiacId}`,
     { params },
   )
 
@@ -79,7 +79,7 @@ export const getOneTeamTileMapCluster = async (
 // 1등 팀과 우리팀의 정보를 반환 (/tiles/teams/{zodiacId}/situation)
 export const getZodiacTeamSituation = async (zodiacId: string) => {
   const response = await apiClient.get<ZodiacTeamSituationResponse>(
-    `tiles/teams/${zodiacId}/situation`,
+    `/tiles/teams/${zodiacId}/situation`,
   )
   return response.data
 }
@@ -91,10 +91,24 @@ export const getTeamCluster = async (params: {
   zoomLevel: number
 }) => {
   const response = await apiClient.get<TeamClusterResponse>(
-    `tiles/teams/cluster`,
+    `/tiles/teams/cluster`,
     {
       params,
     },
+  )
+  return response.data
+}
+
+// 개인 타일 클러스터링 확인
+export const getPersonalTileMapCluster = async (params: {
+  localDate: string
+  lat: number
+  lng: number
+  zoomLevel: number
+}) => {
+  const response = await apiClient.get<TileMapClusterResponse>(
+    `/tiles/members/cluster`,
+    { params },
   )
   return response.data
 }

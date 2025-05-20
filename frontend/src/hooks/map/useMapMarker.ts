@@ -41,15 +41,15 @@ export const useMapMarker = ({ mapRef, loc }: useMapMarkerProps) => {
       addMarker(loc)
     } else {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        ({ coords }) => {
           const currentLoc = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lat: coords.latitude,
+            lng: coords.longitude,
           }
           addMarker(currentLoc)
         },
         (err) => {
-          console.error("현재 위치 가져오기 실패:", err)
+          console.log("현재 위치 가져오기 실패:", err)
         },
       )
     }

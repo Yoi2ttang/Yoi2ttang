@@ -39,15 +39,19 @@ const TilesMap = ({
 
   useEffect(() => {
     if (!mapRef.current) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude: lat, longitude: lng } = position.coords
-        initializeMap({
-          loc: { lat, lng },
-          zoom,
-          onCenterChange,
-          mapDiv: "naver-map",
-        })
-      })
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude: lat, longitude: lng } = position.coords
+          initializeMap({
+            loc: { lat, lng },
+            zoom,
+            onCenterChange,
+            mapDiv: "naver-map",
+          })
+        },
+        () => {},
+        { enableHighAccuracy: true }, // 위치 정확도 높임
+      )
     } else {
       // 기존 리스너 제거
       if (listenerRef.current) {

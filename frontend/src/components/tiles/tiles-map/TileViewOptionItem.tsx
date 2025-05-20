@@ -21,7 +21,7 @@ const TileViewOptionItem = ({
   isSelected,
   idx,
 }: TileViewOptionItemProps) => {
-  const { id, name, style, icon, position } = item
+  const { name, style, icon, position } = item
   return (
     <motion.div
       onClick={onClick}
@@ -34,18 +34,18 @@ const TileViewOptionItem = ({
         stiffness: 180,
       }}
       className={cn(
-        "flex w-3/4 cursor-pointer flex-col items-center gap-2 rounded-2xl border border-white/30 bg-white/60 py-3 shadow-lg backdrop-blur-md transition-all",
+        "flex w-full cursor-pointer items-center justify-start gap-2 rounded-2xl border border-white/30 bg-white/60 px-2 py-3 shadow-lg backdrop-blur-md transition-all",
         position,
         isSelected && "ring-yoi-400 ring-2",
       )}>
       <div
         className={cn(
-          "flex size-12 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-blue-400/80 to-purple-400/80 text-white",
+          "flex size-10 items-center justify-center rounded-full border border-white/20 bg-gradient-to-br from-blue-400/80 to-purple-400/80 text-white",
           style,
         )}>
         {icon}
       </div>
-      <p className="mt-1 text-sm font-semibold tracking-tight text-gray-800 drop-shadow-sm">
+      <p className="text-sm font-semibold tracking-tight text-gray-800 drop-shadow-sm">
         {name}
       </p>
     </motion.div>
