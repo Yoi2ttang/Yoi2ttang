@@ -14,12 +14,12 @@ const CourseHistoryList = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4">
-      {isEmpty ? (
-        <p className="text-center text-neutral-300">일치하는 결과가 없어요</p>
-      ) : isLoading ? (
+      {isLoading ? (
         Array.from({ length: 5 }).map((_, index) => (
           <Skeleton key={index} className="h-64 w-full" />
         ))
+      ) : isEmpty ? (
+        <p className="text-center text-neutral-300">일치하는 결과가 없어요</p>
       ) : (
         <>
           {data?.pages.map((page: CoursePaginationResponse) =>
