@@ -95,6 +95,14 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseDetail(courseId, member));
     }
 
+    @GetMapping("/{courseId}/cleared-members/count")
+    public ResponseEntity<Integer> getClearedMemberCount(
+            @PathVariable("courseId") Long courseId,
+            @AuthMember Member member
+    ) {
+        return ResponseEntity.ok(courseService.getClearedMemberCount(courseId));
+    }
+
     @GetMapping("/{courseId}/cleared-members/preview")
     public ResponseEntity<List<CourseClearMemberResponse>> getClearedMembersByCourseIdPreview(
             @PathVariable("courseId") Long courseId,

@@ -81,4 +81,13 @@ public interface RunningRepository extends JpaRepository<Running, Long>, Running
     List<Running> findCompleteRunning(
             @Param("memberId") Long memberId
     );
+
+    @Query(value = """
+            SELECT COUNT(DISTINCT r.member_id)
+            FROM runnings r
+            WHERE r.course_id = :courseId
+              AND r.state = 'COMPLETE'
+              AND r.member_id IS NOT NULL
+        """, nativeQuery = true)
+    long countClearedMembersByCourseId(@Param("courseId") Long courseId);
 }

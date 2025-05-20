@@ -169,6 +169,11 @@ public class CourseService {
         );
     }
 
+    public Integer getClearedMemberCount(Long courseId) {
+        List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
+        return getClearedMembersCount(courseId, memberIds);
+    }
+
     public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId, Member member) {
         List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
         return getClearedMembers(courseId, memberIds, member.getMemberId());
@@ -386,6 +391,25 @@ public class CourseService {
                 .toList();
 
         return memberRepository.findCourseClearMembersByIds(clearedMemberIds, currentMemberId);
+    }
+
+    private Integer getClearedMembersCount(
+            Long courseId,
+            List<Long> candidateMemberIds
+    ) {
+        Long totalTiles = courseTileJpaRepository.countCourseTileByCourseId(courseId);
+
+        Map<Long, Long> visitedTileByMember = tileHistoryRepository.countVisitedTilesByCourseAndMember(
+                courseId,
+                candidateMemberIds
+        );
+
+        List<Long> clearedMemberIds = visitedTileByMember.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), totalTiles))
+                .map(Map.Entry::getKey)
+                .toList();
+
+        return clearedMemberIds.size();
     }
 
 }
