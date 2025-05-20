@@ -1,11 +1,11 @@
 "use client"
 
-import PeopleIcon from "@/assets/icons/navigation-bar/people-icon.svg"
 import MapHeader from "@/components/layouts/Header/MapHeader"
 import CurrentOption from "@/components/tiles/tiles-map/CurrentOption"
 import TilesViewOptionButton from "@/components/tiles/tiles-map/TilesViewOptionButton"
 import TilesViewOptionContainer from "@/components/tiles/tiles-map/TilesViewOptionContainer"
-import TilesMapContainer from "@/components/tiles/TilesMapCotainer"
+import TilesMapContainer from "@/components/tiles/TilesMapContainer"
+import useTileMapStore from "@/stores/useTileMapStore"
 import { TileViewOption } from "@/types/map/tile"
 import { use, useState } from "react"
 
@@ -15,37 +15,16 @@ interface TileMapPageProps {
   }>
 }
 
-const metaData = [
-  {
-    id: TileViewOption.MY,
-    name: "나의 타일",
-    style: "bg-yoi-200",
-    position: "translate-y-0",
-    icon: <PeopleIcon />,
-  },
-  {
-    id: TileViewOption.ALL,
-    name: "전체 점령 타일",
-    style: "bg-yoi-300",
-    position: "-translate-y-10",
-    icon: <PeopleIcon />,
-  },
-  {
-    id: TileViewOption.UNCLAIMED,
-    name: "미점령 타일",
-    style: "bg-yoi-400",
-    position: "translate-y-0",
-    icon: <PeopleIcon />,
-  },
-]
-
 const TileMapPage = ({ params }: TileMapPageProps) => {
+  const setCluster = useTileMapStore.getState().setCluster
+  const setTiles = useTileMapStore.getState().setTiles
+
   const { type } = use(params)
   const isMyTileMap = type === "my"
 
   const [open, setOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<TileViewOption | null>(
-    null,
+    isMyTileMap ? TileViewOption.MY : TileViewOption.TEAM,
   )
 
   const handleOptionClick = (id: TileViewOption) => {
@@ -54,7 +33,9 @@ const TileMapPage = ({ params }: TileMapPageProps) => {
   }
 
   const handleResetOption = () => {
-    setSelectedOption(null)
+    setSelectedOption(isMyTileMap ? TileViewOption.MY : TileViewOption.TEAM)
+    setTiles([])
+    setCluster([])
     setOpen(false)
   }
 
@@ -66,7 +47,6 @@ const TileMapPage = ({ params }: TileMapPageProps) => {
         <section className="flex w-full flex-col items-center justify-center gap-2">
           {open && (
             <TilesViewOptionContainer
-              metaData={metaData}
               selectedOption={selectedOption}
               onOptionClick={handleOptionClick}
             />

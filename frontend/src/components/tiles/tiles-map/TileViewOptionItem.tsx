@@ -12,12 +12,14 @@ interface TileViewOptionItemProps {
     position: string
   }
   isSelected: boolean
+  idx: number
 }
 
 const TileViewOptionItem = ({
   onClick,
   item,
   isSelected,
+  idx,
 }: TileViewOptionItemProps) => {
   const { id, name, style, icon, position } = item
   return (
@@ -27,7 +29,7 @@ const TileViewOptionItem = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: 0.1,
-        delay: 0.1 * id,
+        delay: 0.1 * idx,
         type: "spring",
         stiffness: 180,
       }}

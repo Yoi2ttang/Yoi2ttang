@@ -43,5 +43,5 @@ export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
     }
   }, [tiles])
 
-  return { renderTiles }
+  return { renderTiles, rectanglesRef }
 }

@@ -52,8 +52,8 @@ export interface TileMapClusterResponse {
 }
 
 export enum TileViewOption {
-  MY,
-  TEAM,
-  ALL,
-  UNCLAIMED,
+  MY = "my",
+  TEAM = "team",
+  ALL = "all",
+  UNCLAIMED = "unclaimed",
 }
