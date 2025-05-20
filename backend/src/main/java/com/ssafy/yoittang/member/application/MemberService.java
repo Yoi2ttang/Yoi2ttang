@@ -210,7 +210,7 @@ public class MemberService {
                 followerCount,
                 isFollow,
                 convertToRunningTimeResponse(totalTime),
-                getTotalDistance(targetMember.getMemberId()),
+                getTotalDistance(targetMember.getMemberId()) / 1000.0,
                 getTileCount(targetMember.getMemberId()),
                 getCourseSummaryByMemberId(targetMember.getMemberId())
         );
@@ -230,7 +230,7 @@ public class MemberService {
                 followingCount,
                 followerCount,
                 convertToRunningTimeResponse(totalTime),
-                getTotalDistance(member.getMemberId()),
+                getTotalDistance(member.getMemberId()) / 1000.0,
                 getTileCount(member.getMemberId()),
                 getCourseSummaryByMemberId(member.getMemberId())
         );
