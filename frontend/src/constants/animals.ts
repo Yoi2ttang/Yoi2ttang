@@ -26,6 +26,7 @@ interface AnimalMetaDataType {
   teamName: string
   bgColor: string
   textColor: string
+  color: string
 }
 
 export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
@@ -34,6 +35,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "MOUSE",
     icon: Mouse,
     teamName: "쥐 팀",
+    color: "#bebebe",
     bgColor: "bg-mouse",
     textColor: "text-mouse",
   },
@@ -42,6 +44,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "COW",
     icon: Cow,
     teamName: "소 팀",
+    color: "#e2be8d",
     bgColor: "bg-cow",
     textColor: "text-cow",
   },
@@ -50,6 +53,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "TIGER",
     icon: Tiger,
     teamName: "호랑이 팀",
+    color: "#ffb950",
     bgColor: "bg-tiger",
     textColor: "text-tiger",
   },
@@ -58,6 +62,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "RABBIT",
     icon: Rabbit,
     teamName: "토끼 팀",
+    color: "#ac2fd7",
     bgColor: "bg-rabbit",
     textColor: "text-rabbit",
   },
@@ -66,6 +71,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "DRAGON",
     icon: Dragon,
     teamName: "용 팀",
+    color: "#88bfa7",
     bgColor: "bg-dragon",
     textColor: "text-dragon",
   },
@@ -74,6 +80,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "SNAKE",
     icon: Snake,
     teamName: "뱀 팀",
+    color: "#4f93d2",
     bgColor: "bg-snake",
     textColor: "text-snake",
   },
@@ -82,6 +89,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "HORSE",
     icon: Horse,
     teamName: "말 팀",
+    color: "#ad6b23",
     bgColor: "bg-horse",
     textColor: "text-horse",
   },
@@ -90,6 +98,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "SHEEP",
     icon: Sheep,
     teamName: "양 팀",
+    color: "#f2e7d6",
     bgColor: "bg-sheep",
     textColor: "text-sheep",
   },
@@ -98,6 +107,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "MONKEY",
     icon: Monkey,
     teamName: "원숭이",
+    color: "#f2cc4d",
     bgColor: "bg-monkey",
     textColor: "text-monkey",
   },
@@ -106,6 +116,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "CHICKEN",
     icon: Chicken,
     teamName: "닭",
+    color: "#ef3a5d",
     bgColor: "bg-chicken",
     textColor: "text-chicken",
   },
@@ -114,6 +125,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "DOG",
     icon: Dog,
     teamName: "개",
+    color: "#9d9d9d",
     bgColor: "bg-dog",
     textColor: "text-dog",
   },
@@ -122,6 +134,7 @@ export const animalMetaData: Record<AnimalType, AnimalMetaDataType> = {
     en: "PIG",
     icon: Pig,
     teamName: "돼지",
+    color: "#f5b8c3",
     bgColor: "bg-pig",
     textColor: "text-pig",
   },

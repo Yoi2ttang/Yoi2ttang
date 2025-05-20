@@ -4,7 +4,7 @@ export interface Tile {
   geoHash: string
   sw: Coordinates
   ne: Coordinates
-  zordiacId: number
+  zodiacId: number
 }
 
 // 팀 타일 지도 응답 타입

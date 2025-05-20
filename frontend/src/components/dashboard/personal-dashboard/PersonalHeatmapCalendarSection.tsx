@@ -1,6 +1,5 @@
 import Section from "@/components/common/Section"
 import { getDailyTime } from "@/services/dashboard/api"
-import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { use } from "react"
 import ActivityGrid from "./ActivityGrid"
@@ -22,8 +21,8 @@ const PersonalHeatmapCalendarSection =
           <Link
             href="/dashboard/my/heatmap"
             className="text-caption flex items-center gap-1 text-neutral-400">
-            <span>자세히 보기</span>
-            <ChevronRight className="size-4" />
+            {/* <span>자세히 보기</span>
+            <ChevronRight className="size-4" /> */}
           </Link>
         }>
         <div className="h-full">

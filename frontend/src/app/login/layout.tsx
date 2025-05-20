@@ -8,7 +8,11 @@ interface LoginLayoutProps {
 }
 
 const LoginLayout = ({ children }: LoginLayoutProps) => {
-  return <StackAnimated direction="forward">{children}</StackAnimated>
+  return (
+    <StackAnimated direction="up" duration={0.6}>
+      {children}
+    </StackAnimated>
+  )
 }
 
 export default LoginLayout

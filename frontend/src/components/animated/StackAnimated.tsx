@@ -17,16 +17,19 @@ const StackAnimated = <T extends string | number>({
 }: StackAnimatedProps<T>) => {
   const variants = {
     initial: (direction: NavigationDirection) => ({
-      x: direction === "forward" ? 800 : -800,
+      x: direction === "forward" ? 800 : direction === "backward" ? -800 : 0,
+      y: direction === "up" ? 40 : direction === "down" ? -40 : 0,
       opacity: 0,
     }),
     animate: {
       x: 0,
+      y: 0,
       opacity: 1,
       transition: { duration },
     },
     exit: {
       x: 0,
+      y: 0,
       opacity: 0.9,
       transition: { duration },
     },
