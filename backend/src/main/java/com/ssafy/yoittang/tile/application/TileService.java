@@ -167,9 +167,7 @@ public class TileService {
         Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
         List<String> likeList = likeSet.stream().toList();
 
-        for ( String like : likeList) {
-            log.info(like);
-        }
+        log.info("size : " + likeList.size());
 
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
