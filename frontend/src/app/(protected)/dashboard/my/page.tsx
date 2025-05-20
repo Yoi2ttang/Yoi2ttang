@@ -17,6 +17,8 @@ const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
       month: new Date().getMonth() + 1,
     }),
   )
+
+  console.log("data", data)
   const { nickname } = use(getPayloadOrRedirect())
 
   return (
