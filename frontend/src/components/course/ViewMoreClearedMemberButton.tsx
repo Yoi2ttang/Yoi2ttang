@@ -8,7 +8,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 import useDrawer from "@/hooks/common/useDrawer"
-import useClearedMembers from "@/hooks/course/useClearedMembers"
+import useGetClearedMembers from "@/hooks/course/useGetClearedMembers"
 import { CourseClearedMemberPaginationResponse } from "@/types/course/course.type"
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
@@ -24,7 +24,7 @@ const ViewMoreClearedMemberButton = ({
 }: ViewMoreClearedMemberButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const { targetRef, data, isLoading, isFetchingNextPage } =
-    useClearedMembers(courseId)
+    useGetClearedMembers(courseId)
 
   useDrawer({
     key: "cleared-members",

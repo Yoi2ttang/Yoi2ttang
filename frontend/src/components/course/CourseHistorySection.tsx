@@ -1,15 +1,26 @@
+"use client"
+
 import Carousel from "@/components/common/Carousel"
 import Section from "@/components/common/Section"
 import CourseCarouselItem from "@/components/course/CourseCarouselItem"
-import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
-import { getCourseHistoryPreview } from "@/services/course/api-server"
+import useGetCourseHistoryPreview from "@/hooks/course/useGetCourseHistoryPreview"
+import { getPayload } from "@/lib/auth/util"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import Skeleton from "../common/skeleton"
 
-const CourseHistorySection = async () => {
-  const { data, isError } = await getCourseHistoryPreview()
-  const { nickname } = await getPayloadOrRedirect()
-  const isEmpty = isError || data.length === 0
+const CourseHistorySection = () => {
+  const [nickname, setNickname] = useState("")
+  const { data, isLoading, isError } = useGetCourseHistoryPreview()
+  const isEmpty = !data || data.length === 0
+
+  useEffect(() => {
+    const payload = getPayload()
+    if (payload) {
+      setNickname(payload.nickname)
+    }
+  }, [])
 
   return (
     <Section
@@ -30,7 +41,11 @@ const CourseHistorySection = async () => {
           </Link>
         )
       }>
-      {isEmpty ? (
+      {isLoading ? (
+        Array.from({ length: 1 }).map((_, index) => (
+          <Skeleton key={index} className="h-32 w-full shrink-0" />
+        ))
+      ) : isEmpty ? (
         <div className="flex items-center justify-center rounded-xl bg-white py-6 text-neutral-300">
           {isError ? (
             <p>잠시 후 다시 시도해 주세요</p>

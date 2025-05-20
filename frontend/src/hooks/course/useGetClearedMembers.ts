@@ -1,7 +1,9 @@
+"use client"
+
 import { getClearedMembers } from "@/services/course/api"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 
-const useClearedMembers = (courseId: number) => {
+const useGetClearedMembers = (courseId: number) => {
   const fetchFn = async (pageParam: number) => {
     const response = await getClearedMembers({
       courseId,
@@ -20,4 +22,4 @@ const useClearedMembers = (courseId: number) => {
   })
 }
 
-export default useClearedMembers
+export default useGetClearedMembers

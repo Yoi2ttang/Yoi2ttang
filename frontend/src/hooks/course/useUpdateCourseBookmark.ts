@@ -1,13 +1,17 @@
 "use client"
 
 import { updateBookmark } from "@/services/course/api"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-interface UseCourseBookmarkProps {
+interface UseUpdateCourseBookmarkProps {
   onChange: (bookmarkState: boolean) => void
 }
 
-const useCourseBookmark = ({ onChange }: UseCourseBookmarkProps) => {
+const useUpdateCourseBookmark = ({
+  onChange,
+}: UseUpdateCourseBookmarkProps) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ courseId }: { courseId: number; bookmarkState: boolean }) =>
       updateBookmark(courseId),
@@ -15,9 +19,11 @@ const useCourseBookmark = ({ onChange }: UseCourseBookmarkProps) => {
       onChange(!variables.bookmarkState)
 
       // 추후에 코스 페이지를 다시 들어갈 경우, 현재 북마크 결과가 반영되도록 캐시를 무효화
-      await fetch("/api/revalidate?tag=course-bookmarks-preview")
+      queryClient.invalidateQueries({
+        queryKey: ["course-bookmark-preview"],
+      })
     },
   })
 }
 
-export default useCourseBookmark
+export default useUpdateCourseBookmark
