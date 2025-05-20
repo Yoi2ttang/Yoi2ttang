@@ -15,7 +15,7 @@ const IntroduceHeader = ({}: IntroduceHeaderProps) => {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
-        className="from-yoi-500 to-yoi-400 shadow-yoi-500/20 hover:shadow-yoi-500/30 rounded-full bg-gradient-to-tr px-5 py-2.5 text-sm text-white shadow-lg transition-all duration-300 hover:shadow-xl">
+        className="from-yoi-500 to-yoi-400 shadow-yoi-500/20 hover:shadow-yoi-500/30 cursor-pointer rounded-full bg-gradient-to-tr px-5 py-2.5 text-sm text-white shadow-lg transition-all duration-300 hover:shadow-xl">
         지금 다운로드
       </motion.button>
     </header>

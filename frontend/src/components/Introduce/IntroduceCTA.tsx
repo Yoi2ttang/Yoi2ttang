@@ -26,7 +26,7 @@ const IntroduceCTA = ({}: IntroduceCTAProps) => {
               boxShadow: "0 20px 40px -12px rgba(255, 255, 255, 0.3)",
             }}
             whileTap={{ scale: 0.98 }}
-            className="text-yoi-500 rounded-full bg-white px-8 py-4 text-lg font-medium shadow-xl">
+            className="text-yoi-500 cursor-pointer rounded-full bg-white px-8 py-4 text-lg font-medium shadow-xl">
             지금 다운로드
           </motion.button>
         </motion.div>

@@ -25,7 +25,7 @@ const IntroduceHero = ({}: IntroduceHeroProps) => {
               boxShadow: "0 25px 50px -12px rgba(255, 84, 52, 0.4)",
             }}
             whileTap={{ scale: 0.98 }}
-            className="text-md from-yoi-500 to-yoi-400 shadow-yoi-500/20 hover:shadow-yoi-500/30 rounded-full bg-gradient-to-tr px-8 py-4 font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl">
+            className="text-md from-yoi-500 to-yoi-400 shadow-yoi-500/20 hover:shadow-yoi-500/30 cursor-pointer rounded-full bg-gradient-to-tr px-8 py-4 font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl">
             지금 다운로드
           </motion.button>
         </motion.div>
