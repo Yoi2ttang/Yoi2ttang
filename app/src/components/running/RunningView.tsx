@@ -63,6 +63,11 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
     PostLocationResponse | PostLocationResponse[] | null
   >(null);
 
+  const [showTile, setShowTile] = useState(true);
+  const [selectedTileView, setSelectedTileView] = useState<
+    'my' | 'team' | 'empty' | null
+  >('my');
+
   useEffect(() => {
     if (!currentLoc || hasStartedRunning) return;
 
@@ -216,7 +221,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           initialCamera={{
             latitude: loc.lat,
             longitude: loc.lng,
-            zoom: 15,
+            zoom: 13,
           }}
           onCameraChanged={({latitude, longitude, zoom}) => {
             if (zoom !== undefined) {
@@ -230,7 +235,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
             }
           }}>
           {/* ✅ 지도 내부로 이동 */}
-          {/* {zoomLevel >= 16 &&
+          {selectedTileView === 'empty' &&
             tileData?.tileGetResponseList?.map(tile => {
               const {sw, ne} = tile;
               return (
@@ -245,13 +250,13 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                   color="rgba(255, 124, 100, 0.4)" // ✅ 배경 색 (40% 투명도)
                   outlineColor="#ff7c64"
                   outlineWidth={2}
-                  zIndex={999}
+                  zIndex={9999}
                 />
               );
-            })} */}
+            })}
 
-          {/* ✅ 방문한 타일 (다른 색상) */}
-          {zoomLevel >= 14 &&
+          {/* 내가 방문한 타일 */}
+          {selectedTileView === 'my' &&
             visitedTiles.map(({geoHash, sw, ne}) => (
               <NaverMapPolygonOverlay
                 key={`visited-${geoHash}`}
@@ -261,14 +266,15 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                   {latitude: ne.lat, longitude: ne.lng},
                   {latitude: sw.lat, longitude: ne.lng},
                 ]}
-                color="rgba(100, 180, 255, 0.3)"
-                outlineColor="#007aff"
+                color="rgba(255, 124, 100, 0.4)"
+                outlineColor="#ff7c64"
                 outlineWidth={1}
                 zIndex={998}
               />
             ))}
 
           {zoomLevel < 16 &&
+            selectedTileView === 'team' &&
             clusterData?.tileClusterGetResponseList?.map(cluster => (
               <NaverMapMarkerOverlay
                 key={`${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
@@ -292,9 +298,18 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         />
       )}
 
-      <RunningSettingsButton onClick={() => setShowSettings(true)} />
+      <RunningSettingsButton
+        onClick={() => setShowSettings(true)}
+        selectedTileView={selectedTileView}
+      />
       {showSettings && (
-        <RunningSettingsModal onClose={() => setShowSettings(false)} />
+        <RunningSettingsModal
+          onClose={() => setShowSettings(false)}
+          showTile={showTile}
+          setShowTile={setShowTile}
+          selectedTileView={selectedTileView}
+          setSelectedTileView={setSelectedTileView}
+        />
       )}
     </StyledView>
   );
