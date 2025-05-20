@@ -8,12 +8,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 import useDrawer from "@/hooks/common/useDrawer"
-import { ChevronRight } from "lucide-react"
-import { useState } from "react"
-import RunnerItem from "../profile/RunnerItem"
 import useClearedMembers from "@/hooks/course/useClearedMembers"
 import { CourseClearedMemberPaginationResponse } from "@/types/course/course.type"
+import { ChevronRight } from "lucide-react"
+import { useState } from "react"
 import Skeleton from "../common/skeleton"
+import RunnerItem from "../profile/RunnerItem"
 
 interface ViewMoreClearedMemberButtonProps {
   courseId: number
@@ -79,6 +79,7 @@ const ViewMoreClearedMemberButton = ({
                         nickname={item.nickname}
                         animalType={"TIGER"}
                         profileImageUrl={item.profileImageUrl}
+                        isFollow={null}
                       />
                     )),
                 )}
