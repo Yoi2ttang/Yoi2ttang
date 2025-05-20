@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +18,7 @@ import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileMemberClusterGetWrapperResponse;
 import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
