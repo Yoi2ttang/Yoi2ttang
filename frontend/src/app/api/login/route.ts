@@ -47,7 +47,7 @@ export const GET = async (request: Request) => {
         secure: true,
         sameSite: "strict",
         path: "/",
-        maxAge: 60 * 60, // 60분
+        maxAge: 60 * 60 * 24 * 30, // 30일
       })
 
       // 쿠키 방식으로 리프레쉬 토큰 생성

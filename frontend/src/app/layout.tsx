@@ -3,6 +3,7 @@ import { Metadata } from "next"
 import localFont from "next/font/local"
 import { ReactNode } from "react"
 import "./globals.css"
+import ResponsiveContainer from "@/components/ResponsiveContainer"
 
 const pretendard = localFont({
   src: [
@@ -30,9 +31,9 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <html lang="ko">
       <body className={`${pretendard.className} bg-neutral-100`}>
         <RootProvider>
-          <div className="max-w-yoi-width mx-auto flex min-h-dvh flex-col bg-neutral-50">
+          <ResponsiveContainer>
             <div className="flex-1">{children}</div>
-          </div>
+          </ResponsiveContainer>
         </RootProvider>
       </body>
     </html>

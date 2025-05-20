@@ -1,11 +1,16 @@
-import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
+"use client"
+
+import { useDevice } from "@/components/DeviceProvider"
+import IntroduceContentContainer from "@/components/Introduce/IntroduceContent"
 
 const Home = () => {
-  return (
-    <div>
-      <NavigationBar />
-    </div>
-  )
+  const { isDesktop } = useDevice()
+
+  if (!isDesktop) {
+    return <div>온보딩</div>
+  }
+
+  return <IntroduceContentContainer />
 }
 
 export default Home

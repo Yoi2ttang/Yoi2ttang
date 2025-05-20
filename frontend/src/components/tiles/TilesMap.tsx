@@ -1,74 +1,74 @@
 "use client"
 
-import useGetTeamTile from "@/hooks/tile/useGetTeamTile"
-import { TileMapResponse } from "@/types/dashboard/dashboard.type"
-import { Coordinates } from "@/types/map/navermaps"
-import { Tile } from "@/types/map/tile"
-import { useEffect, useState } from "react"
-import Map from "../common/Map"
+import useMapCluster from "@/hooks/map/useMapCluster"
+import { useMapInitialize } from "@/hooks/map/useMapInitialize"
+import { useMapMarker } from "@/hooks/map/useMapMarker"
+import { useMapTiles } from "@/hooks/map/useMapTiles"
+import { cn } from "@/lib/utils"
+import useTileMapStore from "@/stores/useTileMapStore"
+import { Coordinates, NaverMap } from "@/types/map/navermaps"
+import { useEffect, useRef } from "react"
+import { useShallow } from "zustand/react/shallow"
 
-interface TilesMapProps {}
-
-const mockTeamTileMap: TileMapResponse = {
-  tileGetResponseList: [
-    {
-      geoHash: "mock1",
-      zordiacId: 1,
-      sw: { lat: 37.509, lng: 127.0212 },
-      ne: { lat: 37.5095, lng: 127.0217 },
-    },
-    {
-      geoHash: "mock2",
-      zordiacId: 2,
-      sw: { lat: 37.5095, lng: 127.0217 },
-      ne: { lat: 37.51, lng: 127.0222 },
-    },
-    {
-      geoHash: "mock3",
-      zordiacId: 3,
-      sw: { lat: 37.509, lng: 127.0222 },
-      ne: { lat: 37.5095, lng: 127.0227 },
-    },
-    {
-      geoHash: "mock4",
-      zordiacId: 4,
-      sw: { lat: 37.5085, lng: 127.0212 },
-      ne: { lat: 37.509, lng: 127.0217 },
-    },
-  ],
+interface TilesMapProps {
+  zoom: number
+  onCenterChange: (center: Coordinates, map: NaverMap | null) => void
 }
 
-const testData = mockTeamTileMap.tileGetResponseList
+const TilesMap = ({ zoom, onCenterChange }: TilesMapProps) => {
+  const { cluster, tiles } = useTileMapStore(
+    useShallow((state) => ({
+      cluster: state.cluster,
+      tiles: state.tiles,
+    })),
+  )
 
-const TilesMap = ({}: TilesMapProps) => {
-  const [loc, setLoc] = useState<Coordinates>()
-  const [tiles, setTiles] = useState<Tile[]>(testData)
+  const { mapRef, initializeMap } = useMapInitialize()
+  const listenerRef = useRef<naver.maps.MapEventListener | null>(null)
 
-  const { mutateAsync: getTeamTileMap } = useGetTeamTile()
-
-  const handleCenterChange = async (center: Coordinates) => {
-    const res = await getTeamTileMap(center)
-    setTiles([...testData, ...res.tileGetResponseList])
-  }
+  useMapCluster({ mapRef, clusterList: cluster })
+  useMapMarker({ mapRef })
+  useMapTiles({ mapRef, tiles })
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLoc({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+    if (!mapRef.current) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude: lat, longitude: lng } = position.coords
+        initializeMap({
+          loc: { lat, lng },
+          zoom,
+          onCenterChange,
+          mapDiv: "naver-map",
+        })
       })
-    })
-  }, [])
+    } else {
+      // 기존 리스너 제거
+      if (listenerRef.current) {
+        naver.maps.Event.removeListener(listenerRef.current)
+      }
 
-  return (
-    loc && (
-      <Map
-        loc={loc}
-        zoom={17}
-        tiles={tiles}
-        onCenterChange={handleCenterChange}
-      />
-    )
-  )
+      // 새 리스너 등록
+      listenerRef.current = naver.maps.Event.addListener(
+        mapRef.current,
+        "idle",
+        () => {
+          const center = mapRef.current?.getCenter() as naver.maps.LatLng
+          onCenterChange(
+            { lat: center.lat(), lng: center.lng() },
+            mapRef.current,
+          )
+        },
+      )
+    }
+
+    return () => {
+      if (listenerRef.current) {
+        naver.maps.Event.removeListener(listenerRef.current)
+      }
+    }
+  }, [zoom, onCenterChange, initializeMap])
+
+  return <div id="naver-map" className={cn("h-full w-full")} />
 }
+
 export default TilesMap
