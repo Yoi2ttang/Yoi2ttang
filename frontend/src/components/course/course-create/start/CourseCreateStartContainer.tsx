@@ -67,7 +67,11 @@ const CourseCreateStartContainer = ({
         path: [{ lat, lng }],
         localAddress: convertedAddress,
       })
-    })
+    },
+    () => {},
+    {
+      enableHighAccuracy: true,
+    },)
   }
 
   const handleConvertedAddress = (localAddress: string) => {

@@ -51,6 +51,9 @@ export const useMapMarker = ({ mapRef, loc }: useMapMarkerProps) => {
         (err) => {
           console.log("현재 위치 가져오기 실패:", err)
         },
+        {
+          enableHighAccuracy: true,
+        },
       )
     }
   }, [loc, mapRef])

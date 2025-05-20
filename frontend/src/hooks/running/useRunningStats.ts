@@ -73,6 +73,9 @@ export const useRunningStats = ({ isPaused, weight }: useRunningStatsProps) => {
       (error) => {
         console.error("현재 위치를 불러오는 데 실패했습니다:", error)
       },
+      {
+        enableHighAccuracy: true,
+      },
     )
   }, [])
 

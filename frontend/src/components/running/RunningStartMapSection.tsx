@@ -13,7 +13,11 @@ const RunningStartMapSection = () => {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       })
-    })
+    },
+    () => {},
+    {
+      enableHighAccuracy: true,
+    },)
   }, [])
 
   return (

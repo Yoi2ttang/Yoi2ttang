@@ -18,20 +18,26 @@ const CourseCreateMap = ({
 
   useEffect(() => {
     if (!mapRef.current) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude: lat, longitude: lng } = position.coords
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude: lat, longitude: lng } = position.coords
 
-        initializeMap({
-          loc: startLocation ?? { lat, lng },
-          mapDiv: "naver-map",
-          zoom: 16,
-          onCenterChange: handleDragEnd,
-        })
+          initializeMap({
+            loc: startLocation ?? { lat, lng },
+            mapDiv: "naver-map",
+            zoom: 16,
+            onCenterChange: handleDragEnd,
+          })
 
-        ref.current = mapRef.current
+          ref.current = mapRef.current
 
-        handleDragEnd({ lat, lng })
-      })
+          handleDragEnd({ lat, lng })
+        },
+        () => {},
+        {
+          enableHighAccuracy: true,
+        },
+      )
     }
   }, [])
 
