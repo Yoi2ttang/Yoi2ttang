@@ -130,10 +130,11 @@ public class MemberService {
         follow.updateActive(false);
     }
 
-    public PageInfo<FollowResponse> getFollowingList(Long targetId, String pageToken, Member member) {
+    public PageInfo<FollowResponse> getFollowingList(Long targetId, String keyword, String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
         List<Long> followingMemberIds = followJpaRepository.findFollowingMemberIds(
                 targetId,
+                keyword,
                 lastToId,
                 DEFAULT_AUTO_PROFILE_SIZE
         );
@@ -151,11 +152,12 @@ public class MemberService {
 
     }
 
-    public PageInfo<FollowResponse> getFollowerList(Long targetId, String pageToken, Member member) {
+    public PageInfo<FollowResponse> getFollowerList(Long targetId, String keyword, String pageToken, Member member) {
         Long lastToId = (pageToken != null) ? Long.parseLong(pageToken) : null;
 
         List<Long> followerMemberIds = followJpaRepository.findFollowerMemberIds(
                 targetId,
+                keyword,
                 lastToId,
                 DEFAULT_AUTO_PROFILE_SIZE
         );
