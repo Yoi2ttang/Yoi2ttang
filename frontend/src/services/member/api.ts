@@ -1,6 +1,7 @@
 "use client"
 
 import apiClient from "@/lib/http-common"
+import { Course } from "@/types/course/course.type"
 import {
   FollowListPaginationRequest,
   MemberAutocompletePaginationRequest,
@@ -94,4 +95,11 @@ export const updateProfile = async (data: ProfileForEditRequest) => {
   }
 
   return await apiClient.patch("/members/profiles", formData)
+}
+
+export const getCompletedCourses = async (
+  targetId: number,
+): Promise<Course[]> => {
+  const response = await apiClient.get(`/members/${targetId}/completed-courses`)
+  return response.data
 }
