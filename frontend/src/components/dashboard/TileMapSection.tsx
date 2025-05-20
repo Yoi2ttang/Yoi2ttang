@@ -4,7 +4,7 @@ import Section from "@/components/common/Section"
 import { useMapInitialize } from "@/hooks/map/useMapInitialize"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
 import { useMapTiles } from "@/hooks/map/useMapTiles"
-import useGetTeamTile from "@/hooks/tile/useGetTeamTile"
+import useGetTeamTile from "@/hooks/tile/useGetMyTeamTile"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
 import { ChevronRight } from "lucide-react"
@@ -22,10 +22,19 @@ const TileMapSection = ({ type }: TileMapSectionProps) => {
   const { addMarker } = useMapMarker({ mapRef })
   useMapTiles({ mapRef, tiles })
 
-  const { mutateAsync: getTeamTileMap } = useGetTeamTile()
+  const { mutateAsync: getTeamTileMap } = useGetTeamTile({
+    zodiacId: 1,
+  })
 
   const handleCenterChange = async (center: Coordinates) => {
-    const res = await getTeamTileMap(center)
+    const bounds = mapRef.current?.getBounds()
+
+    const res = await getTeamTileMap({
+      swLat: bounds?.minY() ?? center.lat,
+      swLng: bounds?.minX() ?? center.lng,
+      neLat: bounds?.maxY() ?? center.lat,
+      neLng: bounds?.maxX() ?? center.lng,
+    })
     setTiles([...res.tileGetResponseList])
   }
 

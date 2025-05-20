@@ -18,10 +18,10 @@ const Section = ({
 }: SectionProps) => {
   return (
     <div className={cn("flex flex-col gap-5", className)}>
-      <header className="flex w-full items-baseline">
+      <header className="flex w-full items-center">
         <div className="flex flex-1 gap-2">
           {leftIcon && <div>{leftIcon}</div>}
-          <div className="text-title-md">{title}</div>
+          <div className="text-title-md line-clamp-1 break-all">{title}</div>
         </div>
         {supplement && typeof supplement === "string" ? (
           <span className="text-caption text-neutral-400">{supplement}</span>

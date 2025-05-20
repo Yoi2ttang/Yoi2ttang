@@ -1,6 +1,5 @@
 "use client"
 
-import KakaoProfileImage from "@/assets/images/profile/kakao_profile.jpg"
 import { AnimalType } from "@/types/animal"
 import Image from "next/image"
 import Link from "next/link"
@@ -39,7 +38,7 @@ const RunnerItem = ({
         <div className="flex flex-1 flex-col gap-0.5">
           <Link
             href={`/profile/${targetId}`}
-            className="line-clamp-1 w-fit break-all">
+            className="line-clamp-1 w-fit cursor-pointer break-all">
             {nickname}
           </Link>
           <AnimalBadge animal={animalType} />

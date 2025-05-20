@@ -4,7 +4,7 @@ import { ReactNode } from "react"
 
 interface StackAnimatedProps<T extends string | number> {
   duration?: number
-  step: T
+  step?: T
   children: ReactNode
   direction: NavigationDirection
 }
