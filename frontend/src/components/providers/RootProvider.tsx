@@ -1,4 +1,5 @@
 import { ReactNode } from "react"
+import DeviceProvider from "../DeviceProvider"
 import QueryProvider from "./QueryProvider"
 import { ScriptProvider } from "./ScriptProvider"
 import WebViewProvider from "./WebViewProvider"
@@ -13,8 +14,10 @@ const RootProvider = (data: RootProviderProps) => {
   return (
     <WebViewProvider>
       <QueryProvider>
-        <ScriptProvider />
-        {children}
+        <DeviceProvider>
+          <ScriptProvider />
+          {children}
+        </DeviceProvider>
       </QueryProvider>
     </WebViewProvider>
   )

@@ -25,6 +25,7 @@ interface FetchResponse<T, E> {
   data: T
   isError: boolean
   error: null | E
+  config: Response
 }
 
 const getAccessToken = async () => {
@@ -62,11 +63,18 @@ const nextFetchInstance = async (baseUrl?: string) => {
         isSuccess: false,
         isError: true,
         error,
+        config: response,
       }
     }
 
     const data = await response.json()
-    return { isSuccess: true, data, isError: false, error: null }
+    return {
+      isSuccess: true,
+      data,
+      isError: false,
+      error: null,
+      config: response,
+    }
   }
 
   const request = async <T>(

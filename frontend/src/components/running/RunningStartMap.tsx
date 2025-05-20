@@ -1,17 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import CurrentLocationBtn from "@/assets/icons/maps/current-location-btn.svg"
+import { useCurrentLocationButton } from "@/hooks/map/useCurrentLocationButton"
 import { useMap } from "@/hooks/map/useMap"
 import { useMapMarker } from "@/hooks/map/useMapMarker"
-import { useMapTiles } from "@/hooks/map/useMapTiles"
 import { useMapTileClusters } from "@/hooks/map/useMapTileClusters"
+import { useMapTiles } from "@/hooks/map/useMapTiles"
+import useGetOneTeamTileMap from "@/hooks/running/useGetOneTeamTileMap"
+import useGetOneTeamTileMapCluster from "@/hooks/running/useGetOneTeamTileMapCluster"
+import { getPayload } from "@/lib/auth/util"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile } from "@/types/map/tile"
-import { getPayload } from "@/lib/auth/util"
-import { useCurrentLocationButton } from "@/hooks/map/useCurrentLocationButton"
-import CurrentLocationBtn from "@/assets/icons/maps/current-location-btn.svg"
-import useGetOneTeamTileMapCluster from "@/hooks/running/useGetOneTeamTileMapCluster"
-import useGetOneTeamTileMap from "@/hooks/running/useGetOneTeamTileMap"
+import { useEffect, useState } from "react"
 
 interface RunningStartMapProps {
   loc: Coordinates
@@ -56,7 +56,8 @@ const RunningStartMap = ({ loc }: RunningStartMapProps) => {
   // 줌이 16 이상일 때만 타일 요청
   const { data: tileData } = useGetOneTeamTileMap({
     zodiacId,
-    center,
+    sw: { lat: center.lat, lng: center.lng },
+    ne: { lat: center.lat, lng: center.lng },
   })
 
   // tile 또는 cluster 반영

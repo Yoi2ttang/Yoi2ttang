@@ -1,4 +1,4 @@
-import { postLogout, postReissue } from "@/services/auth/api-server"
+import { postLogout } from "@/services/auth/api-server"
 import { NextResponse } from "next/server"
 
 export const POST = async (request: Request) => {
@@ -8,6 +8,9 @@ export const POST = async (request: Request) => {
 
     // 액세스 토큰이 담긴 쿠키 삭제
     nextResponse.cookies.delete("accessToken")
+
+    // 리프레쉬 토큰이 담긴 쿠키 삭제
+    nextResponse.cookies.delete("refreshToken")
 
     return nextResponse
   } catch (error) {

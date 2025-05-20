@@ -1,21 +1,29 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { getOneTeamTileMap } from "@/services/tile/api"
 import { Coordinates } from "@/types/map/navermaps"
+import { useQuery } from "@tanstack/react-query"
 
 interface useGetOneTeamTileMapProps {
   zodiacId: number
-  center: Coordinates
+  sw: Coordinates
+  ne: Coordinates
 }
 
 const useGetOneTeamTileMap = ({
   zodiacId,
-  center,
+  sw,
+  ne,
 }: useGetOneTeamTileMapProps) => {
   return useQuery({
-    queryKey: ["oneTeamTileMap", zodiacId, center],
-    queryFn: () => getOneTeamTileMap(zodiacId, center),
+    queryKey: ["oneTeamTileMap", zodiacId, sw, ne],
+    queryFn: () =>
+      getOneTeamTileMap(zodiacId, {
+        swLat: sw.lat,
+        swLng: sw.lng,
+        neLat: ne.lat,
+        neLng: ne.lng,
+      }),
     staleTime: 1000 * 60,
   })
 }

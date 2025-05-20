@@ -6,16 +6,13 @@ import { useRef } from "react"
 interface InitMapOptions {
   loc: Coordinates
   zoom?: number
-  onCenterChange?: (center: Coordinates) => void
+  onCenterChange?: (center: Coordinates, map: NaverMap | null) => void
   mapDiv?: string | HTMLElement
   customOptions?: naver.maps.MapOptions
 }
 
 export const useMapInitialize = () => {
   const mapRef = useRef<NaverMap | null>(null)
-  const centerChangeCallbackRef = useRef<
-    ((center: Coordinates) => void) | null
-  >(null)
 
   const initializeMap = ({
     mapDiv,
@@ -26,10 +23,7 @@ export const useMapInitialize = () => {
   }: InitMapOptions) => {
     if (typeof window === "undefined" || !window.naver || mapRef.current) {
       return null
-      // throw new Error("네이버 지도 api가 로드되지 않았습니다.")
     }
-
-    centerChangeCallbackRef.current = onCenterChange ?? null
 
     const mapOptions = {
       center: new naver.maps.LatLng(loc.lat, loc.lng),
@@ -45,19 +39,17 @@ export const useMapInitialize = () => {
     const map = new naver.maps.Map(mapDiv ?? "naver-map", mapOptions)
     mapRef.current = map
 
-    centerChangeCallbackRef.current?.({
-      lat: loc.lat,
-      lng: loc.lng,
-    })
+    // 초기 호출
+    onCenterChange?.({ lat: loc.lat, lng: loc.lng }, map)
 
     // 중심 좌표 변화 시 좌표 출력
     naver.maps.Event.addListener(map, "idle", () => {
       const center = map.getCenter() as naver.maps.LatLng
+
       const newCenter = {
         lat: center.lat(),
         lng: center.lng(),
       }
-      centerChangeCallbackRef.current?.(newCenter)
     })
   }
 
