@@ -20,9 +20,9 @@ const NavigationBar = () => {
       />
       <NavigationRunningButton />
       <NavigationButton
-        href="/quest"
+        href="/course"
         icon={<RouteIcon className="size-7" />}
-        label="퀘스트"
+        label="코스"
       />
       <NavigationProfileButton href="/profile" label="프로필" />
     </div>
