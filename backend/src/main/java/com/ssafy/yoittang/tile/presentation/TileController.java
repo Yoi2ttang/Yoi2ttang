@@ -22,6 +22,7 @@ import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.PersonalTileGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileMemberClusterGetWrapperResponse;
 import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
@@ -97,7 +98,7 @@ public class TileController implements TileControllerSwaggerDoc {
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
         @RequestParam("lat") Double lat,
         @RequestParam("lng") Double lng,
-        @RequestParam("zoomLevel") Integer zoomLevel
+        @RequestParam("zoom-level") Integer zoomLevel
     ) {
         return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
     }
@@ -137,6 +138,18 @@ public class TileController implements TileControllerSwaggerDoc {
                 .build();
 
         return ResponseEntity.ok(tileHistoryService.getTile(personalTileGetRequest, loginMember));
+    }
+
+    @GetMapping("/members/cluster")
+    public ResponseEntity<TileMemberClusterGetWrapperResponse> getTile(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("local-date") LocalDate localDate,
+            @RequestParam("zoom-level") Integer zoomLevel,
+            @AuthMember Member loginMember
+    ) {
+
+        return ResponseEntity.ok(tileService.getMemberCluster(lat, lng, localDate, zoomLevel, loginMember));
     }
 
     @GetMapping("/rankings")
