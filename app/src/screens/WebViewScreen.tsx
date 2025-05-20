@@ -1,11 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  BackHandler,
-  ToastAndroid, // ✅ 추가
-  Platform,
-} from 'react-native';
+import {View, StyleSheet, BackHandler, ToastAndroid} from 'react-native';
 import {WebView} from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -16,6 +10,11 @@ import {RouteProp} from '@react-navigation/native';
 const WebViewScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const [currentUrl, setCurrentUrl] = useState<string>(
+    'https://yoi2ttang.site',
+  );
+
   const [receivedToken, setReceivedToken] = useState<string | null>(null);
   const webViewRef = useRef<WebView>(null);
   const canGoBackRef = useRef(false);
@@ -60,22 +59,26 @@ const WebViewScreen = () => {
   // ✅ Android 뒤로가기 핸들링
   useEffect(() => {
     const handleBackPress = () => {
-      if (canGoBackRef.current && webViewRef.current) {
-        webViewRef.current.goBack();
-        return true;
-      } else {
+      if (currentUrl === 'https://yoi2ttang.site/dashboard/my') {
         const now = Date.now();
         if (now - lastBackPress.current < 2000) {
-          return false; // 앱 종료
+          BackHandler.exitApp(); // ✅ 두 번째 눌렀을 때 앱 종료
         } else {
           ToastAndroid.show(
             '종료하려면 한 번 더 눌러주세요',
             ToastAndroid.SHORT,
           );
           lastBackPress.current = now;
-          return true;
         }
+        return true;
       }
+
+      if (canGoBackRef.current && webViewRef.current) {
+        webViewRef.current.goBack(); // ✅ 그 외는 웹뷰 뒤로가기
+        return true;
+      }
+
+      return true;
     };
 
     const subscription = BackHandler.addEventListener(
@@ -86,7 +89,7 @@ const WebViewScreen = () => {
     return () => {
       subscription.remove(); // ✅ Type-safe 정리
     };
-  }, []);
+  }, [currentUrl]);
 
   return (
     <View style={styles.container}>
@@ -96,6 +99,7 @@ const WebViewScreen = () => {
         onMessage={handleMessage}
         onNavigationStateChange={navState => {
           canGoBackRef.current = navState.canGoBack;
+          setCurrentUrl(navState.url); // ✅ 현재 URL 추적
         }}
         geolocationEnabled={true}
       />
