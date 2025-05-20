@@ -28,6 +28,9 @@ export const useMapTiles = ({
     rectanglesRef.current.forEach((rectangle) => rectangle.setMap(null))
     rectanglesRef.current = []
 
+    // ✅ 안전하게 배열 여부 확인
+    if (!Array.isArray(tiles)) return
+
     // 새 타일 추가
     tiles.forEach(({ sw, ne, zodiacId }) => {
       let color
@@ -79,7 +82,7 @@ export const useMapTiles = ({
   }
 
   useEffect(() => {
-    if (mapRef.current) {
+    if (mapRef.current && Array.isArray(tiles)) {
       renderTiles(tiles)
     }
   }, [tiles])
