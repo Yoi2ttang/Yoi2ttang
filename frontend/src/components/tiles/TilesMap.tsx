@@ -11,12 +11,11 @@ import { useEffect, useRef } from "react"
 import { useShallow } from "zustand/react/shallow"
 
 interface TilesMapProps {
-  tileMapRef: React.RefObject<NaverMap | null>
   zoom: number
-  onCenterChange: (center: Coordinates) => void
+  onCenterChange: (center: Coordinates, map: NaverMap | null) => void
 }
 
-const TilesMap = ({ tileMapRef, zoom, onCenterChange }: TilesMapProps) => {
+const TilesMap = ({ zoom, onCenterChange }: TilesMapProps) => {
   const { cluster, tiles } = useTileMapStore(
     useShallow((state) => ({
       cluster: state.cluster,
@@ -54,13 +53,12 @@ const TilesMap = ({ tileMapRef, zoom, onCenterChange }: TilesMapProps) => {
         "idle",
         () => {
           const center = mapRef.current?.getCenter() as naver.maps.LatLng
-          onCenterChange({ lat: center.lat(), lng: center.lng() })
+          onCenterChange(
+            { lat: center.lat(), lng: center.lng() },
+            mapRef.current,
+          )
         },
       )
-    }
-
-    if (!tileMapRef.current) {
-      tileMapRef.current = mapRef.current
     }
 
     return () => {

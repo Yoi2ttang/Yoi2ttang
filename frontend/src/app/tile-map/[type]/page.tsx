@@ -7,7 +7,7 @@ import TilesViewOptionContainer from "@/components/tiles/tiles-map/TilesViewOpti
 import TilesMapContainer from "@/components/tiles/TilesMapContainer"
 import useTileMapStore from "@/stores/useTileMapStore"
 import { TileViewOption } from "@/types/map/tile"
-import { use, useState } from "react"
+import { use, useMemo, useState } from "react"
 
 interface TileMapPageProps {
   params: Promise<{
@@ -20,11 +20,10 @@ const TileMapPage = ({ params }: TileMapPageProps) => {
   const setTiles = useTileMapStore.getState().setTiles
 
   const { type } = use(params)
-  const isMyTileMap = type === "my"
 
   const [open, setOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<TileViewOption | null>(
-    isMyTileMap ? TileViewOption.MY : TileViewOption.TEAM,
+    null,
   )
 
   const handleOptionClick = (id: TileViewOption) => {
@@ -33,20 +32,28 @@ const TileMapPage = ({ params }: TileMapPageProps) => {
   }
 
   const handleResetOption = () => {
-    setSelectedOption(isMyTileMap ? TileViewOption.MY : TileViewOption.TEAM)
+    setSelectedOption(null)
     setTiles([])
     setCluster([])
     setOpen(false)
   }
 
+  const headerTitle = useMemo(() => {
+    if (type === "my") {
+      return "내 타일 지도"
+    }
+    return "팀 타일 지도"
+  }, [type])
+
   return (
     <div className="relative flex h-dvh w-full flex-col gap-4">
-      <MapHeader showBackButton title="전체 타일 지도" />
-      <TilesMapContainer selectedOption={selectedOption} />
+      <MapHeader showBackButton title={headerTitle} />
+      <TilesMapContainer tileMapType={type} selectedOption={selectedOption} />
       <div className="absolute bottom-10 z-101 flex w-full items-center justify-center gap-2">
         <section className="flex w-full flex-col items-center justify-center gap-2">
           {open && (
             <TilesViewOptionContainer
+              tileMapType={type}
               selectedOption={selectedOption}
               onOptionClick={handleOptionClick}
             />

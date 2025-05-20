@@ -47,7 +47,7 @@ export const GET = async (request: Request) => {
         secure: true,
         sameSite: "lax",
         path: "/",
-        maxAge: 60 * 60, // 60분
+        maxAge: 60 * 60 * 24 * 30, // 30일
       })
 
       return nextResponse

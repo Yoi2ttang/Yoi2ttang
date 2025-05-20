@@ -8,7 +8,8 @@ interface useGetPersonalTileProps {
 const useGetPersonalTile = ({ memberId }: useGetPersonalTileProps) => {
   return useMutation({
     mutationKey: ["getPersonalTile"],
-    mutationFn: () => getPersonalTileMap(memberId),
+    mutationFn: (params: { lat: number; lng: number; localDate: string }) =>
+      getPersonalTileMap(memberId, params),
   })
 }
 

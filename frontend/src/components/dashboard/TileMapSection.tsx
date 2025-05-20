@@ -22,13 +22,18 @@ const TileMapSection = ({ type }: TileMapSectionProps) => {
   const { addMarker } = useMapMarker({ mapRef })
   useMapTiles({ mapRef, tiles })
 
-  const { mutateAsync: getTeamTileMap } = useGetTeamTile()
+  const { mutateAsync: getTeamTileMap } = useGetTeamTile({
+    zodiacId: 1,
+  })
 
   const handleCenterChange = async (center: Coordinates) => {
+    const bounds = mapRef.current?.getBounds()
+
     const res = await getTeamTileMap({
-      zodiacId: 1,
-      lat: center.lat,
-      lng: center.lng,
+      swLat: bounds?.minY() ?? center.lat,
+      swLng: bounds?.minX() ?? center.lng,
+      neLat: bounds?.maxY() ?? center.lat,
+      neLng: bounds?.maxX() ?? center.lng,
     })
     setTiles([...res.tileGetResponseList])
   }

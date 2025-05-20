@@ -6,6 +6,8 @@ interface useMapTilesProps {
   tiles: Tile[]
 }
 
+const GAP = 0.00002
+
 export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
 
@@ -24,14 +26,15 @@ export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
       const rectangle = new naver.maps.Rectangle({
         map,
         bounds: new naver.maps.LatLngBounds(
-          new naver.maps.LatLng(sw.lat, sw.lng),
-          new naver.maps.LatLng(ne.lat, ne.lng),
+          new naver.maps.LatLng(sw.lat + GAP, sw.lng + GAP),
+          new naver.maps.LatLng(ne.lat - GAP, ne.lng - GAP),
         ),
         strokeColor: color,
-        strokeOpacity: 1,
+        strokeOpacity: 0.4,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: 0.3,
+        strokeLineJoin: "round",
       })
       rectanglesRef.current.push(rectangle)
     })

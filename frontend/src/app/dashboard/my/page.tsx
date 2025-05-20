@@ -12,6 +12,7 @@ interface PersonalDashboardPageProps {}
 
 const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
   const { data } = use(getDashboardData())
+  console.log("data", data)
   const { nickname } = use(getPayloadOrRedirect())
 
   return (

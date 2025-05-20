@@ -6,7 +6,7 @@ import { useRef } from "react"
 interface InitMapOptions {
   loc: Coordinates
   zoom?: number
-  onCenterChange?: (center: Coordinates) => void
+  onCenterChange?: (center: Coordinates, map: NaverMap | null) => void
   mapDiv?: string | HTMLElement
   customOptions?: naver.maps.MapOptions
 }
@@ -40,7 +40,7 @@ export const useMapInitialize = () => {
     mapRef.current = map
 
     // 초기 호출
-    onCenterChange?.({ lat: loc.lat, lng: loc.lng })
+    onCenterChange?.({ lat: loc.lat, lng: loc.lng }, map)
 
     // 중심 좌표 변화 시 좌표 출력
     naver.maps.Event.addListener(map, "idle", () => {

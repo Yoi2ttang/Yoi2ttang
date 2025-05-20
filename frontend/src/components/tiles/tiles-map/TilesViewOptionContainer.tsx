@@ -7,6 +7,7 @@ import TileViewOptionItem from "./TileViewOptionItem"
 interface TilesViewOptionContainerProps {
   onOptionClick: (id: TileViewOption) => void
   selectedOption: TileViewOption | null
+  tileMapType: "my" | "team"
 }
 
 const metaData = [
@@ -43,12 +44,13 @@ const metaData = [
 const TilesViewOptionContainer = ({
   onOptionClick,
   selectedOption,
+  tileMapType,
 }: TilesViewOptionContainerProps) => {
   const OptionList = metaData.filter(({ id }) => {
-    if (selectedOption === TileViewOption.TEAM) {
-      return id !== TileViewOption.MY
-    } else if (selectedOption === TileViewOption.MY) {
+    if (tileMapType === "my") {
       return id !== TileViewOption.TEAM
+    } else if (tileMapType === "team") {
+      return id !== TileViewOption.MY
     } else {
       return true
     }

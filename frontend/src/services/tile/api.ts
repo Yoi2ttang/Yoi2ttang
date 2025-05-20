@@ -7,9 +7,17 @@ import {
 } from "@/types/map/tile"
 
 // 개인 타일 지도 조회
-export const getPersonalTileMap = async (memberId: string) => {
+export const getPersonalTileMap = async (
+  memberId: string,
+  params: {
+    lat: number
+    lng: number
+    localDate: string // 2025-05-20
+  },
+) => {
   const response = await apiClient.get<TileMapResponse>(
     `tiles/members/${memberId}`,
+    { params },
   )
   return response.data
 }
