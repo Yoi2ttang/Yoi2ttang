@@ -50,16 +50,5 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
             @Param("endDate") LocalDateTime endDate
     );
 
-    @Query(value = """
-            SELECT *
-            FROM running_points rp
-            WHERE (rp.running_id, rp.sequence) IN (
-                SELECT running_id, MAX(sequence)
-                FROM running_points
-                WHERE running_id IN(:runningIds)
-                GROUP BY running_id
-            """, nativeQuery = true)
-    List<RunningPoint> findLastPointsByRunningIds(@Param("runningIds") List<Long> runningIds);
-
     List<RunningPoint> findByRunningIdOrderBySequence(Long runningId);
 }

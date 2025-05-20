@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ssafy.yoittang.course.domain.Course;
-import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 
@@ -31,18 +30,6 @@ public interface CourseQueryRepository {
             Long memberId,
             LocalDateTime startDate,
             LocalDateTime endDate
-    );
-
-    List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId);
-
-    float sumDistancesByCourseIds(List<Long> courseIds);
-
-    List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
-            double latitude,
-            double longitude,
-            double radiusKm,
-            double minDistance,
-            double maxDistance
     );
 
     List<CourseSummaryResponse> findCourseByKeyword(

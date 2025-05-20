@@ -7,10 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.ssafy.yoittang.common.model.PageInfo;
 import com.ssafy.yoittang.course.domain.Course;
-import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,30 +80,6 @@ public class CourseRepository {
 
     public void save(Course course) {
         courseJpaRepositoy.save(course);
-    }
-
-    public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
-        return courseQueryRepository.findCompleteCoursesByMemberIdAndKeyword(keyword, memberId);
-    }
-
-    public float sumDistancesByCourseIds(List<Long> courseIds) {
-        return courseQueryRepository.sumDistancesByCourseIds(courseIds);
-    }
-
-    public List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
-            double latitude,
-            double longitude,
-            double radiusKm,
-            double minDistance,
-            double maxDistance
-    ) {
-        return courseQueryRepository.findNearbyCoursesWithinDistance(
-                latitude,
-                longitude,
-                radiusKm,
-                minDistance,
-                maxDistance
-        );
     }
 
     public PageInfo<CourseSummaryResponse> findCourseByKeyword(String keyword, String pageToken) {

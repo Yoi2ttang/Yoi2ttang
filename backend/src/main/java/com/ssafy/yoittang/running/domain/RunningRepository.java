@@ -63,20 +63,6 @@ public interface RunningRepository extends JpaRepository<Running, Long>, Running
                 AND r.state = 'COMPLETE'
                 AND end_time IS NOT NULL
             ORDER BY end_time DESC
-            LIMIT :limit
-            """, nativeQuery = true)
-    List<Running> findRecentCompleteRunning(
-            @Param("memberId") Long memberId,
-            @Param("limit") int limit
-    );
-
-    @Query(value = """
-            SELECT *
-            FROM runnings r
-            WHERE r.member_id = :memberId
-                AND r.state = 'COMPLETE'
-                AND end_time IS NOT NULL
-            ORDER BY end_time DESC
             """, nativeQuery = true)
     List<Running> findCompleteRunning(
             @Param("memberId") Long memberId

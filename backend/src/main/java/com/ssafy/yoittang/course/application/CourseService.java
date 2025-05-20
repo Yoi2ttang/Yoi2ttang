@@ -1,7 +1,6 @@
 package com.ssafy.yoittang.course.application;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,7 @@ import com.ssafy.yoittang.course.domain.repository.CourseRepository;
 import com.ssafy.yoittang.course.domain.repository.CourseTileJpaRepository;
 import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.member.domain.repository.MemberRepository;
-import com.ssafy.yoittang.running.domain.Running;
 import com.ssafy.yoittang.running.domain.RunningRepository;
-import com.ssafy.yoittang.runningpoint.domain.RunningPoint;
-import com.ssafy.yoittang.runningpoint.domain.RunningPointRepository;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
@@ -48,12 +44,10 @@ public class CourseService {
     private final CourseBookmarkJpaRepository courseBookmarkJpaRepository;
     private final CourseTileJpaRepository courseTileJpaRepository;
     private final RunningRepository runningRepository;
-    private final RunningPointRepository runningPointRepository;
     private final TileRepository tileRepository;
     private final TileHistoryRepository tileHistoryRepository;
     private final S3ImageUploader s3ImageUploader;
 
-    private static final double DISTANCE_THRESHOLD_KM = 10.0;
     private static final int DEFAULT_PAGE_SIZE = 10;
 
     public List<RunCourseResponse> getRunCoursePreview(Member member) {
@@ -218,44 +212,6 @@ public class CourseService {
                 .build(); //0.289c초
     }
 
-    public List<CourseSummaryResponse> getRecommendCourse(Member member) {
-        List<Running> recentRunning = runningRepository.findRecentCompleteRunning(member.getMemberId(), 20);
-        if (recentRunning.isEmpty()) {
-            return List.of();
-        }
-        List<RunningPoint> endPoints = runningPointRepository.findLastPointsByRunningIds(
-                recentRunning.stream().map(Running::getRunningId).toList()
-        );
-
-        List<RunningPoint> filtered = filterOutliers(endPoints);
-        if (filtered.isEmpty()) {
-            return List.of();
-        }
-
-        double avgLat = filtered.stream().mapToDouble(p -> p.getRoute().getEndPoint().getY()).average().orElseThrow();
-        double avgLon = filtered.stream().mapToDouble(p -> p.getRoute().getEndPoint().getX()).average().orElseThrow();
-
-        List<Long> courseIds = filtered.stream()
-                .map(RunningPoint::getCourseId)
-                .filter(Objects::nonNull)
-                .distinct()
-                .toList();
-
-        float totalDistance = courseRepository.sumDistancesByCourseIds(courseIds);
-
-        double avgDistance = totalDistance / (double) filtered.size();
-        double minDistance = avgDistance * 0.7;
-        double maxDistance = avgDistance * 1.3;
-
-        List<CourseSummaryResponse> nearbyCourses = courseRepository.findNearbyCoursesWithinDistance(
-                avgLat, avgLon, 5.0, minDistance, maxDistance
-        );
-
-        // 7. 무작위 10개 샘플링
-        Collections.shuffle(nearbyCourses);
-        return nearbyCourses.stream().limit(10).toList();
-    }
-
     private List<String> getGeoHashes(Long courseId, String geoHashString) {
         return courseTileJpaRepository.findGeoHashesByCourseIdAndGeoHashPrefix(courseId, geoHashString);
     }
@@ -272,25 +228,6 @@ public class CourseService {
         }
     }
 
-    private List<RunningPoint> filterOutliers(List<RunningPoint> points) {
-        if (points.size() <= 1) {
-            return points;
-        }
-
-        double[] weightedAvg = weightedAverageLocation(points);
-
-        double avgLat = weightedAvg[0];
-        double avgLng = weightedAvg[1];
-
-        return points.stream()
-                .filter(p -> {
-                    double lat = p.getRoute().getEndPoint().getY();
-                    double lng = p.getRoute().getEndPoint().getX();
-                    return haversine(lat, lng, avgLat, avgLng) <= DISTANCE_THRESHOLD_KM;
-                })
-                .toList();
-    }
-
     private double haversine(double lat1, double lng1, double lat2, double lng2) {
         final int R = 6371; // Radius of the Earth in km
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -300,28 +237,6 @@ public class CourseService {
                 * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
         double centralAngle  = 2 * Math.atan2(Math.sqrt(haversineFormula), Math.sqrt(1 - haversineFormula));
         return R * centralAngle;
-    }
-
-    private double[] weightedAverageLocation(List<RunningPoint> points) {
-        double sumWeight = 0.0;
-        double weightedLat = 0.0;
-        double weightedLng = 0.0;
-
-        double midLat = points.stream().mapToDouble(p -> p.getRoute().getEndPoint().getY()).average().orElse(0);
-        double midLng = points.stream().mapToDouble(p -> p.getRoute().getEndPoint().getX()).average().orElse(0);
-
-        for (RunningPoint point : points) {
-            double lat = point.getRoute().getEndPoint().getY();
-            double lng = point.getRoute().getEndPoint().getX();
-            double distance = haversine(lat, lng, midLat, midLng);
-            double weight = 1 / (1 + distance);
-
-            weightedLat += lat * weight;
-            weightedLng += lng * weight;
-            sumWeight += weight;
-        }
-
-        return new double[] {weightedLat / sumWeight, weightedLng / sumWeight};
     }
 
     private List<RunCourseResponse> toRunCourseResponsesFromCourses(List<Course> courses, Long memberId) {

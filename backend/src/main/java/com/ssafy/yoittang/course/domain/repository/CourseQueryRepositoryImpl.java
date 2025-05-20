@@ -3,7 +3,6 @@ package com.ssafy.yoittang.course.domain.repository;
 import static com.ssafy.yoittang.course.domain.QCourse.course;
 import static com.ssafy.yoittang.course.domain.QCourseBookmark.courseBookmark;
 import static com.ssafy.yoittang.running.domain.QRunning.running;
-import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.course.domain.Course;
-import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
 import com.ssafy.yoittang.course.domain.dto.response.CourseSummaryResponse;
 import com.ssafy.yoittang.dashboard.domain.dto.response.CoursePointResponse;
 import com.ssafy.yoittang.running.domain.State;
@@ -183,72 +181,6 @@ public class CourseQueryRepositoryImpl implements CourseQueryRepository {
                         running.endTime.lt(endDate)
                 )
                 .groupBy(runningDate)
-                .fetch();
-    }
-
-    @Override
-    public List<CourseSummaryResponse> findCompleteCoursesByMemberIdAndKeyword(String keyword, Long memberId) {
-        return jpaQueryFactory
-                .select(
-                        Projections.constructor(
-                                CourseSummaryResponse.class,
-                                course.courseId,
-                                course.courseName,
-                                course.distance,
-                                course.courseImageUrl
-                        )
-                )
-                .from(running)
-                .join(course).on(running.courseId.eq(course.courseId))
-                .where(
-                        running.memberId.eq(memberId),
-                        running.state.eq(State.COMPLETE),
-                        keywordContains(keyword)
-                )
-                .fetch();
-    }
-
-    @Override
-    public float sumDistancesByCourseIds(List<Long> courseIds) {
-        Float sum = jpaQueryFactory
-                .select(course.distance.sum())
-                .from(course)
-                .where(course.courseId.in(courseIds))
-                .fetchOne();
-
-        return sum != null ? sum : 0;
-    }
-
-    @Override
-    public List<CourseSummaryResponse> findNearbyCoursesWithinDistance(
-            double latitude,
-            double longitude,
-            double radiusKm,
-            double minDistance,
-            double maxDistance
-    ) {
-        return jpaQueryFactory
-                .select(Projections.constructor(
-                        CourseSummaryResponse.class,
-                        course.courseId,
-                        course.courseName,
-                        course.distance,
-                        course.courseImageUrl
-                ))
-                .from(runningPoint)
-                .join(course).on(runningPoint.courseId.eq(course.courseId))
-                .where(
-                        course.distance.between(minDistance, maxDistance),
-                        runningPoint.route.isNotNull(),
-                        Expressions.booleanTemplate(
-                                "ST_DistanceSphere({0}, ST_MakePoint({1}, {2})) <= {3}",
-                                runningPoint.route,
-                                longitude,
-                                latitude,
-                                radiusKm * 1000
-                        )
-                )
-                .distinct()
                 .fetch();
     }
 

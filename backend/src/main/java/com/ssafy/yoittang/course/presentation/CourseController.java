@@ -127,13 +127,6 @@ public class CourseController {
         ));
     }
 
-    @GetMapping("/recommends")
-    public ResponseEntity<List<CourseSummaryResponse>> getRecommendCourse(
-            @AuthMember Member member
-    ) {
-        return ResponseEntity.ok(courseService.getRecommendCourse(member));
-    }
-
     @GetMapping
     public ResponseEntity<PageInfo<RunCourseResponse>> getCourseByKeyword(
             @RequestParam(required = false, name = "keyword") String keyword,
