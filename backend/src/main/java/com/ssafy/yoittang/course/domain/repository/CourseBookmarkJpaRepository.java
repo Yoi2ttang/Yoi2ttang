@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.yoittang.course.domain.CourseBookmark;
 
-
-
 public interface CourseBookmarkJpaRepository extends JpaRepository<CourseBookmark, Long> {
     boolean existsByMemberIdAndCourseIdAndIsActiveTrue(Long memberId, Long courseId);
 
