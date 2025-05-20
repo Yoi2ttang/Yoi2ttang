@@ -155,6 +155,8 @@ public class TileService {
 
     public TileGetResponseWrapper getTile(Long zodiacId, TwoGeoPoint twoGeoPoint) {
 
+        return null;
+
         GeoPoint sw = twoGeoPoint.sw();
         GeoPoint ne = twoGeoPoint.ne();
 
@@ -169,9 +171,10 @@ public class TileService {
 
         log.info("size : " + likeList.size());
 
-        return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
-                .build();
+
+//        return TileGetResponseWrapper.builder()
+//                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
+//                .build();
     }
 
     private Set<String> getLevel6Geohashes(
