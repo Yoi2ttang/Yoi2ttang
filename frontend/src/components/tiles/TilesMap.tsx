@@ -13,9 +13,16 @@ import { useShallow } from "zustand/react/shallow"
 interface TilesMapProps {
   zoom: number
   onCenterChange: (center: Coordinates, map: NaverMap | null) => void
+  myZodiacId: number
+  memberId: string
 }
 
-const TilesMap = ({ zoom, onCenterChange }: TilesMapProps) => {
+const TilesMap = ({
+  zoom,
+  onCenterChange,
+  myZodiacId,
+  memberId,
+}: TilesMapProps) => {
   const { cluster, tiles } = useTileMapStore(
     useShallow((state) => ({
       cluster: state.cluster,
@@ -28,7 +35,7 @@ const TilesMap = ({ zoom, onCenterChange }: TilesMapProps) => {
 
   useMapCluster({ mapRef, clusterList: cluster })
   useMapMarker({ mapRef })
-  useMapTiles({ mapRef, tiles })
+  useMapTiles({ mapRef, tiles, myZodiacId, memberId })
 
   useEffect(() => {
     if (!mapRef.current) {

@@ -22,7 +22,7 @@ const CurrentOption = ({ selectedOption, onClose }: CurrentOptionProps) => {
   }, [selectedOption])
 
   return (
-    <div className="">
+    <div className="h-full w-full">
       <div className="border-yoi-400 flex w-full items-center justify-center gap-4 rounded-full border bg-white/60 px-4 py-2 text-neutral-800 backdrop-blur-md">
         <span className="text-sm font-semibold">{value}</span>
         <XIcon className="size-4" onClick={onClose} />

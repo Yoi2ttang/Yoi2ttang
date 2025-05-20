@@ -3,35 +3,30 @@ import useGetTeamTile from "@/hooks/tile/useGetMyTeamTile"
 import useGetOneTeamTileCluster from "@/hooks/tile/useGetOneTeamTileCluster"
 import useGetPersonalTile from "@/hooks/tile/useGetPersonalTile"
 import useGetTeamTileCluster from "@/hooks/tile/useGetTeamTileCluster"
-import { getPayload } from "@/lib/auth/util"
-import { Payload } from "@/types/auth/auth.type"
 import { Coordinates } from "@/types/map/navermaps"
 import { Tile, TileViewOption } from "@/types/map/tile"
-import { useEffect, useState } from "react"
+import { debounce } from "lodash-es"
 
 interface TileDataFetcherProps {
   tileMapType: "my" | "team"
+  myZodiacId: number
+  memberId: string
 }
 
-export const useTileDataFetcher = ({ tileMapType }: TileDataFetcherProps) => {
-  const [zodiacId, setZodiacId] = useState<number>(0)
-  const [memberId, setMemberId] = useState<string>("")
-
+export const useTileDataFetcher = ({
+  tileMapType,
+  myZodiacId,
+  memberId,
+}: TileDataFetcherProps) => {
   const { mutateAsync: getPersonalTile } = useGetPersonalTile({
     memberId,
   })
-  const { mutateAsync: getTeamTile } = useGetTeamTile({ zodiacId })
+  const { mutateAsync: getTeamTile } = useGetTeamTile({ zodiacId: myZodiacId })
   const { mutateAsync: getAllTiles } = useGetAllTiles()
   const { mutateAsync: getTeamTileMapCluster } = useGetTeamTileCluster()
   const { mutateAsync: getOneTeamTileMapCluster } = useGetOneTeamTileCluster({
-    zodiacId,
+    zodiacId: myZodiacId,
   })
-
-  useEffect(() => {
-    const { zodiacId, sub } = getPayload() as Payload
-    setZodiacId(+zodiacId)
-    setMemberId(sub)
-  }, [])
 
   // 타일 데이터 가져오기
   const fetchTileData = async (
@@ -54,7 +49,6 @@ export const useTileDataFetcher = ({ tileMapType }: TileDataFetcherProps) => {
         break
       case TileViewOption.ALL:
       case TileViewOption.UNCLAIMED:
-        console.log("타일 데이터 가져오기 전체 팀")
         const res2 = await getAllTiles({
           swLat: bounds.sw.lat,
           swLng: bounds.sw.lng,
@@ -63,6 +57,13 @@ export const useTileDataFetcher = ({ tileMapType }: TileDataFetcherProps) => {
         })
 
         tileGetResponseList = res2?.tileGetResponseList ?? []
+
+        if (selectedOption === TileViewOption.UNCLAIMED) {
+          console.log("점령 되지 않은 타일 필터링")
+          tileGetResponseList = tileGetResponseList.filter(
+            (tile) => tile.zodiacId === null,
+          )
+        }
         break
       case TileViewOption.TEAM:
         console.log("타일 데이터 가져오기 팀")
@@ -103,41 +104,51 @@ export const useTileDataFetcher = ({ tileMapType }: TileDataFetcherProps) => {
   }
 
   // 클러스터링 데이터 가져오기
-  const fetchClusterData = async (
-    selectedOption: TileViewOption | null,
-    zoom: number,
-    center: Coordinates,
-  ) => {
-    let tileClusterGetResponseList
-    if (
-      selectedOption === TileViewOption.MY ||
-      (selectedOption === null && tileMapType === "my")
-    ) {
-      console.log("클러스터링 처리 특정 팀")
-      const res = await getOneTeamTileMapCluster({
-        lat: center.lat,
-        lng: center.lng,
-        zoomLevel: zoom,
-      })
+  const fetchClusterData = debounce(
+    async (
+      selectedOption: TileViewOption | null,
+      zoom: number,
+      center: Coordinates,
+    ) => {
+      let tileClusterGetResponseList
+      if (
+        selectedOption === TileViewOption.MY ||
+        (selectedOption === null && tileMapType === "my")
+      ) {
+        console.log("클러스터링 처리 특정 팀")
+        const res = await getOneTeamTileMapCluster({
+          lat: center.lat,
+          lng: center.lng,
+          zoomLevel: zoom,
+        })
 
-      tileClusterGetResponseList = res?.tileClusterGetResponseList ?? []
-    } else if (
-      selectedOption === TileViewOption.TEAM ||
-      (selectedOption === null && tileMapType === "team")
-    ) {
-      console.log("클러스터링 처리 전체 팀")
-      const res = await getTeamTileMapCluster({
-        lat: center.lat,
-        lng: center.lng,
-        zoomLevel: zoom,
-      })
+        tileClusterGetResponseList = res?.tileClusterGetResponseList ?? []
+      } else if (
+        selectedOption === TileViewOption.TEAM ||
+        (selectedOption === null && tileMapType === "team")
+      ) {
+        console.log("클러스터링 처리 특정 팀")
+        const res = await getOneTeamTileMapCluster({
+          lat: center.lat,
+          lng: center.lng,
+          zoomLevel: zoom,
+        })
 
-      tileClusterGetResponseList = res?.tileClusterGetResponseList ?? []
-    } else if (selectedOption === TileViewOption.ALL) {
-      console.log("클러스터링 처리 미소유 타일")
-    }
-    return tileClusterGetResponseList
-  }
+        tileClusterGetResponseList = res?.tileClusterGetResponseList ?? []
+      } else if (selectedOption === TileViewOption.ALL) {
+        console.log("클러스터링 처리 미소유 타일")
+        console.log("클러스터링 처리 전체 팀")
+        const res = await getTeamTileMapCluster({
+          lat: center.lat,
+          lng: center.lng,
+          zoomLevel: zoom,
+        })
+        tileClusterGetResponseList = res?.tileClusterGetResponseList ?? []
+      }
+      return tileClusterGetResponseList
+    },
+    0,
+  )
 
   return { fetchTileData, fetchClusterData }
 }

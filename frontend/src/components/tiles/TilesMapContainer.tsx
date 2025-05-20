@@ -5,6 +5,7 @@ import { getMapBounds } from "@/lib/map/utils"
 import useTileMapStore from "@/stores/useTileMapStore"
 import { Coordinates, NaverMap } from "@/types/map/navermaps"
 import { TileViewOption } from "@/types/map/tile"
+import { debounce } from "lodash-es"
 import { useCallback } from "react"
 import { useShallow } from "zustand/react/shallow"
 import TilesMap from "./TilesMap"
@@ -12,10 +13,15 @@ import TilesMap from "./TilesMap"
 interface TilesMapContainerProps {
   selectedOption: TileViewOption | null
   tileMapType: "my" | "team"
+  myZodiacId: number
+  memberId: string
 }
-const CLUSTERING_ZOOM_LEVEL = 17
+const CLUSTERING_ZOOM_LEVEL = 16
+const MIN_ZOOM_LEVEL = 12
 
 const TilesMapContainer = ({
+  myZodiacId,
+  memberId,
   selectedOption,
   tileMapType,
 }: TilesMapContainerProps) => {
@@ -28,11 +34,19 @@ const TilesMapContainer = ({
 
   const { fetchTileData, fetchClusterData } = useTileDataFetcher({
     tileMapType,
+    myZodiacId,
+    memberId,
   })
 
   const handleCenterChange = useCallback(
-    async (center: Coordinates, map: NaverMap | null) => {
+    debounce(async (center: Coordinates, map: NaverMap | null) => {
       if (center.lat === undefined || center.lng === undefined) {
+        return
+      }
+
+      if (map && map?.getZoom() <= MIN_ZOOM_LEVEL) {
+        setCluster([])
+        setTiles([])
         return
       }
 
@@ -46,8 +60,8 @@ const TilesMapContainer = ({
 
       // 타일 데이터 가져오기
       await handleTileView(center, map)
-    },
-    [selectedOption, tileMapType],
+    }, 500),
+    [selectedOption, tileMapType, setCluster, setTiles],
   )
 
   const handleTileView = useCallback(
@@ -79,7 +93,9 @@ const TilesMapContainer = ({
 
   return (
     <TilesMap
-      zoom={CLUSTERING_ZOOM_LEVEL}
+      myZodiacId={myZodiacId}
+      memberId={memberId}
+      zoom={16}
       onCenterChange={handleCenterChange}
     />
   )

@@ -18,7 +18,6 @@ const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
     }),
   )
 
-  console.log("data", data)
   const { nickname } = use(getPayloadOrRedirect())
 
   return (

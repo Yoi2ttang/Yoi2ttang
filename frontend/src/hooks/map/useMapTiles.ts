@@ -4,14 +4,21 @@ import { RefObject, useEffect, useRef } from "react"
 interface useMapTilesProps {
   mapRef: RefObject<naver.maps.Map | null>
   tiles: Tile[]
+  myZodiacId?: number
+  memberId?: string
 }
 
 const GAP = 0.00002
 
-export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
+export const useMapTiles = ({
+  mapRef,
+  tiles,
+  myZodiacId,
+  memberId,
+}: useMapTilesProps) => {
   const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
 
-  const renderTiles = (tiles: Tile[], color = "#FF7C64") => {
+  const renderTiles = (tiles: Tile[]) => {
     const map = mapRef.current
     if (!map || typeof window === "undefined" || !window.naver) {
       return
@@ -22,7 +29,24 @@ export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
     rectanglesRef.current = []
 
     // 새 타일 추가
-    tiles.forEach(({ sw, ne }) => {
+    tiles.forEach(({ sw, ne, zodiacId }) => {
+      let color
+
+      const isMyTeam = zodiacId === myZodiacId
+      const isUnclaimed = zodiacId === null
+
+      if (isUnclaimed) {
+        // 점령 되지 않은 땅
+        color = "#a0a0a0"
+        // return
+      } else if (!isMyTeam) {
+        // 다른 팀이 점령한 땅땅
+        color = "#ff5959"
+      } else {
+        // color = animalMetaData[animalNumberMap[zodiacId.toString()]].color
+        color = "#37E851"
+      }
+
       const rectangle = new naver.maps.Rectangle({
         map,
         bounds: new naver.maps.LatLngBounds(
@@ -32,9 +56,23 @@ export const useMapTiles = ({ mapRef, tiles }: useMapTilesProps) => {
         strokeColor: color,
         strokeOpacity: 0.4,
         strokeWeight: 2,
-        fillColor: color,
+        fillColor: color, // 색상 적용
         fillOpacity: 0.3,
+        clickable: true,
         strokeLineJoin: "round",
+      })
+
+      rectangle.addListener("click", (e) => {
+        if (isUnclaimed) {
+          // 점령 되지 않은 땅
+          console.log("점령 되지 않은 땅")
+        } else if (!isMyTeam) {
+          // 다른 팀이 점령한 땅땅
+          console.log("다른 팀이 점령한 땅땅")
+        } else {
+          // 내 팀이 점령한 땅
+          console.log("내 팀이 점령한 땅")
+        }
       })
       rectanglesRef.current.push(rectangle)
     })
