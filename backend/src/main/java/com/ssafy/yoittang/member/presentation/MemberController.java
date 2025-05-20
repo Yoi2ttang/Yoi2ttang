@@ -81,19 +81,21 @@ public class MemberController {
     @GetMapping("/{targetId}/followings")
     public ResponseEntity<PageInfo<FollowResponse>> getFollowingList(
             @PathVariable("targetId") Long targetId,
+            @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getFollowingList(targetId, pageToken, member));
+        return ResponseEntity.ok(memberService.getFollowingList(targetId, keyword, pageToken, member));
     }
 
     @GetMapping("/{targetId}/followers")
     public ResponseEntity<PageInfo<FollowResponse>> getFollowerList(
             @PathVariable("targetId") Long targetId,
+            @RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "pageToken") String pageToken,
             @AuthMember Member member
     ) {
-        return ResponseEntity.ok(memberService.getFollowerList(targetId, pageToken, member));
+        return ResponseEntity.ok(memberService.getFollowerList(targetId, keyword, pageToken, member));
     }
 
     @GetMapping("/{targetId}/profiles")
