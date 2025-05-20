@@ -77,7 +77,7 @@ public class MemberDashboardService {
         return rows.stream()
                 .map(row -> new MemberDailyDistanceResponse(
                         ((java.sql.Date) row[0]).toLocalDate(),
-                        ((Number) row[1]).doubleValue() / 1000.0
+                        row[1] != null ? ((Number) row[1]).doubleValue() / 1000.0 : 0.0
                 ))
                 .toList();
     }
