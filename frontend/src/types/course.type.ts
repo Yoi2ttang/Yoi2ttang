@@ -32,7 +32,7 @@ export interface StepConfig {
   buttonText: string
 }
 
-export type NavigationDirection = "forward" | "backward"
+export type NavigationDirection = "forward" | "backward" | "up" | "down"
 
 export interface SearchResult {
   addressPOI: string

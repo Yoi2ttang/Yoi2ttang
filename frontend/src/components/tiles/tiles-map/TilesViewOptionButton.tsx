@@ -16,6 +16,10 @@ const TilesViewOptionButton = ({
       rotate: isOpen ? 180 : 0,
       transition: { duration: 0.3 },
     }),
+    initial: {
+      rotate: 0,
+      transition: { duration: 0.3 },
+    },
     exit: {
       rotate: 0,
       transition: { duration: 0.3 },

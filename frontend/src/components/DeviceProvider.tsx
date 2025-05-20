@@ -12,7 +12,7 @@ import {
 type DeviceType = "mobile" | "android" | "desktop"
 
 interface DeviceContextType {
-  deviceType: DeviceType
+  deviceType: DeviceType | null
   isDesktop: boolean
   isMobile: boolean
 }
@@ -33,11 +33,7 @@ export default function DeviceProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const isDesktop = deviceType === "desktop"
-  const isMobile = !isDesktop
-
-  if (!deviceType) {
-    return null
-  }
+  const isMobile = deviceType === "mobile"
 
   return (
     <DeviceContext.Provider value={{ deviceType, isDesktop, isMobile }}>

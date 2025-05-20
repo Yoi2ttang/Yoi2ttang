@@ -11,8 +11,13 @@ import { use } from "react"
 interface PersonalDashboardPageProps {}
 
 const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
-  const { data } = use(getDashboardData())
-  console.log("data", data)
+  const { data } = use(
+    getDashboardData({
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+    }),
+  )
+
   const { nickname } = use(getPayloadOrRedirect())
 
   return (

@@ -10,9 +10,14 @@ import type {
 } from "@/types/dashboard/dashboard.type"
 
 // 개인 대시보드 데이터 가져오기
-export const getDashboardData = async () => {
+export const getDashboardData = async (params: {
+  year: number
+  month: number
+}) => {
   const nextApiClient = await getApiServer()
-  return nextApiClient.get<PersonalDashboardResponse>("/dashboards/members")
+  return nextApiClient.get<PersonalDashboardResponse>("/dashboards/members", {
+    params,
+  })
 }
 
 // 개인 일별 달린 시간 조회

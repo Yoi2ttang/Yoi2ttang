@@ -29,17 +29,17 @@ const PersonalStatisticsSection = ({
     {
       title: "총 활동 거리",
       icon: "🏃",
-      value: `${totalDistance ?? 0} km`,
+      value: `${totalDistance?.toFixed(2) ?? "?"} km`,
     },
     {
       title: "완주한 코스",
       icon: "🏆",
-      value: `${completeCourseCount ?? 0}개`,
+      value: `${completeCourseCount ?? "?"} 개`,
     },
     {
       title: "점령한 타일",
       icon: "🪵",
-      value: `${occupiedTileCount ?? 0}개`,
+      value: `${occupiedTileCount ?? "?"} 개`,
     },
   ]
 
