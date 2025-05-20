@@ -1,4 +1,4 @@
-import ProfileCompletedQuestSection from "@/components/profile/ProfileCompletedQuestSection"
+import ProfileCompletedCourseSection from "@/components/profile/ProfileCompletedCourseSection"
 import ProfileHeader from "@/components/profile/ProfileHeader"
 import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
@@ -25,7 +25,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           <>
             <ProfileInfo data={data} />
             <ProfileRunningRecordSection data={data} />
-            <ProfileCompletedQuestSection data={data} />
+            <ProfileCompletedCourseSection data={data} />
           </>
         )}
       </div>

@@ -1,13 +1,13 @@
 import NavigationBar from "@/components/layouts/navigation-bar/NavigationBar"
 import { ReactNode } from "react"
 
-interface ProfileWithNavigationBarLayoutProps {
+interface CourseWithNavigationBarLayoutProps {
   children: ReactNode
 }
 
-const ProfileWithNavigationBarLayout = ({
+const CourseWithNavigationBarLayout = ({
   children,
-}: ProfileWithNavigationBarLayoutProps) => {
+}: CourseWithNavigationBarLayoutProps) => {
   return (
     <div className="pb-yoi-navbar-height">
       {children}
@@ -16,4 +16,4 @@ const ProfileWithNavigationBarLayout = ({
   )
 }
 
-export default ProfileWithNavigationBarLayout
+export default CourseWithNavigationBarLayout
