@@ -1,21 +1,29 @@
 package com.ssafy.yoittang.tile.application;
 
+import java.lang.reflect.Array;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
+
+import ch.hsr.geohash.WGS84Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.yoittang.common.exception.BadRequestException;
 import com.ssafy.yoittang.common.exception.ErrorCode;
+import com.ssafy.yoittang.member.domain.Member;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
 import com.ssafy.yoittang.tile.domain.Tile;
 import com.ssafy.yoittang.tile.domain.TileRepository;
 import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponseWrapper;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponseWrapper;
+import com.ssafy.yoittang.tile.domain.response.TileMemberClusterGetWrapperResponse;
 import com.ssafy.yoittang.tile.domain.response.TilePreviewResponse;
 import com.ssafy.yoittang.tile.domain.response.TileRankingResponse;
 import com.ssafy.yoittang.tile.domain.response.TileSituationResponse;
@@ -160,121 +168,45 @@ public class TileService {
         log.info("swString : " + geoHashSWString);
         log.info("neString : " + geoHashNEString);
 
-        //row 시작 끝, col 시작 끝을 가져옴
-        int[][] levelDiff = new int[2][2];
-        int changeLevel = 7;
+        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
+        List<String> likeList = likeSet.stream().toList();
 
-        for (int i = 0; i < geoHashSWString.length() - 1; ++i) {
-            if (geoHashSWString.charAt(i) != geoHashNEString.charAt(i)) {
-                char swChar = geoHashSWString.charAt(i);
-                char neChar = geoHashNEString.charAt(i);
-
-                levelDiff = getStartEndInt(swChar, neChar, level[i  % 2], i);
-                changeLevel = i;
-
-//                char nextSWChar = geoHashSWString.charAt(i + 1);
-//                char nextNEChar = geoHashNEString.charAt(i + 1);
-//                levelDiff[i % 2] = getStartEndInt(nextSWChar, nextNEChar, level[(i + 1)  % 2], i + 1);
-
-                break;
-            }
+        for( String like : likeList) {
+            log.info(like);
         }
-
-        for (int[] level : levelDiff) {
-            log.info(Arrays.toString(level));
-        }
-        log.info(String.valueOf(changeLevel));
-
-        List<String> likeList = new ArrayList<>();
-
-        List<Integer> rowList = getIndexRange(
-                levelDiff[0],
-                level[changeLevel % 2].length,
-                levelDiff[1][0] == levelDiff[1][1]
-        );
-        List<Integer> colList = getIndexRange(
-                levelDiff[1],
-                level[changeLevel % 2][0].length,
-                levelDiff[0][0] == levelDiff[0][1]
-        );
-
-        log.info("rowList : " + rowList);
-        log.info("colList : " + colList);
-
-        String prefix = geoHashSWString.substring(0, changeLevel);
-
-        log.info("init sb : "  + prefix);
-
-        for (int row : rowList) {
-            for (int col : colList) {
-                StringBuilder sb = new StringBuilder(prefix);
-                sb.append(level[changeLevel % 2][row][col]);
-//                sb.append(level[(changeLevel + 1) % 2][col]);
-//                if (changeLevel <= 5) {
-//                    sb.append("%");
-//                }
-                likeList.add(sb.toString());
-            }
-        }
-
-        log.info(Arrays.toString(new List[]{likeList}));
-
 
         return TileGetResponseWrapper.builder()
                 .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
                 .build();
     }
 
-    private int[][] getStartEndInt(char swChar, char neChar, char[][] level, int idx) {
-        int[][] result = new int[2][2];
+    private Set<String> getLevel6Geohashes(
+            double swLat, double swLon,
+            double neLat, double neLon) {
 
-        for (int i = 0; i < level.length; ++i) {
-            for ( int j = 0; j < level[i].length; ++j) {
-                if (level[i][j] == swChar) {
-                    result[0][1] = i;
-                    result[1][0] = j;
-                    break;
-                }
+        final int precision = 6;
+        Set<String> hashes = new HashSet<>();
+
+        // SW 지점에서 level-6 hash 객체 얻어서, 하나의 셀 크기(위도·경도 범위) 계산
+        GeoHash swHash6 = GeoHash.withCharacterPrecision(swLat, swLon, 7);
+        double latStep = swHash6.getBoundingBox().getLatitudeSize();
+        double lonStep = swHash6.getBoundingBox().getLongitudeSize();
+
+        log.info(String.valueOf(latStep));
+        log.info(String.valueOf(lonStep));
+
+        // 위도 남->북, 경도 서->동 순회
+        for (double lat = swLat; lat <= neLat; lat += latStep) {
+            for (double lon = swLon; lon <= neLon; lon += lonStep) {
+                // 각 격자점의 level-6 geohash 생성
+                String hash6 = GeoHash.geoHashStringWithCharacterPrecision(lat, lon, precision);
+                hashes.add(hash6);
             }
         }
 
-        for (int i = 0; i < level.length; ++i) {
-            for ( int j = 0; j < level[i].length; ++j) {
-                if (level[i][j] == neChar) {
-                    result[0][0] = i;
-                    result[1][1] = j;
-                    break;
-                }
-            }
-        }
-
-        return result;
+        return hashes;
     }
 
-    private List<Integer> getIndexRange(int[] levelDiff, int length, boolean isRowFixed) {
-        List<Integer> result = new ArrayList<>();
-
-        if (levelDiff[0] > levelDiff[1]) {
-            //경계를 포함할 때
-            for (int i = levelDiff[1]; i < length; ++i) {
-                result.add(i);
-            }
-            for (int i = 0; i <= levelDiff[0]; ++i) {
-                result.add(i);
-            }
-        } else if (levelDiff[0] == levelDiff[1] && isRowFixed) {
-            //경겨를 포함하면서 인덱스가 같을 때
-            for (int i = 0; i < length; ++i) {
-                result.add(i);
-            }
-        } else {
-            for (int i = levelDiff[0]; i <= levelDiff[1]; ++i) {
-                result.add(i);
-            }
-        }
-
-        return result;
-    }
 
     public TileGetResponseWrapper getTile(Long zodiacId, Double lat, Double lng) {
 
@@ -290,6 +222,10 @@ public class TileService {
 
     public TileClusterGetResponseWrapper getTileCluster(Double lat, Double lng, Integer zoomLevel) {
 
+        if (zoomLevel <= 6) {
+            return null;
+        }
+
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
                         null,
@@ -302,6 +238,11 @@ public class TileService {
 
 //        checkZodiacId(zodiacId);
 
+        if (zoomLevel <= 6) {
+            return null;
+        }
+
+
         return TileClusterGetResponseWrapper.builder()
                 .tileClusterGetResponseList(tileRepository.getTileCluster(
                         zodiacId,
@@ -309,6 +250,29 @@ public class TileService {
                 )
                 .build();
     }
+
+    public TileMemberClusterGetWrapperResponse getMemberCluster(
+            Double lat,
+            Double lng,
+            LocalDate localDate,
+            Integer zoomLevel,
+            Member member
+    ) {
+        if (zoomLevel <= 6) {
+            return null;
+        }
+
+        return TileMemberClusterGetWrapperResponse.builder()
+                .tileClusterGetResponseList(
+                        tileRepository.getMemberTileCluster(
+                                    getGeoHashStringByZoomLevel(lat, lng, zoomLevel),
+                                    localDate,
+                                    member.getMemberId()
+                                )
+                )
+                .build();
+    }
+
 
     public TileSituationResponse getTileSituation(Long zodiacId) {
 

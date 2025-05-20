@@ -1,8 +1,11 @@
 package com.ssafy.yoittang.tile.domain;
 
 import static com.ssafy.yoittang.course.domain.QCourseTile.courseTile;
+import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 import static com.ssafy.yoittang.tile.domain.QTile.tile;
+import static com.ssafy.yoittang.tilehistory.domain.jpa.QTileHistoryJpa.tileHistoryJpa;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,13 +13,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
-import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
-
+import com.ssafy.yoittang.tile.domain.response.TileMemberClusterGetResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -141,6 +142,44 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
 //                .groupBy(tile.zodiacId, geoHashPrefix)
 //                .fetch();
 //    }
+
+    @Override
+    public List<TileMemberClusterGetResponse> getMemberTileCluster(
+            String geoHashString,
+            LocalDate localDate,
+            Long memberId
+    ) {
+
+        int limitLength = Math.min(6, geoHashString.length() + 1);
+        StringTemplate geoHashPrefix = Expressions.stringTemplate(
+                "left({0}, {1})",
+                tile.geoHash,
+                limitLength
+        );
+
+        return queryFactory.select(
+            Projections.constructor(
+                TileMemberClusterGetResponse.class,
+                    Projections.constructor(
+                            GeoPoint.class,
+                            tile.latNorth.add(tile.latSouth).divide(2).avg(),
+                            tile.lngEast.add(tile.lngWest).divide(2).avg()
+                    ),
+                    tile.count()
+                )
+        )
+                .from(tileHistoryJpa)
+                .join(runningPoint).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningPointId))
+                .join(tile).on(tileHistoryJpa.geoHash.eq(tile.geoHash))
+                .where(
+                        tileHistoryJpa.memberId.eq(memberId),
+                        runningPoint.arrivalTime.goe(localDate.atStartOfDay())
+                                .and(runningPoint.arrivalTime.lt(localDate.plusDays(1).atStartOfDay())),
+                        tile.geoHash.startsWith(geoHashPrefix)
+                )
+                .groupBy(geoHashPrefix)
+                .fetch();
+    }
 
     @Override
     public List<TileGetResponse> getTileByCourseId(Long courseId, String geohash) {
