@@ -59,7 +59,7 @@ public class CourseController {
     }
 
     @GetMapping("/bookmarks/preview")
-    public ResponseEntity<List<RunCourseResponse>> getBookmarkCoursePreview(
+    public ResponseEntity<List<CourseSummaryResponse>> getBookmarkCoursePreview(
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getBookmarkCoursePreview(member));

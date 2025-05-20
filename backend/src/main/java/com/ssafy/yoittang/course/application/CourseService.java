@@ -72,9 +72,8 @@ public class CourseService {
         return PageInfo.of(responses, DEFAULT_PAGE_SIZE, RunCourseResponse::courseId);
     }
 
-    public List<RunCourseResponse> getBookmarkCoursePreview(Member member) {
-        List<CourseSummaryResponse> courses = courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId(), 4);
-        return toRunCourseResponsesFromCourseSummary(courses, member.getMemberId());
+    public List<CourseSummaryResponse> getBookmarkCoursePreview(Member member) {
+        return courseRepository.findBookmarkedCoursesByMemberId(member.getMemberId(), 4);
     }
 
     public PageInfo<RunCourseResponse> getBookmarkCourseAll(String pageToken, String keyword, Member member) {
