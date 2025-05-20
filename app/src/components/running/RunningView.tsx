@@ -35,6 +35,7 @@ import {getMarkerIconByZodiacId} from '../../lib/markers';
 import useGetOneTeamTileMapNew from '../../hooks/running/useGetOneTeamTileMapNew';
 import {getPayload} from '../../lib/payload';
 import useGetOneTeamTileCluster from '../../hooks/running/useGetOneTeamTileCluster';
+import CurrentLocationMarker from './CurrentLocationMarker';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -275,6 +276,17 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
               });
             }
           }}>
+          {currentLoc && (
+            <NaverMapMarkerOverlay
+              key="current-location-marker"
+              latitude={currentLoc.lat}
+              longitude={currentLoc.lng}
+              width={24}
+              height={24}>
+              <CurrentLocationMarker />
+            </NaverMapMarkerOverlay>
+          )}
+
           {/* 내가 방문한 타일 */}
           {selectedTileView === 'my' &&
             visitedTiles.map(({geoHash, sw, ne}) => (
