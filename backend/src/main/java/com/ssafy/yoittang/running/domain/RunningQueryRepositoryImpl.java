@@ -1,6 +1,5 @@
 package com.ssafy.yoittang.running.domain;
 
-import static com.ssafy.yoittang.member.domain.QMember.member;
 import static com.ssafy.yoittang.running.domain.QRunning.running;
 import static com.ssafy.yoittang.runningpoint.domain.QRunningPoint.runningPoint;
 
@@ -64,9 +63,30 @@ public class RunningQueryRepositoryImpl implements RunningQueryRepository {
     }
 
     @Override
+    public List<Long> findMemberIdsByCourseId(Long courseId) {
+        List<Tuple> results = jpaQueryFactory
+                .select(running.memberId, running.endTime)
+                .distinct()
+                .from(running)
+                .where(
+                        running.courseId.eq(courseId),
+                        running.state.eq(State.COMPLETE),
+                        running.memberId.isNotNull()
+                )
+                .orderBy(running.endTime.desc())
+                .limit(10)
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> tuple.get(running.memberId))
+                .distinct()
+                .toList();
+    }
+
+    @Override
     public List<Long> findPagedClearedMemberIdsByCourseId(Long courseId, String pageToken, int pageSize) {
-        return jpaQueryFactory
-                .select(running.memberId)
+        List<Tuple> tuples = jpaQueryFactory
+                .select(running.memberId, running.endTime)
                 .distinct()
                 .from(running)
                 .where(
@@ -78,6 +98,11 @@ public class RunningQueryRepositoryImpl implements RunningQueryRepository {
                 .orderBy(running.endTime.desc())
                 .limit(pageSize + 1)
                 .fetch();
+
+        return tuples.stream()
+                .map(t -> t.get(running.memberId)) // memberId만 추출
+                .distinct()                         // Java단에서 중복 제거
+                .toList();
     }
 
     private BooleanExpression isInRange(String pageToken) {

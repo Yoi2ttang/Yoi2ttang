@@ -182,21 +182,28 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
     }
 
     @Override
-    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds) {
+    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds, Long currentMemberId) {
         if (memberIds == null || memberIds.isEmpty()) {
             return List.of();
         }
 
         QMember member = QMember.member;
+        QZodiac zodiac = QZodiac.zodiac;
+        QFollow follow = QFollow.follow;
 
         return queryFactory
                 .select(Projections.constructor(
                         CourseClearMemberResponse.class,
                         member.memberId,
                         member.nickname,
-                        member.profileImageUrl
+                        member.profileImageUrl,
+                        zodiac.zodiacName,
+                        follow.isActive.coalesce(false)
                 ))
                 .from(member)
+                .join(zodiac).on(member.zodiacId.eq(zodiac.zodiacId))
+                .leftJoin(follow).on(follow.fromMember.eq(currentMemberId)
+                        .and(follow.toMember.eq(member.memberId)))
                 .where(member.memberId.in(memberIds))
                 .fetch();
     }

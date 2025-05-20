@@ -169,18 +169,27 @@ public class CourseService {
         );
     }
 
-    public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId) {
+    public Integer getClearedMemberCount(Long courseId) {
         List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
-        return getClearedMembers(courseId, memberIds);
+        return getClearedMembersCount(courseId, memberIds);
     }
 
-    public PageInfo<CourseClearMemberResponse> getClearedMembersByCourseId(Long courseId, String pageToken) {
+    public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId, Member member) {
+        List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
+        return getClearedMembers(courseId, memberIds, member.getMemberId());
+    }
+
+    public PageInfo<CourseClearMemberResponse> getClearedMembersByCourseId(
+            Long courseId,
+            String pageToken,
+            Member member
+    ) {
         List<Long> pagedMemberIds = runningRepository.findPagedClearedMemberIdsByCourseId(
                 courseId,
                 pageToken,
                 DEFAULT_PAGE_SIZE
         );
-        List<CourseClearMemberResponse> responses = getClearedMembers(courseId, pagedMemberIds);
+        List<CourseClearMemberResponse> responses = getClearedMembers(courseId, pagedMemberIds, member.getMemberId());
         return PageInfo.of(responses, DEFAULT_PAGE_SIZE, CourseClearMemberResponse::memberId);
     }
 
@@ -364,7 +373,11 @@ public class CourseService {
                 .toList();
     }
 
-    private List<CourseClearMemberResponse> getClearedMembers(Long courseId, List<Long> candidateMemberIds) {
+    private List<CourseClearMemberResponse> getClearedMembers(
+            Long courseId,
+            List<Long> candidateMemberIds,
+            Long currentMemberId
+    ) {
         Long totalTiles = courseTileJpaRepository.countCourseTileByCourseId(courseId);
 
         Map<Long, Long> visitedTileByMember = tileHistoryRepository.countVisitedTilesByCourseAndMember(
@@ -377,7 +390,26 @@ public class CourseService {
                 .map(Map.Entry::getKey)
                 .toList();
 
-        return memberRepository.findCourseClearMembersByIds(clearedMemberIds);
+        return memberRepository.findCourseClearMembersByIds(clearedMemberIds, currentMemberId);
+    }
+
+    private Integer getClearedMembersCount(
+            Long courseId,
+            List<Long> candidateMemberIds
+    ) {
+        Long totalTiles = courseTileJpaRepository.countCourseTileByCourseId(courseId);
+
+        Map<Long, Long> visitedTileByMember = tileHistoryRepository.countVisitedTilesByCourseAndMember(
+                courseId,
+                candidateMemberIds
+        );
+
+        List<Long> clearedMemberIds = visitedTileByMember.entrySet().stream()
+                .filter(entry -> Objects.equals(entry.getValue(), totalTiles))
+                .map(Map.Entry::getKey)
+                .toList();
+
+        return clearedMemberIds.size();
     }
 
 }

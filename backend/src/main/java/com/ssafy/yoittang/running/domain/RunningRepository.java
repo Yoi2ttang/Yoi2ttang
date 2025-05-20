@@ -83,14 +83,11 @@ public interface RunningRepository extends JpaRepository<Running, Long>, Running
     );
 
     @Query(value = """
-            SELECT DISTINCT r.member_id
+            SELECT COUNT(DISTINCT r.member_id)
             FROM runnings r
             WHERE r.course_id = :courseId
               AND r.state = 'COMPLETE'
               AND r.member_id IS NOT NULL
-            ORDER BY r.end_time DESC
-            LIMIT 10
         """, nativeQuery = true)
-    List<Long> findMemberIdsByCourseId(@Param("courseId") Long courseId);
-
+    long countClearedMembersByCourseId(@Param("courseId") Long courseId);
 }
