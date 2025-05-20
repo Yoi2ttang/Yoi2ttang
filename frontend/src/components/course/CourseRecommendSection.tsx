@@ -1,13 +1,16 @@
+"use client"
+
 import RouteIcon from "@/assets/icons/navigation-bar/route-icon.svg"
 import Section from "@/components/common/Section"
+import CourseCard from "@/components/course/CourseCard"
+import useGetCoursePreview from "@/hooks/course/useGetCoursePreview"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
-import CourseCard from "@/components/course/CourseCard"
-import { getCourseRecommendPreview } from "@/services/course/api-server"
+import Skeleton from "../common/skeleton"
 
-const CourseRecommendSection = async () => {
-  const { data, isError } = await getCourseRecommendPreview()
-  const isEmpty = isError || data.length === 0
+const CourseRecommendSection = () => {
+  const { data, isLoading, isError } = useGetCoursePreview()
+  const isEmpty = !data || data.length === 0
 
   return (
     <Section
@@ -28,7 +31,13 @@ const CourseRecommendSection = async () => {
         )
       }
       className="rounded-xl bg-white p-6">
-      {isEmpty ? (
+      {isLoading ? (
+        <div className="grid grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-44" />
+          ))}
+        </div>
+      ) : isEmpty ? (
         <div className="rounded-xl bg-white py-4 text-center text-neutral-300">
           {isError ? (
             <p>잠시 후 다시 시도해 주세요</p>

@@ -1,16 +1,19 @@
+"use client"
+
 import Carousel from "@/components/common/Carousel"
 import Section from "@/components/common/Section"
 import ClearedMemberItem from "@/components/course/ClearedMemberItem"
 import ViewMoreClearedMemberButton from "@/components/course/ViewMoreClearedMemberButton"
-import { getClearMemberPreview } from "@/services/course/api-server"
+import useGetClearedMemberPreview from "@/hooks/course/useGetClearedMemberPreview"
+import Skeleton from "../common/skeleton"
 
 interface CourseMemberSectionProps {
   courseId: number
 }
 
-const CourseMemberSection = async ({ courseId }: CourseMemberSectionProps) => {
-  const { data, isError } = await getClearMemberPreview(courseId)
-  const isEmpty = isError || data.length === 0
+const CourseMemberSection = ({ courseId }: CourseMemberSectionProps) => {
+  const { data, isLoading, isError } = useGetClearedMemberPreview(courseId)
+  const isEmpty = !data || data.length === 0
 
   return (
     <Section
@@ -23,6 +26,8 @@ const CourseMemberSection = async ({ courseId }: CourseMemberSectionProps) => {
         <p className="text-center text-neutral-300">
           잠시 후 다시 시도해 주세요
         </p>
+      ) : isLoading ? (
+        <Skeleton className="h-32" />
       ) : isEmpty ? (
         <p className="text-center text-neutral-300">완주한 러너가 없습니다</p>
       ) : (

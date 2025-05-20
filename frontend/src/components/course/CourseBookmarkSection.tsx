@@ -1,13 +1,16 @@
+"use client"
+
+import PinIcon from "@/assets/icons/course/pin-icon.svg"
+import CourseCard from "@/components/course/CourseCard"
+import useGetCourseBookmarkPreview from "@/hooks/course/useGetCourseBookmarkPreview"
+import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Section from "../common/Section"
-import PinIcon from "@/assets/icons/course/pin-icon.svg"
-import { ChevronRight } from "lucide-react"
-import CourseCard from "@/components/course/CourseCard"
-import { getCourseBookmarkPreview } from "@/services/course/api-server"
+import Skeleton from "../common/skeleton"
 
-const CourseBookmarkSection = async () => {
-  const { data, isError } = await getCourseBookmarkPreview()
-  const isEmpty = isError || data.length === 0
+const CourseBookmarkSection = () => {
+  const { data, isLoading, isError } = useGetCourseBookmarkPreview()
+  const isEmpty = !data || data.length === 0
 
   return (
     <Section
@@ -28,7 +31,13 @@ const CourseBookmarkSection = async () => {
         )
       }
       className="rounded-xl bg-white p-6">
-      {isEmpty ? (
+      {isLoading ? (
+        <div className="grid grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-44" />
+          ))}
+        </div>
+      ) : isEmpty ? (
         <div className="rounded-xl bg-white py-4 text-center text-neutral-300">
           {isError ? (
             <p>잠시 후 다시 시도해 주세요</p>

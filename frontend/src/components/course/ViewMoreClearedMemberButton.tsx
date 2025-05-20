@@ -8,7 +8,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 import useDrawer from "@/hooks/common/useDrawer"
-import useClearedMembers from "@/hooks/course/useClearedMembers"
+import useGetClearedMembers from "@/hooks/course/useGetClearedMembers"
 import { CourseClearedMemberPaginationResponse } from "@/types/course/course.type"
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
@@ -24,7 +24,7 @@ const ViewMoreClearedMemberButton = ({
 }: ViewMoreClearedMemberButtonProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const { targetRef, data, isLoading, isFetchingNextPage } =
-    useClearedMembers(courseId)
+    useGetClearedMembers(courseId)
 
   useDrawer({
     key: "cleared-members",
@@ -57,17 +57,17 @@ const ViewMoreClearedMemberButton = ({
           </DrawerHeader>
 
           <div className="flex h-dvh flex-col gap-4 overflow-y-auto p-4">
-            {isEmpty ? (
+            {isLoading ? (
+              Array.from({ length: 10 }).map((_, index) => (
+                <Skeleton key={index} className="h-16 shrink-0" />
+              ))
+            ) : isEmpty ? (
               <div className="flex items-center justify-center rounded-xl py-6 text-neutral-300">
                 <p className="text-center">
                   아직 완주한 러너가 없어요
                   <br />첫 번째로 이 코스를 완주해 보세요!
                 </p>
               </div>
-            ) : isLoading ? (
-              Array.from({ length: 10 }).map((_, index) => (
-                <Skeleton key={index} className="h-16 shrink-0" />
-              ))
             ) : (
               <>
                 {data?.pages.map(

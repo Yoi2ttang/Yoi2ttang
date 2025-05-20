@@ -1,9 +1,9 @@
 "use client"
 
 import StarIcon from "@/assets/icons/course/star-icon.svg"
-import { useState } from "react"
+import useUpdateCourseBookmark from "@/hooks/course/useUpdateCourseBookmark"
 import { cn } from "@/lib/utils"
-import useCourseBookmark from "@/hooks/course/useCourseBookmark"
+import { useState } from "react"
 
 interface CourseBookmarkButtonProps {
   courseId: number
@@ -15,7 +15,7 @@ const CourseBookmarkButton = ({
   isBookmarked,
 }: CourseBookmarkButtonProps) => {
   const [bookmarkState, setBookmarkState] = useState(isBookmarked)
-  const { mutate } = useCourseBookmark({
+  const { mutate } = useUpdateCourseBookmark({
     onChange: setBookmarkState,
   })
 
