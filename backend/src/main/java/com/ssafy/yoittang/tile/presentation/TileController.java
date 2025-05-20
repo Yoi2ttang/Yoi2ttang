@@ -95,9 +95,9 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/teams/cluster")
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
-        @RequestParam Double lat,
-        @RequestParam Double lng,
-        @RequestParam Integer zoomLevel
+        @RequestParam("lat") Double lat,
+        @RequestParam("lng") Double lng,
+        @RequestParam("zoomLevel") Integer zoomLevel
     ) {
         return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
     }
