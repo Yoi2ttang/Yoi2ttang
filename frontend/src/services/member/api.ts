@@ -9,6 +9,12 @@ import {
   ProfileForEditResponse,
 } from "@/types/member/member.type"
 
+// 프로필 조회
+export const getProfile = async (memberId: number) => {
+  const response = await apiClient.get(`/members/${memberId}/profiles`)
+  return response.data
+}
+
 // 팔로워 조회
 export const getFollowers = async (
   followListRequest: FollowListPaginationRequest,
