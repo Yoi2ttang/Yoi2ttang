@@ -157,19 +157,19 @@ public class TileService {
 
         return null;
 
-        GeoPoint sw = twoGeoPoint.sw();
-        GeoPoint ne = twoGeoPoint.ne();
-
-        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
-        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
-
-        log.info("swString : " + geoHashSWString);
-        log.info("neString : " + geoHashNEString);
-
-        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
-        List<String> likeList = likeSet.stream().toList();
-
-        log.info("size : " + likeList.size());
+//        GeoPoint sw = twoGeoPoint.sw();
+//        GeoPoint ne = twoGeoPoint.ne();
+//
+//        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
+//        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
+//
+//        log.info("swString : " + geoHashSWString);
+//        log.info("neString : " + geoHashNEString);
+//
+//        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
+//        List<String> likeList = likeSet.stream().toList();
+//
+//        log.info("size : " + likeList.size());
 
 
 //        return TileGetResponseWrapper.builder()
