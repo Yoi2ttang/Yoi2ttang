@@ -56,10 +56,10 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/teams/new")
     public ResponseEntity<TileGetResponseWrapper> getTile(
-            @RequestParam("swLat") Double swLat,
-            @RequestParam("swLng") Double swLng,
-            @RequestParam("neLat") Double neLat,
-            @RequestParam("neLng") Double neLng
+            @RequestParam Double swLat,
+            @RequestParam Double swLng,
+            @RequestParam Double neLat,
+            @RequestParam Double neLng
     ) {
         return ResponseEntity.ok(tileService.getTile(null, new TwoGeoPoint(
                     new GeoPoint(swLat, swLng),
@@ -81,10 +81,10 @@ public class TileController implements TileControllerSwaggerDoc {
     @GetMapping("/teams/{zodiacId}/new")
     public ResponseEntity<TileGetResponseWrapper> getTile(
             @PathVariable(name = "zodiacId") Long zodiacId,
-            @RequestParam("swLat") Double swLat,
-            @RequestParam("swLng") Double swLng,
-            @RequestParam("neLat") Double neLat,
-            @RequestParam("neLng") Double neLng
+            @RequestParam Double swLat,
+            @RequestParam Double swLng,
+            @RequestParam Double neLat,
+            @RequestParam Double neLng
     ) {
         return ResponseEntity.ok(tileService.getTile(zodiacId, new TwoGeoPoint(
                     new GeoPoint(swLat, swLng),
@@ -96,9 +96,9 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/teams/cluster")
     public ResponseEntity<TileClusterGetResponseWrapper> getTileCluster(
-        @RequestParam("lat") Double lat,
-        @RequestParam("lng") Double lng,
-        @RequestParam("zoom-level") Integer zoomLevel
+        @RequestParam Double lat,
+        @RequestParam Double lng,
+        @RequestParam Integer zoomLevel
     ) {
         return ResponseEntity.ok(tileService.getTileCluster(lat, lng, zoomLevel));
     }
@@ -142,10 +142,10 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/members/cluster")
     public ResponseEntity<TileMemberClusterGetWrapperResponse> getTile(
-            @RequestParam("lat") Double lat,
-            @RequestParam("lng") Double lng,
-            @RequestParam("local-date") LocalDate localDate,
-            @RequestParam("zoom-level") Integer zoomLevel,
+            @RequestParam Double lat,
+            @RequestParam Double lng,
+            @RequestParam LocalDate localDate,
+            @RequestParam Integer zoomLevel,
             @AuthMember Member loginMember
     ) {
 
