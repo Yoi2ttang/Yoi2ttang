@@ -4,21 +4,21 @@ import {styled} from 'nativewind';
 
 interface RunningSettingsButtonProps {
   onClick: () => void;
-  selectedTileView: 'my' | 'team' | 'empty' | null;
+  selectedTileView: 'my' | 'team' | 'all' | null;
 }
 
 const StyledPressable = styled(Pressable);
 const StyledText = styled(Text);
 const StyledView = styled(View);
 
-const getTileViewLabel = (view: 'my' | 'team' | 'empty' | null) => {
+const getTileViewLabel = (view: 'my' | 'team' | 'all' | null) => {
   switch (view) {
     case 'my':
       return '내 타일 보기';
     case 'team':
       return '우리 팀 타일 보기';
-    case 'empty':
-      return '빈 타일 보기';
+    case 'all':
+      return '모든 팀 타일 보기';
     default:
       return '';
   }

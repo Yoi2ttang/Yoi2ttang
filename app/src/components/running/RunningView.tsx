@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {styled} from 'nativewind';
 import {Coordinates} from '../../types/map';
 import {useRunningStats} from '../../hooks/useRunningStats';
@@ -17,8 +17,9 @@ import RunningSettingsButton from './RunningSettingsButton';
 import RunningSettingsModal from './RunningSettingsModal';
 import {usePostStartRunning} from '../../hooks/running/usepostStartRunning';
 import {useRunningStatsContext} from '../../hooks/useRunningStatsContext';
-import useGetTeamTileMap from '../../hooks/running/useGetTeamTileMap';
 import useGetTeamTileMapCluster from '../../hooks/running/useGetTeamTileMapCluster';
+import {getColorByZodiacId} from '../../lib/zodiacColor';
+
 import {
   NaverMapMarkerOverlay,
   NaverMapPolygonOverlay,
@@ -28,6 +29,9 @@ import {
   usePostLocation,
 } from '../../hooks/running/usePostLocation';
 import {TileMapResponse} from '../../services/running/api';
+import {getBoundsFromCenterAndZoom} from '../../lib/bounds';
+import useGetTeamTileMapNew from '../../hooks/running/useGetTeamTileMapNew';
+import {getMarkerIconByZodiacId} from '../../lib/markers';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -65,7 +69,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
 
   const [showTile, setShowTile] = useState(true);
   const [selectedTileView, setSelectedTileView] = useState<
-    'my' | 'team' | 'empty' | null
+    'my' | 'team' | 'all' | null
   >('my');
 
   useEffect(() => {
@@ -104,9 +108,12 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
     );
   }, [currentLoc, hasStartedRunning]);
 
-  const {data: tileData} = useGetTeamTileMap({
-    center: center || currentLoc!,
-  });
+  const bounds = getBoundsFromCenterAndZoom(center || currentLoc, zoomLevel);
+  const {data: tileData} = useGetTeamTileMapNew(
+    bounds
+      ? {sw: bounds.sw, ne: bounds.ne}
+      : {sw: currentLoc!, ne: currentLoc!},
+  );
 
   const {data: clusterData} = useGetTeamTileMapCluster({
     center: center || currentLoc!,
@@ -198,20 +205,18 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         줌: {zoomLevel}
         {'\n'}
         중심: {center?.lat?.toFixed(5)}, {center?.lng?.toFixed(5)}
+        {'\n'}
+        {tileData?.tileGetResponseList.length}
+        {'\n'}
+        bounds:
+        {bounds?.sw.lat}
+        {'\n'}
+        {bounds?.sw.lng}
+        {'\n'}
+        {bounds?.ne.lat}
+        {'\n'}
+        {bounds?.ne.lng}
       </StyledText>
-      {/* <StyledText className="absolute bottom-4 left-4 right-4 bg-white z-50 p-2 rounded text-xs">
-        마지막 전송:\n{lastSentPayload}
-      </StyledText> */}
-      {/* <StyledText className="absolute bottom-24 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40">
-        타일 수: {visitedTiles.length}
-        {'\n'}
-        {visitedTiles.map(t => t.geoHash).join(', ')}
-      </StyledText> */}
-      {/* <StyledText className="absolute bottom-64 left-4 right-4 bg-white z-50 p-2 rounded text-xs h-40 overflow-scroll">
-        🔁 마지막 응답:
-        {'\n'}
-        {lastResponse ? JSON.stringify(lastResponse, null, 2) : '응답 없음'}
-      </StyledText> */}
 
       {currentLoc && loc && (
         <StyledNaverMapView
@@ -221,7 +226,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           initialCamera={{
             latitude: loc.lat,
             longitude: loc.lng,
-            zoom: 13,
+            zoom: 16,
           }}
           onCameraChanged={({latitude, longitude, zoom}) => {
             if (zoom !== undefined) {
@@ -234,26 +239,30 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
               });
             }
           }}>
-          {/* ✅ 지도 내부로 이동 */}
-          {selectedTileView === 'empty' &&
-            tileData?.tileGetResponseList?.map(tile => {
-              const {sw, ne} = tile;
-              return (
-                <NaverMapPolygonOverlay
-                  key={tile.geoHash}
-                  coords={[
-                    {latitude: sw.lat, longitude: sw.lng},
-                    {latitude: ne.lat, longitude: sw.lng},
-                    {latitude: ne.lat, longitude: ne.lng},
-                    {latitude: sw.lat, longitude: ne.lng},
-                  ]}
-                  color="rgba(255, 124, 100, 0.4)" // ✅ 배경 색 (40% 투명도)
-                  outlineColor="#ff7c64"
-                  outlineWidth={2}
-                  zIndex={9999}
-                />
-              );
-            })}
+          {/* 팀별 타일 */}
+          {zoomLevel > 15 &&
+            selectedTileView === 'all' &&
+            tileData?.tileGetResponseList
+              ?.filter(tile => tile.geoHash !== null)
+              .map(tile => {
+                const {sw, ne, geoHash, zodiacId} = tile;
+                const fillColor = getColorByZodiacId(zodiacId);
+                return (
+                  <NaverMapPolygonOverlay
+                    key={geoHash}
+                    coords={[
+                      {latitude: sw.lat, longitude: sw.lng},
+                      {latitude: ne.lat, longitude: sw.lng},
+                      {latitude: ne.lat, longitude: ne.lng},
+                      {latitude: sw.lat, longitude: ne.lng},
+                    ]}
+                    color={fillColor + '33'} // ✅ 40% 투명도 (#rrggbb + 66)
+                    outlineColor={fillColor + '66'}
+                    outlineWidth={2}
+                    zIndex={9999}
+                  />
+                );
+              })}
 
           {/* 내가 방문한 타일 */}
           {selectedTileView === 'my' &&
@@ -273,15 +282,38 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
               />
             ))}
 
-          {zoomLevel < 16 &&
-            selectedTileView === 'team' &&
+          {/* 팀별 클러스터링 */}
+          {zoomLevel > 12 &&
+            zoomLevel <= 15 &&
+            selectedTileView === 'all' &&
             clusterData?.tileClusterGetResponseList?.map(cluster => (
               <NaverMapMarkerOverlay
-                key={`${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
+                key={`marker-${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
                 latitude={cluster.geoPoint.lat}
                 longitude={cluster.geoPoint.lng}
-                caption={{text: `${cluster.count}`}}
-              />
+                width={40}
+                height={40}>
+                <View
+                  key={`${cluster.zodiacId}`} // key 필수
+                  collapsable={false} // 필수 설정
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: getColorByZodiacId(cluster.zodiacId),
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  {/* <Image
+                    source={require('../../assets/animals/dog-icon.svg')}
+                    style={{width: 24, height: 24}}
+                  /> */}
+
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {cluster.count}
+                  </Text>
+                </View>
+              </NaverMapMarkerOverlay>
             ))}
         </StyledNaverMapView>
       )}

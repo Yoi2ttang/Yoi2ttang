@@ -14,8 +14,8 @@ interface RunningSettingsModalProps {
   onClose: () => void;
   showTile: boolean;
   setShowTile: Dispatch<SetStateAction<boolean>>;
-  selectedTileView: 'my' | 'team' | 'empty' | null;
-  setSelectedTileView: Dispatch<SetStateAction<'my' | 'team' | 'empty' | null>>;
+  selectedTileView: 'my' | 'team' | 'all' | null;
+  setSelectedTileView: Dispatch<SetStateAction<'my' | 'team' | 'all' | null>>;
 }
 
 const StyledView = styled(View);
@@ -95,13 +95,13 @@ const RunningSettingsModal = ({
 
                     <StyledView className="flex-row justify-between items-center pr-3">
                       <StyledText className="text-sm text-gray-700">
-                        빈 타일 보기
+                        모든 팀 타일 보기
                       </StyledText>
                       <Checkbox
-                        value={selectedTileView === 'empty'}
+                        value={selectedTileView === 'all'}
                         onValueChange={() =>
                           setSelectedTileView(prev =>
-                            prev === 'empty' ? null : 'empty',
+                            prev === 'all' ? null : 'all',
                           )
                         }
                       />

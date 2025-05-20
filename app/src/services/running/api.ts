@@ -43,12 +43,24 @@ export interface TileMapResponse {
   tileGetResponseList: Tile[];
 }
 
-// 전체 점령 지도 확인 (팀 상관없이 좌쵸 근처에 대한 타일의 정보 가져옴)
+// 중심 좌표 기반 모든 타일 가져오기
 export const getTeamTileMap = async (params: {lat: number; lng: number}) => {
   const response = await apiClient.get<TileMapResponse>('tiles/teams', {
     params,
   });
-  console.log(response.data);
+  return response.data;
+};
+
+// 모서리 좌표 기반 모든 타일 가져오기기
+export const getTeamTileMapNew = async (params: {
+  swLat: number;
+  swLng: number;
+  neLat: number;
+  neLng: number;
+}) => {
+  const response = await apiClient.get<TileMapResponse>('tiles/teams/new', {
+    params,
+  });
   return response.data;
 };
 

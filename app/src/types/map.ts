@@ -9,5 +9,5 @@ export interface Tile {
   geoHash: string;
   sw: Coordinates;
   ne: Coordinates;
-  zordiacId: number;
+  zodiacId: number;
 }

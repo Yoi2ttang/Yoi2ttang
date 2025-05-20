@@ -1,6 +1,8 @@
+import {useDebounce} from '../useDebounce';
 import {useQuery} from '@tanstack/react-query';
 import {getTeamTileMapCluster} from '../../services/running/api';
 import {Coordinates} from '../../types/map';
+import {keepPreviousData} from '@tanstack/react-query';
 
 interface useGetTeamTileMapProps {
   center: Coordinates;
@@ -13,18 +15,27 @@ const useGetTeamTileMapCluster = ({
 }: useGetTeamTileMapProps) => {
   const lat = center?.lat;
   const lng = center?.lng;
-  const roundedZoom = Math.round(zoomLevel);
+  const roundedZoom = Math.floor(zoomLevel);
+
+  // 디바운싱 적용
+  const debouncedLat = useDebounce(lat, 300);
+  const debouncedLng = useDebounce(lng, 300);
+  const debouncedZoom = useDebounce(roundedZoom, 300);
 
   return useQuery({
-    queryKey: ['teamTileMapCluster', lat, lng, roundedZoom],
+    queryKey: ['teamTileMapCluster', debouncedLat, debouncedLng, debouncedZoom],
     queryFn: () =>
       getTeamTileMapCluster({
-        lat,
-        lng,
-        zoomLevel: roundedZoom,
+        lat: debouncedLat,
+        lng: debouncedLng,
+        zoomLevel: debouncedZoom,
       }),
+    enabled:
+      debouncedLat !== undefined &&
+      debouncedLng !== undefined &&
+      debouncedZoom !== undefined,
     staleTime: 1000 * 60,
-    enabled: lat !== undefined && lng !== undefined && zoomLevel !== undefined,
+    placeholderData: keepPreviousData,
   });
 };
 
