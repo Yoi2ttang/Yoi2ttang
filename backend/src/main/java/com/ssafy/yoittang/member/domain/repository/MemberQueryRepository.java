@@ -18,5 +18,5 @@ public interface MemberQueryRepository {
 
     List<FollowResponse> findFollowerByIds(List<Long> ids, Long memberId);
 
-    List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds);
+    List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds, Long currentMemberId);
 }

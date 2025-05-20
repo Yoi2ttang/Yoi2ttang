@@ -101,7 +101,8 @@ public class CourseController {
             @AuthMember Member member
     ) {
         return ResponseEntity.ok(courseService.getClearedMembersByCourseIdPreview(
-                courseId
+                courseId,
+                member
         ));
     }
 
@@ -113,7 +114,8 @@ public class CourseController {
     ) {
         return ResponseEntity.ok(courseService.getClearedMembersByCourseId(
                 courseId,
-                pageToken
+                pageToken,
+                member
         ));
     }
 

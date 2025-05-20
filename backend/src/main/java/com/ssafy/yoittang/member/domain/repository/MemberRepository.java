@@ -68,7 +68,7 @@ public class MemberRepository {
         return memberJpaRepository.findAll();
     }
 
-    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds) {
-        return memberQueryRepository.findCourseClearMembersByIds(memberIds);
+    public List<CourseClearMemberResponse> findCourseClearMembersByIds(List<Long> memberIds, Long currentMemberId) {
+        return memberQueryRepository.findCourseClearMembersByIds(memberIds, currentMemberId);
     }
 }

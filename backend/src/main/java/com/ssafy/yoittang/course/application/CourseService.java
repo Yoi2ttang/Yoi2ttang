@@ -169,18 +169,22 @@ public class CourseService {
         );
     }
 
-    public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId) {
+    public List<CourseClearMemberResponse> getClearedMembersByCourseIdPreview(Long courseId, Member member) {
         List<Long> memberIds = runningRepository.findMemberIdsByCourseId(courseId);
-        return getClearedMembers(courseId, memberIds);
+        return getClearedMembers(courseId, memberIds, member.getMemberId());
     }
 
-    public PageInfo<CourseClearMemberResponse> getClearedMembersByCourseId(Long courseId, String pageToken) {
+    public PageInfo<CourseClearMemberResponse> getClearedMembersByCourseId(
+            Long courseId,
+            String pageToken,
+            Member member
+    ) {
         List<Long> pagedMemberIds = runningRepository.findPagedClearedMemberIdsByCourseId(
                 courseId,
                 pageToken,
                 DEFAULT_PAGE_SIZE
         );
-        List<CourseClearMemberResponse> responses = getClearedMembers(courseId, pagedMemberIds);
+        List<CourseClearMemberResponse> responses = getClearedMembers(courseId, pagedMemberIds, member.getMemberId());
         return PageInfo.of(responses, DEFAULT_PAGE_SIZE, CourseClearMemberResponse::memberId);
     }
 
@@ -364,7 +368,11 @@ public class CourseService {
                 .toList();
     }
 
-    private List<CourseClearMemberResponse> getClearedMembers(Long courseId, List<Long> candidateMemberIds) {
+    private List<CourseClearMemberResponse> getClearedMembers(
+            Long courseId,
+            List<Long> candidateMemberIds,
+            Long currentMemberId
+    ) {
         Long totalTiles = courseTileJpaRepository.countCourseTileByCourseId(courseId);
 
         Map<Long, Long> visitedTileByMember = tileHistoryRepository.countVisitedTilesByCourseAndMember(
@@ -377,7 +385,7 @@ public class CourseService {
                 .map(Map.Entry::getKey)
                 .toList();
 
-        return memberRepository.findCourseClearMembersByIds(clearedMemberIds);
+        return memberRepository.findCourseClearMembersByIds(clearedMemberIds, currentMemberId);
     }
 
 }
