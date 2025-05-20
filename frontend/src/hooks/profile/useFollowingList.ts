@@ -1,9 +1,11 @@
 import { getFollowings } from "@/services/member/api"
-import { useParams } from "next/navigation"
+import { useParams, useSearchParams } from "next/navigation"
 import useInfiniteScroll from "../common/useInfiniteScroll"
 
 const useFollowingList = () => {
-  const { memberId, keyword } = useParams()
+  const { memberId } = useParams()
+  const searchParams = useSearchParams()
+  const keyword = searchParams.get("keyword")
 
   const fetchFn = async (pageToken: number) => {
     const response = await getFollowings({
