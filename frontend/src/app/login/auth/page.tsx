@@ -3,9 +3,8 @@
 import TileLoading from "@/assets/images/loading/tile-loading.gif"
 import useLogin from "@/hooks/auth/useLogin"
 import Image from "next/image"
-import { Suspense } from "react"
 
-const LoginContent = () => {
+const LoginAuthPage = () => {
   useLogin()
 
   return (
@@ -21,14 +20,6 @@ const LoginContent = () => {
         <Image src="/images/logo.svg" alt="logo" width={46} height={34} />
       </div>
     </div>
-  )
-}
-
-const LoginAuthPage = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LoginContent />
-    </Suspense>
   )
 }
 
