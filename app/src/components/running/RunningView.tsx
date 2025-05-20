@@ -32,6 +32,9 @@ import {TileMapResponse} from '../../services/running/api';
 import {getBoundsFromCenterAndZoom} from '../../lib/bounds';
 import useGetTeamTileMapNew from '../../hooks/running/useGetTeamTileMapNew';
 import {getMarkerIconByZodiacId} from '../../lib/markers';
+import useGetOneTeamTileMapNew from '../../hooks/running/useGetOneTeamTileMapNew';
+import {getPayload} from '../../lib/payload';
+import useGetOneTeamTileCluster from '../../hooks/running/useGetOneTeamTileCluster';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -42,6 +45,19 @@ interface RunningViewProps {
 }
 
 const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
+  const [zodiacId, setZodiacId] = useState<number | null>(null);
+
+  // payload에서 zodiacId 추출
+  useEffect(() => {
+    const fetch = async () => {
+      const payload = await getPayload();
+      if (payload?.zodiacId) {
+        setZodiacId(Number(payload.zodiacId));
+      }
+    };
+    fetch();
+  }, []);
+
   const [hasStartedRunning, setHasStartedRunning] = useState(false);
 
   const [loc, setLoc] = useState<Coordinates>();
@@ -119,6 +135,26 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
     center: center || currentLoc!,
     zoomLevel,
   });
+
+  const {data: oneTeamClusterData} = useGetOneTeamTileCluster({
+    zodiacId: zodiacId || 1,
+    center: center || currentLoc!,
+    zoomLevel,
+  });
+
+  const {data: oneTeamTileData} = useGetOneTeamTileMapNew(
+    zodiacId !== null
+      ? {
+          zodiacId,
+          sw: bounds ? bounds.sw : currentLoc!,
+          ne: bounds ? bounds.ne : currentLoc!,
+        }
+      : {
+          zodiacId: 0,
+          sw: currentLoc!,
+          ne: currentLoc!,
+        },
+  );
 
   useEffect(() => {
     if (!currentLoc || !runningId) {
@@ -239,6 +275,77 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
               });
             }
           }}>
+          {/* 내가 방문한 타일 */}
+          {selectedTileView === 'my' &&
+            visitedTiles.map(({geoHash, sw, ne}) => (
+              <NaverMapPolygonOverlay
+                key={`visited-${geoHash}`}
+                coords={[
+                  {latitude: sw.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: ne.lng},
+                  {latitude: sw.lat, longitude: ne.lng},
+                ]}
+                color="rgba(255, 124, 100, 0.4)"
+                outlineColor="#ff7c64"
+                outlineWidth={1}
+                zIndex={998}
+              />
+            ))}
+
+          {/* 우리팀 타일 */}
+          {zoomLevel > 15 &&
+            selectedTileView === 'team' &&
+            oneTeamTileData?.tileGetResponseList.map(({geoHash, sw, ne}) => (
+              <NaverMapPolygonOverlay
+                key={`visited-${geoHash}`}
+                coords={[
+                  {latitude: sw.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: sw.lng},
+                  {latitude: ne.lat, longitude: ne.lng},
+                  {latitude: sw.lat, longitude: ne.lng},
+                ]}
+                color="rgba(255, 124, 100, 0.4)"
+                outlineColor="#ff7c64"
+                outlineWidth={1}
+                zIndex={998}
+              />
+            ))}
+
+          {/* 우리팀 클러스터링 */}
+          {zoomLevel > 12 &&
+            zoomLevel <= 15 &&
+            selectedTileView === 'team' &&
+            oneTeamClusterData?.tileClusterGetResponseList?.map(cluster => (
+              <NaverMapMarkerOverlay
+                key={`marker-${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
+                latitude={cluster.geoPoint.lat}
+                longitude={cluster.geoPoint.lng}
+                width={40}
+                height={40}>
+                <View
+                  key={`${cluster.zodiacId}`} // key 필수
+                  collapsable={false} // 필수 설정
+                  style={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: '#ff7c64',
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  {/* <Image
+                    source={require('../../assets/animals/dog-icon.svg')}
+                    style={{width: 24, height: 24}}
+                  /> */}
+
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    {cluster.count}
+                  </Text>
+                </View>
+              </NaverMapMarkerOverlay>
+            ))}
+
           {/* 팀별 타일 */}
           {zoomLevel > 15 &&
             selectedTileView === 'all' &&
@@ -263,24 +370,6 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                   />
                 );
               })}
-
-          {/* 내가 방문한 타일 */}
-          {selectedTileView === 'my' &&
-            visitedTiles.map(({geoHash, sw, ne}) => (
-              <NaverMapPolygonOverlay
-                key={`visited-${geoHash}`}
-                coords={[
-                  {latitude: sw.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: ne.lng},
-                  {latitude: sw.lat, longitude: ne.lng},
-                ]}
-                color="rgba(255, 124, 100, 0.4)"
-                outlineColor="#ff7c64"
-                outlineWidth={1}
-                zIndex={998}
-              />
-            ))}
 
           {/* 팀별 클러스터링 */}
           {zoomLevel > 12 &&
@@ -318,9 +407,13 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         </StyledNaverMapView>
       )}
 
+      {/* 슬라이드 버튼 */}
       <RunningStatsButton onClick={() => setShowStats(true)} />
+
+      {/* 타이머 */}
       <RunningTimer tileCnt={visitedTiles.length} />
 
+      {/* 슬라이드 */}
       {showStats && (
         <RunningInfoSlide
           onClose={() => setShowStats(false)}
@@ -330,10 +423,13 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         />
       )}
 
+      {/* 타일 보기 버튼 */}
       <RunningSettingsButton
         onClick={() => setShowSettings(true)}
         selectedTileView={selectedTileView}
       />
+
+      {/* 타일 보기 모달 */}
       {showSettings && (
         <RunningSettingsModal
           onClose={() => setShowSettings(false)}

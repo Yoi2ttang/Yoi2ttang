@@ -106,3 +106,40 @@ export const postLocation = async (payload: PostLocationRequest) => {
 
   return response.data;
 };
+
+// 특정 팀 점령 지도 확인
+export const getOneTeamTileMapNew = async (params: {
+  zodiacId: number;
+  swLat: number;
+  swLng: number;
+  neLat: number;
+  neLng: number;
+}) => {
+  const response = await apiClient.get<TileMapResponse>(
+    `tiles/teams/${params.zodiacId}/new`,
+    {
+      params: {
+        swLat: params.swLat,
+        swLng: params.swLng,
+        neLat: params.neLat,
+        neLng: params.neLng,
+      },
+    },
+  );
+  return response.data;
+};
+
+// 특정 팀팀 점령 지도 클러스터 확인
+export const getOneTeamTileCluster = async (params: {
+  zodiacId: number;
+  lat: number;
+  lng: number;
+  zoomLevel: number;
+}) => {
+  const response = await apiClient.get<TileMapClusterResponse>(
+    `tiles/teams/cluster/${params.zodiacId}`,
+    {params: {lat: params.lat, lng: params.lng, zoomLevel: params.zoomLevel}},
+  );
+
+  return response.data;
+};
