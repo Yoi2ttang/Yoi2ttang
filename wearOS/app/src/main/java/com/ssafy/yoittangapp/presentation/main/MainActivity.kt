@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.main
+package com.ssafy.yoittangapp.presentation.main
 
 import android.app.AlertDialog
 import android.content.Context
@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -18,12 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
-import com.ssafy.yoittangWatch.R
-import com.ssafy.yoittangWatch.presentation.common.PhoneNode
-import com.ssafy.yoittangWatch.presentation.common.util.PermissionHelper
-import com.ssafy.yoittangWatch.presentation.common.YoittangCircleButton
-import com.ssafy.yoittangWatch.presentation.countdown.CountdownActivity
-import com.ssafy.yoittangWatch.presentation.theme.YoittangWatchTheme
+import com.ssafy.yoittangapp.R
+import com.ssafy.yoittangapp.presentation.common.PhoneNode
+import com.ssafy.yoittangapp.presentation.common.util.PermissionHelper
+import com.ssafy.yoittangapp.presentation.common.YoittangCircleButton
+import com.ssafy.yoittangapp.presentation.countdown.CountdownActivity
+import com.ssafy.yoittangapp.presentation.theme.YoittangWatchTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -119,8 +118,27 @@ class MainActivity : ComponentActivity() {
     private fun fetchAndCachePhoneNode(context: Context, onResult: () -> Unit) {
         Wearable.getNodeClient(context).connectedNodes
             .addOnSuccessListener { nodes ->
-                PhoneNode.phoneNodeId = nodes.firstOrNull()?.id
+                if (nodes.isEmpty()) {
+                    Log.d("MainActivity", "No connected nodes!")
+                    return@addOnSuccessListener
+                }
+
+                // (1) 여러 노드를 돌면서 displayName, isNearby 로그 확인
+                nodes.forEach { node ->
+                    Log.d(
+                        "MainActivity",
+                        "Node ↔ id=${node.id}, displayName=${node.displayName}, isNearby=${node.isNearby}"
+                    )
+                }
+
+                // (2) 첫 번째 노드를 폰으로 간주
+                PhoneNode.phoneNodeId = nodes.first().id
+                Log.d("MainActivity", "Using phoneNodeId=${PhoneNode.phoneNodeId}")
+
                 onResult()
+            }
+            .addOnFailureListener {
+                Log.e("MainActivity", "Failed to get connected nodes", it)
             }
     }
 

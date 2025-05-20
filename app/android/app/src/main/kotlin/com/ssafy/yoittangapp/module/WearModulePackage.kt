@@ -1,4 +1,4 @@
-package com.ssafy.yoittangapp.service
+package com.ssafy.yoittangapp.module
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

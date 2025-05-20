@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.common.util
+package com.ssafy.yoittangapp.presentation.common.util
 
 import java.time.ZoneId
 import java.time.ZonedDateTime

@@ -4,6 +4,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_LOCATION"
+        android:required="false" />
+    <uses-permission android:name="com.google.android.gms.permission.BIND_LISTENER" />
 
     <application
         android:name=".MainApplication"
@@ -14,6 +20,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Google Play Services 버전 정보 -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <!-- 네이버 지도 클라이언트 키 -->
+        <meta-data
+            android:name="com.naver.maps.map.NCP_KEY_ID"
+            android:value="${NAVER_MAP_CLIENT_ID}" />
+
+        <!-- 런처 액티비티 -->
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
@@ -27,14 +44,13 @@
             </intent-filter>
         </activity>
 
+        <!-- 포그라운드 서비스 -->
         <service
             android:name=".service.ForegroundService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location"/>
+            android:foregroundServiceType="location" />
 
-        <meta-data
-            android:name="com.naver.maps.map.NCP_KEY_ID"
-            android:value="${NAVER_MAP_CLIENT_ID}" />
     </application>
+
 </manifest>

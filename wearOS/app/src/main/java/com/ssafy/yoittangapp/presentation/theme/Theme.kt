@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.theme
+package com.ssafy.yoittangapp.presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

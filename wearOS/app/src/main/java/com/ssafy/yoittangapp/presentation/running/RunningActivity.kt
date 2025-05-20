@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.running
+package com.ssafy.yoittangapp.presentation.running
 
 import android.app.Activity
 import android.content.Context
@@ -33,15 +33,15 @@ import androidx.core.content.ContextCompat
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.google.android.gms.wearable.Wearable
-import com.ssafy.yoittangWatch.application.running.RunningForegroundService
-import com.ssafy.yoittangWatch.presentation.common.PhoneNode
-import com.ssafy.yoittangWatch.presentation.common.YoittangCircleButton
-import com.ssafy.yoittangWatch.presentation.common.util.PermissionHelper
-import com.ssafy.yoittangWatch.presentation.common.util.calculatePace
-import com.ssafy.yoittangWatch.presentation.common.util.formatElapsedTime
-import com.ssafy.yoittangWatch.presentation.common.util.getCurrentTimeString
-import com.ssafy.yoittangWatch.presentation.main.MainActivity
-import com.ssafy.yoittangWatch.presentation.theme.YoittangWatchTheme
+import com.ssafy.yoittangapp.application.running.RunningForegroundService
+import com.ssafy.yoittangapp.presentation.common.PhoneNode
+import com.ssafy.yoittangapp.presentation.common.YoittangCircleButton
+import com.ssafy.yoittangapp.presentation.common.util.PermissionHelper
+import com.ssafy.yoittangapp.presentation.common.util.calculatePace
+import com.ssafy.yoittangapp.presentation.common.util.formatElapsedTime
+import com.ssafy.yoittangapp.presentation.common.util.getCurrentTimeString
+import com.ssafy.yoittangapp.presentation.main.MainActivity
+import com.ssafy.yoittangapp.presentation.theme.YoittangWatchTheme
 import kotlinx.coroutines.delay
 
 class RunningActivity : ComponentActivity() {

@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.common.util
+package com.ssafy.yoittangapp.presentation.common.util
 
 import android.Manifest
 import android.content.Intent
@@ -11,7 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.ssafy.yoittangWatch.R
+import com.ssafy.yoittangapp.R
 
 object PermissionHelper {
 

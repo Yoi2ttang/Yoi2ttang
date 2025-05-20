@@ -1,9 +1,11 @@
 package com.ssafy.yoittangapp
 
+import android.util.Log
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import com.google.android.gms.wearable.Wearable
 
 class MainActivity : ReactActivity() {
 

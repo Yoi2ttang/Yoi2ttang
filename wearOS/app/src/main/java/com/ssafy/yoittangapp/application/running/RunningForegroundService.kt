@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.application.running
+package com.ssafy.yoittangapp.application.running
 
 import android.Manifest
 import android.app.Notification
@@ -34,12 +34,12 @@ import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
-import com.ssafy.yoittangWatch.R
-import com.ssafy.yoittangWatch.presentation.common.PhoneNode
-import com.ssafy.yoittangWatch.presentation.common.util.haversine
-import com.ssafy.yoittangWatch.presentation.main.MainActivity
-import com.ssafy.yoittangWatch.presentation.running.RunningActivity.DistanceHolder
-import com.ssafy.yoittangWatch.presentation.running.RunningActivity.HeartRateHolder
+import com.ssafy.yoittangapp.R
+import com.ssafy.yoittangapp.presentation.common.PhoneNode
+import com.ssafy.yoittangapp.presentation.common.util.haversine
+import com.ssafy.yoittangapp.presentation.main.MainActivity
+import com.ssafy.yoittangapp.presentation.running.RunningActivity.DistanceHolder
+import com.ssafy.yoittangapp.presentation.running.RunningActivity.HeartRateHolder
 import org.json.JSONObject
 
 class RunningForegroundService : Service() {

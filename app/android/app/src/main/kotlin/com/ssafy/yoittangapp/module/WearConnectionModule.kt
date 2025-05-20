@@ -1,4 +1,4 @@
-package com.ssafy.yoittangapp.service
+package com.ssafy.yoittangapp.module
 
 import android.content.Intent
 import androidx.core.content.ContextCompat
@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import com.google.android.gms.wearable.Wearable
+import com.ssafy.yoittangapp.service.ForegroundService
 
 class WearConnectionModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {

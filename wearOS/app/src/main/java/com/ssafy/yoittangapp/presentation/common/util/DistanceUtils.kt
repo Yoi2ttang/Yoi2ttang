@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.common.util
+package com.ssafy.yoittangapp.presentation.common.util
 import kotlin.math.*
 
 fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {

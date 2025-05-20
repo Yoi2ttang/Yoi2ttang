@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.common
+package com.ssafy.yoittangapp.presentation.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset

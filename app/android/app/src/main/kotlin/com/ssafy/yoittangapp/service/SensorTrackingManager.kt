@@ -17,6 +17,7 @@ class SensorTrackingManager(
     private val csvLogger = CsvLogger(context)
 
     private val messageListener = MessageClient.OnMessageReceivedListener { event ->
+        Log.d(TAG, "▷ 메시지 수신 시도: path=${event.path}, size=${event.data.size}")
         if (event.path == "/running/metrics") {
             val json = String(event.data)
             Log.d(TAG, "워치로부터 메트릭 수신: $json")
@@ -35,6 +36,8 @@ class SensorTrackingManager(
                 val map = mapOf(
                     "heartRate" to heartRate,
                     "distance" to distance,
+                    "lat" to lat,
+                    "lng" to lng
                 )
 
                 reactContext
@@ -44,12 +47,22 @@ class SensorTrackingManager(
             } catch (e: Exception) {
                 Log.e(TAG, "JSON 파싱 실패", e)
             }
+        } else {
+            Log.w(TAG, "예상치 못한 메시지 수신: path=${event.path}, data=${String(event.data)}")
         }
     }
 
     fun start() {
-        Log.d(TAG, "SensorTrackingManager started (워치 수신 리스너 등록)")
+        Log.d(TAG, "▶ Listener 등록 시도")
+        // 연결된 노드 찍어보기
+        Wearable.getNodeClient(context).connectedNodes
+            .addOnSuccessListener { nodes ->
+                Log.d(TAG, "▶ 연결된 노드 개수=${nodes.size}, nodes=$nodes")
+            }
+
+        // 메시지 리스너 등록
         Wearable.getMessageClient(context).addListener(messageListener)
+        Log.d(TAG, "▶ Listener 등록 완료")
     }
 
     fun stop() {

@@ -1,4 +1,4 @@
-package com.ssafy.yoittangWatch.presentation.countdown
+package com.ssafy.yoittangapp.presentation.countdown
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.ssafy.yoittangWatch.presentation.running.RunningActivity
-import com.ssafy.yoittangWatch.presentation.theme.YoittangWatchTheme
+import com.ssafy.yoittangapp.presentation.running.RunningActivity
+import com.ssafy.yoittangapp.presentation.theme.YoittangWatchTheme
 import kotlinx.coroutines.delay
 
 class CountdownActivity : ComponentActivity() {
