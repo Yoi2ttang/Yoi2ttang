@@ -26,7 +26,7 @@ const DeviceContext = createContext<DeviceContextType>({
 export const useDevice = () => useContext(DeviceContext)
 
 export default function DeviceProvider({ children }: { children: ReactNode }) {
-  const [deviceType, setDeviceType] = useState<DeviceType>("desktop")
+  const [deviceType, setDeviceType] = useState<DeviceType | null>(null)
 
   useEffect(() => {
     setDeviceType(getDeviceType() as DeviceType)
@@ -34,6 +34,10 @@ export default function DeviceProvider({ children }: { children: ReactNode }) {
 
   const isDesktop = deviceType === "desktop"
   const isMobile = !isDesktop
+
+  if (!deviceType) {
+    return null
+  }
 
   return (
     <DeviceContext.Provider value={{ deviceType, isDesktop, isMobile }}>
