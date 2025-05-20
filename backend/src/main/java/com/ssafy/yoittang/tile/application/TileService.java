@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -155,26 +156,27 @@ public class TileService {
 
     public TileGetResponseWrapper getTile(Long zodiacId, TwoGeoPoint twoGeoPoint) {
 
-        return null;
+        GeoPoint sw = twoGeoPoint.sw();
+        GeoPoint ne = twoGeoPoint.ne();
 
-//        GeoPoint sw = twoGeoPoint.sw();
-//        GeoPoint ne = twoGeoPoint.ne();
-//
-//        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
-//        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
-//
-//        log.info("swString : " + geoHashSWString);
-//        log.info("neString : " + geoHashNEString);
-//
+        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
+        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
+
+        log.info("swString : " + geoHashSWString);
+        log.info("neString : " + geoHashNEString);
+
 //        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
 //        List<String> likeList = likeSet.stream().toList();
 //
 //        log.info("size : " + likeList.size());
 
+        List<TileGetResponse> tileGetResponseList =  tileRepository.getTile(twoGeoPoint, zodiacId);
 
-//        return TileGetResponseWrapper.builder()
-//                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
-//                .build();
+        log.info(String.valueOf(tileGetResponseList.size()));
+
+        return TileGetResponseWrapper.builder()
+                .tileGetResponseList(tileGetResponseList)
+                .build();
     }
 
     private Set<String> getLevel6Geohashes(

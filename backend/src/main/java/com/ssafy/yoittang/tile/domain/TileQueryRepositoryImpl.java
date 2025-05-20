@@ -16,11 +16,11 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.tile.domain.request.TwoGeoPoint;
 import com.ssafy.yoittang.tile.domain.response.TileGetResponse;
 import com.ssafy.yoittang.tile.domain.response.TileMemberClusterGetResponse;
 
 import lombok.RequiredArgsConstructor;
-
 
 @RequiredArgsConstructor
 public class TileQueryRepositoryImpl implements TileQueryRepository {
@@ -82,6 +82,32 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
                 .where(
                         eqZodiacId(zodiacId),
                         builder
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<TileGetResponse> getTile(TwoGeoPoint twoGeoPoint, Long zodiacId) {
+        double swLon = twoGeoPoint.sw().lng();
+        double swLat = twoGeoPoint.sw().lat();
+        double neLon = twoGeoPoint.ne().lng();
+        double neLat = twoGeoPoint.ne().lat();
+
+        return queryFactory
+                .select(Projections.constructor(
+                        TileGetResponse.class,
+                        tile.geoHash, tile.zodiacId,
+                        Projections.constructor(GeoPoint.class, tile.latSouth, tile.lngWest),
+                        Projections.constructor(GeoPoint.class, tile.latNorth, tile.lngEast)
+                ))
+                .from(tile)
+                .where(
+                        eqZodiacId(zodiacId),
+                        Expressions.booleanTemplate(
+                                "ST_Intersects({0}, ST_MakeEnvelope({1}, {2}, {3}, {4}, 4326))",
+                                tile.geom,
+                                swLon, swLat, neLon, neLat
+                        )
                 )
                 .fetch();
     }
