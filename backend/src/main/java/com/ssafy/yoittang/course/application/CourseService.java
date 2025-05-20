@@ -117,7 +117,7 @@ public class CourseService {
     }
 
     @Transactional
-    public boolean toggleCourseBookmark(Long courseId, Member member) {
+    public void toggleCourseBookmark(Long courseId, Member member) {
         Optional<CourseBookmark> courseBookmarkOptional = courseBookmarkJpaRepository.findBookmarkByMemberIdAndCourseId(
                 member.getMemberId(),
                 courseId
@@ -125,7 +125,6 @@ public class CourseService {
         if (courseBookmarkOptional.isPresent()) {
             CourseBookmark courseBookmark = courseBookmarkOptional.get();
             courseBookmark.changeState();
-            return courseBookmark.getIsActive();
         }
         courseBookmarkJpaRepository.save(
                 CourseBookmark.builder()
@@ -133,7 +132,6 @@ public class CourseService {
                         .courseId(courseId)
                         .build()
         );
-        return true;
     }
 
     public CourseDetailResponse getCourseDetail(Long courseId, Member member) {

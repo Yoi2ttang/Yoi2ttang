@@ -33,23 +33,22 @@ public class RunningQueryRepositoryImpl implements RunningQueryRepository {
     ) {
         List<Tuple> tuples = jpaQueryFactory
                 .select(
-                        Expressions.dateTemplate(LocalDate.class, "DATE({0})", runningPoint.arrivalTime),
+                        Expressions.dateTemplate(LocalDate.class, "DATE({0})", running.startTime),
                         Expressions.numberTemplate(Double.class,
                                 "SUM(EXTRACT(EPOCH FROM {0}) - EXTRACT(EPOCH FROM {1}))",
                                 running.endTime, running.startTime
                         )
                 )
                 .from(running)
-                .join(runningPoint).on(running.runningId.eq(runningPoint.runningId))
                 .where(
                         running.memberId.eq(memberId),
                         running.state.eq(State.COMPLETE),
-                        runningPoint.arrivalTime.goe(startDate),
-                        runningPoint.arrivalTime.lt(endDate)
+                        running.startTime.goe(startDate),
+                        running.startTime.lt(endDate)
                 )
-                .groupBy(Expressions.dateTemplate(LocalDate.class, "DATE({0})", runningPoint.arrivalTime))
+                .groupBy(Expressions.dateTemplate(LocalDate.class, "DATE({0})", running.startTime))
                 .orderBy(new OrderSpecifier<>(Order.ASC,
-                        Expressions.dateTemplate(LocalDate.class, "DATE({0})", runningPoint.arrivalTime)))
+                        Expressions.dateTemplate(LocalDate.class, "DATE({0})", running.startTime)))
                 .fetch();
 
         return tuples.stream()

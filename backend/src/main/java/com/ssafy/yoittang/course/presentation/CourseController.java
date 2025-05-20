@@ -50,7 +50,7 @@ public class CourseController {
     }
 
     @PostMapping("/{courseId}/bookmarks")
-    public ResponseEntity<Boolean> toggleBookmark(
+    public ResponseEntity<Void> toggleBookmark(
             @PathVariable Long courseId,
             @AuthMember Member member
     ) {
