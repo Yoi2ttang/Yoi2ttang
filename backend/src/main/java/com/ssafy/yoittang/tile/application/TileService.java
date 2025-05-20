@@ -155,23 +155,26 @@ public class TileService {
 
     public TileGetResponseWrapper getTile(Long zodiacId, TwoGeoPoint twoGeoPoint) {
 
-        GeoPoint sw = twoGeoPoint.sw();
-        GeoPoint ne = twoGeoPoint.ne();
+        return null;
 
-        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
-        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
+//        GeoPoint sw = twoGeoPoint.sw();
+//        GeoPoint ne = twoGeoPoint.ne();
+//
+//        String geoHashSWString = GeoHash.geoHashStringWithCharacterPrecision(sw.lat(), sw.lng(), 7);
+//        String geoHashNEString = GeoHash.geoHashStringWithCharacterPrecision(ne.lat(), ne.lng(), 7);
+//
+//        log.info("swString : " + geoHashSWString);
+//        log.info("neString : " + geoHashNEString);
+//
+//        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
+//        List<String> likeList = likeSet.stream().toList();
+//
+//        log.info("size : " + likeList.size());
 
-        log.info("swString : " + geoHashSWString);
-        log.info("neString : " + geoHashNEString);
 
-        Set<String> likeSet =  getLevel6Geohashes(sw.lat(), sw.lng(), ne.lat(), ne.lng());
-        List<String> likeList = likeSet.stream().toList();
-
-        log.info("size : " + likeList.size());
-
-        return TileGetResponseWrapper.builder()
-                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
-                .build();
+//        return TileGetResponseWrapper.builder()
+//                .tileGetResponseList(tileRepository.getTile(zodiacId, likeList))
+//                .build();
     }
 
     private Set<String> getLevel6Geohashes(
