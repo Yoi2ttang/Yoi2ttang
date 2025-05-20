@@ -125,6 +125,7 @@ public class CourseService {
         if (courseBookmarkOptional.isPresent()) {
             CourseBookmark courseBookmark = courseBookmarkOptional.get();
             courseBookmark.changeState();
+            return;
         }
         courseBookmarkJpaRepository.save(
                 CourseBookmark.builder()
