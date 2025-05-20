@@ -11,7 +11,7 @@ public interface TileQueryRepository {
 
     List<TileGetResponse> getTile(Long zodiacId, List<String> geohashLikeList);
 
-    List<TileClusterGetResponse> getTileCluster(Long zodiacId, String geoHashString);
+//    List<TileClusterGetResponse> getTileCluster(Long zodiacId, String geoHashString);
 
     List<TileGetResponse> getTileByCourseId(Long courseId, String geohash);
 
