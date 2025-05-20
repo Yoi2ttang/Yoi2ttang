@@ -5,16 +5,34 @@ plugins {
 }
 
 android {
-    namespace = "com.ssafy.yoittangWatch"
+    namespace = "com.ssafy.yoittangapp"
 
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ssafy.yoittangWatch"
+        applicationId = "com.ssafy.yoittangapp"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+    }
+
+    signingConfigs {
+        create("unifiedDebug") {
+            // mobile 모듈에 있는 키 경로 (프로젝트 구조에 맞게 수정)
+            storeFile = file("$rootDir/../app/android/app/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            // Kotlin DSL에서는 이렇게 지정
+            signingConfig = signingConfigs.getByName("unifiedDebug")
+        }
+        // release 타입은 그대로 두어도 무방
     }
 
     buildFeatures {

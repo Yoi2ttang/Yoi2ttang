@@ -9,12 +9,19 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.Text
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.ssafy.yoittangapp.R
@@ -25,6 +32,8 @@ import com.ssafy.yoittangapp.presentation.countdown.CountdownActivity
 import com.ssafy.yoittangapp.presentation.theme.YoittangWatchTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val TAG = "MainActivity"
 
     private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
         if (messageEvent.path == "/running/start") {
@@ -48,7 +57,9 @@ class MainActivity : ComponentActivity() {
                 // UI 설정
                 setContent {
                     YoittangWatchTheme {
-                        MainScreen(onStartClick = { handleStartClick() })
+                        MainScreen(
+                            onStartClick = { handleStartClick() }
+                        )
                     }
                 }
             }
@@ -143,17 +154,23 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun sendStartSignalToPhone(nodeId: String) {
-        Wearable.getMessageClient(this)
-            .sendMessage(nodeId, "/running/start", ByteArray(0))
-            .addOnSuccessListener {
-                Log.d("MainActivity", "러닝 시작 메시지 전송 완료")
+        Wearable.getNodeClient(this)
+            .connectedNodes
+            .addOnSuccessListener { nodes ->
+                nodes.forEach { node ->
+                    Log.d(TAG, "▶ sendMessage to node=${node.id}, path=/running/metrics")
+                    Wearable.getMessageClient(this)
+                        .sendMessage(nodeId, "/running/start", ByteArray(0))
+                        .addOnSuccessListener {
+                            Log.d(TAG, "러닝 시작 메시지 전송 완료 to ${node.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "러닝 시작 메시지 전송 완료 to ${node.id}", e)
+                        }
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "러닝 시작 메시지 전송 실패: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+            .addOnFailureListener {
+                Log.e(TAG, "노드 조회 실패", it)
             }
     }
 }
@@ -164,6 +181,7 @@ fun MainScreen(onStartClick: () -> Unit = {}) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        // 러닝 시작 버튼
         YoittangCircleButton(
             icon = Icons.Filled.PlayArrow,
             contentDescription = "러닝 시작",

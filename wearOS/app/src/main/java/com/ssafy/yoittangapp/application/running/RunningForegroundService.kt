@@ -297,6 +297,10 @@ class RunningForegroundService : Service() {
                 val dataMap = mutableMapOf<String, Any>()
                 HeartRateHolder.bpm.value?.let { dataMap["heartRate"] = it }
                 DistanceHolder.distance.value?.let { dataMap["distance"] = it }
+                if(lastLat != null && lastLng != null) {
+                    dataMap["lat"] = lastLat!!
+                    dataMap["lng"] = lastLng!!
+                }
 
                 // ② 스마트폰으로 전송
                 sendMetricsToPhone(dataMap)
@@ -323,17 +327,26 @@ class RunningForegroundService : Service() {
     }
 
     private fun sendMetricsToPhone(metricsMap: Map<String, Any>) {
-        PhoneNode.phoneNodeId?.let { nodeId ->
-            val json = JSONObject(metricsMap).toString()
-            Wearable.getMessageClient(this)
-                .sendMessage(nodeId, "/running/metrics", json.toByteArray())
-                .addOnSuccessListener {
-                    Log.d(TAG, "Metrics 전송 성공: $json")
+        val json = JSONObject(metricsMap).toString().toByteArray()
+        Wearable.getNodeClient(this)
+            .connectedNodes
+            .addOnSuccessListener { nodes ->
+                Log.d(TAG, "▶ 보내는 대상 노드 리스트: $nodes")
+                nodes.forEach { node ->
+                    Log.d(TAG, "▶ sendMessage to node=${node.id}, path=/running/metrics, data=$json")
+                    Wearable.getMessageClient(this)
+                        .sendMessage(node.id, "/running/metrics", json)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Metrics 전송 성공 to ${node.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "Metrics 전송 실패 to ${node.id}", e)
+                        }
                 }
-                .addOnFailureListener { e ->
-                    Log.e(TAG, "Metrics 전송 실패", e)
-                }
-        }
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "노드 조회 실패", it)
+            }
     }
 
     private fun updateHeartRate(metrics: DataPointContainer) {

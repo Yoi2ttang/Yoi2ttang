@@ -33,7 +33,7 @@
             android:value="true" />
 
         <activity
-            android:name="com.ssafy.yoittangWatch.presentation.main.MainActivity"
+            android:name="com.ssafy.yoittangapp.presentation.main.MainActivity"
             android:exported="true"
             android:taskAffinity="">
             <intent-filter>
@@ -43,9 +43,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.ssafy.yoittangWatch.presentation.countdown.CountdownActivity" />
+        <activity android:name="com.ssafy.yoittangapp.presentation.countdown.CountdownActivity" />
 
-        <activity android:name="com.ssafy.yoittangWatch.presentation.running.RunningActivity" />
+        <activity android:name="com.ssafy.yoittangapp.presentation.running.RunningActivity" />
 
         <service
             android:name=".application.running.RunningForegroundService"
