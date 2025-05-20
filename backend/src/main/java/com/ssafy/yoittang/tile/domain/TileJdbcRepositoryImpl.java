@@ -2,10 +2,14 @@ package com.ssafy.yoittang.tile.domain;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.ssafy.yoittang.runningpoint.domain.dto.request.GeoPoint;
+import com.ssafy.yoittang.tile.domain.response.TileClusterGetResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,5 +74,66 @@ public class TileJdbcRepositoryImpl implements TileJdbcRepository {
             """;
 
         jdbcTemplate.update(sql);
+    }
+
+    public List<TileClusterGetResponse> getTileCluster(Long zodiacId,
+                                                       String geoHashPrefix) {
+
+        // LEFT(geo_hash, prefixLen) 으로 한 글자 늘린 클러스터 단위
+        int prefixLen = Math.min(6, geoHashPrefix.length() + 1);
+
+        /* ---------- SQL 만들기 ---------- */
+        StringBuilder sql = new StringBuilder()
+                .append("WITH per_tile AS ( ")
+                .append("  SELECT zodiac_id, ")
+                .append("         geohash, ")
+                .append("         ((lat_north + lat_south) / 2.0) AS tile_center_lat, ")
+                .append("         ((lng_east  + lng_west ) / 2.0) AS tile_center_lng, ")
+                .append("         COUNT(*) AS w ")
+                .append("  FROM tiles ")
+                .append("  WHERE geohash LIKE ? || '%' ")
+                .append("    AND zodiac_id IS NOT NULL ");
+
+        if (zodiacId != null) {
+            sql.append("    AND zodiac_id = ? ");
+        }
+
+        sql.append("  GROUP BY zodiac_id, geohash ")
+                .append("), clustered AS ( ")
+                .append("  SELECT zodiac_id, ")
+                .append("         LEFT(geohash, ?) AS cluster_prefix, ")
+                .append("         SUM(tile_center_lat * w) AS sum_lat_w, ")
+                .append("         SUM(tile_center_lng * w) AS sum_lng_w, ")
+                .append("         SUM(w) AS total_w ")
+                .append("  FROM per_tile ")
+                .append("  GROUP BY zodiac_id, cluster_prefix ")
+                .append(") ")
+                .append("SELECT zodiac_id, ")
+                .append("       sum_lat_w / total_w AS center_lat, ")
+                .append("       sum_lng_w / total_w AS center_lng, ")
+                .append("       total_w AS total_points ")
+                .append("FROM clustered");
+
+        /* ---------- 파라미터 배열 ---------- */
+        List<Object> params = new ArrayList<>();
+        params.add(geoHashPrefix);      // LIKE ? || '%'
+        if (zodiacId != null) {
+            params.add(zodiacId);       // AND zodiac_id = ?
+        }
+        params.add(prefixLen);          // LEFT(geo_hash, ?)
+
+        /* ---------- 실행 & 매핑 ---------- */
+        return jdbcTemplate.query(
+                sql.toString(),
+                params.toArray(),
+                (rs, rowNum) -> new TileClusterGetResponse(
+                        rs.getLong("zodiac_id"),
+                        new GeoPoint(
+                                rs.getDouble("center_lat"),
+                                rs.getDouble("center_lng")
+                        ),
+                        rs.getLong("total_points")
+                )
+        );
     }
 }

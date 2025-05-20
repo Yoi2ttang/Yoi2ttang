@@ -102,45 +102,45 @@ public class TileQueryRepositoryImpl implements TileQueryRepository {
         return builder;
     }
 
-    @Override
-    public List<TileClusterGetResponse> getTileCluster(
-            Long zodiacId,
-            String geoHashString
-    ) {
-        NumberExpression<Double> centerLat =
-                tile.latNorth.add(tile.latSouth).divide(2.0).avg();
-
-        NumberExpression<Double> centerLng =
-                tile.lngEast.add(tile.lngWest).divide(2.0).avg();
-
-        int limitLength = geoHashString.length() + 1;
-        StringTemplate geoHashPrefix = Expressions.stringTemplate(
-                "left({0}, {1})",
-                tile.geoHash,
-                limitLength
-        );
-
-        return queryFactory.select(
-                        Projections.constructor(
-                                TileClusterGetResponse.class,
-                                tile.zodiacId,
-                                Projections.constructor(
-                                        GeoPoint.class,
-                                        centerLat,
-                                        centerLng
-                                ),
-                                tile.count()
-                        )
-                )
-                .from(tile)
-                .where(
-                        tile.geoHash.startsWith(geoHashString),
-                        tile.zodiacId.isNotNull(),
-                        eqZodiacId(zodiacId)
-                )
-                .groupBy(tile.zodiacId, geoHashPrefix)
-                .fetch();
-    }
+//    @Override
+//    public List<TileClusterGetResponse> getTileCluster(
+//            Long zodiacId,
+//            String geoHashString
+//    ) {
+//        NumberExpression<Double> centerLat =
+//                tile.latNorth.add(tile.latSouth).divide(2.0).avg();
+//
+//        NumberExpression<Double> centerLng =
+//                tile.lngEast.add(tile.lngWest).divide(2.0).avg();
+//
+//        int limitLength = Math.min(6, geoHashString.length() + 1);
+//        StringTemplate geoHashPrefix = Expressions.stringTemplate(
+//                "left({0}, {1})",
+//                tile.geoHash,
+//                limitLength
+//        );
+//
+//        return queryFactory.select(
+//                        Projections.constructor(
+//                                TileClusterGetResponse.class,
+//                                tile.zodiacId,
+//                                Projections.constructor(
+//                                        GeoPoint.class,
+//                                        centerLat,
+//                                        centerLng
+//                                ),
+//                                tile.count()
+//                        )
+//                )
+//                .from(tile)
+//                .where(
+//                        tile.geoHash.startsWith(geoHashString),
+//                        tile.zodiacId.isNotNull(),
+//                        eqZodiacId(zodiacId)
+//                )
+//                .groupBy(tile.zodiacId, geoHashPrefix)
+//                .fetch();
+//    }
 
     @Override
     public List<TileGetResponse> getTileByCourseId(Long courseId, String geohash) {
