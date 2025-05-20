@@ -1,12 +1,14 @@
 import Carousel from "@/components/common/Carousel"
 import Section from "@/components/common/Section"
 import CourseCarouselItem from "@/components/course/CourseCarouselItem"
+import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
 import { getCourseHistoryPreview } from "@/services/course/api-server"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 
 const CourseHistorySection = async () => {
   const { data, isError } = await getCourseHistoryPreview()
+  const { nickname } = await getPayloadOrRedirect()
   const isEmpty = isError || data.length === 0
 
   return (
@@ -14,7 +16,7 @@ const CourseHistorySection = async () => {
       title={
         <div className="text-title-sm flex">
           <p className="line-clamp-1 break-all">
-            <span className="text-yoi-500">98년생호랑이</span>
+            <span className="text-yoi-500">{nickname}</span>
           </p>
           <p className="shrink-0">님이 달렸던 코스</p>
         </div>
