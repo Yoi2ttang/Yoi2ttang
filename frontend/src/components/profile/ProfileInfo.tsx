@@ -34,6 +34,10 @@ const ProfileInfo = ({ data }: ProfileInfoProps) => {
     setIsMe(checkSelf(memberId))
   }, [memberId])
 
+  useEffect(() => {
+    setFollowState(isFollow)
+  }, [isFollow])
+
   const calculateFollowerCount = () => {
     // 낙관적 업데이트를 수행했을 때의 팔로워 카운트
     if (followState === isFollow) {

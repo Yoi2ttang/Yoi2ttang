@@ -19,22 +19,17 @@ const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
         const isStaled = Math.floor(Date.now() / 1_000) > payload.exp
         // accessToken이 만료되었으면 리이슈 요청
         if (isStaled) {
-          console.log("a")
           const response = await fetch("/api/auth/reissue", {
             method: "POST",
           })
           if (response.ok) {
-            console.log("b")
-
             return
           }
         } else {
-          console.log("c")
           return
         }
       }
 
-      console.log("d")
       router.replace("/login")
     }
 

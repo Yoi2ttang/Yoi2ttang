@@ -19,7 +19,7 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-6 p-4">
         {isError ? (
           <p className="text-center text-neutral-400">존재하지 않는 유저에요</p>
-        ) : ( 
+        ) : (
           <>
             {isLoading ? (
               <>

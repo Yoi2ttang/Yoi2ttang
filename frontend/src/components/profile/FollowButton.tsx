@@ -2,12 +2,13 @@
 
 import useFollow from "@/hooks/profile/useFollow"
 import Button from "../common/Button"
+import { Dispatch, MouseEvent, SetStateAction } from "react"
 
 interface FollowButtonProps {
   targetId: number
   className?: string
   followState: boolean
-  onClick: (followState: boolean) => void
+  onClick: Dispatch<SetStateAction<boolean>>
 }
 
 const FollowButton = ({
@@ -20,9 +21,10 @@ const FollowButton = ({
     onClick,
   })
 
-  const handleClick = () => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
     follow({ targetId, followState })
-    onClick(followState)
   }
 
   return (

@@ -25,22 +25,20 @@ const RunnerItem = ({
   const [followState, setFollowState] = useState(isFollow ?? false)
 
   return (
-    <div className="flex items-center rounded-xl bg-white p-4">
+    <Link
+      href={`/profile/${targetId}`}
+      className="flex cursor-pointer items-center rounded-xl bg-white p-4">
       <div className="flex w-full items-center gap-3">
         <Image
           src={profileImageUrl}
           alt=""
           width={52}
           height={52}
-          className="size-14 rounded-full object-cover"
+          className="size-14 shrink-0 rounded-full object-cover"
         />
 
         <div className="flex flex-1 flex-col gap-0.5">
-          <Link
-            href={`/profile/${targetId}`}
-            className="line-clamp-1 w-fit cursor-pointer break-all">
-            {nickname}
-          </Link>
+          <p className="line-clamp-1 break-all">{nickname}</p>
           <AnimalBadge animal={animalType} />
         </div>
 
@@ -55,7 +53,7 @@ const RunnerItem = ({
           />
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 
