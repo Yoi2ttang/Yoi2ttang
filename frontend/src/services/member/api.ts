@@ -1,6 +1,7 @@
 "use client"
 
 import apiClient from "@/lib/http-common"
+import { Course } from "@/types/course/course.type"
 import {
   FollowListPaginationRequest,
   MemberAutocompletePaginationRequest,
@@ -8,6 +9,12 @@ import {
   ProfileForEditRequest,
   ProfileForEditResponse,
 } from "@/types/member/member.type"
+
+// 프로필 조회
+export const getProfile = async (memberId: number) => {
+  const response = await apiClient.get(`/members/${memberId}/profiles`)
+  return response.data
+}
 
 // 팔로워 조회
 export const getFollowers = async (
@@ -88,4 +95,11 @@ export const updateProfile = async (data: ProfileForEditRequest) => {
   }
 
   return await apiClient.patch("/members/profiles", formData)
+}
+
+export const getCompletedCourses = async (
+  targetId: number,
+): Promise<Course[]> => {
+  const response = await apiClient.get(`/members/${targetId}/completed-courses`)
+  return response.data
 }

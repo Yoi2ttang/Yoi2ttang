@@ -1,21 +1,21 @@
 import LockIcon from "@/assets/icons/profile/lock-icon.svg"
-import { getPayloadOrRedirect } from "@/hooks/common/get-payload-or-redirect"
 import { ProfileResponse } from "@/types/member/member.type"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Carousel from "../common/Carousel"
 import Section from "../common/Section"
 import CourseCard from "../course/CourseCard"
+import { useParams } from "next/navigation"
 
 interface ProfileCompletedCourseSectionProps {
   data: ProfileResponse
 }
 
-const ProfileCompletedCourseSection = async ({
+const ProfileCompletedCourseSection = ({
   data,
 }: ProfileCompletedCourseSectionProps) => {
+  const { memberId } = useParams()
   const { courses } = data
-  const { nickname } = await getPayloadOrRedirect()
 
   return (
     <Section
@@ -24,7 +24,7 @@ const ProfileCompletedCourseSection = async ({
         courses &&
         courses.length > 0 && (
           <Link
-            href={`/profile/${nickname}/courses`}
+            href={`/profile/${memberId}/courses`}
             className="flex cursor-pointer items-center gap-0.5">
             <p className="text-caption text-neutral-400">전체 보기</p>
             <ChevronRight className="size-5 text-neutral-300" />
@@ -33,7 +33,7 @@ const ProfileCompletedCourseSection = async ({
       }
       className="rounded-2xl bg-white p-6">
       {courses ? (
-        <div className="flex gap-4">
+        <>
           {courses.length > 0 ? (
             <Carousel dragFree={true}>
               {courses.map((item) => (
@@ -49,7 +49,7 @@ const ProfileCompletedCourseSection = async ({
               완주한 코스가 없어요
             </p>
           )}
-        </div>
+        </>
       ) : (
         <div className="flex items-center justify-center gap-2">
           <LockIcon className="size-5 text-neutral-300" />

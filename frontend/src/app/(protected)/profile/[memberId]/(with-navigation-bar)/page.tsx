@@ -1,31 +1,39 @@
+"use client"
+
 import ProfileCompletedCourseSection from "@/components/profile/ProfileCompletedCourseSection"
 import ProfileHeader from "@/components/profile/ProfileHeader"
 import ProfileInfo from "@/components/profile/ProfileInfo"
 import ProfileRunningRecordSection from "@/components/profile/ProfileRunningRecordSection"
-import { getProfile } from "@/services/member/api-server"
+import useGetProfile from "@/hooks/profile/useGetProfile"
+import ProfileInfoSkeleton from "./../../../../../components/profile/ProfileInfoSkeleton"
+import ProfileRunningRecordSectionSkeleton from "@/components/profile/ProfileRunningRecordSectionSkeleton"
+import ProfileCompletedCourseSectionSkeleton from "@/components/profile/ProfileCompletedCourseSectionSkeleton"
 
-interface ProfilePageProps {
-  params: Promise<{
-    memberId: number
-  }>
-}
-
-const ProfilePage = async ({ params }: ProfilePageProps) => {
-  const { memberId } = await params
-  const { data, isError } = await getProfile(memberId)
+const ProfilePage = () => {
+  const { data, isLoading, isError } = useGetProfile()
 
   return (
     <div>
       <ProfileHeader />
 
       <div className="flex flex-col gap-6 p-4">
-        {!data || isError ? (
+        {isError ? (
           <p className="text-center text-neutral-400">존재하지 않는 유저에요</p>
-        ) : (
+        ) : ( 
           <>
-            <ProfileInfo data={data} />
-            <ProfileRunningRecordSection data={data} />
-            <ProfileCompletedCourseSection data={data} />
+            {isLoading ? (
+              <>
+                <ProfileInfoSkeleton />
+                <ProfileRunningRecordSectionSkeleton />
+                <ProfileCompletedCourseSectionSkeleton />
+              </>
+            ) : (
+              <>
+                <ProfileInfo data={data} />
+                <ProfileRunningRecordSection data={data} />
+                <ProfileCompletedCourseSection data={data} />
+              </>
+            )}
           </>
         )}
       </div>

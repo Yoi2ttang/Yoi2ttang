@@ -1,5 +1,6 @@
 import SearchBar from "@/components/common/SearchBar"
 import StackHeader from "@/components/layouts/Header/StackHeader"
+import CompletedCourseList from "@/components/profile/CompletedCourseList"
 
 const ProfileCoursePage = () => {
   return (
@@ -8,10 +9,7 @@ const ProfileCoursePage = () => {
 
       <div className="flex flex-1 flex-col gap-6 p-4">
         <SearchBar placeholder=" 이름을 입력해 주세요" />
-
-        <div className="flex flex-1 flex-col gap-4">
-          <p className="text-neutral-300">일치하는 결과가 없습니다.</p>
-        </div>
+        <CompletedCourseList />
       </div>
     </div>
   )
