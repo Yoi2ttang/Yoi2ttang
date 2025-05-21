@@ -68,7 +68,8 @@ const useCourseCreate = () => {
         redirect("/course", "replace" as RedirectType)
       case CourseCreateStep.SEARCH:
         setNavigationDirection("backward")
-        router.push(`?step=${CourseCreateStep.START}`)
+        window.location.href = `?step=${CourseCreateStep.START}`
+        // router.push(`?step=${CourseCreateStep.START}`)
         break
       case CourseCreateStep.DRAW:
         handleDrawT0NameStep()
@@ -77,7 +78,8 @@ const useCourseCreate = () => {
         await handleSubmit()
         break
       default:
-        router.push(`?step=${step + 1}`)
+        window.location.href = `?step=${step + 1}`
+      // router.push(`?step=${step + 1}`)
     }
   }
 
@@ -86,9 +88,11 @@ const useCourseCreate = () => {
       redirect("/course", "replace" as RedirectType)
     } else if (step === CourseCreateStep.SEARCH) {
       setNavigationDirection("backward")
-      router.push(`?step=${CourseCreateStep.START}`)
+      window.location.href = `?step=${CourseCreateStep.START}`
+      // router.push(`?step=${CourseCreateStep.START}`)
     } else {
-      router.push(`?step=${step - 1}`)
+      window.location.href = `?step=${step - 1}`
+      // router.push(`?step=${step - 1}`)
     }
   }
 
@@ -113,7 +117,8 @@ const useCourseCreate = () => {
     try {
       await createCourse(formData)
       setNavigationDirection("forward")
-      router.push(`?step=${CourseCreateStep.END}`)
+      window.location.href = `?step=${CourseCreateStep.END}`
+      // router.push(`?step=${CourseCreateStep.END}`)
     } catch (error) {
       console.error(error)
     }
@@ -121,12 +126,14 @@ const useCourseCreate = () => {
 
   const handleSearchStep = () => {
     isSearch.current = true
-    router.push(`?step=${CourseCreateStep.SEARCH}`)
+    window.location.href = `?step=${CourseCreateStep.SEARCH}`
+    // router.push(`?step=${CourseCreateStep.SEARCH}`)
   }
 
   const handleDrawT0NameStep = async () => {
     await handleCapture()
-    router.push(`?step=${CourseCreateStep.NAME}`)
+    window.location.href = `?step=${CourseCreateStep.NAME}`
+    // router.push(`?step=${CourseCreateStep.NAME}`)
   }
 
   const searchParams = useSearchParams()
