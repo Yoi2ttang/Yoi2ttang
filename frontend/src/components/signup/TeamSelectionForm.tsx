@@ -33,12 +33,14 @@ const TeamSelectionForm = ({ onNext }: TeamSelectionFormProps) => {
   return (
     <div className="flex h-full flex-col justify-between p-6">
       <h1 className="text-title-md mt-12">
-        {nickname}님은
-        <br />
+        <div className="flex items-center">
+          <p className="line-clamp-1 break-all">{nickname}</p>
+          <p className="shrink-0">님은</p>
+        </div>
         <span className="text-yoi-500">
           {animalKey ? animalTeamNameMap[animalKey] : ""}
-        </span>
-        이 데리고 갔어요
+        </span>{" "}
+        팀이 데리고 갔어요
       </h1>
 
       <div

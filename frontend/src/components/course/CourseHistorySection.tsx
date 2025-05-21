@@ -26,9 +26,7 @@ const CourseHistorySection = () => {
     <Section
       title={
         <div className="text-title-sm flex">
-          <p className="line-clamp-1 break-all">
-            <span className="text-yoi-500">{nickname}</span>
-          </p>
+          <p className="text-yoi-500 line-clamp-1 break-all">{nickname}</p>
           <p className="shrink-0">님이 달렸던 코스</p>
         </div>
       }
