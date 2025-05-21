@@ -15,7 +15,7 @@ const IntroduceHeader = ({}: IntroduceHeaderProps) => {
       <motion.button
         onClick={() => {
           window.open(
-            "https://drive.google.com/drive/folders/19wyoeBws-6XZ_P7sgwzIRmn7ieErsqFU?usp=sharing",
+            "https://drive.google.com/file/d/1YHCTqunRivlp0lUeJua-9ti4sgQqG3ff/view",
             "_blank",
           )
         }}

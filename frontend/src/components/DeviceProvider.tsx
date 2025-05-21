@@ -15,12 +15,14 @@ interface DeviceContextType {
   deviceType: DeviceType | null
   isDesktop: boolean
   isMobile: boolean
+  isAndroid: boolean
 }
 
 const DeviceContext = createContext<DeviceContextType>({
   deviceType: "desktop",
   isDesktop: true,
   isMobile: false,
+  isAndroid: false,
 })
 
 export const useDevice = () => useContext(DeviceContext)
@@ -34,9 +36,11 @@ export default function DeviceProvider({ children }: { children: ReactNode }) {
 
   const isDesktop = deviceType === "desktop"
   const isMobile = deviceType === "mobile"
+  const isAndroid = deviceType === "android"
 
   return (
-    <DeviceContext.Provider value={{ deviceType, isDesktop, isMobile }}>
+    <DeviceContext.Provider
+      value={{ deviceType, isDesktop, isMobile, isAndroid }}>
       {children}
     </DeviceContext.Provider>
   )

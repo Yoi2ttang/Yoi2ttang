@@ -99,7 +99,7 @@ const useCourseCreate = () => {
       JSON.stringify({
         courseName: courseData.courseName,
         geoPoints: courseData.path,
-        distance: 12,
+        distance: courseData.distance,
       }),
     )
     if (courseData.imageFile) {

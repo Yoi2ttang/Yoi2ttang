@@ -9,19 +9,19 @@ const IntroduceValueProps = ({}: IntroduceValuePropsProps) => {
       title: "행복한 걷기",
       description: "일상 속에서 즐거운 경험을 제공합니다",
       highlight: "즐거운 경험",
-      image: "/walking-illustration.png",
+      image: "/images/walking-illustration.jpg",
     },
     {
       title: "운동 목표 달성",
       description: "매일 조금씩 목표를 달성해요",
       highlight: "목표를 달성",
-      image: "/health-illustration.png",
+      image: "/images/health-illustration.jpg",
     },
     {
       title: "함께하는 즐거움",
       description: "친구와 함께하면 더욱 즐거워요",
       highlight: "더욱 즐거워",
-      image: "/friends-illustration.png",
+      image: "/images/friends-illustration.jpg",
     },
   ]
 
@@ -49,7 +49,7 @@ const IntroduceValueProps = ({}: IntroduceValuePropsProps) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="flex flex-col items-center text-center">
+            className="drop-shadow-accent-foreground flex flex-col items-center py-6 text-center">
             <motion.div
               className="relative mb-8 h-40 w-40"
               whileHover={{ scale: 1.05, rotate: 5 }}
@@ -58,9 +58,8 @@ const IntroduceValueProps = ({}: IntroduceValuePropsProps) => {
               <Image
                 src={item.image}
                 alt={item.title}
-                width={160}
-                height={160}
-                className="h-full w-full object-contain"
+                fill
+                className="h-full w-full rounded-full object-cover"
               />
             </motion.div>
             <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
