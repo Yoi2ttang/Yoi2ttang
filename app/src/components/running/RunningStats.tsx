@@ -84,7 +84,7 @@ const RunningStats = ({
               source={require('../../assets/icons/heart-rate.png')}
               style={{width: 24, height: 24}}
             />
-            <StyledText className="text-xl font-semibold">131</StyledText>
+            <StyledText className="text-xl font-semibold">-</StyledText>
           </StyledView>
         </StyledView>
         <StyledView className="flex-1 flex-col">

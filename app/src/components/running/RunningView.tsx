@@ -36,6 +36,7 @@ import useGetOneTeamTileMapNew from '../../hooks/running/useGetOneTeamTileMapNew
 import {getPayload} from '../../lib/payload';
 import useGetOneTeamTileCluster from '../../hooks/running/useGetOneTeamTileCluster';
 import CurrentLocationMarker from './CurrentLocationMarker';
+import {getZodiacImage} from '../../lib/zodiacIcon';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -238,7 +239,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
 
   return (
     <StyledView className="flex-1 relative w-full">
-      <StyledText className="absolute top-4 left-4 bg-white z-50 p-2 rounded">
+      {/* <StyledText className="absolute top-4 left-4 bg-white z-50 p-2 rounded">
         {currentLoc
           ? `위도: ${currentLoc.lat}\n경도: ${currentLoc.lng} \n${runningId}`
           : '위치 정보 없음'}
@@ -261,7 +262,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
         {bounds?.ne.lat}
         {'\n'}
         {bounds?.ne.lng}
-      </StyledText>
+      </StyledText> */}
 
       {currentLoc && loc && (
         <StyledNaverMapView
@@ -271,7 +272,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           initialCamera={{
             latitude: loc.lat,
             longitude: loc.lng,
-            zoom: 16,
+            zoom: 15,
           }}
           onCameraChanged={({latitude, longitude, zoom}) => {
             if (zoom !== undefined) {
@@ -294,43 +295,50 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
               <CurrentLocationMarker />
             </NaverMapMarkerOverlay>
           )}
-
           {/* 내가 방문한 타일 */}
           {selectedTileView === 'my' &&
-            visitedTiles.map(({geoHash, sw, ne}) => (
-              <NaverMapPolygonOverlay
-                key={`visited-${geoHash}`}
-                coords={[
-                  {latitude: sw.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: ne.lng},
-                  {latitude: sw.lat, longitude: ne.lng},
-                ]}
-                color="rgba(255, 124, 100, 0.4)"
-                outlineColor="#ff7c64"
-                outlineWidth={1}
-                zIndex={998}
-              />
-            ))}
+            visitedTiles.map(({geoHash, sw, ne}) => {
+              const gap = 0.00003;
+
+              return (
+                <NaverMapPolygonOverlay
+                  key={`visited-${geoHash}`}
+                  coords={[
+                    {latitude: sw.lat + gap, longitude: sw.lng + gap},
+                    {latitude: ne.lat - gap, longitude: sw.lng + gap},
+                    {latitude: ne.lat - gap, longitude: ne.lng - gap},
+                    {latitude: sw.lat + gap, longitude: ne.lng - gap},
+                  ]}
+                  color="rgba(255, 124, 100, 0.4)"
+                  outlineColor="#ff7c64"
+                  outlineWidth={1}
+                  zIndex={998}
+                />
+              );
+            })}
 
           {/* 우리팀 타일 */}
           {zoomLevel > 15 &&
             selectedTileView === 'team' &&
-            oneTeamTileData?.tileGetResponseList.map(({geoHash, sw, ne}) => (
-              <NaverMapPolygonOverlay
-                key={`visited-${geoHash}`}
-                coords={[
-                  {latitude: sw.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: sw.lng},
-                  {latitude: ne.lat, longitude: ne.lng},
-                  {latitude: sw.lat, longitude: ne.lng},
-                ]}
-                color="rgba(255, 124, 100, 0.4)"
-                outlineColor="#ff7c64"
-                outlineWidth={1}
-                zIndex={998}
-              />
-            ))}
+            oneTeamTileData?.tileGetResponseList.map(({geoHash, sw, ne}) => {
+              const gap = 0.00003;
+
+              return (
+                <NaverMapPolygonOverlay
+                  key={`visited-${geoHash}`}
+                  coords={[
+                    {latitude: sw.lat + gap, longitude: sw.lng + gap},
+                    {latitude: ne.lat - gap, longitude: sw.lng + gap},
+                    {latitude: ne.lat - gap, longitude: ne.lng - gap},
+                    {latitude: sw.lat + gap, longitude: ne.lng - gap},
+                  ]}
+                  color="rgba(255, 124, 100, 0.4)"
+                  outlineColor="#ff7c64"
+                  outlineWidth={1}
+                  zIndex={998}
+                />
+              );
+            })}
 
           {/* 우리팀 클러스터링 */}
           {zoomLevel > 12 &&
@@ -341,27 +349,35 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                 key={`marker-${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
                 latitude={cluster.geoPoint.lat}
                 longitude={cluster.geoPoint.lng}
-                width={40}
-                height={40}>
+                width={70}
+                height={70}>
                 <View
-                  key={`${cluster.zodiacId}`} // key 필수
-                  collapsable={false} // 필수 설정
+                  key={`${cluster.zodiacId}`}
+                  collapsable={false}
                   style={{
-                    width: 40,
-                    height: 40,
-                    backgroundColor: '#ff7c64',
-                    borderRadius: 20,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  {/* <Image
-                    source={require('../../assets/animals/dog-icon.svg')}
-                    style={{width: 24, height: 24}}
-                  /> */}
+                  <View
+                    style={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: getColorByZodiacId(zodiacId || 1),
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 4, // 이미지와 숫자 간격
+                    }}>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      {cluster.count}
+                    </Text>
+                  </View>
 
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {cluster.count}
-                  </Text>
+                  <Image
+                    source={getZodiacImage(cluster.zodiacId)}
+                    style={{width: 44, height: 44}}
+                    resizeMode="contain"
+                  />
                 </View>
               </NaverMapMarkerOverlay>
             ))}
@@ -372,18 +388,21 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
             tileData?.tileGetResponseList
               ?.filter(tile => tile.geoHash !== null)
               .map(tile => {
-                const {sw, ne, geoHash, zodiacId} = tile;
-                const fillColor = getColorByZodiacId(zodiacId);
+                const {sw, ne, geoHash} = tile;
+                const fillColor = getColorByZodiacId(tile.zodiacId);
+
+                const gap = 0.00003;
+
                 return (
                   <NaverMapPolygonOverlay
                     key={geoHash}
                     coords={[
-                      {latitude: sw.lat, longitude: sw.lng},
-                      {latitude: ne.lat, longitude: sw.lng},
-                      {latitude: ne.lat, longitude: ne.lng},
-                      {latitude: sw.lat, longitude: ne.lng},
+                      {latitude: sw.lat + gap, longitude: sw.lng + gap},
+                      {latitude: ne.lat - gap, longitude: sw.lng + gap},
+                      {latitude: ne.lat - gap, longitude: ne.lng - gap},
+                      {latitude: sw.lat + gap, longitude: ne.lng - gap},
                     ]}
-                    color={fillColor + '33'} // ✅ 40% 투명도 (#rrggbb + 66)
+                    color={fillColor + '33'}
                     outlineColor={fillColor + '66'}
                     outlineWidth={2}
                     zIndex={9999}
@@ -400,27 +419,34 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
                 key={`marker-${cluster.zodiacId}-${cluster.geoPoint.lat}-${cluster.geoPoint.lng}`}
                 latitude={cluster.geoPoint.lat}
                 longitude={cluster.geoPoint.lng}
-                width={40}
-                height={40}>
+                width={70}
+                height={70}>
                 <View
-                  key={`${cluster.zodiacId}`} // key 필수
-                  collapsable={false} // 필수 설정
+                  key={`${cluster.zodiacId}`}
+                  collapsable={false}
                   style={{
-                    width: 40,
-                    height: 40,
-                    backgroundColor: getColorByZodiacId(cluster.zodiacId),
-                    borderRadius: 20,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  {/* <Image
-                    source={require('../../assets/animals/dog-icon.svg')}
-                    style={{width: 24, height: 24}}
-                  /> */}
+                  <View
+                    style={{
+                      width: 24,
+                      height: 24,
+                      backgroundColor: getColorByZodiacId(cluster.zodiacId),
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      {cluster.count}
+                    </Text>
+                  </View>
 
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {cluster.count}
-                  </Text>
+                  <Image
+                    source={getZodiacImage(cluster.zodiacId)}
+                    style={{width: 44, height: 44}}
+                    resizeMode="contain"
+                  />
                 </View>
               </NaverMapMarkerOverlay>
             ))}

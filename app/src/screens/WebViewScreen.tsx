@@ -103,7 +103,7 @@ const WebViewScreen = () => {
         }}
         geolocationEnabled={true}
       />
-      <Text>20250521 - 11:20</Text>
+      {/* <Text>20250521 - 13:43</Text> */}
     </View>
   );
 };
