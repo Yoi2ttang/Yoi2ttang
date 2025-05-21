@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest) => {
 
   const params = {
     query: searchParams.get("query"),
-    display: 5,
+    display: 10,
     start: 1,
     sort: searchParams.get("sort") ?? "random",
   } as {
@@ -27,7 +27,10 @@ export const GET = async (req: NextRequest) => {
 
   if (!clientId || !clientSecret) {
     return NextResponse.json(
-      { error: "Client ID or Secret is not set" },
+      {
+        error: "Client ID or Secret is not set",
+        data: `${clientId};${clientSecret}`,
+      },
       { status: 500 },
     )
   }
