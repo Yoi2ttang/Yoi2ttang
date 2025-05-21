@@ -12,7 +12,7 @@ const TeamContributionSection = ({
   zodiacId,
 }: TeamContributionSectionProps) => {
   const { data } = use(
-    getZodiacContributionRankingServer(3, {
+    getZodiacContributionRankingServer(zodiacId, {
       date: "2025-05-22",
       size: 3,
     }),
