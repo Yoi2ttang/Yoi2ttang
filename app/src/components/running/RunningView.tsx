@@ -269,6 +269,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           className="flex-1"
           locale="ko"
           isShowZoomControls={false}
+          isShowLocationButton={false}
           initialCamera={{
             latitude: loc.lat,
             longitude: loc.lng,
