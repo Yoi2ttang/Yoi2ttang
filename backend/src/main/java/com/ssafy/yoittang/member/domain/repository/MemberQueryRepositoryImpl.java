@@ -12,6 +12,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yoittang.course.domain.dto.response.CourseClearMemberResponse;
+import com.ssafy.yoittang.member.domain.DisclosureStatus;
 import com.ssafy.yoittang.member.domain.QFollow;
 import com.ssafy.yoittang.member.domain.QMember;
 import com.ssafy.yoittang.member.domain.dto.response.FollowResponse;
@@ -75,6 +76,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 .on(qFollow.fromMember.eq(memberId)
                         .and(qFollow.toMember.eq(qMember.memberId)))
                 .where(
+                        qMember.disclosure.eq(DisclosureStatus.ALL),
                         qMember.nickname.startsWith(keyword),
                         isInRange(lastMemberId)
                 )
@@ -139,7 +141,10 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 ))
                 .from(qMember)
                 .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
-                .where(qMember.memberId.in(ids))
+                .where(
+                        qMember.memberId.in(ids),
+                        qMember.disclosure.eq(DisclosureStatus.ALL)
+                        )
                 .orderBy(qMember.memberId.asc())
                 .fetch();
     }
@@ -176,7 +181,10 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository {
                 ))
                 .from(qMember)
                 .join(qzodiac).on(qzodiac.zodiacId.eq(qMember.zodiacId))
-                .where(qMember.memberId.in(ids))
+                .where(
+                        qMember.memberId.in(ids),
+                        qMember.disclosure.eq(DisclosureStatus.ALL)
+                        )
                 .orderBy(qMember.memberId.asc())
                 .fetch();
     }
