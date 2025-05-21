@@ -4,7 +4,8 @@ import CourseImage1 from "@/assets/images/onboard/course_1.png"
 import CourseImage2 from "@/assets/images/onboard/course_2.png"
 import DashBoardImage1 from "@/assets/images/onboard/dashboard_1.png"
 import DashBoardImage2 from "@/assets/images/onboard/dashboard_2.png"
-import ProfileImage from "@/assets/images/onboard/profile.png"
+import ProfileImage1 from "@/assets/images/onboard/profile_1.png"
+import ProfileImage2 from "@/assets/images/onboard/profile_2.png"
 import RunningImage1 from "@/assets/images/onboard/running_1.png"
 import RunningImage2 from "@/assets/images/onboard/running_2.png"
 import Button from "@/components/common/Button"
@@ -47,6 +48,7 @@ const OnboardContent = () => {
             image1={DashBoardImage2}
             image2={DashBoardImage1}
           />
+
           <OnboardCarouselItem
             title="다양한 여정을 떠나봐요"
             description="#나의 코스 #코스 생성"
@@ -54,9 +56,11 @@ const OnboardContent = () => {
             image2={CourseImage1}
           />
           <OnboardCarouselItem
-            title="다른 러너들이 궁금하다면"
+            title="다른 러너가 궁금하다면"
             description="#러너 프로필"
-            image1={ProfileImage}
+            image1={ProfileImage2}
+            image2={ProfileImage1}
+            className="mr-0 ml-6"
           />
         </Carousel>
       </div>

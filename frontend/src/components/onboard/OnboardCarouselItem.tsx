@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { StaticImport } from "next/dist/shared/lib/get-img-props"
 import Image from "next/image"
@@ -8,6 +9,7 @@ interface OnboardCarouselItemProps {
   description?: ReactNode | string
   image1: StaticImport
   image2?: StaticImport
+  className?: string
 }
 
 const OnboardCarouselItem = ({
@@ -15,9 +17,14 @@ const OnboardCarouselItem = ({
   description,
   image1,
   image2,
+  className,
 }: OnboardCarouselItemProps) => {
   return (
-    <div className="mr-4 flex w-full shrink-0 flex-col items-center gap-12 select-none">
+    <div
+      className={cn(
+        "mr-6 flex w-full shrink-0 flex-col items-center gap-12 select-none",
+        className,
+      )}>
       <div>
         <motion.h1
           className="text-title-md"
