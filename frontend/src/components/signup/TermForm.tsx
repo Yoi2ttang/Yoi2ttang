@@ -106,7 +106,7 @@ const TermForm = ({ signupData, onChange, onNext }: TermFormProps) => {
         disabled={
           !signupData.agreements.privacy || !signupData.agreements.location
         }
-        className="w-full"
+        className="relative z-10 w-full"
         onClick={onNext}>
         다음
       </Button>
