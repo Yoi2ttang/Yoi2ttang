@@ -37,7 +37,7 @@ export default function DeviceProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const isDesktop = deviceType === "desktop"
-  const isMobile = deviceType === "mobile"
+  const isMobile = deviceType === "mobile" || deviceType === "android"
   const isAndroid = deviceType === "android"
   const isWebView = deviceType === "yoi2ttang-webview"
 

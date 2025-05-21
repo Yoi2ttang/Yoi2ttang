@@ -5,13 +5,13 @@ import IntroduceContentContainer from "@/components/Introduce/IntroduceContent"
 import OnboardContent from "@/components/onboard/OnboardContent"
 
 const Home = () => {
-  const { isDesktop, isWebView } = useDevice()
+  const { isWebView } = useDevice()
 
   if (isWebView) {
     return <OnboardContent />
   }
 
-  if (!isDesktop && !isWebView) {
+  if (!isWebView) {
     return <IntroduceContentContainer />
   }
 

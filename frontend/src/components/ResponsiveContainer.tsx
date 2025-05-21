@@ -9,13 +9,14 @@ export default function ResponsiveContainer({
 }: {
   children: ReactNode
 }) {
-  const { isDesktop } = useDevice()
+  const { isDesktop, isMobile } = useDevice()
 
   return (
     <div
       className={cn(
         "mx-auto flex min-h-dvh flex-col bg-neutral-50",
-        isDesktop ? "w-full" : "max-w-yoi-width",
+        isDesktop && "w-full",
+        isMobile && "max-w-yoi-width",
       )}>
       {children}
     </div>
