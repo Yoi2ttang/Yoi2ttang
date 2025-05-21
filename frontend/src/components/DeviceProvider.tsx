@@ -9,13 +9,14 @@ import {
   useState,
 } from "react"
 
-type DeviceType = "mobile" | "android" | "desktop"
+type DeviceType = "mobile" | "android" | "desktop" | "yoi2ttang-webview"
 
 interface DeviceContextType {
   deviceType: DeviceType | null
   isDesktop: boolean
   isMobile: boolean
   isAndroid: boolean
+  isWebView: boolean
 }
 
 const DeviceContext = createContext<DeviceContextType>({
@@ -23,6 +24,7 @@ const DeviceContext = createContext<DeviceContextType>({
   isDesktop: true,
   isMobile: false,
   isAndroid: false,
+  isWebView: false,
 })
 
 export const useDevice = () => useContext(DeviceContext)
@@ -37,10 +39,11 @@ export default function DeviceProvider({ children }: { children: ReactNode }) {
   const isDesktop = deviceType === "desktop"
   const isMobile = deviceType === "mobile"
   const isAndroid = deviceType === "android"
+  const isWebView = deviceType === "yoi2ttang-webview"
 
   return (
     <DeviceContext.Provider
-      value={{ deviceType, isDesktop, isMobile, isAndroid }}>
+      value={{ deviceType, isDesktop, isMobile, isAndroid, isWebView }}>
       {children}
     </DeviceContext.Provider>
   )
