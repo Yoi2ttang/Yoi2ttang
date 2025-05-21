@@ -32,7 +32,7 @@ interface TileMapStore {
 const useTileMapStore = create<TileMapStore>((set, get) => ({
   tiles: [],
   cluster: [],
-  selectedOption: TileViewOption.MY,
+  selectedOption: TileViewOption.TEAM,
   setTiles: (tiles: Tile[] | ((tiles: Tile[]) => Tile[])) =>
     set({
       tiles: typeof tiles === "function" ? tiles(get().tiles) : tiles,

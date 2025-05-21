@@ -1,5 +1,14 @@
+import React from "react"
+import ReactDOMServer from "react-dom/server"
+
+import TileInfoToast from "@/components/tiles/TileInfoToast"
 import { Tile } from "@/types/map/tile"
 import { RefObject, useEffect, useRef } from "react"
+
+// Add type extension
+interface ExtendedRectangle extends naver.maps.Rectangle {
+  _clickListener?: naver.maps.MapEventListener
+}
 
 interface useMapTilesProps {
   mapRef: RefObject<naver.maps.Map | null>
@@ -16,7 +25,48 @@ export const useMapTiles = ({
   myZodiacId,
   memberId,
 }: useMapTilesProps) => {
-  const rectanglesRef = useRef<naver.maps.Rectangle[]>([])
+  const rectanglesRef = useRef<ExtendedRectangle[]>([])
+  const infoWindowRef = useRef<naver.maps.InfoWindow | null>(null) // 타일 클릭 시 표시되는 정보창
+
+  const showInfoWindow = (
+    message: string,
+    position: naver.maps.Point,
+    zodiacId: number,
+  ) => {
+    const map = mapRef.current
+    if (!map) return
+
+    if (!infoWindowRef.current) {
+      infoWindowRef.current = new naver.maps.InfoWindow({
+        content: ReactDOMServer.renderToString(
+          React.createElement(TileInfoToast, {
+            message,
+            zodiacId,
+          }),
+        ),
+        borderWidth: 0,
+        disableAnchor: true,
+        backgroundColor: "transparent",
+        zIndex: 103,
+        position: new naver.maps.Point(map.getCenter().x, map.getCenter().y),
+      })
+    }
+
+    infoWindowRef.current.setContent(
+      ReactDOMServer.renderToString(
+        React.createElement(TileInfoToast, {
+          message,
+          zodiacId,
+        }),
+      ),
+    )
+
+    infoWindowRef.current.open(map, position)
+
+    setTimeout(() => {
+      infoWindowRef.current?.close()
+    }, 2000)
+  }
 
   const renderTiles = (tiles: Tile[]) => {
     const map = mapRef.current
@@ -24,14 +74,11 @@ export const useMapTiles = ({
       return
     }
 
-    // 기존 타일 제거
     rectanglesRef.current.forEach((rectangle) => rectangle.setMap(null))
     rectanglesRef.current = []
 
-    // ✅ 안전하게 배열 여부 확인
     if (!Array.isArray(tiles)) return
 
-    // 새 타일 추가
     tiles.forEach(({ sw, ne, zodiacId }) => {
       let color
 
@@ -39,14 +86,10 @@ export const useMapTiles = ({
       const isUnclaimed = zodiacId === null
 
       if (isUnclaimed) {
-        // 점령 되지 않은 땅
         color = "#a0a0a0"
-        // return
       } else if (!isMyTeam) {
-        // 다른 팀이 점령한 땅땅
         color = "#ff5959"
       } else {
-        // color = animalMetaData[animalNumberMap[zodiacId.toString()]].color
         color = "#37E851"
       }
 
@@ -59,24 +102,28 @@ export const useMapTiles = ({
         strokeColor: color,
         strokeOpacity: 0.4,
         strokeWeight: 2,
-        fillColor: color, // 색상 적용
+        fillColor: color,
         fillOpacity: 0.3,
         clickable: true,
         strokeLineJoin: "round",
       })
 
-      rectangle.addListener("click", (e) => {
+      const clickListener = (e: any) => {
+        const coord = e.coord || e.latlng
+
+        const point = new naver.maps.Point(coord.x, coord.y)
+
         if (isUnclaimed) {
-          // 점령 되지 않은 땅
-          console.log("점령 되지 않은 땅")
+          showInfoWindow("점령해보세요!", point, zodiacId)
         } else if (!isMyTeam) {
-          // 다른 팀이 점령한 땅땅
-          console.log("다른 팀이 점령한 땅땅")
+          showInfoWindow("다른 팀이 점령한 땅입니다", point, zodiacId)
         } else {
-          // 내 팀이 점령한 땅
-          console.log("내 팀이 점령한 땅")
+          showInfoWindow("우리팀 타일입니다.", point, zodiacId)
         }
-      })
+      }
+
+      rectangle.addListener("click", clickListener)
+
       rectanglesRef.current.push(rectangle)
     })
   }
@@ -84,6 +131,13 @@ export const useMapTiles = ({
   useEffect(() => {
     if (mapRef.current && Array.isArray(tiles)) {
       renderTiles(tiles)
+    }
+
+    return () => {
+      rectanglesRef.current.forEach((rectangle) => {
+        rectangle.setMap(null)
+      })
+      infoWindowRef.current?.setMap(null)
     }
   }, [tiles])
 
