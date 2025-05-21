@@ -9,9 +9,9 @@ const MainHeader = ({}: HeaderProps) => {
     <HeaderWrapper>
       <Link className="" href="/">
         <Image
-          src="/images/logo.svg"
+          src="/images/logo-title.svg"
           alt="logo"
-          width={50}
+          width={120}
           height={50}
           className="object-contain py-2"
         />
