@@ -5,10 +5,6 @@ const naverMapScript = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyI
 export const ScriptProvider = () => {
   return (
     <>
-      {/* <Head>
-        <link rel="preconnect" href="https://openapi.map.naver.com/" />
-        <link rel="preload" as="script" href={naverMapScript} />
-      </Head> */}
       <Script strategy="beforeInteractive" src={naverMapScript} />
     </>
   )

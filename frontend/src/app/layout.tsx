@@ -1,9 +1,9 @@
 import RootProvider from "@/components/providers/RootProvider"
+import ResponsiveContainer from "@/components/ResponsiveContainer"
 import { Metadata } from "next"
 import localFont from "next/font/local"
 import { ReactNode } from "react"
 import "./globals.css"
-import ResponsiveContainer from "@/components/ResponsiveContainer"
 
 const pretendard = localFont({
   src: [
@@ -20,6 +20,15 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: "요이땅",
   description: "요이땅",
+  icons: {
+    icon: "/favicon.svg",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 }
 
 interface RootLayoutProps {
@@ -29,6 +38,12 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="ko">
+      <link rel="preconnect" href="https://openapi.map.naver.com/" />
+      <link
+        rel="preload"
+        as="script"
+        href={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_MAP_CLIENT_ID}&submodules=geocoder`}
+      />
       <body className={`${pretendard.className} bg-neutral-100`}>
         <RootProvider>
           <ResponsiveContainer>
