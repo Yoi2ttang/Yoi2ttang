@@ -17,7 +17,7 @@ const StartPin = ({ className, step }: StartPinProps) => {
       )}>
       <div className="relative flex flex-col items-center gap-1">
         <div className="absolute -top-8 w-14">
-          <span className="bg-yoi-400 rounded-md px-3 py-1 text-center text-xs text-white drop-shadow-sm">
+          <span className="bg-yoi-400 w-fit rounded-md px-3 py-1 text-center text-xs text-white drop-shadow-sm">
             출발지
           </span>
         </div>

@@ -19,9 +19,14 @@ export interface ContributionUserInfo {
   tileCount: number
 }
 
+export interface PageToken {
+  lastMemberId: number
+  lastCount: number
+}
+
 export interface ZodiacContributionRankingResponse {
   pageInfoArgs: {
-    pageToken: null
+    pageToken: PageToken
     data: ContributionUserInfo[]
     hasNext: boolean
   }

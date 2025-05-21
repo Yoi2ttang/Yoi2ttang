@@ -2,7 +2,7 @@ import RootProvider from "@/components/providers/RootProvider"
 import ResponsiveContainer from "@/components/ResponsiveContainer"
 import { Metadata, Viewport } from "next"
 import localFont from "next/font/local"
-import { ReactNode } from "react"
+import { ReactNode, unstable_ViewTransition as ViewTransition } from "react"
 import "./globals.css"
 
 const pretendard = localFont({
@@ -34,6 +34,9 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: ReactNode
+  params: Promise<{
+    teamId: string
+  }>
 }
 
 const RootLayout = ({ children }: RootLayoutProps) => {
@@ -48,7 +51,9 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       <body className={`${pretendard.className} bg-neutral-100`}>
         <RootProvider>
           <ResponsiveContainer>
-            <div className="flex-1">{children}</div>
+            <ViewTransition name="main-layout">
+              <div className="flex-1">{children}</div>
+            </ViewTransition>
           </ResponsiveContainer>
         </RootProvider>
       </body>

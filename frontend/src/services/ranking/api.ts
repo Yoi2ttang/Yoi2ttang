@@ -1,4 +1,5 @@
 import { getApiServer } from "@/lib/api-server"
+import apiClient from "@/lib/http-common"
 import {
   MyTeamInfoResponse,
   TeamRankingResponse,
@@ -25,11 +26,41 @@ export const getTeamRankingPreview = async (params: {
 }
 
 // 간지별 기여도 랭킹 확인
-export const getZodiacContributionRanking = async (zodiacId: number) => {
+export const getZodiacContributionRanking = async (
+  zodiacId: number,
+  params: {
+    date: string
+    lastCount?: number
+    lastMemberId?: number
+    size?: number
+  },
+) => {
+  // 브라우저 환경에서 다른 호출
+  if (typeof window !== "undefined") {
+    const response = await apiClient.get(`/tiles/rankings/${zodiacId}`, {
+      params,
+    })
+    return response.data
+  }
+}
+
+// 간지별 기여도 랭킹 확인 :서버 환경에서 호출
+export const getZodiacContributionRankingServer = async (
+  zodiacId: number,
+  params: {
+    date: string
+    lastCount?: number
+    lastMemberId?: number
+    size?: number
+  },
+) => {
   const nextApiClient = await getApiServer()
 
   return nextApiClient.get<ZodiacContributionRankingResponse>(
     `/tiles/rankings/${zodiacId}`,
+    {
+      params,
+    },
   )
 }
 
