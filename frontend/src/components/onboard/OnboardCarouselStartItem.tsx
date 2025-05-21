@@ -18,7 +18,7 @@ const OnboardCarouselStartItem = () => {
         setIsVisible(entry.isIntersecting)
       },
       {
-        threshold: 0.1, // 요소가 10% 이상 보일 때 감지
+        threshold: 0.95,
       },
     )
 
@@ -42,9 +42,9 @@ const OnboardCarouselStartItem = () => {
   return (
     <div
       ref={elementRef}
-      className="mr-4 flex w-full shrink-0 flex-col gap-4 select-none">
+      className="mr-6 flex w-full shrink-0 flex-col gap-4 select-none">
       <motion.h1
-        className="text-title-lg self-center"
+        className="text-title-md self-center"
         whileInView={{
           y: [20, 0],
           opacity: [0, 1],
