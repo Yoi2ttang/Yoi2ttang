@@ -170,6 +170,12 @@ public class TileService {
 //
 //        log.info("size : " + likeList.size());
 
+        if (Math.abs(ne.lat() - sw.lat()) + Math.abs(ne.lng() - sw.lng()) > 0.0156559) {
+            return TileGetResponseWrapper.builder()
+                    .tileGetResponseList(new ArrayList<>())
+                    .build();
+        }
+
         List<TileGetResponse> tileGetResponseList =  tileRepository.getTile(twoGeoPoint, zodiacId);
 
         log.info(String.valueOf(tileGetResponseList.size()));
