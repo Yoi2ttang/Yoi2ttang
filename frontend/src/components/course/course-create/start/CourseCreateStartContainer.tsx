@@ -52,26 +52,28 @@ const CourseCreateStartContainer = ({
   const handleSelectCurrentLocation = async () => {
     if (!mapRef.current) return
     // 현재 위치로 이동하기
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude: lat, longitude: lng } = position.coords
-      mapRef.current?.panTo({ lat, lng })
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude: lat, longitude: lng } = position.coords
+        mapRef.current?.panTo({ lat, lng })
 
-      const reverseGeocode = await getReverseGeocode({ lat, lng })
-      const address = reverseGeocode.v2.address.roadAddress
+        const reverseGeocode = await getReverseGeocode({ lat, lng })
+        const address = reverseGeocode.v2.address.roadAddress
 
-      const { title, convertedAddress } = handleConvertedAddress(address)
+        const { title, convertedAddress } = handleConvertedAddress(address)
 
-      updateCourseData({
-        addressPOI: title,
-        startLocation: { lat, lng },
-        path: [{ lat, lng }],
-        localAddress: convertedAddress,
-      })
-    },
-    () => {},
-    {
-      enableHighAccuracy: true,
-    },)
+        updateCourseData({
+          addressPOI: title,
+          startLocation: { lat, lng },
+          path: [{ lat, lng }],
+          localAddress: convertedAddress,
+        })
+      },
+      () => {},
+      {
+        enableHighAccuracy: true,
+      },
+    )
   }
 
   const handleConvertedAddress = (localAddress: string) => {

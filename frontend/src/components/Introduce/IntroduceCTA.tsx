@@ -21,6 +21,12 @@ const IntroduceCTA = ({}: IntroduceCTAProps) => {
             일상을 즐겁게만 바꿔주는 건강 습관
           </p>
           <motion.button
+            onClick={() => {
+              window.open(
+                "https://drive.google.com/drive/folders/19wyoeBws-6XZ_P7sgwzIRmn7ieErsqFU?usp=sharing",
+                "_blank",
+              )
+            }}
             whileHover={{
               scale: 1.05,
               boxShadow: "0 20px 40px -12px rgba(255, 255, 255, 0.3)",
@@ -37,7 +43,7 @@ const IntroduceCTA = ({}: IntroduceCTAProps) => {
           transition={{ duration: 0.5 }}
           className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-md">
           <Image
-            src="/qr-code.png"
+            src="/images/qr-code.png"
             alt="QR 코드"
             width={150}
             height={150}

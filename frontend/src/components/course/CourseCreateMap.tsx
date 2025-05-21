@@ -38,8 +38,16 @@ const CourseCreateMap = ({
           enableHighAccuracy: true,
         },
       )
+    } else {
+      naver.maps.Event.addListener(mapRef.current, "idle", () => {
+        const center = mapRef.current?.getCenter() as naver.maps.LatLng
+        handleDragEnd({
+          lat: center.lat(),
+          lng: center.lng(),
+        })
+      })
     }
-  }, [])
+  }, [handleDragEnd])
 
   return (
     <>

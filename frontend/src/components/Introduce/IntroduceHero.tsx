@@ -20,6 +20,12 @@ const IntroduceHero = ({}: IntroduceHeroProps) => {
             즐기세요! 건강한 걸음 한 걸음마다 호적되어 재미로 바꿉니다!
           </p>
           <motion.button
+            onClick={() => {
+              window.open(
+                "https://drive.google.com/drive/folders/19wyoeBws-6XZ_P7sgwzIRmn7ieErsqFU?usp=sharing",
+                "_blank",
+              )
+            }}
             whileHover={{
               scale: 1.05,
               boxShadow: "0 25px 50px -12px rgba(255, 84, 52, 0.4)",
@@ -38,7 +44,7 @@ const IntroduceHero = ({}: IntroduceHeroProps) => {
         <div className="relative h-auto w-80 rotate-x-12 rotate-y-6 transform transition-transform duration-700 perspective-[1000px] hover:rotate-x-0 hover:rotate-y-0">
           <div className="from-yoi-300 to-yoi-100 absolute inset-0 -z-10 animate-pulse rounded-[40px] bg-gradient-to-tr opacity-30 shadow-2xl blur-3xl"></div>
           <Image
-            src="/app-screenshot-map.png"
+            src="/images/app-screenshot-map.png"
             alt="요이땅 앱 스크린샷"
             width={400}
             height={800}

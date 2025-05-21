@@ -1,6 +1,6 @@
 import RootProvider from "@/components/providers/RootProvider"
 import ResponsiveContainer from "@/components/ResponsiveContainer"
-import { Metadata } from "next"
+import { Metadata, Viewport } from "next"
 import localFont from "next/font/local"
 import { ReactNode } from "react"
 import "./globals.css"
@@ -17,17 +17,18 @@ const pretendard = localFont({
   variable: "--font-pretendard",
 })
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata: Metadata = {
   title: "요이땅",
   description: "요이땅",
   icons: {
     icon: "/favicon.svg",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
   },
 }
 

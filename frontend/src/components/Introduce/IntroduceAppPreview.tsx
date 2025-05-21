@@ -30,7 +30,7 @@ const IntroduceAppPreview = ({}: IntroduceAppPreviewProps) => {
           <div className="from-yoi-400 to-yoi-200 absolute inset-0 -z-10 animate-pulse rounded-[56px] bg-gradient-to-tr opacity-30 blur-3xl"></div>
           <div className="relative transform transition-all duration-700 perspective-[1000px] hover:rotate-x-12 hover:rotate-y-6">
             <Image
-              src="/app-screenshot-home.png"
+              src="/images/app-preview.gif"
               alt="요이땅 앱 스크린샷"
               width={350}
               height={700}

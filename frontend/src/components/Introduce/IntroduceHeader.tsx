@@ -13,6 +13,12 @@ const IntroduceHeader = ({}: IntroduceHeaderProps) => {
         요이땅
       </motion.div>
       <motion.button
+        onClick={() => {
+          window.open(
+            "https://drive.google.com/drive/folders/19wyoeBws-6XZ_P7sgwzIRmn7ieErsqFU?usp=sharing",
+            "_blank",
+          )
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.98 }}
         className="from-yoi-500 to-yoi-400 shadow-yoi-500/20 hover:shadow-yoi-500/30 cursor-pointer rounded-full bg-gradient-to-tr px-5 py-2.5 text-sm text-white shadow-lg transition-all duration-300 hover:shadow-xl">
