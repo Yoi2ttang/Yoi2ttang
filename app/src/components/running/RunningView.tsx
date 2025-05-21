@@ -129,9 +129,13 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
 
   const bounds = getBoundsFromCenterAndZoom(center || currentLoc, zoomLevel);
   const {data: tileData} = useGetTeamTileMapNew(
-    bounds
-      ? {sw: bounds.sw, ne: bounds.ne}
-      : {sw: currentLoc!, ne: currentLoc!},
+    {
+      sw: bounds?.sw || currentLoc!,
+      ne: bounds?.ne || currentLoc!,
+    },
+    {
+      enabled: zoomLevel >= 15 && !!bounds && !!currentLoc,
+    },
   );
 
   const {data: clusterData} = useGetTeamTileMapCluster({
@@ -146,17 +150,14 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
   });
 
   const {data: oneTeamTileData} = useGetOneTeamTileMapNew(
-    zodiacId !== null
-      ? {
-          zodiacId,
-          sw: bounds ? bounds.sw : currentLoc!,
-          ne: bounds ? bounds.ne : currentLoc!,
-        }
-      : {
-          zodiacId: 0,
-          sw: currentLoc!,
-          ne: currentLoc!,
-        },
+    {
+      zodiacId: zodiacId || 0,
+      sw: bounds?.sw || currentLoc!,
+      ne: bounds?.ne || currentLoc!,
+    },
+    {
+      enabled: zoomLevel >= 15 && zodiacId !== null && !!bounds && !!currentLoc,
+    },
   );
 
   useEffect(() => {

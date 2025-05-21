@@ -7,7 +7,14 @@ interface useGetTeamTileMapNewProps {
   ne: Coordinates;
 }
 
-const useGetTeamTileMapNew = ({sw, ne}: useGetTeamTileMapNewProps) => {
+interface Options {
+  enabled?: boolean;
+}
+
+const useGetTeamTileMapNew = (
+  {sw, ne}: useGetTeamTileMapNewProps,
+  options?: Options,
+) => {
   return useQuery({
     queryKey: ['teamTileMap', sw, ne],
     queryFn: () =>
@@ -19,6 +26,7 @@ const useGetTeamTileMapNew = ({sw, ne}: useGetTeamTileMapNewProps) => {
       }),
     staleTime: 1000 * 60,
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true, // ✅ enabled 설정 가능
   });
 };
 

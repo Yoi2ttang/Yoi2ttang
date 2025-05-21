@@ -102,7 +102,9 @@ const WebViewScreen = () => {
           setCurrentUrl(navState.url); // ✅ 현재 URL 추적
         }}
         geolocationEnabled={true}
+        userAgent="yoi2ttang-webview"
       />
+
       {/* <Text>20250521 - 17:24</Text> */}
     </View>
   );

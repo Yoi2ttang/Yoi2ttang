@@ -8,16 +8,19 @@ interface useGetOneTeamTileMapNewProps {
   ne: Coordinates;
 }
 
-const useGetOneTeamTileMapNew = ({
-  zodiacId,
-  sw,
-  ne,
-}: useGetOneTeamTileMapNewProps) => {
+interface Options {
+  enabled?: boolean;
+}
+
+const useGetOneTeamTileMapNew = (
+  {zodiacId, sw, ne}: useGetOneTeamTileMapNewProps,
+  options?: Options,
+) => {
   return useQuery({
     queryKey: ['teamTileMap', zodiacId, sw, ne],
     queryFn: () =>
       getOneTeamTileMapNew({
-        zodiacId: zodiacId,
+        zodiacId,
         swLat: sw.lat,
         swLng: sw.lng,
         neLat: ne.lat,
@@ -25,6 +28,7 @@ const useGetOneTeamTileMapNew = ({
       }),
     staleTime: 1000 * 60,
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true, // ✅ 조건적 실행
   });
 };
 
