@@ -53,5 +53,9 @@ export const getDeviceType = () => {
     return "android"
   }
 
+  if (userAgent.includes("yoi2ttang-webview")) {
+    return "yoi2ttang-webview"
+  }
+
   return "desktop"
 }
