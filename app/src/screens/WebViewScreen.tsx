@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useEffect, useRef, useState} from 'react';
-import {BackHandler, StyleSheet, ToastAndroid, View} from 'react-native';
-import {WebView} from 'react-native-webview';
-import type {RootStackParamList} from '../../App';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useEffect, useRef, useState } from 'react';
+import { BackHandler, StyleSheet, ToastAndroid, View } from 'react-native';
+import { WebView } from 'react-native-webview';
+import type { RootStackParamList } from '../../App';
 
 const WebViewScreen = () => {
   const navigation =
