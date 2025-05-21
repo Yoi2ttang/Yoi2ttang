@@ -95,12 +95,12 @@ public class TileHistoryJdbcRepositoryImpl implements TileHistoryJdbcRepository 
                 .addValue("size", size);
 
         if (tileMemberRankingRequest.lastCount() != null && tileMemberRankingRequest.lastMemberId() != null) {
-            sql.append("HAVING COUNT(*) < :last_count or (COUNT(*) = :last_count and th.member_id > :last_member_id)");
+            sql.append(" HAVING COUNT(*) < :last_count OR (COUNT(*) = :last_count AND th.member_id > :last_member_id) ");
             params.addValue("last_count", tileMemberRankingRequest.lastCount());
             params.addValue("last_member_id", tileMemberRankingRequest.lastMemberId());
         }
 
-        sql.append("ORDER BY COUNT(*) DESC, th.member_id ASC LIMIT :size");
+        sql.append(" ORDER BY COUNT(*) DESC, th.member_id ASC LIMIT :size");
 
         List<TileHistoryMemberRankingResponse> tileHistoryMemberRankingResponseList =
                 namedParameterJdbcTemplate.query(sql.toString(), params, (rs, rowNum) ->
