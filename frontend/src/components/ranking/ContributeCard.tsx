@@ -16,24 +16,30 @@ const ContributeCard = ({ userInfo }: ContributeCardProps) => {
     <Link
       href={`/profile/${memberId}`}
       className="flex items-center justify-between rounded-xl bg-neutral-200 px-3 py-4 transition-all duration-300 active:scale-95">
-      <div className="flex w-full items-center gap-2 text-black">
-        <div className="text-title-sm basis-8 text-center">{rankIcon}</div>
-        <div className="flex w-full flex-1 items-center gap-2">
+      <div className="flex items-center gap-3 text-black">
+        {/*  */}
+        <div className="text-title-md text-center">{rankIcon}</div>
+        {/*  */}
+        <div>
           {profileImageUrl ? (
-            <Image
-              src={profileImageUrl}
-              alt={nickname}
-              width={30}
-              height={30}
-              className="size-9 rounded-full"
-            />
+            <div className="relative size-8">
+              <Image
+                src={profileImageUrl}
+                alt={nickname}
+                fill
+                className="rounded-full"
+              />
+            </div>
           ) : (
-            <div className="size-9 rounded-full bg-neutral-300" />
+            <div className="size-10 rounded-full bg-blue-200" />
           )}
-          <span className="text-title-sm">{nickname}</span>
         </div>
+        {/*  */}
+        <span className="max-w-28 truncate text-base font-semibold">
+          {nickname}
+        </span>
       </div>
-      <div className="flex basis-20 items-center justify-end gap-2">
+      <div className="flex basis-2/3 items-center justify-end gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
           {tileCount}타일
         </Badge>

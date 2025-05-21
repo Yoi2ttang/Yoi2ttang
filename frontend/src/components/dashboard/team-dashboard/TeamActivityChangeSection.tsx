@@ -26,7 +26,7 @@ const TeamActivityChangeSection = ({}: TeamActivityChangeSectionProps) => {
   )
 
   const data =
-    activityData?.pointList.length > 0 ? activityData?.pointList : mockData
+    activityData?.pointList?.length > 0 ? activityData?.pointList : mockData
 
   const dailyData = {
     changeRate: 10,

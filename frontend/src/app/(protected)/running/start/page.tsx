@@ -1,6 +1,7 @@
 "use client"
 
 import Button from "@/components/common/Button"
+import { useDevice } from "@/components/DeviceProvider"
 import PreRunningInfo from "@/components/running/PreRunningInfo"
 import RunningStartMapSection from "@/components/running/RunningStartMapSection"
 import { useRouter } from "next/navigation"
@@ -19,8 +20,14 @@ declare global {
 
 const RunningStartPage = () => {
   const router = useRouter()
+  const { isWebView } = useDevice()
 
   const handleParticipate = () => {
+    if (!isWebView) {
+      alert("앱에서만 사용 가능합니다.")
+      return
+    }
+
     if (typeof window !== "undefined") {
       // ✅ WebView → React Native 로 메시지 보내기
       window.ReactNativeWebView?.postMessage("navigateToRunning")
@@ -32,6 +39,8 @@ const RunningStartPage = () => {
 
       // ✅ 실제 페이지 이동
       // router.push("/running")
+    } else {
+      alert("앱을 설치해주세요.")
     }
   }
 

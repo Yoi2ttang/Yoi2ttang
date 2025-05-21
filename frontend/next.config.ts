@@ -60,16 +60,17 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // experimental: {
-  //   turbo: {
-  //     rules: {
-  //       "*.svg": {
-  //         loaders: ["@svgr/webpack"],
-  //         as: "*.js",
-  //       },
-  //     },
-  //   },
-  // },
+  experimental: {
+    viewTransition: true, // 뷰 전환 활성화
+    // turbo: {
+    //   rules: {
+    //     "*.svg": {
+    //       loaders: ["@svgr/webpack"],
+    //       as: "*.js",
+    //     },
+    //   },
+    // },
+  },
 
   // webpack 설정
   webpack: (config) => {

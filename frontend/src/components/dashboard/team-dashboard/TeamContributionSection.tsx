@@ -1,5 +1,5 @@
 import Section from "@/components/common/Section"
-import { getZodiacContributionRanking } from "@/services/ranking/api"
+import { getZodiacContributionRankingServer } from "@/services/ranking/api"
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { use } from "react"
@@ -11,7 +11,12 @@ interface TeamContributionSectionProps {
 const TeamContributionSection = ({
   zodiacId,
 }: TeamContributionSectionProps) => {
-  const { data } = use(getZodiacContributionRanking(zodiacId))
+  const { data } = use(
+    getZodiacContributionRankingServer(3, {
+      date: "2025-05-22",
+      size: 3,
+    }),
+  )
 
   const contributionData = data?.pageInfoArgs?.data
 

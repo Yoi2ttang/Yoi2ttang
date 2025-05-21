@@ -16,8 +16,8 @@ const StartPin = ({ className, step }: StartPinProps) => {
         step === CourseCreateStep.DRAW && "-translate-6",
       )}>
       <div className="relative flex flex-col items-center gap-1">
-        <div className="absolute -top-8 w-14">
-          <span className="bg-yoi-400 rounded-md px-3 py-1 text-center text-xs text-white drop-shadow-sm">
+        <div className="absolute -top-8 flex w-16 items-center justify-center">
+          <span className="bg-yoi-400 w-full rounded-md px-3 py-1 text-center text-xs text-white drop-shadow-sm">
             출발지
           </span>
         </div>

@@ -103,8 +103,7 @@ const CourseCreateStartContainer = ({
         .trim()
     }
 
-    const title =
-      courseData.addressPOI !== undefined ? courseData.addressPOI : buildingName
+    const title = buildingName
 
     return { title, convertedAddress }
   }
