@@ -2,7 +2,6 @@ export const revalidate = 0
 
 import OccupyButton from "@/components/dashboard/OccupyButton"
 import PersonalActivityChangeSection from "@/components/dashboard/personal-dashboard/PersonalActivityChangeSection"
-import PersonalHeatmapCalendarSection from "@/components/dashboard/personal-dashboard/PersonalHeatmapCalendarSection"
 import PersonalStatisticsSection from "@/components/dashboard/personal-dashboard/PersonalStatisticsSection"
 import PersonalTitleSection from "@/components/dashboard/personal-dashboard/PersonalTitleSection"
 import TileMapSectionWrapper from "@/components/dashboard/TileMapSectionWrapper"
@@ -27,7 +26,7 @@ const PersonalDashboardPage = ({}: PersonalDashboardPageProps) => {
       <PersonalTitleSection name={nickname ?? ""} days={data.duration + 1} />
       <PersonalStatisticsSection dashboardData={data} />
       <OccupyButton />
-      <PersonalHeatmapCalendarSection />
+      {/* <PersonalHeatmapCalendarSection /> */}
       <TileMapSectionWrapper type="my" />
       <PersonalActivityChangeSection />
     </main>
