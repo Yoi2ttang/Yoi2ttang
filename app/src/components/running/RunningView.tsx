@@ -72,6 +72,7 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
   const {mutate: startRunning} = usePostStartRunning();
   const {runningId, setRunningId} = useRunningStatsContext();
 
+  const currentLocRef = useRef<Coordinates | undefined>(null);
   const beforeLocRef = useRef<Coordinates | null>(null);
   const {mutate: postLocation} = usePostLocation();
 
@@ -158,21 +159,30 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
   );
 
   useEffect(() => {
-    if (!currentLoc || !runningId) {
-      console.log('⛔ 위치 전송 불가 - currentLoc 또는 runningId 없음');
+    currentLocRef.current = currentLoc;
+  }, [currentLoc]);
+
+  useEffect(() => {
+    if (!runningId) {
+      console.log('⛔ 위치 전송 불가 - runningId 없음');
       return;
     }
 
     const interval = setInterval(() => {
+      const now = currentLocRef.current;
+      if (!now) return;
+
       if (!beforeLocRef.current) {
-        beforeLocRef.current = currentLoc;
+        // ✅ 최초 1회만 설정 (postLocation은 안 함)
+        beforeLocRef.current = now;
+        console.log('🟡 최초 beforeLoc 설정');
         return;
       }
 
       const payload = {
         runningId,
         beforePoint: beforeLocRef.current,
-        nowPoint: currentLoc,
+        nowPoint: now,
         currentTime: new Date().toISOString(),
       };
 
@@ -220,19 +230,17 @@ const RunningView = ({isPaused, setIsPaused}: RunningViewProps) => {
           `🕒 ${payload.currentTime}`,
       );
 
-      beforeLocRef.current = currentLoc;
+      beforeLocRef.current = now;
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [currentLoc, runningId]);
+  }, [runningId]);
 
   return (
     <StyledView className="flex-1 relative w-full">
       <StyledText className="absolute top-4 left-4 bg-white z-50 p-2 rounded">
         {currentLoc
-          ? `위도: ${currentLoc.lat.toFixed(6)}\n경도: ${currentLoc.lng.toFixed(
-              6,
-            )} \n${runningId}`
+          ? `위도: ${currentLoc.lat}\n경도: ${currentLoc.lng} \n${runningId}`
           : '위치 정보 없음'}
       </StyledText>
       <StyledText className="absolute top-4 right-4 bg-white z-50 p-2 rounded">

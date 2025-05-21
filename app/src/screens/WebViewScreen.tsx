@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, BackHandler, ToastAndroid} from 'react-native';
+import {View, StyleSheet, BackHandler, ToastAndroid, Text} from 'react-native';
 import {WebView} from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -103,6 +103,7 @@ const WebViewScreen = () => {
         }}
         geolocationEnabled={true}
       />
+      <Text>20250521 - 11:20</Text>
     </View>
   );
 };

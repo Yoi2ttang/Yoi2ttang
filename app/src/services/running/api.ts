@@ -102,6 +102,7 @@ export interface PostLocationRequest {
 
 // 러닝 중 위치 보내기
 export const postLocation = async (payload: PostLocationRequest) => {
+  console.log('보낸 데이터', payload);
   const response = await apiClient.post('/runnings/locations', payload);
 
   return response.data;
