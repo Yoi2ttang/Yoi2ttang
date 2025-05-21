@@ -95,7 +95,7 @@ public class TileHistoryQueryRepositoryImpl implements TileHistoryQueryRepositor
                 .select(Projections.constructor(
                         MemberDailyTileResponse.class,
                         arrivalDate,
-                        tileHistoryJpa.geoHash.countDistinct().intValue()
+                        tileHistoryJpa.geoHash.countDistinct().castToNum(Integer.class)
                 ))
                 .from(tileHistoryJpa)
                 .join(runningPoint).on(tileHistoryJpa.runningPointId.eq(runningPoint.runningPointId))
