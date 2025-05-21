@@ -1,3 +1,5 @@
+export const revalidate = 0
+
 import OccupyButton from "@/components/dashboard/OccupyButton"
 import PersonalActivityChangeSection from "@/components/dashboard/personal-dashboard/PersonalActivityChangeSection"
 import PersonalHeatmapCalendarSection from "@/components/dashboard/personal-dashboard/PersonalHeatmapCalendarSection"
