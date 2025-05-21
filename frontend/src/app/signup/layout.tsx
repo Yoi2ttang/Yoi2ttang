@@ -6,11 +6,7 @@ interface SignupLayoutProps {
 }
 
 const SignupLayout = ({ children }: SignupLayoutProps) => {
-  return (
-    <Suspense fallback={<Loading />}>
-      <div className="h-dvh overflow-hidden">{children}</div>
-    </Suspense>
-  )
+  return <Suspense fallback={<Loading />}>{children}</Suspense>
 }
 
 export default SignupLayout
