@@ -18,8 +18,6 @@ const TeamContributionSection = ({
     }),
   )
 
-  console.log(new Date().toISOString().split("T")[0], data)
-
   const contributionData = data?.pageInfoArgs?.data
 
   return (

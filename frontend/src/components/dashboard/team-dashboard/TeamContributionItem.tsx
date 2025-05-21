@@ -19,11 +19,13 @@ const TeamContributionItem = ({ data }: TeamContributionItemProps) => {
 
   return (
     <DashboardCard className="flex items-center justify-between">
-      <div className="flex w-full items-center gap-2 text-black">
-        <div className="text-title-sm text-center">{rankIcon}</div>
-        <div className="flex grow-0 items-center gap-2">
+      <div className="flex items-center gap-3 text-black">
+        {/*  */}
+        <div className="text-title-md text-center">{rankIcon}</div>
+        {/*  */}
+        <div>
           {profileImageUrl ? (
-            <div className="relative size-10">
+            <div className="relative size-8">
               <Image
                 src={profileImageUrl}
                 alt={nickname}
@@ -34,8 +36,11 @@ const TeamContributionItem = ({ data }: TeamContributionItemProps) => {
           ) : (
             <div className="size-10 rounded-full bg-blue-200" />
           )}
-          <span className="text-title-sm basis-28 truncate">{nickname}</span>
         </div>
+        {/*  */}
+        <span className="max-w-28 truncate text-base font-semibold">
+          {nickname}
+        </span>
       </div>
       <div className="flex basis-2/3 items-center justify-end gap-2">
         <Badge className={cn("bg-yoi-300 border-yoi-400 border text-black")}>
