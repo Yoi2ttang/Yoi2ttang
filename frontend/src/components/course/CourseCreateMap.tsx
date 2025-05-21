@@ -1,6 +1,6 @@
 import { useMapInitialize } from "@/hooks/map/useMapInitialize"
 import { Coordinates, NaverMap } from "@/types/map/navermaps"
-import { RefObject, useEffect } from "react"
+import { RefObject, useEffect, useRef } from "react"
 import StartPin from "./StartPin"
 
 interface CourseCreateMapProps {
@@ -15,6 +15,16 @@ const CourseCreateMap = ({
   startLocation,
 }: CourseCreateMapProps) => {
   const { mapRef, initializeMap } = useMapInitialize()
+
+  const listener = useRef<naver.maps.MapEventListener>(null)
+
+  const handleIdle = () => {
+    const center = mapRef.current?.getCenter() as naver.maps.LatLng
+    handleDragEnd({
+      lat: center.lat(),
+      lng: center.lng(),
+    })
+  }
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -39,15 +49,16 @@ const CourseCreateMap = ({
         },
       )
     } else {
-      naver.maps.Event.addListener(mapRef.current, "idle", () => {
-        const center = mapRef.current?.getCenter() as naver.maps.LatLng
-        handleDragEnd({
-          lat: center.lat(),
-          lng: center.lng(),
-        })
-      })
+      if (listener.current) {
+        naver.maps.Event.removeListener(listener.current)
+      }
+      listener.current = naver.maps.Event.addListener(
+        mapRef.current,
+        "idle",
+        handleIdle,
+      )
     }
-  }, [handleDragEnd])
+  }, [handleDragEnd, handleIdle])
 
   return (
     <>
