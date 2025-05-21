@@ -7,7 +7,7 @@ interface HeaderProps {}
 const MainHeader = ({}: HeaderProps) => {
   return (
     <HeaderWrapper>
-      <Link className="" href="/">
+      <Link href="/dashboard/my">
         <Image
           src="/images/logo-title.svg"
           alt="logo"
