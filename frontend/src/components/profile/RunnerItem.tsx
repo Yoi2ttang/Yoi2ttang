@@ -3,7 +3,7 @@
 import { AnimalType } from "@/types/animal"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import AnimalBadge from "../animal-badges/AnimalBadge"
 import FollowButton from "./FollowButton"
 
@@ -23,6 +23,10 @@ const RunnerItem = ({
   isFollow,
 }: RunnerItemProps) => {
   const [followState, setFollowState] = useState(isFollow ?? false)
+
+  useEffect(() => {
+    setFollowState(isFollow ?? false)
+  }, [isFollow])
 
   return (
     <Link

@@ -3,7 +3,7 @@
 import StarIcon from "@/assets/icons/course/star-icon.svg"
 import useUpdateCourseBookmark from "@/hooks/course/useUpdateCourseBookmark"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface CourseBookmarkButtonProps {
   courseId: number
@@ -22,6 +22,10 @@ const CourseBookmarkButton = ({
   const handleClick = () => {
     mutate({ courseId, bookmarkState })
   }
+
+  useEffect(() => {
+    setBookmarkState(isBookmarked)
+  }, [isBookmarked])
 
   return (
     <button className="cursor-pointer" onClick={handleClick}>
