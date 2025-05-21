@@ -18,12 +18,12 @@ public interface RunningPointRepository extends JpaRepository<RunningPoint, Long
 
     @Query(value = """
         SELECT SUM(ST_Length(rp.route::geography))
-        FROM running_points rp
-        LEFT JOIN runnings r ON rp.running_id = r.running_id
+        FROM runnings r
+        JOIN running_points rp ON rp.running_id = r.running_id
         WHERE r.member_id = :memberId
           AND r.state = 'COMPLETE'
-          AND rp.arrival_time >= :startDate
-          AND rp.arrival_time < :endDate
+          AND r.start_time >= :startDate
+          AND r.start_time < :endDate
         """, nativeQuery = true)
     Double findLastMonthDistanceByMemberId(
             @Param("memberId") Long memberId,
