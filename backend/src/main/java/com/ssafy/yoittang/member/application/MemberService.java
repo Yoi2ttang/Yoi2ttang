@@ -309,7 +309,20 @@ public class MemberService {
     }
 
     private List<CourseSummaryResponse> getCourseSummaryByMemberId(Long memberId) {
-        return courseRepository.findCompleteCoursesByMemberId(memberId);
+        List<CourseSummaryResponse> courseSummaryResponses = courseRepository.findCompleteCoursesByMemberId(memberId);
+        List<Long> courseIds = courseSummaryResponses.stream().map(CourseSummaryResponse::courseId).toList();
+
+        Map<Long, Long> totalTiles = courseTileJpaRepository.countCourseTileByCourseIds(courseIds);
+        Map<Long, Long> visitedTiles = tileHistoryRepository.countVisitedCourseTilesByMember(memberId, courseIds);
+
+
+        return courseSummaryResponses.stream()
+                .filter(course -> {
+                    Long courseId = course.courseId();
+                    return totalTiles.get(courseId) != null
+                            && totalTiles.get(courseId).equals(visitedTiles.get(courseId));
+                })
+                .toList();
     }
 
     @Transactional
