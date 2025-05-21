@@ -56,10 +56,10 @@ public class TileController implements TileControllerSwaggerDoc {
 
     @GetMapping("/teams/new")
     public ResponseEntity<TileGetResponseWrapper> getTile(
-            @RequestParam Double swLat,
-            @RequestParam Double swLng,
-            @RequestParam Double neLat,
-            @RequestParam Double neLng
+            @RequestParam("swLat") Double swLat,
+            @RequestParam("swLng") Double swLng,
+            @RequestParam("neLat") Double neLat,
+            @RequestParam("neLng") Double neLng
     ) {
         return ResponseEntity.ok(tileService.getTile(null, new TwoGeoPoint(
                     new GeoPoint(swLat, swLng),
