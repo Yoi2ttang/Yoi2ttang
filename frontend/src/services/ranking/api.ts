@@ -37,12 +37,9 @@ export const getZodiacContributionRanking = async (
 ) => {
   // 브라우저 환경에서 다른 호출
   if (typeof window !== "undefined") {
-    const response = await apiClient.get<ZodiacContributionRankingResponse>(
-      `/tiles/rankings/${zodiacId}`,
-      {
-        params,
-      },
-    )
+    const response = await apiClient.get(`/tiles/rankings/${zodiacId}`, {
+      params,
+    })
     return response.data
   }
 }

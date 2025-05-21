@@ -1,79 +1,35 @@
+"use client"
+
+import Skeleton from "@/components/common/skeleton"
 import ContributeCard from "@/components/ranking/ContributeCard"
-import { getZodiacContributionRanking } from "@/services/ranking/api"
-import { ContributionUserInfo } from "@/types/ranking"
-import { use } from "react"
+import useContributionRanking from "@/hooks/ranking/useContributionRanking"
+import { ZodiacContributionRankingResponse } from "@/types/ranking"
+import { useParams } from "next/navigation"
 
-interface TeamsContributionPageProps {
-  params: Promise<{
-    teamId: string
-  }>
-}
+interface TeamsContributionPageProps {}
 
-const TeamsContributionPage = ({ params }: TeamsContributionPageProps) => {
-  const { teamId } = use(params)
-  // TODO: teamId 기준 팀 기여도 데이터 가져오기
-  const { data, isSuccess } = use(getZodiacContributionRanking(+teamId))
+const TeamsContributionPage = ({}: TeamsContributionPageProps) => {
+  const { teamId } = useParams()
 
-  const userContributionList = isSuccess
-    ? data.pageInfoArgs.data.length > 0
-      ? data.pageInfoArgs.data
-      : mockData.pageInfoArgs.data
-    : mockData.pageInfoArgs.data
+  const { targetRef, data, isSuccess, isFetchingNextPage } =
+    useContributionRanking(Number(teamId), {
+      date: "2025-05-22",
+    })
+  const result = data?.pages[0] as ZodiacContributionRankingResponse
 
+  const userContributionList = isSuccess ? result.pageInfoArgs.data : []
   return (
     <div className="flex flex-col gap-4">
       {userContributionList.map((userInfo) => (
         <ContributeCard key={userInfo.memberId} userInfo={userInfo} />
       ))}
+      {isFetchingNextPage ? (
+        <Skeleton ref={targetRef} className="h-24 w-full" />
+      ) : (
+        <div ref={targetRef} />
+      )}
     </div>
   )
 }
 
 export default TeamsContributionPage
-
-const mockData = {
-  pageInfoArgs: {
-    pageToken: {
-      lastMemberId: 3,
-      lastCount: 3,
-    },
-    data: [
-      {
-        rank: 1,
-        memberId: 1,
-        nickname: "dlskawo0409",
-        profileImageUrl: "",
-        tileCount: 5,
-      },
-      {
-        rank: 2,
-        memberId: 3,
-        nickname: "즈우현호랑이",
-        profileImageUrl: "",
-        tileCount: 3,
-      },
-      {
-        rank: 3,
-        memberId: 4,
-        nickname: "즈우현호랑이",
-        profileImageUrl: "",
-        tileCount: 3,
-      },
-      {
-        rank: 4,
-        memberId: 5,
-        nickname: "즈우현호랑이",
-        profileImageUrl: "",
-        tileCount: 3,
-      },
-      {
-        rank: 5,
-        memberId: 6,
-        nickname: "즈우현호랑이",
-        profileImageUrl: "",
-        tileCount: 3,
-      },
-    ] as ContributionUserInfo[],
-    hasNext: true,
-  },
-}
