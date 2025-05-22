@@ -103,6 +103,8 @@ const WebViewScreen = () => {
         geolocationEnabled={true}
         userAgent="yoi2ttang-webview"
       />
+
+      {/* <Text>20250521 - 17:24</Text> */}
     </View>
   );
 };

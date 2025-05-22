@@ -37,6 +37,11 @@ interface PaceRecord {
   pace: number; // sec/km
 }
 
+interface DistanceRecord {
+  timestamp: number;
+  distance: number;
+}
+
 const requestLocationPermission = async () => {
   if (Platform.OS === 'android') {
     try {
@@ -54,7 +59,7 @@ const requestLocationPermission = async () => {
       return false;
     }
   }
-  return true; // iOS는 권한 자동 처리됨 (권한 설정은 Info.plist에서 관리)
+  return true;
 };
 
 export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
@@ -71,8 +76,11 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
   const distanceRef = useRef(0);
   const timeRef = useRef(0);
   const watchIdRef = useRef<number | null>(null);
+  const distanceLogRef = useRef<DistanceRecord[]>([]);
 
-  // 초기 위치 설정 + 위치 추적 시작
+  const windowDuration = 5000;
+  const minWindowDistance = 10;
+
   useEffect(() => {
     const initLocationTracking = async () => {
       const hasPermission = await requestLocationPermission();
@@ -81,7 +89,6 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
         return;
       }
 
-      // 초기 위치 1회 수집
       Geolocation.getCurrentPosition(
         position => {
           const initialLoc = {
@@ -101,7 +108,6 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
         },
       );
 
-      // 위치 추적 시작
       const watchId = Geolocation.watchPosition(
         position => {
           const nextLoc = {
@@ -110,21 +116,42 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
           };
           setCurrentLoc(nextLoc);
 
+          const now = Date.now();
+
           if (prevLoc.current) {
             const d = getDistance(prevLoc.current, nextLoc);
-            distanceRef.current += d;
-            setDistance(distanceRef.current);
 
-            const timeInHours = timeRef.current / 3600;
-            const distanceInKm = distanceRef.current / 1000;
-            if (timeRef.current > 0 && distanceInKm > 0) {
-              setSpeed(distanceInKm / timeInHours);
-              setAveragePace(timeRef.current / distanceInKm);
-            }
+            // 거리 기록 저장
+            distanceLogRef.current.push({timestamp: now, distance: d});
 
-            setCalories(
-              calculateCalories(distanceInKm, timeRef.current, weight ?? 50),
+            // 5초 이내 기록만 유지
+            distanceLogRef.current = distanceLogRef.current.filter(
+              record => now - record.timestamp <= windowDuration,
             );
+
+            // 누적 거리 계산
+            const windowDistance = distanceLogRef.current.reduce(
+              (acc, r) => acc + r.distance,
+              0,
+            );
+
+            if (windowDistance >= minWindowDistance) {
+              console.log('많이감');
+              distanceRef.current += d;
+              setDistance(distanceRef.current);
+
+              const timeInHours = timeRef.current / 3600;
+              const distanceInKm = distanceRef.current / 1000;
+
+              if (timeRef.current > 0 && distanceInKm > 0) {
+                setSpeed(distanceInKm / timeInHours);
+                setAveragePace(timeRef.current / distanceInKm);
+              }
+
+              setCalories(
+                calculateCalories(distanceInKm, timeRef.current, weight ?? 50),
+              );
+            }
           }
 
           prevLoc.current = nextLoc;
@@ -134,7 +161,7 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
         },
         {
           enableHighAccuracy: true,
-          distanceFilter: 0,
+          distanceFilter: 1,
           interval: 1000,
           fastestInterval: 1000,
         },
@@ -152,7 +179,6 @@ export const useRunningStats = ({isPaused, weight}: useRunningStatsProps) => {
     };
   }, [weight]);
 
-  // 러닝 시간 증가 타이머
   useEffect(() => {
     const id = setInterval(() => {
       if (isPaused) return;
