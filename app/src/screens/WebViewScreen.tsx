@@ -1,11 +1,10 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, BackHandler, ToastAndroid, Text} from 'react-native';
-import {WebView} from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import React, {useEffect, useRef, useState} from 'react';
+import {BackHandler, StyleSheet, ToastAndroid, View} from 'react-native';
+import {WebView} from 'react-native-webview';
 import type {RootStackParamList} from '../../App';
-import {RouteProp} from '@react-navigation/native';
 
 const WebViewScreen = () => {
   const navigation =
