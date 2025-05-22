@@ -1,0 +1,116 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+	id 'checkstyle'
+    // makes git.property file including git branch, commit data
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
+}
+
+group = 'com.ssafy'
+version = '0.0.1-SNAPSHOT'
+
+def gitHash = 'git rev-parse --short HEAD'.execute([], rootDir).text.trim()
+def buildTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+
+bootJar {
+    manifest {
+        attributes(
+                'Implementation-Version': gitHash,
+                'Built-Time': buildTime
+        )
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // PostgreSQL JDBC
+    runtimeOnly 'org.postgresql:postgresql'
+
+    //Postgis
+    implementation 'net.postgis:postgis-jdbc:2024.1.0'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // Redisson
+    implementation 'org.redisson:redisson:3.23.4'
+
+    // jwt 설정
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //JTS Core
+    implementation 'org.locationtech.jts:jts-core:1.20.0'
+
+    //Hibernate Spatial
+    implementation 'org.hibernate.orm:hibernate-spatial:6.6.13.Final'
+
+    //geohash
+    implementation 'ch.hsr:geohash:1.4.0'
+
+    //S3 설정
+    implementation 'software.amazon.awssdk:s3:2.30.6'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //csv
+    implementation 'com.opencsv:opencsv:5.11'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    maxWarnings = 0
+    configFile = file("${rootDir}/config/naver-checkstyle-rules.xml")
+    configProperties = ["suppressionFile": "${rootDir}/config/naver-checkstyle-suppressions.xml"]
+    toolVersion = "8.42"
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
