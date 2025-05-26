@@ -22,7 +22,6 @@ export const POST = async (request: Request) => {
     const nextResponse = NextResponse.json(
       {
         accessToken: response.data.accessToken,
-        redirectTo: "/dashboard/my",
       },
       { status: 200 },
     )
