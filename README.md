@@ -17,10 +17,10 @@
 
 # 서비스 소개
 
-### <center>지도 위를 달리며 땅을 차지하고,<br>12간지 팀과 함께 랭킹 경쟁을 펼치는 <br> 러닝+게임 융합 앱 서비스</center>
+### 지도 위를 달리며 땅을 차지하고, 12간지 팀과 함께 랭킹 경쟁을 펼치는 러닝+게임 융합 앱 서비스
 
 <div align="center">
-    <img width="100%;" src='/docs/images/main_functions.gif' alt='핵심 기능능'/>
+    <img width="100%;" src='/docs/images/main_functions.gif' alt='핵심 기능'/>
 </div>
 
 - 🕜 **진행 기간** : 2025.04.14. ~ 2025.05.22. (6주)
@@ -28,15 +28,15 @@
 
 ### ✅ 주요 기능 summary
 
-| 기능      | 설명                         |
-| --------- | ---------------------------- |
-| 1️⃣ 로그인 | 서비스 이용을 위한 인증 기능 |
-| 2️⃣        |                              |
-| 3️⃣        |                              |
-| 4️⃣        |                              |
-| 5️⃣        |                              |
-| 6️⃣        |                              |
-| 7️⃣        |                              |
+| 기능                       | 설명                                                                                     |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| 1️⃣ 소셜 로그인             | 서비스 이용을 위한 JWT 기반 인증 기능                                                    |
+| 2️⃣ 개인/팀별 러닝 대시보드 | 최근 1주일 간의 러닝 정보 제공 기능                                                      |
+| 3️⃣ 개인/팀별 통계 대시보드 | 최근 1주일 간의 타일 점령 정보 제공 기능                                                 |
+| 4️⃣ 점령 러닝               | 내가 밟은 타일을 기반으로 러닝를 갱신하고 타일 점령 정보 반영 기능                       |
+| 5️⃣ 나만의 코스 만들기      | 지도 위에 포인트를 추가하여 나만의 코스 제작 기능                                        |
+| 6️⃣ 코스 검색 및 상세 조회  | 내가 달렸던 코스, 찜한 코스, 다른 러너들이 만든 코스 검색 및 상세 조회 기능              |
+| 7️⃣ 러너 검색 및 상세 조회  | 다른 러너를 검색하거나 프로필을 조회하며 러닝 정보를 확인하고 팔로잉 할 수 있는 SNS 기능 |
 
 <br><br>
 
@@ -54,11 +54,15 @@
     </tr>
     <tr>
         <td>👑 이주현</td>
-        <td></td>
+        <td>
+            인프라 설정 및 무중단 배포 자동화
+            <br>
+            서버-프론트 간 통합 환경 설정
+        </td>
     </tr>
     <tr>
         <td>🟡 김수현</td>
-        <td></td></td>
+        <td></td>
     </tr>
     <tr>
         <td>🟡 박창조</td>
@@ -66,7 +70,11 @@
     </tr>
     <tr>
         <td>🟡 윤서희</td>
-        <td></td>
+        <td>
+            러닝 페이지 및 땅 점령 기능 구현
+            <br>
+            React Native를 활용한 native 페이지 구현 및 웹뷰 연결
+        </td>
     </tr>
     <tr>
         <td>🟡 이남재</td>
@@ -92,6 +100,7 @@
 
 ![TypeScript](<https://img.shields.io/badge/typescript(5.7.3)-3178C6?style=for-the-badge&logo=typescript&logoColor=white>)
 ![Next.js](<https://img.shields.io/badge/Next.js(15)-000000?style=for-the-badge&logo=Next.js&logoColor=white>)
+![ReactNative](<https://img.shields.io/badge/React Native-61DAFB?logo=react&logoColor=white&style=for-the-badge>)
 ![tailwindcss](<https://img.shields.io/badge/tailwindcss(4.0.0)-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white>)
 ![Tanstack query](<https://img.shields.io/badge/Tanstack_query(5.64.2)-FF4154?style=for-the-badge&logo=reactquery&logoColor=white>)
 ![zustand](<https://img.shields.io/badge/zustand(5.0.3)-AF001E?style=for-the-badge&logo=zustand&logoColor=white>)
@@ -270,17 +279,17 @@
     <video src="/docs/videos/introduce.mp4" controls width="100%"></video>
 </div>
 
-[서비스 소개 영상 ↗️](/docs/videos/introduce.mp4)
+[![Youtube Badge](https://img.shields.io/badge/Youtube-ff0000?style=flat-square&logo=youtube&link=https://www.youtube.com/c/kyleschool)](https://www.youtube.com/watch?v=Yx08Z7tx0FE)
 
 <br><br>
 
 # 프로젝트 짧은 회고
 
-| 이름   | 내용 |
-| ------ | ---- |
-| 이주현 | _""_ |
-| 김수현 | _""_ |
-| 박창조 | _""_ |
-| 윤서희 | _""_ |
-| 이남재 | _""_ |
-| 전종우 | _""_ |
+| 이름   | 내용                                                                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 이주현 | _"인프라를 처음 해봤는데, 생각할 게 많더라고요. 무중단 배포까지 욕심을 좀 부렸더니 쉽지 않았어요 하지만 시야가 조금 더 넓어진 것 같아 뿌듯합니다"_ |
+| 김수현 | _""_                                                                                                                                               |
+| 박창조 | _""_                                                                                                                                               |
+| 윤서희 | _""_                                                                                                                                               |
+| 이남재 | _"GeoHash 그만보고 싶다.."_                                                                                                                        |
+| 전종우 | _""_                                                                                                                                               |
