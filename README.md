@@ -19,6 +19,10 @@
 
 ### <center>지도 위를 달리며 땅을 차지하고,<br>12간지 팀과 함께 랭킹 경쟁을 펼치는 <br> 러닝+게임 융합 앱 서비스</center>
 
+<div align="center">
+    <img width="100%;" src='/docs/images/main_functions.gif' alt='핵심 기능능'/>
+</div>
+
 - 🕜 **진행 기간** : 2025.04.14. ~ 2025.05.22. (6주)
 - 👨‍👩‍👧‍👦 **진행 인원** : 6명 (FE: 3, BE: 2, INFRA: 1)
 
@@ -251,16 +255,13 @@
 ### 📊 ERD
 
 <div align="center">
-    <img width="100%;" src='/docs/images/design_system_color.png' alt='ERD'/>
+    <img width="100%;" src='/docs/images/erd.png' alt='ERD'/>
 </div>
 
 ### 🎨 디자인 시스템
 
 <div align="center">
-    <img width="100%;" src='/docs/images/design_system_color.png' alt='디자인 시스템(색상표)'/>
-</div>
-<div align="center">
-    <img width="100%;" src='/docs/images/design_system_font.png' alt='디자인 시스템(폰트)'/>
+    <img width="100%;" src='/docs/images/design_system.png' alt='디자인 시스템'/>
 </div>
 
 ### 🎥 서비스 소개 영상
