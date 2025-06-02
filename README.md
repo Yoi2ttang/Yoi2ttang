@@ -39,12 +39,12 @@
         <td>서비스 이용을 위한 JWT 기반 인증 기능</td>
     </tr>
         <tr>
-        <td>2️⃣ 개인/팀별 러닝 대시보드</td>
-        <td>최근 1주일 간의 러닝 정보 제공 기능</td>
+        <td>2️⃣ 개인/팀별 통계 대시보드</td>
+        <td>최근 1주일 간의 통계계 정보 제공 기능</td>
     </tr>
         <tr>
-        <td>3️⃣ 개인/팀별 통계 대시보드</td>
-        <td>최근 1주일 간의 타일 점령 정보 제공 기능</td>
+        <td>3️⃣ 지도 기반 점령 현황 시각화</td>
+        <td>지도 위에 팀별 점령 타일 현황 정보 제공 기능</td>
     </tr>
         <tr>
         <td>4️⃣ 점령 러닝</td>
@@ -232,14 +232,12 @@
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
-
 > 서비스 이용을 위한 JWT 기반 인증 기능
 
-- 설명을 입력해 주세요
+- OAuth 2.0 기반의 카카오 소셜 로그인 기능 구현
 
 <div align="center">
-    <img src='/docs/images/signup.gif' alt='소셜 로그인' width="50%" />
+    <img src='/docs/images/signup.gif' alt='소셜 로그인' />
 </div>
 </details>
 
@@ -248,19 +246,15 @@
 <details>
 <summary>
     <strong style="font-size: 1.25em;">
-        2️⃣ 개인/팀별 러닝 대시보드
+        2️⃣ 개인/팀별 통계 대시보드
     </strong>
 </summary>
-
-![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
 > 최근 1주일 간의 러닝 정보 제공 기능
 
-- 설명을 입력해 주세요
-
 <div align="center">
-    <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드' width="50%" />
-    <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드' width="50%" />
+    <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드' />
+    <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드' />
 </div>
 </details>
 
@@ -269,18 +263,17 @@
 <details>
 <summary>
     <strong style="font-size: 1.25em;">
-        3️⃣ 개인/팀별 통계 대시보드
+        3️⃣ 지도 기반 점령 현황 시각화
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
+>
 
-> 최근 1주일 간의 타일 점령 정보 제공
-
-- 설명을 입력해 주세요
+- GeoHash 기반의 타일 클러스터링
+- 디바운싱을 적용한 타일 조회 최적화
 
 <div align="center">
-    <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드' width="50%" />
+    <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드' />
 </div>
 </details>
 
@@ -293,14 +286,12 @@
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-윤서희-31A8FF) ![](https://img.shields.io/badge/BE-이남재-7dd581)
-
 > 내가 밟은 타일을 기반으로 러닝 정보를 갱신하고, 타일 점령 정보 반영 기능
 
-- 설명을 입력해 주세요
+- 디바운싱을 적용한 타일 조회 최적화
 
 <div align="center">
-    <img src='/docs/images/running.gif' alt='러닝' width="50%"/>
+    <img src='/docs/images/running.gif' alt='러닝' />
 </div>
 </details>
 
@@ -313,14 +304,10 @@
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
-
 > 지도 위에 포인트를 추가하여 나만의 코스 제작 기능
 
-- 설명을 입력해 주세요
-
 <div align="center">
-    <img src='/docs/images/course-write.gif' alt='코스 작성' width="50%"/>
+    <img src='/docs/images/course-write.gif' alt='코스 작성' />
 </div>
 </details>
 
@@ -333,14 +320,10 @@
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
-
 > 내가 달렸던 코스, 찜한 코스, 다른 러너들이 만든 코스 검색 및 상세 조회 기능
 
-- 설명을 입력해 주세요
-
 <div align="center">
-    <img src='/docs/images/course-read.gif' alt='코스 조회' width="50%"/>
+    <img src='/docs/images/course-read.gif' alt='코스 조회' />
 </div>
 </details>
 
@@ -353,15 +336,11 @@
     </strong>
 </summary>
 
-![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
-
 > 다른 러너를 검색하거나 프로필을 조회하며 러닝 정보를 확인하고 팔로잉 할 수 있는 SNS 기능
 
-- 설명을 입력해 주세요
-
 <div align="center">
-    <img src='/docs/images/profile.gif' alt='프로필' width="50%"/>
-    <img src='/docs/images/following.gif' alt='프로필' width="50%"/>
+    <img src='/docs/images/profile.gif' alt='프로필' />
+    <img src='/docs/images/following.gif' alt='프로필' />
 </div>
 </details>
 
