@@ -340,7 +340,7 @@
 
 <div align="center">
     <img src='/docs/images/profile.gif' alt='프로필' />
-    <img src='/docs/images/following.gif' alt='프로필' />
+    <img src='/docs/images/following.gif' alt='프로필' width="80%" />
 </div>
 </details>
 
