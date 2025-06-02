@@ -236,7 +236,7 @@
 
 - OAuth 2.0 기반의 카카오 소셜 로그인 기능 구현
 
-<div align="center">
+<div>
     <img src='/docs/images/signup.gif' alt='소셜 로그인' />
 </div>
 </details>
@@ -252,7 +252,7 @@
 
 > 최근 1주일 간의 러닝 정보 제공 기능
 
-<div align="center">
+<div>
     <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드' />
     <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드' />
 </div>
@@ -272,7 +272,7 @@
 - GeoHash 기반의 타일 클러스터링
 - 디바운싱을 적용한 타일 조회 최적화
 
-<div align="center">
+<div>
     <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드' />
 </div>
 </details>
@@ -290,7 +290,7 @@
 
 - 디바운싱을 적용한 타일 조회 최적화
 
-<div align="center">
+<div>
     <img src='/docs/images/running.gif' alt='러닝' />
 </div>
 </details>
@@ -306,7 +306,7 @@
 
 > 지도 위에 포인트를 추가하여 나만의 코스 제작 기능
 
-<div align="center">
+<div>
     <img src='/docs/images/course-write.gif' alt='코스 작성' />
 </div>
 </details>
@@ -322,7 +322,7 @@
 
 > 내가 달렸던 코스, 찜한 코스, 다른 러너들이 만든 코스 검색 및 상세 조회 기능
 
-<div align="center">
+<div>
     <img src='/docs/images/course-read.gif' alt='코스 조회' />
 </div>
 </details>
@@ -338,9 +338,9 @@
 
 > 다른 러너를 검색하거나 프로필을 조회하며 러닝 정보를 확인하고 팔로잉 할 수 있는 SNS 기능
 
-<div align="center">
+<div>
     <img src='/docs/images/profile.gif' alt='프로필' />
-    <img src='/docs/images/following.gif' alt='프로필' width="80%" />
+    <img src='/docs/images/following.gif' alt='프로필' />
 </div>
 </details>
 
@@ -350,13 +350,13 @@
 
 ### ERD
 
-<div align="center">
+<div>
     <img width="100%;" src='/docs/images/erd.png' alt='ERD'/>
 </div>
 
 ### 디자인 시스템
 
-<div align="center">
+<div>
     <img width="100%;" src='/docs/images/design_system.png' alt='디자인 시스템'/>
 </div>
 
