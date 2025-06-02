@@ -24,7 +24,7 @@
 - 👨‍👩‍👧‍👦 **진행 인원** : 6명 (FE: 3, BE: 2, INFRA: 1)
 
 <div align="center">
-    <img width="100%;" src='/docs/images/main_functions.gif' alt='주요요 기능'/>
+    <img width="100%;" src='/docs/images/main_functions.gif' alt='주요 기능'/>
 </div>
 
 ### ✅ 주요 기능 summary
@@ -121,8 +121,8 @@
 
 <table style="width: 100%;"> 
     <tr>
-        <td style="width: 15%;" align="center"><b>이름</b></th>
-        <td style="width: 85%;" align="center"><b>역할</b></td>
+        <td style="width: 25%;" align="center"><b>이름</b></th>
+        <td style="width: 75%;" align="center"><b>역할</b></td>
     </tr>
     <tr>
         <td align="center">이주현<td>
@@ -225,109 +225,144 @@
 
 ## 주요 기능
 
-### 1️⃣ 소셜 로그인
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        1️⃣ 소셜 로그인
+    </strong>
+</summary>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
 > 서비스 이용을 위한 JWT 기반 인증 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/signup.gif' alt='소셜 로그인'/>
+</div>
 </details>
 
-### 2️⃣ 개인/팀별 러닝 대시보드
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        2️⃣ 개인/팀별 러닝 대시보드
+    </strong>
+</summary>
+
+![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
 > 최근 1주일 간의 러닝 정보 제공 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드'/>
+    <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드'/>
+</div>
 </details>
 
-### 3️⃣ 개인/팀별 통계 대시보드
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        3️⃣ 개인/팀별 통계 대시보드
+    </strong>
+</summary>
 
-> 최근 1주일 간의 타일 점령 정보 제공 기능
+![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
+
+> 최근 1주일 간의 타일 점령 정보 제공
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드'/>
+</div>
 </details>
 
-### 4️⃣ 점령 러닝
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        4️⃣ 점령 러닝
+    </strong>
+</summary>
+
+![](https://img.shields.io/badge/FE-윤서희-31A8FF) ![](https://img.shields.io/badge/BE-이남재-7dd581)
 
 > 내가 밟은 타일을 기반으로 러닝 정보를 갱신하고, 타일 점령 정보 반영 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/running.gif' alt='러닝'/>
+</div>
 </details>
 
-### 5️⃣ 나만의 코스 만들기
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        5️⃣ 나만의 코스 만들기
+    </strong>
+</summary>
 
-> 지도 위에 포인트를 추가하여 나만의 코스 제작 기능
+![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
+
+> 서비스 이용을 위한 JWT 기반 인증 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/course-write.gif' alt='코스 작성'/>
+</div>
 </details>
 
-### 6️⃣ 코스 검색 및 상세 조회
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        6️⃣ 코스 검색 및 상세 조회
+    </strong>
+</summary>
+
+![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
 > 내가 달렸던 코스, 찜한 코스, 다른 러너들이 만든 코스 검색 및 상세 조회 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/course-read.gif' alt='코스 조회'/>
+</div>
 </details>
 
-### 7️⃣ 러너 검색 및 상세 조회
+<br>
 
-![](https://img.shields.io/badge/FE-OOO-31A8FF) ![](https://img.shields.io/badge/BE-OOO-7dd581)
+<details>
+<summary>
+    <strong style="font-size: 1.25em;">
+        7️⃣ 러너 검색 및 상세 조회
+    </strong>
+</summary>
+
+![](https://img.shields.io/badge/FE-전종우-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
 > 다른 러너를 검색하거나 프로필을 조회하며 러닝 정보를 확인하고 팔로잉 할 수 있는 SNS 기능
 
 - 설명을 입력해 주세요
 
-<details>
-<summary>
-&nbsp; 상세 보기
-</summary>
-이곳에 내용을 입력해 주세요
+<div align="center">
+    <img src='/docs/images/profile.gif' alt='프로필'/>
+    <img src='/docs/images/following.gif' alt='프로필'/>
+</div>
 </details>
 
 <br><br>
@@ -367,15 +402,16 @@
     </tr>
     <tr>
         <td align="center">김수현</td>
-        <td><i>""</i></td>
+        <td><i>"</i>PostgreSQL을 써봐서 좋았습니다."</td>
     </tr>
     <tr>
         <td align="center">박창조</td>
-        <td><i>""</i></td>
+        <td><i>"런닝이라는 서비스를 기획하고 개발하게 되면서, Webview라는 새로운 아키텍처를 도입하여 앱과 웹의 차이에 대해 공부할 수 있는 시간이 되어 의미가 깊었습니다. 더불어 사용자 경험을 위해 정적인 데이터를 빠르게 보여주기 위해 도입한 Next.js를 도입하면서, SSR에 대한 이해도를 높이며 프론트엔드 개발자로 한층 더 성장할 수 있었던 시간이었습니다. 특별히 평소 친했던 팀원들과 웃음 가득히 즐겁게 개발했던 6주의 시간이어서 행복했던 추억으로 남을 것 같습니다 :)"</i></td>
     </tr>
     <tr>
         <td align="center">윤서희</td>
-        <td><i>""</i></td>
+        <td><i>"안드로이드 환경을 더 공부하고 개발했으면 하는 생각이 듭니다.
+다음번엔 백그라운드 동작, wearable 연동까지 도전해보려고 합니다."</i></td>
     </tr>
     <tr>
         <td align="center">이남재</td>
@@ -383,6 +419,6 @@
     </tr>
     <tr>
         <td align="center">전종우</td>
-        <td><i>""</i></td>
+        <td><i>"SSR을 경험하기 위해 Next.js 학습을 병행하며 진행했던 만큼 개발 속도가 많이 더뎠던 프로젝트였지만, 네이티브 앱 페이지나 서버 컴포넌트 등 다양한 플랫폼에서 JWT 토큰을 관리하기 위해 고민하며 성장할 수 있었습니다."</i></td>
     </tr>
 </table>
