@@ -4,19 +4,19 @@
 
 <br><br>
 
-## 목차
+## ✨ 목차
 
-- [1️⃣ 서비스 소개](#서비스-소개)
-- [2️⃣ 팀원 및 역할 분담](#팀원-및-역할-분담)
-- [3️⃣ 시스템 아키텍처](#시스템-아키텍처)
-- [4️⃣ 기술 스택](#기술-스택)
-- [5️⃣ 주요 기능](#주요-기능)
-- [6️⃣ 참고 문서](#참고-문서)
-- [7️⃣ 프로젝트 회고](#프로젝트-회고)
+- [1️⃣ 서비스 소개](#✨-서비스-소개)
+- [2️⃣ 팀원 및 역할 분담](#✨-팀원-및-역할-분담)
+- [3️⃣ 시스템 아키텍처](#✨-시스템-아키텍처)
+- [4️⃣ 기술 스택](#✨-기술-스택)
+- [5️⃣ 주요 기능](#✨-주요-기능)
+- [6️⃣ 참고 문서](#✨-참고-문서)
+- [7️⃣ 프로젝트 회고](#✨-프로젝트-회고)
 
 <br><br>
 
-## 서비스 소개
+## ✨ 서비스 소개
 
 ### 지도 위를 달리며 땅을 차지하고, 12간지 팀과 함께 랭킹 경쟁을 펼치는 러닝+게임 융합 앱 서비스
 
@@ -66,7 +66,7 @@
 
 <br><br>
 
-## 팀원 및 역할 분담
+## ✨ 팀원 및 역할 분담
 
 <table style="width: 100%;">
     <tr>
@@ -121,8 +121,8 @@
 
 <table style="width: 100%;"> 
     <tr>
-        <td style="width: 25%;" align="center"><b>이름</b></th>
-        <td style="width: 75%;" align="center"><b>역할</b></td>
+        <td style="width: 30%;" align="center"><b>이름</b></td>
+        <td style="width: 70%;" align="center"><b>역할</b></td>
     </tr>
     <tr>
         <td align="center">이주현<td>
@@ -176,13 +176,13 @@
 
 <br><br>
 
-## 시스템 아키텍처
+## ✨ 시스템 아키텍처
 
 <div style="width: 100%; "><img src='/docs/images/system_architecture.png' alt='시스템 아키텍처'/></div>
 
 <br><br>
 
-## 기술 스택
+## ✨ 기술 스택
 
 ### **Frontend**
 
@@ -223,7 +223,7 @@
 
 <br><br>
 
-## 주요 기능
+## ✨ 주요 기능
 
 <details>
 <summary>
@@ -239,7 +239,7 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/signup.gif' alt='소셜 로그인'/>
+    <img src='/docs/images/signup.gif' alt='소셜 로그인' width="50%" />
 </div>
 </details>
 
@@ -259,8 +259,8 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드'/>
-    <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드'/>
+    <img src='/docs/images/dashboard_my.gif' alt='개인 대시보드' width="50%" />
+    <img src='/docs/images/dashboard_team.gif' alt='팀 대시보드' width="50%" />
 </div>
 </details>
 
@@ -280,7 +280,7 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드'/>
+    <img src='/docs/images/dashboard_statistic.gif' alt='통계 대시보드' width="50%" />
 </div>
 </details>
 
@@ -300,7 +300,7 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/running.gif' alt='러닝'/>
+    <img src='/docs/images/running.gif' alt='러닝' width="50%"/>
 </div>
 </details>
 
@@ -315,12 +315,12 @@
 
 ![](https://img.shields.io/badge/FE-박창조-31A8FF) ![](https://img.shields.io/badge/BE-김수현-7dd581)
 
-> 서비스 이용을 위한 JWT 기반 인증 기능
+> 지도 위에 포인트를 추가하여 나만의 코스 제작 기능
 
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/course-write.gif' alt='코스 작성'/>
+    <img src='/docs/images/course-write.gif' alt='코스 작성' width="50%"/>
 </div>
 </details>
 
@@ -340,7 +340,7 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/course-read.gif' alt='코스 조회'/>
+    <img src='/docs/images/course-read.gif' alt='코스 조회' width="50%"/>
 </div>
 </details>
 
@@ -360,14 +360,14 @@
 - 설명을 입력해 주세요
 
 <div align="center">
-    <img src='/docs/images/profile.gif' alt='프로필'/>
-    <img src='/docs/images/following.gif' alt='프로필'/>
+    <img src='/docs/images/profile.gif' alt='프로필' width="50%"/>
+    <img src='/docs/images/following.gif' alt='프로필' width="50%"/>
 </div>
 </details>
 
 <br><br>
 
-## 참고 문서
+## ✨ 참고 문서
 
 ### ERD
 
@@ -387,12 +387,12 @@
 
 <br><br>
 
-## 프로젝트 회고
+## ✨ 프로젝트 회고
 
 <table style="width: 100%;"> 
     <tr>
-        <td style="width: 15%;" align="center"><b>이름</b></th>
-        <td style="width: 85%;" align="center"><b>내용</b></td>
+        <td style="width: 30%;" align="center"><b>이름</b></td>
+        <td style="width: 70%;" align="center"><b>내용</b></td>
     </tr>
     <tr>
         <td align="center">이주현</td>
